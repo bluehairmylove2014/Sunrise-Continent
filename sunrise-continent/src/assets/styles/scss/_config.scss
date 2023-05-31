@@ -1,0 +1,164 @@
+// Global settings
+$container-max-width: 1200px;
+
+// Responsive settings
+$desktop-breakpoint: 1024px;
+$tablet-breakpoint: 768px;
+$mobile-breakpoint: 480px;
+
+// Color define
+:root {
+    --light-blue: #23A6F0;
+    --light-grey: #737373;
+    --light-pink: #FFDCE0;
+    --light-cyan: #B3E3FF;
+    --pale-cyan: #E2F6FF;
+    --pale-pink: #FFDCD1;
+    --danger: #E74040;
+    --dark-slate-grey: #252B42;
+    --bright-sun: #FFCE31;
+    --silver-sand: #BDBDBD;
+    --leaf-green: #40BB15;
+    --medium-sea-green: #2DC071;
+    --dull-orange: #E77C40;
+}
+/* Import fonts */
+@font-face {
+    font-family: Montserrat;
+    src: url('../../fonts/Montserrat/Montserrat-VariableFont_wght.ttf');
+}
+/* Smooth scroll behavior*/
+@media (prefers-reduced-motion: no-preference) {
+    :root {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Overall */
+:root {
+    font-size: 16px;
+    /* Font size desktop */
+}
+
+@media (max-width: $desktop-breakpoint) {
+    :root {
+        font-size: 14px;
+        /* Font size tablet */
+    }
+}
+
+@media (max-width: $tablet-breakpoint) {
+    :root {
+        font-size: 12px;
+        /* Font size mobile */
+    }
+}
+
+@media (max-width: $mobile-breakpoint) {
+    :root {
+        font-size: 10px;
+        /* Font size mobile */
+    }
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-family: Montserrat, sans-serif;
+    letter-spacing: 0.2px;
+}
+
+.container {
+    max-width: $container-max-width;
+    margin: 0px auto;
+    padding: 0px 100px;
+}
+
+@media (max-width: $desktop-breakpoint) {
+    .container {
+        padding: 0px 50px;
+    }
+}
+
+
+@media (max-width: $mobile-breakpoint) {
+    .container {
+        padding: 0px 30px;
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 2.5rem;
+    /* Convert 40px to 2.5rem */
+}
+
+h2 {
+    font-size: 2rem;
+    /* Convert 32px to 2rem */
+}
+
+h3 {
+    font-size: 1.5rem;
+    /* Convert 24px to 1.5rem */
+}
+
+h4 {
+    font-size: 1.125rem;
+    /* Convert 18px to 1.125rem */
+}
+
+h5 {
+    font-size: 1rem;
+    /* Convert 16px to 1rem */
+    letter-spacing: 0.1px;
+}
+
+h6 {
+    font-size: 0.875rem;
+    /* Convert 14px to 0.875rem */
+}
+
+p {
+    color: var(--light-grey);
+    font-size: 0.875rem;
+    /* Convert 14px to 0.875rem */
+    margin: 0;
+}
+
+small {
+    color: var(--light-grey);
+    font-size: 0.75rem;
+    /* Convert 12px to 0.75rem */
+}
+
+button {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 0.875rem;
+    font-family: Montserrat, sans-serif;
+}
+
+ul {
+    padding: 0;
+
+    li {
+        list-style: none;
+    }
+}
+
+a {
+    text-decoration: none;
+}

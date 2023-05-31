@@ -1,0 +1,37 @@
+
+// Mixin
+@mixin dflex($dir, $jcontent, $align-items, $fwrap) {
+    display: flex;
+    flex-direction: $dir;
+    justify-content: $jcontent;
+    align-items: $align-items;
+    flex-wrap: $fwrap;
+}
+
+@mixin dgrid($column, $gap) {
+    display: grid;
+    grid-template-columns: $column;
+    gap: $gap;
+}
+
+@mixin normal-btn($bder, $bradius, $bg_color, $color, $pding, $fsize) {
+    cursor: pointer;
+    border: $bder;
+    border-radius: $bradius;
+    outline: none;
+
+    background-color: $bg_color;
+    color: $color;
+
+    padding: $pding;
+    font-size: $fsize;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+@mixin rect-decor($bg-color, $w, $h, $bradius) {
+    background-color: $bg-color;
+    width: $w;
+    height: $h;
+    border-radius: $bradius;
+}

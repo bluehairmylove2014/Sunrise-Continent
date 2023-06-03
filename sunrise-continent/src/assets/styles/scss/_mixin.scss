@@ -15,6 +15,13 @@
     gap: $gap;
 }
 
+@mixin absolute-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 @mixin normal-btn($bder, $bradius, $bg_color, $color, $pding, $fsize) {
     cursor: pointer;
     border: $bder;

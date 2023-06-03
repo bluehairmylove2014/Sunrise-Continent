@@ -1,6 +1,8 @@
 @import './mixin';
 
 .header {
+    position: relative;
+    z-index: 999;
     height: 140px;
     width: 100%;
     // columns - row - gap
@@ -11,7 +13,7 @@
         grid-column: 1;
         grid-row: 1 / span 2;
         text-align: center;
-        border-right: 1px solid var(--extra-light-grey);
+        border-right: 1px solid var(--quill-grey);
         padding: 0 4rem;
         .header__logo-img {
             width: auto;
@@ -21,7 +23,7 @@
     .header__search {
         grid-column: 2;
         grid-row: 1;
-        border-bottom: 1px solid var(--extra-light-grey);
+        border-bottom: 1px solid var(--quill-grey);
         
         // columns - row - gap
         @include dgrid(35% 1fr, auto, 10px);
@@ -55,7 +57,7 @@
             @include dflex(row, flex-end, center, nowrap);
             
             .header-main-nav__infor {
-                border-right: 1px solid var(--extra-light-grey);
+                border-right: 1px solid var(--quill-grey);
                 // direction - justify content - align items - flex wrap
                 @include dflex(row, flex-start, center, nowrap);
                 li {
@@ -104,7 +106,7 @@
         @include dflex(row, flex-end, center, nowrap);
 
         ul {
-            border-right: 1px solid var(--extra-light-grey);
+            border-right: 1px solid var(--quill-grey);
             // direction - justify content - align items - flex wrap
             @include dflex(row, flex-end, center, nowrap);
             li {

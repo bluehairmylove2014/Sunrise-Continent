@@ -1,8 +1,6 @@
 
-import '../../assets/styles/scss/_header.scss';
-
 import React from 'react';
-
+import '../../assets/styles/scss/_header.scss';
 // Images
 import logo_img from '../../assets/images/logos/sc-vertical.png';
 

@@ -1,5 +1,3 @@
-// Global settings
-$container-max-width: 1200px;
 
 // Responsive settings
 $desktop-breakpoint: 1024px;
@@ -8,20 +6,12 @@ $mobile-breakpoint: 480px;
 
 // Color define
 :root {
-    --light-blue: #23A6F0;
-    --light-grey: #737373;
-    --light-pink: #FFDCE0;
-    --light-cyan: #B3E3FF;
-    --pale-cyan: #E2F6FF;
-    --pale-pink: #FFDCD1;
-    --danger: #E74040;
-    --dark-slate-grey: #252B42;
-    --bright-sun: #FFCE31;
-    --silver-sand: #BDBDBD;
-    --leaf-green: #40BB15;
-    --medium-sea-green: #2DC071;
-    --extra-light-grey: #d3d3d3;
-    --dull-orange: #E77C40;
+    --quill-grey: #d3d3d3;
+    --midnight: #141130;
+    --butterfly-bush: #3C2C7C;
+    --mountain-mist: #9390A0;
+    --dirty-orange: #D37200;
+    --ebony-clay: #232641;
 }
 /* Import fonts */
 @font-face {
@@ -40,6 +30,13 @@ $mobile-breakpoint: 480px;
 :root {
     font-size: 16px;
     /* Font size desktop */
+}
+
+@media (min-width: $desktop-breakpoint) {
+    :root {
+        font-size: 20px;
+        /* Font size tablet */
+    }
 }
 
 @media (max-width: $desktop-breakpoint) {
@@ -73,7 +70,6 @@ body {
 }
 
 .container {
-    max-width: $container-max-width;
     margin: 0px auto;
     padding: 0px 100px;
 }
@@ -98,6 +94,7 @@ h4,
 h5,
 h6 {
     font-weight: bold;
+    margin: 0;
 }
 
 h1 {

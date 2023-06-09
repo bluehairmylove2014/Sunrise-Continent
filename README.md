@@ -1,5 +1,4 @@
-﻿# Sunrise-Continent
-# Working with Git
+﻿# Working with Git
 _ Nhánh chính là nhánh **Master** chứa code chung, không được push code trực tiếp vào nhánh này mà phải **checkout** nhánh khác và tạo **Pull Request** .
 
 _ Lưu ý  khi **checkout** giữa các nhánh

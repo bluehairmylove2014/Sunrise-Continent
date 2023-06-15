@@ -12,7 +12,7 @@ import TrendingHotel from './TrendingHotels';
 import DestinationIcon from '../../assets/images/icons/destination.svg';
 import AirplaneIcon from '../../assets/images/icons/plane.svg';
 import FireIcon from '../../assets/images/icons/fire.svg';
-import CityGraphic from '../../assets/images/graphics/city.svg';
+import CityGraphic from '../../assets/images/bgs/360_F_63940372_ghZQzzZEwektiDoOroft0eNNZlC66k5c.png';
 
 // img
 import VietnamField from '../../assets/images/bgs/Mountain.png';
@@ -26,9 +26,14 @@ const Home = () => {
     const [trendingHotelPage, setTrendingHotelPage] = useState(1);
     const [trendingHotel, setTrendingHotel] = useState([]);
 
+    const trendingHotelPerPage = 6;
+
     // Methods
+    const handleChangeTrendingHotelPage = (e) => {
+        setTrendingHotelPage(Number(e.target.getAttribute('data-pagenumber')));
+    }
     const renderPagePaginationNumberBtn = (targetPage, numberOfPages) => {
-        let displayPages = [];
+        const displayPages = [];
 
         if(targetPage === 1) {
             for(let i = 0; i < 3 && targetPage + i <= numberOfPages; i++) {
@@ -47,11 +52,15 @@ const Home = () => {
                 displayPages.push({page: targetPage - i, active: i === 0 ? true : false});
             }
         }
-        console.log(displayPages)
 
-        const htmlDisplayPages = displayPages.map(p => {
+        const htmlDisplayPages = displayPages.map((p, i) => {
             return (
-                <button className={p.active && 'active'}>
+                <button 
+                    className={p.active ? 'active' : ''} 
+                    data-pagenumber={p.page}
+                    onClick={e => handleChangeTrendingHotelPage(e)}
+                    key={`trending-hotel-page-number@${i}`}
+                >
                     {p.page}
                 </button>
             )
@@ -252,13 +261,15 @@ const Home = () => {
                             options={countries}
                             defaultVal='Bạn muốn đi đâu?'
                             search={true}
-                            valMultipleLevel={2}
+                            valMultipleLevel={true}
+                            inputType={'text'}
                         />
                         <ModernInput 
                             options={roomType}
                             defaultVal='Bạn mong muốn gì từ khách sạn?'
                             search={false}
-                            valMultipleLevel={null}
+                            valMultipleLevel={false}
+                            inputType={'text'}
                         />
                     </div> 
                     <div className="home-des-form__row">
@@ -266,19 +277,22 @@ const Home = () => {
                             options={countries}
                             defaultVal='Khi nào thì bạn khởi hành?'
                             search={false}
-                            valMultipleLevel={'date'}
+                            valMultipleLevel={false}
+                            inputType={'date'}
                         />
                         <ModernInput 
                             options={countries}
                             defaultVal='Bạn dự định sẽ ở lại bao lâu?'
                             search={false}
-                            valMultipleLevel={null}
+                            valMultipleLevel={false}
+                            inputType={'text'}
                         />
                         <ModernInput 
                             options={countries}
                             defaultVal='Ngân sách của bạn thế nào?'
                             search={false}
-                            valMultipleLevel={null}
+                            valMultipleLevel={false}
+                            inputType={'text'}
                         />
                     </div>
                 </form>
@@ -305,6 +319,7 @@ const Home = () => {
                         <img src={FireIcon} className='home-trending__title-icon' alt='fire'/>
                         <h3>Xu hướng hiện nay</h3>
                     </div>
+                    <p>Discover our collection of the hottest and most trending hotels. Immerse yourself in luxury, comfort, and style as you explore these top-rated accommodations handpicked just for you.</p>
                 </div>
                 {/* Hotel list */}
                 <div className="home-trending__trending-list">
@@ -323,7 +338,7 @@ const Home = () => {
                                 <i className="fi fi-rs-angle-small-left"></i>
                             </button>
 
-                            {renderPagePaginationNumberBtn(trendingHotelPage, trendingHotel.length)}
+                            {renderPagePaginationNumberBtn(trendingHotelPage, Math.ceil(trendingHotel.length / trendingHotelPerPage))}
 
                             <button>
                                 <i className="fi fi-rs-angle-small-right"></i>

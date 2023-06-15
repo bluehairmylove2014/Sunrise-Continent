@@ -119,6 +119,7 @@
         margin: 3rem auto;
         .home-promised-land__title-container {
             .home-promised-land__title {
+                margin-bottom: 0.5rem;
                 // direction - justify content - align items - flex wrap
                 @include dflex(row, flex-start, center, nowrap);
                 .home-promised-land__title-icon {
@@ -211,7 +212,9 @@
     .home__trending {
         margin: 3rem auto;
         .home-trending__title-container {
+            max-width: 70%;
             .home-trending__title {
+                margin-bottom: 0.5rem;
                 // direction - justify content - align items - flex wrap
                 @include dflex(row, flex-start, center, nowrap);
                 .home-trending__title-icon {
@@ -258,9 +261,13 @@
     }
     .home__why-choosing-us {
         background-color: var(--ebony-clay);
-        height: 1000px;
+        min-height: 1000px;
         width: 100%;
         margin-top: 0;
+        img {
+            width: 100%;
+            height: auto;
+        }
     }
 }
 

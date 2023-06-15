@@ -18,7 +18,7 @@ const HotelCard = ({hotelData}) => {
         let starList = [];
         for(let i = 0; i < numberOfStar; i++) {
             starList.push(
-                <img src={star} alt="star" />
+                <img src={star} alt="star" key={`star@${i}`}/>
             );
         }
         return starList;

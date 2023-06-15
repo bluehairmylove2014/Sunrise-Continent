@@ -25,6 +25,7 @@ const Gallery = ({list}) => {
                 className={`home-promised-land__gallery-item ${i === 0 && 'active'}`}
                 ref={el => gallery_item_ref.current[i] = el}
                 onClick={e => showDetail(e)}
+                key={`gallery-item@${i}`}
             >
                 <img src={item.ImgUrl} alt="hot-countries" />
 

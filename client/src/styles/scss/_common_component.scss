@@ -6,17 +6,20 @@
     border-bottom: 1px solid black;
     position: relative;
     & > button {
+        position: relative;
         width: 100%;
         height: 100%;
         // direction - justify content - align items - flex wrap
         @include dflex(row, space-between, center, nowrap);
         // border - border radius - background color - color - padding - font size
         @include normal-btn(0, 0, transparent, black, auto, 1rem);
-    }
 
-    &.active {
-        .cc-modern-input__dropdown {
-            display: block;
+        input {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            opacity: 0;
+            pointer-events: none;
         }
     }
 
@@ -30,7 +33,7 @@
         left: 0;
         z-index: 999;
         width: 100%;
-        height: 500px;
+        height: max-content;
         max-height: 500px;
         padding: 1rem 2rem;
         overflow-y: hidden;
@@ -68,24 +71,47 @@
             button {
                 padding: 10px 35px;
                 text-transform: uppercase;
+                cursor: pointer;
             }
         }
         .cc-modern-input__normalOptions {
             width: 100%;
-            height: 300px;
+            max-height: 180px;
             overflow-y: auto;
             // direction - justify content - align items - flex wrap
             @include dflex(column, flex-start, flex-start, nowrap);
 
             button {
                 width: 100%;
-                background-color: var(--desert-storm);
                 text-transform: uppercase;
-                padding: 20px 0 20px 0;
+                // border - border radius - background color - color - padding - font size
+                @include normal-btn(none, 0, var(--desert-storm), black, 20px 0 20px 0, 0.75rem);
                 &:hover {
                     background-color: var(--quill-grey);
                 }
             }
+        }
+
+        & > p {
+            font-size: 1rem;
+            margin: 1rem 0;
+        }
+        .cc-modern-input__price-detail {
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, space-between, center, nowrap);
+        }
+    }
+
+    &.active {
+        .cc-modern-input__dropdown {
+            display: block;
+        }
+    }
+    &.chosen {
+        border-bottom: 1px solid var(--butterfly-bush);
+
+        & > button {
+            color: var(--butterfly-bush);
         }
     }
 }
@@ -218,16 +244,20 @@
     }
 }
 .common-component__page-loader {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
+    z-index: 999;
+    background-color: white;
     .cc__page-loader-container {
         @include absolute-center;
-        width: 517px;
-        height: 150px;
+        width: 300px;
+        height: 85px;
         overflow: hidden;
         background-image: url('../../assets/images/graphics/loading-sprite.5f0e6cf.png');
-        background-size: 517px 4481px;
+        background-size: 300px 2600px;
         background-repeat: no-repeat;
         animation: page-loader 0.5s steps(30) infinite;
     }
@@ -281,5 +311,5 @@
 
 @keyframes page-loader {
     0% { background-position: 0 0; }
-    100% { background-position: 0 -4480px }
+    100% { background-position: 0 -2600px }
 }

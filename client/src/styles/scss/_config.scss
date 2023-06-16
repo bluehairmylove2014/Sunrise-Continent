@@ -13,12 +13,23 @@ $mobile-breakpoint: 480px;
     --dirty-orange: #D37200;
     --ebony-clay: #232641;
     --heavy-white-smoke: #e6ecf1;
+
+    // Authen color
+    --tuna: #372C57;
+    --soft-blue:#6E88FD;
+    --ultramarine-blue: #4A6CFF;
+    --toxic-green: #3CE241;
+    --kelly-green: #0BC311;
 }
 
 /* Import fonts */
 @font-face {
     font-family: Montserrat;
     src: url('../../assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf');
+}
+@font-face {
+    font-family: RobotoBold;
+    src: url('../../assets/fonts/Roboto_Mono/RobotoMono-Bold.ttf');
 }
 
 /* Smooth scroll behavior*/

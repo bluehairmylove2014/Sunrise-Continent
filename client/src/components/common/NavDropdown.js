@@ -12,7 +12,7 @@ const NavDropdown = ({name, name_il, name_ir, options}) => {
         return (
             op_list ? op_list.map(op => {
                 return (
-                    <Link to={op.option_url}>
+                    <Link to={op.option_url} key={op.option_name}>
                         {op.option_name}
                     </Link>
                 )

@@ -4,19 +4,21 @@
  * @param {string} datetime - The date and time string to format.
  * @returns {string} - The formatted date in a short version.
  */
-export function shortenDatetime (datetime) {
-    const dateObj = new Date(datetime);
+export function shortenDatetime(input) {
+  const dateObj = new Date(input);
 
-    const options = {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-    };
+  const isDatetime = input.includes('T');
 
-    return dateObj.toLocaleDateString(undefined, options);
-};
+  const options = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: isDatetime ? 'numeric' : undefined,
+    minute: isDatetime ? 'numeric' : undefined,
+  };
+
+  return dateObj.toLocaleDateString(undefined, options);
+}
 
 /**
  * Revert a date string from format "MMM D, YYYY, h:mm A" to "YYYY-MM-DDThh:mm".
@@ -24,14 +26,14 @@ export function shortenDatetime (datetime) {
  * @returns {string} - The converted date string.
  */
 export function revertShortenedDatetime(datetime) {
-    const dateObj = new Date(datetime);
-    const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const day = String(dateObj.getDate()).padStart(2, '0');
-    const hour = String(dateObj.getHours()).padStart(2, '0');
-    const minute = String(dateObj.getMinutes()).padStart(2, '0');
-  
-    return `${year}-${month}-${day}T${hour}:${minute}`;
-  }
+  const dateObj = new Date(datetime);
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const hour = String(dateObj.getHours()).padStart(2, '0');
+  const minute = String(dateObj.getMinutes()).padStart(2, '0');
+
+  return `${year}-${month}-${day}T${hour}:${minute}`;
+}
 
 

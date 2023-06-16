@@ -3,6 +3,12 @@ import {
 } from 'react-router-dom';
 import { Suspense, lazy, useEffect, useState } from 'react';
 
+// Notification library
+import { Toaster } from 'react-hot-toast';
+
+// Constant
+import { PAGES } from './constants/Link.constants';
+
 // Global style
 import './App.scss';
 
@@ -17,7 +23,7 @@ import redux_store from './redux/store';
 
 // Code spliting, lazy loading component
 const HomePage = lazy(() => import('./pages/Home/Home'));
-const LoginPage = lazy(() => import('./pages/Login/Login'));
+const AuthenticationPage = lazy(() => import('./pages/Authentication/Authentication'));
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -32,25 +38,19 @@ function App() {
   return (
     <Provider store={redux_store}>
       <div className="App">
+        <div className='app__notification'><Toaster/></div>
         <Suspense fallback={<PageLoader />}>
-          {isLoading ? (
-            <PageLoader />
-          ) : (
+          {isLoading ? (<PageLoader />) : (
             <Routes>
-              <Route exact path='/' element={
+              <Route exact path={PAGES.HOME} element={
                 <>
                   <Header></Header>
                   <HomePage></HomePage>
                   <Footer></Footer>
                 </>
               } />
-              <Route exact path='/login' element={
-                <>
-                  <Header></Header>
-                  <LoginPage></LoginPage>
-                  <Footer></Footer>
-                </>
-              } />
+              <Route exact path={PAGES.LOGIN} element={<AuthenticationPage />} />
+              <Route exact path={PAGES.REGISTER} element={<AuthenticationPage />} />
             </Routes>
           )}
         </Suspense>

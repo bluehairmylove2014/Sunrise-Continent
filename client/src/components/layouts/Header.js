@@ -6,6 +6,9 @@ import '../../styles/scss/_header.scss';
 // Images
 import logo_img from '../../assets/images/logos/sc-vertical.png';
 
+// Constant
+import { PAGES } from '../../constants/Link.constants';
+
 // Component
 import NavDropdown from '../common/NavDropdown';
 
@@ -225,8 +228,8 @@ const Header = () => {
                 </form>
                 <nav className="header__main-nav">
                     <ul className='header-main-nav__infor'>
-                        <li><Link to="/about-us">Về chúng tôi</Link></li>
-                        <li><Link to="/about-us">Liên hệ</Link></li>
+                        <li><Link to={PAGES.ABOUT}>Về chúng tôi</Link></li>
+                        <li><Link to={PAGES.CONTACT}>Liên hệ</Link></li>
                         <li>
                             <div className="header-main-nav__language">
                                 {/* <button>
@@ -249,12 +252,12 @@ const Header = () => {
                     </ul>
                     <ul className='header-main-nav__user-interact'>
                         <li>
-                            <Link to="/login" className='header-user-interact__login-btn'>
+                            <Link to={PAGES.LOGIN} className='header-user-interact__login-btn'>
                                 Đăng nhập
                             </Link>
                         </li>
                         <li>
-                            <Link to="/register" className='header-user-interact__register-btn'>
+                            <Link to={PAGES.REGISTER} className='header-user-interact__register-btn'>
                                 Tham gia ngay!
                             </Link>
                         </li>

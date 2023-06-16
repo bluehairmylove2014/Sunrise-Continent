@@ -3,5 +3,11 @@
 // Global configuration
 @import './styles/scss/config.scss';
 
-// // Pages
-// @import './assets/styles/scss/home.scss';
+// App style
+.App {
+    .app__notification {
+        font-family: RobotoBold;
+        font-size: 0.75rem;
+        letter-spacing: -0.5px;
+    }
+}

@@ -236,7 +236,6 @@ const Home = () => {
                 discountAmount: 0.7
             },
         ])
-
     }, [])
 
     return (
@@ -281,19 +280,30 @@ const Home = () => {
                             inputType={'date'}
                         />
                         <ModernInput 
-                            options={countries}
+                            options={[
+                                '1 ngày',
+                                '2 ngày',
+                                '3 ngày',
+                                '4 ngày trở lên',
+                            ]}
                             defaultVal='Bạn dự định sẽ ở lại bao lâu?'
                             search={false}
                             valMultipleLevel={false}
                             inputType={'text'}
                         />
                         <ModernInput 
-                            options={countries}
                             defaultVal='Ngân sách của bạn thế nào?'
-                            search={false}
-                            valMultipleLevel={false}
-                            inputType={'text'}
+                            inputType={'price'}
                         />
+                    </div>
+                    <div className="home-destination-form__submit-field">
+                        <button type='button'>
+                            <i className="fi fi-rs-trash"></i>
+                            Xóa bộ lọc
+                        </button>
+                        <button type='submit'>
+                            Xem kết quả
+                        </button>
                     </div>
                 </form>
             </section>

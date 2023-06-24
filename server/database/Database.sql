@@ -152,24 +152,40 @@ ADD
 
 -------------------------------------------------
 
+--!add account
+INSERT INTO ACCOUNT VALUES (1, 'abc@gmail.com', 'abc123', 100);
+INSERT INTO ACCOUNT VALUES (2, 'bibizero@gmail.com', 'abc123', 45);
+INSERT INTO ACCOUNT VALUES (3, 'meme13@gmail.com', 'abc123', 20);
+INSERT INTO ACCOUNT VALUES (4, 'titanic9@gmail.com', 'abc123', 120);
+INSERT INTO ACCOUNT VALUES (5, 'gaianime@gmail.com', 'abc123', 60);
 
-INSERT INTO HOTEL VALUES (1, N'Khách sạn 1', N'Việt Nam', N'Tp. Hồ Chí Minh', 3)
-INSERT INTO HOTEL VALUES (2, N'Khách sạn 2', N'Việt Nam', N'Tp. Hồ Chí Minh', 3)
-INSERT INTO HOTEL VALUES (3, N'Khách sạn 3', N'Việt Nam', N'Tp. Hồ Chí Minh', 3)
+--!add personal information
+INSERT INTO PERSONAL_DETAILS VALUES (1, N'Trần Văn A', 'abc@gmail.com', '0966188620', '1990-01-01', 'VN', N'Nam', '123 Main St');
+INSERT INTO PERSONAL_DETAILS VALUES (2, N'Nguyễn Văn B', 'bibizero@gmail.com', '0966188621', '1999-02-01', 'VN', N'Nữ', '123 Main St');
+INSERT INTO PERSONAL_DETAILS VALUES (3, N'Ngô Bá K', 'meme13@gmail.com', '0966188622', '1980-01-03', 'VN', N'Nam', '123 Main St');
+INSERT INTO PERSONAL_DETAILS VALUES (4, N'Lê C', 'titanic9@gmail.com', '0966188623', '1990-01-05', 'USA', N'Nữ', '123 Main St');
+INSERT INTO PERSONAL_DETAILS VALUES (5, N'Trần D', 'gaianime@gmail.com', '0966188624', '1990-01-06', 'JP', N'Nam', '123 Main St');
+
+--!add hotel and room upcoming sau :))
 
 
-INSERT INTO ROOM_TYPE VALUES (1, 1, N'Phòng vip 1', 10, 300000, N'Phòng vip view biển')
-INSERT INTO ROOM_TYPE VALUES (1, 2, N'Phòng vip 2', 10, 200000, N'Phòng vip view núi')
-
-INSERT INTO ROOM_TYPE VALUES (2, 1, N'Phòng nhỏ 1', 10, 80000, N'Phòng không vip view không núi')
-
-INSERT INTO ROOM_PICTURE VALUES (1, 1, 'hanoi.com')
+-- INSERT INTO HOTEL VALUES (1, N'Khách sạn 1', N'Việt Nam', N'Tp. Hồ Chí Minh', 3)
+-- INSERT INTO HOTEL VALUES (2, N'Khách sạn 2', N'Việt Nam', N'Tp. Hồ Chí Minh', 3)
+-- INSERT INTO HOTEL VALUES (3, N'Khách sạn 3', N'Việt Nam', N'Tp. Hồ Chí Minh', 3)
 
 
-INSERT INTO ACCOUNT VALUES (1, 'cuong31247@gmail.com', '123456', 0)
-INSERT INTO ACCOUNT VALUES (2, 'lvdat20@clc.fitus.edu.vn', '123456', 0)
+-- INSERT INTO ROOM_TYPE VALUES (1, 1, N'Phòng vip 1', 10, 300000, N'Phòng vip view biển')
+-- INSERT INTO ROOM_TYPE VALUES (1, 2, N'Phòng vip 2', 10, 200000, N'Phòng vip view núi')
+
+-- INSERT INTO ROOM_TYPE VALUES (2, 1, N'Phòng nhỏ 1', 10, 80000, N'Phòng không vip view không núi')
+
+-- INSERT INTO ROOM_PICTURE VALUES (1, 1, 'hanoi.com')
 
 
-INSERT INTO BOOKING_ACCOUNT VALUES (1, 2, 1, '2023-06-21', '2023-06-22', 1)
+-- INSERT INTO ACCOUNT VALUES (1, 'cuong31247@gmail.com', '123456', 0)
+-- INSERT INTO ACCOUNT VALUES (2, 'lvdat20@clc.fitus.edu.vn', '123456', 0)
+
+
+-- INSERT INTO BOOKING_ACCOUNT VALUES (1, 2, 1, '2023-06-21', '2023-06-22', 1)
 
 select * from HOTEL

@@ -28,6 +28,7 @@ CREATE TABLE HOTEL
 	country NVARCHAR(20), -- not null
 	province_city NVARCHAR(20), -- not null
 	full_address NVARCHAR(100),
+	stars INT,
 	rating FLOAT,
 	hotel_description NVARCHAR(1000),
 	PRIMARY KEY (hotel_id)
@@ -76,9 +77,7 @@ CREATE TABLE PERSONAL_DETAILS
 	email_adress NVARCHAR(100),
 	phone_number NVARCHAR(100),
 	date_of_birth DATE,
-	nationality NVARCHAR(100),
 	gender NVARCHAR(100),
-	personal_address NVARCHAR(1000),
 	PRIMARY KEY (account_id)
 )
 
@@ -110,6 +109,19 @@ CREATE TABLE CATEGORY
 	sub_category NVARCHAR(50),
 
 	PRIMARY KEY (category_name, sub_category)
+)
+
+CREATE TABLE REVIEW
+(
+	hotel_id INTEGER,
+	account_id INTEGER,
+	points FLOAT,
+	review NVARCHAR(1000),
+
+	-- review chung cho khách sạn, có j sau này thêm thông tin phòng ở + các tiêu chí khác dô sau.
+	-- mỗi người đc 1 lần review, nếu review lại sẽ là chỉnh sửa. V cho nó dễ sài
+
+	PRIMARY KEY (hotel_id, account_id)
 )
 
 -------------------------------------------------
@@ -150,6 +162,19 @@ ADD
 	FOREIGN KEY(account_id)
 	REFERENCES ACCOUNT
 
+-- đánh giá
+ALTER TABLE REVIEW
+ADD
+	CONSTRAINT FK_REVIEW_HOTEL
+	FOREIGN KEY(hotel_id)
+	REFERENCES HOTEL
+
+ALTER TABLE REVIEW
+ADD
+	CONSTRAINT FK_REVIEW_ACCOUNT
+	FOREIGN KEY(account_id)
+	REFERENCES ACCOUNT
+
 -------------------------------------------------
 
 --!add account
@@ -160,11 +185,11 @@ INSERT INTO ACCOUNT VALUES (4, 'titanic9@gmail.com', 'abc123', 120);
 INSERT INTO ACCOUNT VALUES (5, 'gaianime@gmail.com', 'abc123', 60);
 
 --!add personal information
-INSERT INTO PERSONAL_DETAILS VALUES (1, N'Trần Văn A', 'abc@gmail.com', '0966188620', '1990-01-01', 'VN', N'Nam', '123 Main St');
-INSERT INTO PERSONAL_DETAILS VALUES (2, N'Nguyễn Văn B', 'bibizero@gmail.com', '0966188621', '1999-02-01', 'VN', N'Nữ', '123 Main St');
-INSERT INTO PERSONAL_DETAILS VALUES (3, N'Ngô Bá K', 'meme13@gmail.com', '0966188622', '1980-01-03', 'VN', N'Nam', '123 Main St');
-INSERT INTO PERSONAL_DETAILS VALUES (4, N'Lê C', 'titanic9@gmail.com', '0966188623', '1990-01-05', 'USA', N'Nữ', '123 Main St');
-INSERT INTO PERSONAL_DETAILS VALUES (5, N'Trần D', 'gaianime@gmail.com', '0966188624', '1990-01-06', 'JP', N'Nam', '123 Main St');
+INSERT INTO PERSONAL_DETAILS VALUES (1, N'Trần Văn A', 'abc@gmail.com', '0966188620', '1990-01-01', N'Nam');
+INSERT INTO PERSONAL_DETAILS VALUES (2, N'Nguyễn Văn B', 'bibizero@gmail.com', '0966188621', '1999-02-01', N'Nữ');
+INSERT INTO PERSONAL_DETAILS VALUES (3, N'Ngô Bá K', 'meme13@gmail.com', '0966188622', '1980-01-03', N'Nam');
+INSERT INTO PERSONAL_DETAILS VALUES (4, N'Lê C', 'titanic9@gmail.com', '0966188623', '1990-01-05', N'Nữ');
+INSERT INTO PERSONAL_DETAILS VALUES (5, N'Trần D', 'gaianime@gmail.com', '0966188624', '1990-01-06', N'Nam');
 
 --!add hotel and room upcoming sau :))
 

@@ -20,15 +20,16 @@ GO
 --	PRIMARY KEY (country, province_city)
 --)
 
-
+--!Hotel và Room
 CREATE TABLE HOTEL
 (
 	hotel_id INTEGER,
 	hotel_name NVARCHAR(100),
 	country NVARCHAR(20), -- not null
 	province_city NVARCHAR(20), -- not null
-	stars INTEGER,
-
+	full_address NVARCHAR(100),
+	rating FLOAT,
+	hotel_description NVARCHAR(1000),
 	PRIMARY KEY (hotel_id)
 )
 
@@ -39,9 +40,12 @@ CREATE TABLE ROOM_TYPE
 	room_type_id INTEGER,
 	room_type_name NVARCHAR(100),
 	vacancy INTEGER,
+	size FLOAT,
 	price FLOAT,
-	more_info NVARCHAR(100),
-
+	room_info NVARCHAR(1000),
+	room_view NVARCHAR(1000),
+	facilities NVARCHAR(1000),
+	Smoking NVARCHAR(100),
 	PRIMARY KEY (hotel_id, room_type_id)
 )
 
@@ -55,17 +59,37 @@ CREATE TABLE ROOM_PICTURE
 	PRIMARY KEY (hotel_id, room_type_id, picture_link)
 )
 
-
+--! Acco và payment method
 CREATE TABLE ACCOUNT
 (
 	account_id INTEGER,
 	account_email VARCHAR(50),
 	account_password VARCHAR(50),
 	member_points INTEGER,
-
 	PRIMARY KEY (account_id)
 )
 
+CREATE TABLE PERSONAL_DETAILS
+(
+	account_id INTEGER,
+	full_name NVARCHAR(1000),
+	email_adress NVARCHAR(100),
+	phone_number NVARCHAR(100),
+	date_of_birth DATE,
+	nationality NVARCHAR(100),
+	gender NVARCHAR(100),
+	personal_address NVARCHAR(1000),
+	PRIMARY KEY (account_id)
+)
+
+CREATE TABLE PAYMENT_METHOD
+(
+	account_id INTEGER,
+	cardholder NVARCHAR(1000),
+	card_numver NVARCHAR(100),
+	expir_date NVARCHAR(10),
+	PRIMARY KEY (account_id)
+)
 
 CREATE TABLE BOOKING_ACCOUNT
 (
@@ -89,7 +113,7 @@ CREATE TABLE CATEGORY
 )
 
 -------------------------------------------------
-
+--!Room 
 ALTER TABLE ROOM_TYPE
 ADD
 	CONSTRAINT FK_ROOM_TYPE_HOTEL
@@ -101,6 +125,18 @@ ADD
 	CONSTRAINT FK_ROOM_PICTURE_ROOM_TYPE
 	FOREIGN KEY(hotel_id, room_type_id)
 	REFERENCES ROOM_TYPE
+--!Account
+ALTER TABLE PERSONAL_DETAILS
+ADD
+	CONSTRAINT FK_PERSONAL_DETAILS_ACCOUNT
+	FOREIGN KEY(account_id)
+	REFERENCES ACCOUNT
+
+ALTER TABLE PAYMENT_METHOD
+ADD
+	CONSTRAINT FK_PAYMENT_METHOD_ACCOUNT
+	FOREIGN KEY(account_id)
+	REFERENCES ACCOUNT
 
 ALTER TABLE BOOKING_ACCOUNT
 ADD

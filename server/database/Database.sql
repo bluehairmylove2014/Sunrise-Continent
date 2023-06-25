@@ -162,7 +162,7 @@ ADD
 	FOREIGN KEY(account_id)
 	REFERENCES ACCOUNT
 
--- đánh giá
+--! đánh giá
 ALTER TABLE REVIEW
 ADD
 	CONSTRAINT FK_REVIEW_HOTEL
@@ -191,26 +191,85 @@ INSERT INTO PERSONAL_DETAILS VALUES (3, N'Ngô Bá K', 'meme13@gmail.com', '0966
 INSERT INTO PERSONAL_DETAILS VALUES (4, N'Lê C', 'titanic9@gmail.com', '0966188623', '1990-01-05', N'Nữ');
 INSERT INTO PERSONAL_DETAILS VALUES (5, N'Trần D', 'gaianime@gmail.com', '0966188624', '1990-01-06', N'Nam');
 
---!add hotel and room upcoming sau :))
+--!add hotel 
+INSERT INTO HOTEL VALUES(1, N'Triple E Hotel Metro Ben Thanh', N'Việt Nam', N'Hồ Chí Minh',
+	 N'Phường Nguyễn Thái Bình 146- 148 Đường Ký Con, District 1, Ho Chi Minh City, Vietnam',
+	 3, 8.8, 
+	 N'Tọa lạc ở Thành phố Hồ Chí Minh, cách Bảo tàng Mỹ thuật 300 m, Triple E Hotel Metro Ben Thanh cung cấp chỗ nghỉ 3 sao với trung tâm thể dục.Khách sạn 3 sao này cung cấp WiFi miễn phí, dịch vụ phòng và dịch vụ lễ tân 24 giờ. Nhân viên tại đây có thể thu xếp dịch vụ đưa đón cho khách.');
+
+INSERT INTO HOTEL VALUES(2, N'Nexus House Thao Dien', N'Việt Nam', N'Hồ Chí Minh',
+	N'8/9 Võ Trường Toản, An Phú, Quận 2, TP. Hồ Chí Minh, Việt Nam',
+ 	0, 9.5,
+	N'Located 6.3 km from Vietnam History Museum, Nexus House Thao Dien offers a garden, a terrace and air-conditioned accommodation with a balcony and free WiFi.');
+
+INSERT INTO HOTEL VALUES(3, N'Landmark Plus Luxury - Vinhomes Central Park', N'Việt Nam', N'Hồ Chí Minh', 
+	N'Phường Nguyễn Thái Bình 146- 148 Đường Ký Con, District 1, Ho Chi Minh City, Vietnam',
+	0, 8.1, 
+	N'Tọa lạc tại Thành phố Hồ Chí Minh, Landmark Plus Luxury - Vinhomes Central Park cung cấp chỗ nghỉ với hồ bơi ngoài trời, khu vườn, sảnh khách chung, sân hiên, quầy bar và tầm nhìn ra thành phố.');
+
+--!add room type 
+
+--todo Triple E Hotel Metro Ben Thanh
+INSERT INTO ROOM_TYPE VALUES(1, 1, N'Suite Deluxe', 5, 32, 4950000,
+	N'Suite này có 1 giường đôi cực lớn, 1 giường sofa, TV màn hình phẳng, máy điều hòa và ấm đun nước điện,minibar',
+	N'Hướng nhìn sân trong',
+	N'Bàn làm việc,Két an toàn,TV màn hình phẳng,Dịch vụ báo thức,Khăn tắm,Giường xếp,Tủ lạnh,Minibar,Ấm đun nước điện,Điện thoại,Điều hòa không khí,Giá treo quần áo,Nước rửa tay',
+	N'Không hút thuốc');
+
+INSERT INTO ROOM_TYPE VALUES(1, 2, N'Suite Nhìn Ra Thành Phố', 3, 32, 5670000,
+	N'Suite này có 1 giường đôi cực lớn, 1 giường sofa, TV màn hình phẳng, máy điều hòa và ấm đun nước điện,minibar',
+	N'Nhìn ra địa danh nổi tiếng,Nhìn ra thành phố',
+	N'Bàn làm việc,Két an toàn,TV màn hình phẳng,Dịch vụ báo thức,Khăn tắm,Giường xếp,Tủ lạnh,Minibar,Ấm đun nước điện,Điện thoại,Điều hòa không khí,Giá treo quần áo,Nước rửa tay',
+	N'Không hút thuốc');
+
+INSERT INTO ROOM_TYPE VALUES(1, 3, N'Suite Junior', 10, 28, 3150000,
+	N'Suite này có 1 giường đôi cực lớn, 1 giường sofa, TV màn hình phẳng, máy điều hòa và ấm đun nước điện,minibar',
+	N'Nhìn ra thành phố',
+	N'Bàn làm việc,Két an toàn,TV màn hình phẳng,Dịch vụ báo thức,Khăn tắm,Giường xếp,Tủ lạnh,Minibar,Ấm đun nước điện,Điện thoại,Điều hòa không khí,Giá treo quần áo,Nước rửa tay',
+	N'Không hút thuốc');
+
+--todo Nexus House Thao Dien
+INSERT INTO ROOM_TYPE VALUES(2, 4, N'Studio Nhìn Ra Vườn', 7, 35, 1870000,
+	N'Studio này có 1 giường đôi lớn, có ban công, lối vào riêng và ghế sofa.',
+	N'Ban công,Nhìn ra vườn',
+	N'Bếp,Tủ lạnh,Lò vi sóng,Đồ bếp,Ấm đun nước điện,Máy giặt,Bàn ghế ngoài trời,Lò nướng,Bếp nấu,Bàn làm việc,TV màn hình phẳng,Lò nướng,Đồng hồ báo thức',
+	N'Không hút thuốc');
+
+INSERT INTO ROOM_TYPE VALUES(2, 5, N'Căn Hộ Có Ban Công', 5, 40,2380000,
+	N'Căn hộ này có 1 giường đôi lớn,1 giường sofa, có ban công, nhà bếp',
+	N'Ban công,Nhìn ra thành phố',
+	N'Bếp,Tủ lạnh,Lò vi sóng,Đồ bếp,Ấm đun nước điện,Máy giặt,Bàn ghế ngoài trời,Lò nướng,Bếp nấu,Bàn làm việc,TV màn hình phẳng,Lò nướng,Đồng hồ báo thức',
+	N'Không hút thuốc');
+
+INSERT INTO ROOM_TYPE VALUES(2, 6, N'Căn Hộ Studio', 5, 40,2422500,
+	N'Căn hộ này có 1 giường đôi lớn,1 giường sofa, có ban công,lối vào riêng,nhà bếp',
+	N'Ban công,Nhìn ra thành phố',
+	N'Bếp,Tủ lạnh,Lò vi sóng,Đồ bếp,Ấm đun nước điện,Máy giặt,Bàn ghế ngoài trời,Lò nướng,Bếp nấu,Bàn làm việc,TV màn hình phẳng,Lò nướng,Đồng hồ báo thức',
+	N'Không hút thuốc');
+
+--todo Landmark Plus Luxury - Vinhomes Central Park
+INSERT INTO ROOM_TYPE VALUES(3, 7, N'Căn hộ Deluxe', 10, 55,2475000,
+	N'Căn hộ này có 1 giường đôi lớn, ban công, TV truyền hình cáp và đồ bếp.',
+	N'Ban công,Sân hiên,Nhìn ra vườn,Nhìn ra hồ bơi,Nhìn ra địa danh nổi tiếng,Nhìn ra thành phố,Nhìn ra sông,Hướng nhìn sân trong,Sân trong',
+	N'Bếp,Ghế cao dành cho trẻ em,Tủ lạnh,Lò vi sóng,Đồ bếp,Minibar,Ấm đun nước điện,Bàn ghế ngoài trời,Khu vực ăn uống ngoài trời,Bếp nấu,Máy nướng bánh mỳ,Khu vực phòng ăn,Bàn ăn,Bàn làm việc,TV màn hình phẳng,Đồng hồ báo thức,Bàn ghế ngoài trời,Bàn ủi,Quạt máy,Tiện nghi ủi,Khu vực tiếp khách,Lò vi sóng,Hồ bơi riêng',
+	N'Không hút thuốc');
+
+INSERT INTO ROOM_TYPE VALUES(3, 8, N'Căn Hộ Có Ban Công', 20, 55,2500000,
+	N'Căn hộ này có 1 giường đôi lớn,  ban công, sàn lát gạch/đá cẩm thạch và hồ bơi riêng.',
+	N'Ban công,Sân hiên,Nhìn ra vườn,Nhìn ra hồ bơi,Nhìn ra địa danh nổi tiếng,Nhìn ra thành phố,Nhìn ra sông,Hướng nhìn sân trong,Sân trong',
+	N'Bếp,Ghế cao dành cho trẻ em,Tủ lạnh,Lò vi sóng,Đồ bếp,Minibar,Ấm đun nước điện,Bàn ghế ngoài trời,Khu vực ăn uống ngoài trời,Bếp nấu,Máy nướng bánh mỳ,Khu vực phòng ăn,Bàn ăn,Bàn làm việc,TV màn hình phẳng,Đồng hồ báo thức,Bàn ghế ngoài trời,Bàn ủi,Quạt máy,Tiện nghi ủi,Khu vực tiếp khách,Lò vi sóng,Hồ bơi riêng',
+	N'Không hút thuốc');
+
+INSERT INTO ROOM_TYPE VALUES(3, 9, N'Căn Hộ 2 Phòng Ngủ', 8, 79,3240000,
+	N'Căn hộ này có 2 giường đôi lớn,ban công, lối vào riêng và bếp nấu ăn.',
+	N'Ban công,Sân hiên,Nhìn ra vườn,Nhìn ra hồ bơi,Nhìn ra địa danh nổi tiếng,Nhìn ra thành phố,Nhìn ra sông,Hướng nhìn sân trong,Sân trong',
+	N'Bếp,Ghế cao dành cho trẻ em,Tủ lạnh,Lò vi sóng,Đồ bếp,Minibar,Ấm đun nước điện,Bàn ghế ngoài trời,Khu vực ăn uống ngoài trời,Bếp nấu,Máy nướng bánh mỳ,Khu vực phòng ăn,Bàn ăn,Bàn làm việc,TV màn hình phẳng,Đồng hồ báo thức,Bàn ghế ngoài trời,Bàn ủi,Quạt máy,Tiện nghi ủi,Khu vực tiếp khách,Lò vi sóng,Hồ bơi riêng',
+	N'Không hút thuốc');
+
+--! add room picture 
+--todo Triple E Hotel Metro Ben Thanh
 
 
--- INSERT INTO HOTEL VALUES (1, N'Khách sạn 1', N'Việt Nam', N'Tp. Hồ Chí Minh', 3)
--- INSERT INTO HOTEL VALUES (2, N'Khách sạn 2', N'Việt Nam', N'Tp. Hồ Chí Minh', 3)
--- INSERT INTO HOTEL VALUES (3, N'Khách sạn 3', N'Việt Nam', N'Tp. Hồ Chí Minh', 3)
 
 
--- INSERT INTO ROOM_TYPE VALUES (1, 1, N'Phòng vip 1', 10, 300000, N'Phòng vip view biển')
--- INSERT INTO ROOM_TYPE VALUES (1, 2, N'Phòng vip 2', 10, 200000, N'Phòng vip view núi')
 
--- INSERT INTO ROOM_TYPE VALUES (2, 1, N'Phòng nhỏ 1', 10, 80000, N'Phòng không vip view không núi')
-
--- INSERT INTO ROOM_PICTURE VALUES (1, 1, 'hanoi.com')
-
-
--- INSERT INTO ACCOUNT VALUES (1, 'cuong31247@gmail.com', '123456', 0)
--- INSERT INTO ACCOUNT VALUES (2, 'lvdat20@clc.fitus.edu.vn', '123456', 0)
-
-
--- INSERT INTO BOOKING_ACCOUNT VALUES (1, 2, 1, '2023-06-21', '2023-06-22', 1)
-
-select * from HOTEL

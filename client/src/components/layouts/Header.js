@@ -1,10 +1,11 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom'
 import '../../styles/scss/_header.scss';
 
 // Images
 import logo_img from '../../assets/images/logos/sc-vertical.png';
+import worker_gif from '../../assets/images/graphics/worker.gif';
 
 // Constant
 import { PAGES } from '../../constants/Link.constants';
@@ -12,10 +13,19 @@ import { PAGES } from '../../constants/Link.constants';
 // Component
 import NavDropdown from '../common/NavDropdown';
 
+// Notification
+import { toast } from 'react-hot-toast';
+
+// Helper
+import { toggleClassNoListener, toggleClass } from '../../utils/helpers/ToggleClass'
+
 const Header = () => {
     const [categories, setCategories] = useState([]);
     const [languageChooser, setLanguageChooser] = useState([]);
 
+    const searchboxRef = useRef(null);
+    const overlayRef = useRef(null);
+    
     useEffect(() => {
         setCategories([
             {
@@ -193,6 +203,7 @@ const Header = () => {
         ])
     }, [])
 
+
     // Methods
     const renderCategories = (catelist) => {
         return (
@@ -211,9 +222,19 @@ const Header = () => {
             }</ul>
         )
     }
+    const handleFocusSearchbox = () => {
+        if(searchboxRef.current) {
+            toggleClass(searchboxRef.current, 'active');
+            toggleClassNoListener(overlayRef.current, 'active');
+        }
+        else {
+            toast.error("Search box recognition error");
+        }
+    }
 
     return (
         <header className='header'>
+            <div className='header__overlay' ref={overlayRef}></div>
             <div className="header__logo-container">
                 <img
                     src={logo_img}
@@ -222,25 +243,32 @@ const Header = () => {
                 />
             </div>
             <div className="header__search">
-                <form>
-                    <i className="fi fi-rr-search"></i>
-                    <input type="text" placeholder='Bạn muốn đặt chân đến nơi nào?' />
-                </form>
+                <div className="search-box__wrapper active" ref={searchboxRef}>
+                    <form>
+                        <i className="fi fi-rr-search"></i>
+                        <input 
+                            type="text" 
+                            placeholder='Bạn muốn đặt chân đến nơi nào?' 
+                            onFocus={handleFocusSearchbox}
+                        />
+                    </form>
+                    <div className="search-box__introduction">
+                        <img src={worker_gif} alt="worker_gif" />
+                        <div>
+                            <h3>Hãy thoải mái yêu cầu những gì bạn muốn!</h3>
+                            <p>Bạn có thể nhập bất kỳ yêu cầu gì với bất kì văn phong nào.
+                                Chúng tôi sẽ tự phân tích và tìm ra kết quả hợp lý nhất cho bạn.
+                            </p>
+                            <small>Ví dụ: Hãy tìm cho tôi một căn Villa tại Đà Lạt với hai phòng đơn, một phòng đôi và có bồn tắm ngoài trời </small>
+                        </div>
+                    </div>
+                </div>
                 <nav className="header__main-nav">
                     <ul className='header-main-nav__infor'>
                         <li><Link to={PAGES.ABOUT}>Về chúng tôi</Link></li>
                         <li><Link to={PAGES.CONTACT}>Liên hệ</Link></li>
                         <li>
                             <div className="header-main-nav__language">
-                                {/* <button>
-                                    <i className="fi fi-rs-language"></i>
-                                    Tiếng Việt
-                                    <i className="fi fi-ts-angle-small-down"></i>
-                                </button>
-                                <div className="language__dropdown">
-
-                                </div> */}
-                                
                                 <NavDropdown 
                                     name='Tiếng Việt'
                                     name_il={'fi fi-rs-language'}

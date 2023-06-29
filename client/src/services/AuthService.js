@@ -85,6 +85,32 @@ class AuthService {
         // Send registration request to the server
         // Handle the server response
         // Store the user account in `currentUser` if registration is successful
+
+        let hashPsw = SHA256(password).toString();
+
+        return new Promise((resolve, reject) => {
+            loginApi(email, hashPsw)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(res.status);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    this.authorizeToken = data.token;
+                    localStorage.setItem(VARIABLES.AUTH_TOKEN_LSKEY, data.token);
+                    resolve(data.status_code);
+                })
+                .catch(error => {
+                    // Check if error message is a number (which would mean it's a status code)
+                    const statusCode = parseInt(error.message, 10);
+                    if (!isNaN(statusCode)) {
+                        resolve({ status_code: statusCode });
+                    } else {
+                        reject(error);
+                    }
+                })
+        })
     }
 
     /**

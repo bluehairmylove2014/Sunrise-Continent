@@ -243,7 +243,7 @@ const Header = () => {
                 />
             </div>
             <div className="header__search">
-                <div className="search-box__wrapper active" ref={searchboxRef}>
+                <div className="search-box__wrapper" ref={searchboxRef}>
                     <form>
                         <i className="fi fi-rr-search"></i>
                         <input 

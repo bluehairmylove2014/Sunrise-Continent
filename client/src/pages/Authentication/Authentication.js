@@ -10,6 +10,9 @@ import toast from 'react-hot-toast';
 
 // Constant
 import { PAGES } from '../../constants/Link.constants';
+import { APICacheMarker } from '../../constants/APICacheMarker.constants';
+import { REGEX } from '../../constants/Regex';
+import { MESSAGE } from '../../constants/Message.constants';
 
 // Img
 import logo from "../../assets/images/logos/sc-non-white.png";
@@ -20,16 +23,45 @@ import mountain_day from "../../assets/images/bgs/mountain-day.jpg";
 import { isValidEmail } from '../../utils/validators/email.validator';
 import { isValidPassword } from '../../utils/validators/password.validator';
 
+// react-query
+import { useMutation, useQueryClient } from 'react-query';
+
+// React hook form
+import { useForm } from 'react-hook-form';
+
+// Service
+import AuthService from '../../services/AuthService';
+import BroadcastService from '../../services/BroadcastService';
+
+
 const Authentication = () => {
+    const loginForm = useForm();
+    const registerForm = useForm();
+
     const navigate = useNavigate();
     const location = useLocation();
 
     const [page, setPage] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
-    const loginFormRef = useRef(null);
     const registerFormRef = useRef(null);
     const authenRef = useRef(null);
+
+    const queryClient = useQueryClient();
+
+    BroadcastService.getChannel().onmessage = (event) => {
+        switch(event.data) {
+            case MESSAGE.USER_LOGGED_IN:
+                navigate("/")
+                break;
+            case MESSAGE.USER_REGISTER:
+                navigate("/login")
+                break;
+            default :
+                toast.error('Error while broadcast channel was listening')
+                break;
+        }
+    };
 
     // Hook
     useEffect(() => {
@@ -57,86 +89,87 @@ const Authentication = () => {
     }, [location]);
 
     // Methods
-    const handleFocus = (ev) => {
-        if (ev.target && ev.target.parentNode) {
-            const labelEl = ev.target.parentNode.querySelector('label');
+    const handleFocus = (target) => {
+        if (target && target.parentNode) {
+            const labelEl = target.parentNode.querySelector('label');
             labelEl && labelEl.classList.remove('active');
         }
     }
-    const handleBlur = (ev) => {
-        if (ev.target && ev.target.parentNode) {
-            const labelEl = ev.target.parentNode.querySelector('label');
-            if (labelEl && !ev.target.value.length) {
+    const handleBlur = (target) => {
+        if (target && target.parentNode) {
+            const labelEl = target.parentNode.querySelector('label');
+            if (labelEl && !target.value.length) {
                 labelEl.classList.add('active');
             }
         }
     }
 
-    const handleLogin = (e) => {
-        // Prevent reload by default
-        e.preventDefault();
+    const loginMutation = useMutation(AuthService.login, {
+        retry: 3,
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(APICacheMarker.AUTH_LOGIN);
+            toast.success('Successfully! You will redirect to home page right now!')
+            setTimeout(() => {
+                BroadcastService.postMessage(MESSAGE.USER_LOGGED_IN);
+                loginForm.reset()
+            }, 2000)
+        },
+        onError: (error) => {
+            loginMutation.reset();
+            toast.error('Login error')
+        },
+    })
+    const registerMutation = useMutation(AuthService.register, {
+        retry: 3,
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(APICacheMarker.AUTH_REGISTER);
+            toast.success('Successfully! Please check your email for verification')
+            setTimeout(() => {
+                BroadcastService.postMessage(MESSAGE.USER_REGISTER);
+                registerForm.reset()
+            }, 2000)
+        },
+        onError: (error) => {
+            loginMutation.reset();
+            toast.error('Register error')
+        },
+    })
 
-        // Check form reference
-        if (!loginFormRef.current) {
-            toast.error('Sorry! Some errors here.')
-            return;
-        }
+    const handleLogin = (data) => {
+        data && loginMutation.mutate(data.login_email, data.login_password)
+    }
+    const handleLoginError = (errors) => {
+        if(errors) {
+            if(errors.login_email) {
+                toast.error(errors.login_email.message)
 
-        // Check data valid
-        if (!isValidEmail(loginFormRef.current.email.value)) {
-            toast.error('Email is invalid')
-            return;
+            }
+            else if(errors.login_password) {
+                toast.error(errors.login_password.message)
+            }
         }
-        if (!isValidPassword(loginFormRef.current.password.value)) {
-            toast.error('Password must not be empty and at least 6 characters long')
-            return;
-        }
-
-        // Check in db here
-        toast.success('Successfully! You will redirect to home page right now!')
-        setTimeout(() => {
-            navigate(PAGES.HOME);
-        }, 4000)
     }
 
-    const handleRegister = (e) => {
-        // Prevent reload by default
-        e.preventDefault();
-
-        // Check form reference
-        if (
-            !registerFormRef.current ||
-            !registerFormRef.current.email ||
-            !registerFormRef.current.password ||
-            !registerFormRef.current.confirm_password
-        ) {
-            toast.error('Sorry! Some errors here.')
-            return;
-        }
-
-        // Check data valid
-        const email = registerFormRef.current.email.value;
-        const password = registerFormRef.current.password.value;
-        const confirm_password = registerFormRef.current.confirm_password.value;
-
-        if (!isValidEmail(email)) {
-            toast.error('Email is invalid')
-            return;
-        }
-        if (!isValidPassword(password)) {
-            toast.error('Password must not be empty and at least 6 characters long')
-            return;
-        }
-        if (confirm_password !== password) {
+    const handleRegister = (data) => {
+        if (data.register_password !== data.confirm_password) {
             toast.error('Confirm password does not match')
             return;
         }
+        data && registerMutation.mutate(data.register_email, data.register_password)
+    }
+    const handleRegisterError = (errors) => {
+        if(errors) {
+            if(errors.register_email) {
+                toast.error(errors.register_email.message)
 
-        // Check in db here
-        toast.success('Successfully! You will redirect to login right now!')
-        setTimeout(() => {
-            navigate(PAGES.HOME);
-        }, 4000)
+            }
+            else if(errors.register_password) {
+                toast.error(errors.register_password.message)
+            }
+            else if(errors.confirm_password) {
+                toast.error(errors.confirm_password.message)
+            }
+        }
     }
 
     const changeBackground = (cur_page) => {
@@ -250,8 +283,7 @@ const Authentication = () => {
                             <form
                                 className={`loginForm ${page === PAGES.LOGIN && 'active'}`}
                                 noValidate
-                                ref={loginFormRef}
-                                onSubmit={handleLogin}
+                                onSubmit={loginForm.handleSubmit(handleLogin, handleLoginError)}
                             >
                                 <h3>Login</h3>
                                 <div className='authen-form__input-field'>
@@ -263,11 +295,18 @@ const Authentication = () => {
                                     </label>
                                     <i className="fi fi-ss-envelope"></i>
                                     <input
-                                        name="email"
+                                        name="login_email"
                                         type="email"
                                         id='login-email-input'
-                                        onFocus={handleFocus}
-                                        onBlur={handleBlur}
+                                        onFocus={e => handleFocus(e.target)}
+                                        onBlur={e => handleBlur(e.target)}
+                                        {...loginForm.register("login_email", {
+                                            required: 'Email should not be empty',
+                                            pattern: {
+                                                value: REGEX.VALID_EMAIL,
+                                                message: "Email is not valid!"
+                                            }
+                                        })}
                                     />
                                 </div>
                                 <div className='authen-form__input-field'>
@@ -279,11 +318,18 @@ const Authentication = () => {
                                     </label>
                                     <i className="fi fi-ss-lock"></i>
                                     <input
-                                        name="password"
+                                        name="login_password"
                                         type="password"
                                         id='login-psw-input'
-                                        onFocus={handleFocus}
-                                        onBlur={handleBlur}
+                                        onFocus={e => handleFocus(e.target)}
+                                        onBlur={e => handleBlur(e.target)}
+                                        {...loginForm.register("login_password", {
+                                            required: 'Password should not be empty',
+                                            minLength: {
+                                                value: 6,
+                                                message: "Password must be at least 6 characters long"
+                                            }
+                                        })}
                                     />
                                 </div>
                                 <div className='authen-form__interact-field'>
@@ -304,8 +350,12 @@ const Authentication = () => {
                                         <Link>Forget Password</Link>
                                     </div>
                                 </div>
-                                <button type='submit' className='authen-form__submit-btn'>
-                                    Sign In
+                                <button 
+                                    type='submit' 
+                                    className='authen-form__submit-btn'
+                                    disabled={loginMutation.isLoading}
+                                >
+                                    {loginMutation.isLoading ? "Signing in..." : "Sign In"}
                                 </button>
                                 <button
                                     type='button'
@@ -319,7 +369,7 @@ const Authentication = () => {
                                 className={`registerForm ${page === PAGES.REGISTER && 'active'}`}
                                 noValidate
                                 ref={registerFormRef}
-                                onSubmit={handleRegister}
+                                onSubmit={registerForm.handleSubmit(handleRegister, handleRegisterError)}
                             >
                                 <h3>Just a few more steps!</h3>
                                 <div className='authen-form__input-field'>
@@ -331,11 +381,18 @@ const Authentication = () => {
                                     </label>
                                     <i className="fi fi-ss-envelope"></i>
                                     <input
-                                        name="email"
+                                        name="register_email"
                                         type="email"
                                         id='register-email-input'
-                                        onFocus={handleFocus}
-                                        onBlur={handleBlur}
+                                        onFocus={e => handleFocus(e.target)}
+                                        onBlur={e => handleBlur(e.target)}
+                                        {...registerForm.register("register_email", {
+                                            required: 'Email should not be empty',
+                                            pattern: {
+                                                value: REGEX.VALID_EMAIL,
+                                                message: "Email is not valid!"
+                                            }
+                                        })}
                                     />
                                 </div>
                                 <div className='authen-form__input-field'>
@@ -347,11 +404,18 @@ const Authentication = () => {
                                     </label>
                                     <i className="fi fi-ss-lock"></i>
                                     <input
-                                        name="password"
+                                        name="register_password"
                                         type="password"
                                         id='register-psw-input'
-                                        onFocus={handleFocus}
-                                        onBlur={handleBlur}
+                                        onFocus={e => handleFocus(e.target)}
+                                        onBlur={e => handleBlur(e.target)}
+                                        {...registerForm.register("register_password", {
+                                            required: 'Password should not be empty',
+                                            minLength: {
+                                                value: 6,
+                                                message: "Password must be at least 6 characters long"
+                                            }
+                                        })}
                                     />
                                 </div>
                                 <div className='authen-form__input-field'>
@@ -366,15 +430,19 @@ const Authentication = () => {
                                         name="confirm_password"
                                         type="password"
                                         id='register-cfpsw-input'
-                                        onFocus={handleFocus}
-                                        onBlur={handleBlur}
+                                        onFocus={e => handleFocus(e.target)}
+                                        onBlur={e => handleBlur(e.target)}
+                                        {...registerForm.register("confirm_password", {
+                                            required: 'Confirm password should not be empty'
+                                        })}
                                     />
                                 </div>
                                 <button
                                     type='submit'
                                     className='authen-form__submit-btn'
+                                    disabled={registerMutation.isLoading}
                                 >
-                                    Register now
+                                    {registerMutation.isLoading ? "Wait a second..." : "Register now"}
                                 </button>
                                 <button
                                     type='button'

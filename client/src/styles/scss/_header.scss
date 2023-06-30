@@ -158,8 +158,7 @@
             }
             .header-main-nav__user-interact {
                 margin: 0 2rem;
-                // direction - justify content - align items - flex wrap
-                @include dflex(row, flex-start, center, nowrap);
+                display: none;
                 li {
                     .header-user-interact__login-btn {
                         font-weight: 600;
@@ -185,6 +184,26 @@
                             display: block;
                         }
                     }
+                }
+                .header-main-nav__user-avatar {
+                    button {
+                        display: block;
+                        position: relative;
+                        width: 40px;
+                        height: 40px;
+                        overflow: hidden;
+                        // border - border radius - background color - color - padding - font size
+                        @include normal-btn(none, 50px, white, black, 0, 0.75rem);
+                        img {
+                            object-fit: contain;
+                            width: 100%;
+                            height: 100%
+                        }
+                    }
+                }
+                &.active {
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(row, flex-start, center, nowrap);
                 }
             }
         }

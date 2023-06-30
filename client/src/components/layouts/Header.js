@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom'
 import '../../styles/scss/_header.scss';
 
@@ -12,6 +12,7 @@ import { PAGES } from '../../constants/Link.constants';
 
 // Component
 import NavDropdown from '../common/NavDropdown';
+import UserSidebar from './UserSidebar';
 
 // Notification
 import { toast } from 'react-hot-toast';
@@ -19,12 +20,30 @@ import { toast } from 'react-hot-toast';
 // Helper
 import { toggleClassNoListener, toggleClass } from '../../utils/helpers/ToggleClass'
 
+// Service
+import AuthService from '../../services/AuthService';
+
 const Header = () => {
     const [categories, setCategories] = useState([]);
     const [languageChooser, setLanguageChooser] = useState([]);
+    const [userSidebarStatus, setUserSidebarStatus] = useState(false);
 
     const searchboxRef = useRef(null);
     const overlayRef = useRef(null);
+
+
+    const [loginStatus, setLoginStatus] = useState(false);
+
+    useEffect(() => {
+        AuthService.isLoggedIn()
+            .then(data => {
+                setLoginStatus(data.isValid);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }, []);
+
     
     useEffect(() => {
         setCategories([
@@ -233,80 +252,91 @@ const Header = () => {
     }
 
     return (
-        <header className='header'>
-            <div className='header__overlay' ref={overlayRef}></div>
-            <div className="header__logo-container">
-                <img
-                    src={logo_img}
-                    alt="Sunrise Continent"
-                    className="header__logo-img"
-                />
-            </div>
-            <div className="header__search">
-                <div className="search-box__wrapper" ref={searchboxRef}>
-                    <form>
-                        <i className="fi fi-rr-search"></i>
-                        <input 
-                            type="text" 
-                            placeholder='Bạn muốn đặt chân đến nơi nào?' 
-                            onFocus={handleFocusSearchbox}
-                        />
-                    </form>
-                    <div className="search-box__introduction">
-                        <img src={worker_gif} alt="worker_gif" />
-                        <div>
-                            <h3>Hãy thoải mái yêu cầu những gì bạn muốn!</h3>
-                            <p>Bạn có thể nhập bất kỳ yêu cầu gì với bất kì văn phong nào.
-                                Chúng tôi sẽ tự phân tích và tìm ra kết quả hợp lý nhất cho bạn.
-                            </p>
-                            <small>Ví dụ: Hãy tìm cho tôi một căn Villa tại Đà Lạt với hai phòng đơn, một phòng đôi và có bồn tắm ngoài trời </small>
+        <React.Fragment>
+            <header className='header'>
+                <div className='header__overlay' ref={overlayRef}></div>
+                <div className="header__logo-container">
+                    <img
+                        src={logo_img}
+                        alt="Sunrise Continent"
+                        className="header__logo-img"
+                    />
+                </div>
+                <div className="header__search">
+                    <div className="search-box__wrapper" ref={searchboxRef}>
+                        <form>
+                            <i className="fi fi-rr-search"></i>
+                            <input 
+                                type="text" 
+                                placeholder='Bạn muốn đặt chân đến nơi nào?' 
+                                onFocus={handleFocusSearchbox}
+                            />
+                        </form>
+                        <div className="search-box__introduction">
+                            <img src={worker_gif} alt="worker_gif" />
+                            <div>
+                                <h3>Hãy thoải mái yêu cầu những gì bạn muốn!</h3>
+                                <p>Bạn có thể nhập bất kỳ yêu cầu gì với bất kì văn phong nào.
+                                    Chúng tôi sẽ tự phân tích và tìm ra kết quả hợp lý nhất cho bạn.
+                                </p>
+                                <small>Ví dụ: Hãy tìm cho tôi một căn Villa tại Đà Lạt với hai phòng đơn, một phòng đôi và có bồn tắm ngoài trời </small>
+                            </div>
                         </div>
                     </div>
+                    <nav className="header__main-nav">
+                        <ul className='header-main-nav__infor'>
+                            <li><Link to={PAGES.ABOUT}>Về chúng tôi</Link></li>
+                            <li><Link to={PAGES.CONTACT}>Liên hệ</Link></li>
+                            <li>
+                                <div className="header-main-nav__language">
+                                    <NavDropdown 
+                                        name='Tiếng Việt'
+                                        name_il={'fi fi-rs-language'}
+                                        name_ir={'fi fi-ts-angle-small-down'}
+                                        options={languageChooser}
+                                    />
+                                </div>
+                            </li>
+                        </ul>
+                        <ul className={`header-main-nav__user-interact ${!loginStatus && 'active'}`}>
+                            <li>
+                                <Link to={PAGES.LOGIN} className='header-user-interact__login-btn'>
+                                    Đăng nhập
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to={PAGES.REGISTER} className='header-user-interact__register-btn'>
+                                    Tham gia ngay!
+                                </Link>
+                            </li>
+                        </ul>
+                        {/* user avatar when logged in */}
+                        <ul className={`header-main-nav__user-interact ${loginStatus && 'active'}`}>
+                            <li className='header-main-nav__user-avatar'>
+                                <button onClick={() => setUserSidebarStatus(!userSidebarStatus)}>
+                                    <img src="https://rialloer.sirv.com/Sunrise-Continent/Users/IMG_0615-min%20(1).jpg?w=500&h=500" alt="user-avatar" />
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
-                <nav className="header__main-nav">
-                    <ul className='header-main-nav__infor'>
-                        <li><Link to={PAGES.ABOUT}>Về chúng tôi</Link></li>
-                        <li><Link to={PAGES.CONTACT}>Liên hệ</Link></li>
-                        <li>
-                            <div className="header-main-nav__language">
-                                <NavDropdown 
-                                    name='Tiếng Việt'
-                                    name_il={'fi fi-rs-language'}
-                                    name_ir={'fi fi-ts-angle-small-down'}
-                                    options={languageChooser}
-                                />
-                            </div>
-                        </li>
-                    </ul>
-                    <ul className='header-main-nav__user-interact'>
-                        <li>
-                            <Link to={PAGES.LOGIN} className='header-user-interact__login-btn'>
-                                Đăng nhập
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to={PAGES.REGISTER} className='header-user-interact__register-btn'>
-                                Tham gia ngay!
-                            </Link>
-                        </li>
-                    </ul>
+                <nav className="header__product-nav">
+                    {renderCategories(categories)}
+                    <button className='product-nav__wish-list'>
+                        <span className='wishlist-btn__label'>
+                            <i className="fi fi-rs-heart"></i>
+                            Wish List
+                        </span>
+                        <span className='wishlist-btn__content'>0&nbsp;</span>
+                        <span className='wishlist-btn__content'>i</span>
+                        <span className='wishlist-btn__content'>t</span>
+                        <span className='wishlist-btn__content'>e</span>
+                        <span className='wishlist-btn__content'>m</span>
+                    </button>
                 </nav>
-            </div>
-            <nav className="header__product-nav">
-                {renderCategories(categories)}
-                <button className='product-nav__wish-list'>
-                    <span className='wishlist-btn__label'>
-                        <i className="fi fi-rs-heart"></i>
-                        Wish List
-                    </span>
-                    <span className='wishlist-btn__content'>0&nbsp;</span>
-                    <span className='wishlist-btn__content'>i</span>
-                    <span className='wishlist-btn__content'>t</span>
-                    <span className='wishlist-btn__content'>e</span>
-                    <span className='wishlist-btn__content'>m</span>
-                </button>
-            </nav>
-        </header>
+            </header>
+            <UserSidebar isActive={userSidebarStatus} callback={useCallback((status) => setUserSidebarStatus(status), [setUserSidebarStatus])}/>
+        </React.Fragment>
     );
 }
 

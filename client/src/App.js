@@ -1,7 +1,10 @@
 import {
-  Routes, Route, useNavigate
+  Routes, Route, useNavigate, useLocation
 } from 'react-router-dom';
 import { Suspense, lazy, useEffect, useState } from 'react';
+
+// Service
+import BroadcastService from './services/BroadcastService';
 
 // React-query
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -11,10 +14,11 @@ import AxiosMockAdapter from "axios-mock-adapter";
 import axios from "axios";
 
 // Notification library
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 // Constant
 import { PAGES } from './constants/Link.constants';
+import { MESSAGE } from './constants/Message.constants';
 
 // Global style
 import './App.scss';
@@ -54,12 +58,38 @@ mock.onPost("http://localhost:2014/api/v1/auth/register").reply(() => {
     }, 2000);
   });
 });
+mock.onPost("http://localhost:2014/api/v1/auth/checkLogin").reply(200, { 
+  isValid: true, 
+  status_code: 200 
+});
+
 
 // Tạo instance cho QueryClient
 const queryClient = new QueryClient();
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  
+  BroadcastService.getChannel().onmessage = (event) => {
+    switch(event.data) {
+        case MESSAGE.USER_LOGGED_IN:
+            if (location.pathname === "/login" || location.pathname === "/register") {
+                navigate("/")
+            }
+            break;
+        case MESSAGE.USER_REGISTER:
+            if (location.pathname === "/register") {
+                navigate("/login")
+            }
+            break;
+        default :
+            toast.error('Error while broadcast channel was listening')
+            break;
+    }
+};
 
   useEffect(() => {
     const timer = setTimeout(() => {

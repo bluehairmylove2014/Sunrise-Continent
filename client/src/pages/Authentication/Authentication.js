@@ -19,19 +19,15 @@ import logo from "../../assets/images/logos/sc-non-white.png";
 import mountain_night from "../../assets/images/bgs/mountain-night.jpg";
 import mountain_day from "../../assets/images/bgs/mountain-day.jpg";
 
-// Validator utils
-import { isValidEmail } from '../../utils/validators/email.validator';
-import { isValidPassword } from '../../utils/validators/password.validator';
-
 // react-query
 import { useMutation, useQueryClient } from 'react-query';
-
-// React hook form
-import { useForm } from 'react-hook-form';
 
 // Service
 import AuthService from '../../services/AuthService';
 import BroadcastService from '../../services/BroadcastService';
+
+// Form
+import { Controller, useForm } from 'react-hook-form';
 
 
 const Authentication = () => {
@@ -48,20 +44,6 @@ const Authentication = () => {
     const authenRef = useRef(null);
 
     const queryClient = useQueryClient();
-
-    BroadcastService.getChannel().onmessage = (event) => {
-        switch(event.data) {
-            case MESSAGE.USER_LOGGED_IN:
-                navigate("/")
-                break;
-            case MESSAGE.USER_REGISTER:
-                navigate("/login")
-                break;
-            default :
-                toast.error('Error while broadcast channel was listening')
-                break;
-        }
-    };
 
     // Hook
     useEffect(() => {
@@ -111,7 +93,7 @@ const Authentication = () => {
             toast.success('Successfully! You will redirect to home page right now!')
             setTimeout(() => {
                 BroadcastService.postMessage(MESSAGE.USER_LOGGED_IN);
-                loginForm.reset()
+                navigate("/");
             }, 2000)
         },
         onError: (error) => {
@@ -126,7 +108,7 @@ const Authentication = () => {
             toast.success('Successfully! Please check your email for verification')
             setTimeout(() => {
                 BroadcastService.postMessage(MESSAGE.USER_REGISTER);
-                registerForm.reset()
+                navigate("/login");
             }, 2000)
         },
         onError: (error) => {
@@ -136,15 +118,15 @@ const Authentication = () => {
     })
 
     const handleLogin = (data) => {
-        data && loginMutation.mutate(data.login_email, data.login_password)
+        data && loginMutation.mutate(data)
     }
     const handleLoginError = (errors) => {
-        if(errors) {
-            if(errors.login_email) {
+        if (errors) {
+            if (errors.login_email) {
                 toast.error(errors.login_email.message)
 
             }
-            else if(errors.login_password) {
+            else if (errors.login_password) {
                 toast.error(errors.login_password.message)
             }
         }
@@ -158,15 +140,15 @@ const Authentication = () => {
         data && registerMutation.mutate(data.register_email, data.register_password)
     }
     const handleRegisterError = (errors) => {
-        if(errors) {
-            if(errors.register_email) {
+        if (errors) {
+            if (errors.register_email) {
                 toast.error(errors.register_email.message)
 
             }
-            else if(errors.register_password) {
+            else if (errors.register_password) {
                 toast.error(errors.register_password.message)
             }
-            else if(errors.confirm_password) {
+            else if (errors.confirm_password) {
                 toast.error(errors.confirm_password.message)
             }
         }
@@ -174,10 +156,10 @@ const Authentication = () => {
 
     const changeBackground = (cur_page) => {
         if (authenRef && authenRef.current) {
-            if(cur_page === PAGES.LOGIN) {
+            if (cur_page === PAGES.LOGIN) {
                 authenRef.current.style.backgroundImage = `url(${mountain_night})`;
             }
-            else if(cur_page === PAGES.REGISTER) {
+            else if (cur_page === PAGES.REGISTER) {
                 authenRef.current.style.backgroundImage = `url(${mountain_day})`;
             }
             else {
@@ -294,19 +276,26 @@ const Authentication = () => {
                                         Email
                                     </label>
                                     <i className="fi fi-ss-envelope"></i>
-                                    <input
+                                    <Controller
                                         name="login_email"
-                                        type="email"
-                                        id='login-email-input'
-                                        onFocus={e => handleFocus(e.target)}
-                                        onBlur={e => handleBlur(e.target)}
-                                        {...loginForm.register("login_email", {
+                                        control={loginForm.control}
+                                        defaultValue=""
+                                        rules={{
                                             required: 'Email should not be empty',
                                             pattern: {
                                                 value: REGEX.VALID_EMAIL,
                                                 message: "Email is not valid!"
                                             }
-                                        })}
+                                        }}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                type="email"
+                                                id='login-email-input'
+                                                onFocus={e => handleFocus(e.target)}
+                                                onBlur={e => handleBlur(e.target)}
+                                            />
+                                        )}
                                     />
                                 </div>
                                 <div className='authen-form__input-field'>
@@ -317,27 +306,41 @@ const Authentication = () => {
                                         Password
                                     </label>
                                     <i className="fi fi-ss-lock"></i>
-                                    <input
+                                    <Controller
                                         name="login_password"
-                                        type="password"
-                                        id='login-psw-input'
-                                        onFocus={e => handleFocus(e.target)}
-                                        onBlur={e => handleBlur(e.target)}
-                                        {...loginForm.register("login_password", {
+                                        control={loginForm.control}
+                                        defaultValue=""
+                                        rules={{
                                             required: 'Password should not be empty',
                                             minLength: {
                                                 value: 6,
                                                 message: "Password must be at least 6 characters long"
                                             }
-                                        })}
+                                        }}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                type="password"
+                                                id='login-psw-input'
+                                                onFocus={e => handleFocus(e.target)}
+                                                onBlur={e => handleBlur(e.target)}
+                                            />
+                                        )}
                                     />
                                 </div>
                                 <div className='authen-form__interact-field'>
                                     <div>
-                                        <input
-                                            name="remember"
-                                            type="checkbox"
-                                            id='login-remember-input'
+                                        <Controller
+                                            name="login_remember"
+                                            control={loginForm.control}
+                                            defaultValue={false}
+                                            render={({ field }) => (
+                                                <input
+                                                    {...field}
+                                                    type="checkbox"
+                                                    id='login-remember-input'
+                                                />
+                                            )}
                                         />
                                         <label
                                             htmlFor="login-remember-input"
@@ -350,8 +353,8 @@ const Authentication = () => {
                                         <Link>Forget Password</Link>
                                     </div>
                                 </div>
-                                <button 
-                                    type='submit' 
+                                <button
+                                    type='submit'
                                     className='authen-form__submit-btn'
                                     disabled={loginMutation.isLoading}
                                 >
@@ -380,19 +383,26 @@ const Authentication = () => {
                                         Email
                                     </label>
                                     <i className="fi fi-ss-envelope"></i>
-                                    <input
+                                    <Controller
                                         name="register_email"
-                                        type="email"
-                                        id='register-email-input'
-                                        onFocus={e => handleFocus(e.target)}
-                                        onBlur={e => handleBlur(e.target)}
-                                        {...registerForm.register("register_email", {
+                                        control={registerForm.control}
+                                        defaultValue=""
+                                        rules={{
                                             required: 'Email should not be empty',
                                             pattern: {
                                                 value: REGEX.VALID_EMAIL,
                                                 message: "Email is not valid!"
                                             }
-                                        })}
+                                        }}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                type="email"
+                                                id='register-email-input'
+                                                onFocus={e => handleFocus(e.target)}
+                                                onBlur={e => handleBlur(e.target)}
+                                            />
+                                        )}
                                     />
                                 </div>
                                 <div className='authen-form__input-field'>
@@ -403,19 +413,26 @@ const Authentication = () => {
                                         Password
                                     </label>
                                     <i className="fi fi-ss-lock"></i>
-                                    <input
+                                    <Controller
                                         name="register_password"
-                                        type="password"
-                                        id='register-psw-input'
-                                        onFocus={e => handleFocus(e.target)}
-                                        onBlur={e => handleBlur(e.target)}
-                                        {...registerForm.register("register_password", {
+                                        control={registerForm.control}
+                                        defaultValue=""
+                                        rules={{
                                             required: 'Password should not be empty',
                                             minLength: {
                                                 value: 6,
                                                 message: "Password must be at least 6 characters long"
                                             }
-                                        })}
+                                        }}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                type="password"
+                                                id='register-psw-input'
+                                                onFocus={e => handleFocus(e.target)}
+                                                onBlur={e => handleBlur(e.target)}
+                                            />
+                                        )}
                                     />
                                 </div>
                                 <div className='authen-form__input-field'>
@@ -426,15 +443,22 @@ const Authentication = () => {
                                         Confirm password
                                     </label>
                                     <i className="fi fi-ss-lock"></i>
-                                    <input
+                                    <Controller
                                         name="confirm_password"
-                                        type="password"
-                                        id='register-cfpsw-input'
-                                        onFocus={e => handleFocus(e.target)}
-                                        onBlur={e => handleBlur(e.target)}
-                                        {...registerForm.register("confirm_password", {
+                                        control={registerForm.control}
+                                        defaultValue=""
+                                        rules={{
                                             required: 'Confirm password should not be empty'
-                                        })}
+                                        }}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                type="password"
+                                                id='register-cfpsw-input'
+                                                onFocus={e => handleFocus(e.target)}
+                                                onBlur={e => handleBlur(e.target)}
+                                            />
+                                        )}
                                     />
                                 </div>
                                 <button

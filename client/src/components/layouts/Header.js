@@ -1,10 +1,10 @@
-
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom'
 import '../../styles/scss/_header.scss';
 
 // Images
-import logo_img from '../../assets/images/logos/sc-vertical.png';
+import logoVerticalImg from '../../assets/images/logos/sc-vertical.png';
+import logoHorizontalImg from '../../assets/images/logos/sc-horizontal.png';
 import worker_gif from '../../assets/images/graphics/worker.gif';
 
 // Constant
@@ -17,22 +17,26 @@ import UserSidebar from './UserSidebar';
 // Notification
 import { toast } from 'react-hot-toast';
 
-// Helper
-import { toggleClassNoListener, toggleClass } from '../../utils/helpers/ToggleClass'
-
 // Service
 import AuthService from '../../services/AuthService';
+
+// React-hook-form
+import { useForm } from 'react-hook-form';
 
 const Header = () => {
     const [categories, setCategories] = useState([]);
     const [languageChooser, setLanguageChooser] = useState([]);
     const [userSidebarStatus, setUserSidebarStatus] = useState(false);
-
-    const searchboxRef = useRef(null);
-    const overlayRef = useRef(null);
-
-
+    const [logoSrc, setLogoSrc] = useState(logoVerticalImg);
     const [loginStatus, setLoginStatus] = useState(false);
+
+    const headerRef = useRef(null);
+
+    const {
+        handleSubmit,
+        register,
+        formState: { errors }
+    } = useForm();
 
     useEffect(() => {
         AuthService.isLoggedIn()
@@ -241,47 +245,60 @@ const Header = () => {
             }</ul>
         )
     }
+    const handleClickOutside = event => {
+        if (headerRef.current && !headerRef.current.contains(event.target)) {
+            headerRef.current.classList.remove("active");
+            setLogoSrc(logoVerticalImg);
+            document.removeEventListener('click', handleClickOutside);
+        }
+    }
     const handleFocusSearchbox = () => {
-        if(searchboxRef.current) {
-            toggleClass(searchboxRef.current, 'active');
-            toggleClassNoListener(overlayRef.current, 'active');
+        if(headerRef.current) {
+            if(!headerRef.current.classList.contains('active')) {
+                headerRef.current.classList.add("active")
+                setLogoSrc(logoHorizontalImg);
+                document.addEventListener('click', handleClickOutside);
+            }
         }
-        else {
-            toast.error("Search box recognition error");
-        }
+    }
+    const onSearch = (data) => {
+        alert(data.search)
     }
 
     return (
         <React.Fragment>
-            <header className='header'>
-                <div className='header__overlay' ref={overlayRef}></div>
+            <header className='header' ref={headerRef}>
+                <div className='header__overlay'></div>
                 <div className="header__logo-container">
                     <img
-                        src={logo_img}
+                        src={logoSrc}
                         alt="Sunrise Continent"
                         className="header__logo-img"
+                        id="header-logo"
                     />
                 </div>
                 <div className="header__search">
-                    <div className="search-box__wrapper" ref={searchboxRef}>
-                        <form>
-                            <i className="fi fi-rr-search"></i>
+                    <div className="search-box__wrapper">
+                        <form onSubmit={handleSubmit(onSearch)}>
+                            <button type="submit">
+                                <i className="fi fi-rr-search"></i>
+                            </button>
                             <input 
+                                name="search"
+                                defaultValue=""
                                 type="text" 
                                 placeholder='Bạn muốn đặt chân đến nơi nào?' 
                                 onFocus={handleFocusSearchbox}
+                                onKeyDown={e => {
+                                    if(e.key === 'Enter') {
+                                        handleSubmit(onSearch)
+                                    }
+                                }}
+                                {...register("search", {
+                                    required: true
+                                })}
                             />
                         </form>
-                        <div className="search-box__introduction">
-                            <img src={worker_gif} alt="worker_gif" />
-                            <div>
-                                <h3>Hãy thoải mái yêu cầu những gì bạn muốn!</h3>
-                                <p>Bạn có thể nhập bất kỳ yêu cầu gì với bất kì văn phong nào.
-                                    Chúng tôi sẽ tự phân tích và tìm ra kết quả hợp lý nhất cho bạn.
-                                </p>
-                                <small>Ví dụ: Hãy tìm cho tôi một căn Villa tại Đà Lạt với hai phòng đơn, một phòng đôi và có bồn tắm ngoài trời </small>
-                            </div>
-                        </div>
                     </div>
                     <nav className="header__main-nav">
                         <ul className='header-main-nav__infor'>
@@ -334,6 +351,16 @@ const Header = () => {
                         <span className='wishlist-btn__content'>m</span>
                     </button>
                 </nav>
+                <div className="search-box__introduction">
+                    <img src={worker_gif} alt="worker_gif" />
+                    <div>
+                        <h3>Hãy thoải mái yêu cầu những gì bạn muốn!</h3>
+                        <p>Bạn có thể nhập bất kỳ yêu cầu gì với bất kì văn phong nào.
+                            Chúng tôi sẽ tự phân tích và tìm ra kết quả hợp lý nhất cho bạn.
+                        </p>
+                        <small>Ví dụ: Hãy tìm cho tôi một căn Villa tại Đà Lạt với hai phòng đơn, một phòng đôi và có bồn tắm ngoài trời </small>
+                    </div>
+                </div>
             </header>
             <UserSidebar isActive={userSidebarStatus} callback={useCallback((status) => setUserSidebarStatus(status), [setUserSidebarStatus])}/>
         </React.Fragment>

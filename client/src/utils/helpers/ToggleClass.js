@@ -4,7 +4,7 @@
  */
 function handleClickOutside(focusArea, className, event) {
     const target = event.target;
-
+    console.log('clickoutside')
     if (!focusArea.contains(target)) {
         focusArea.classList.remove(className);
         document.removeEventListener('click', focusArea._handleClickOutside);

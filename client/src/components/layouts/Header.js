@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import '../../styles/scss/_header.scss';
 
 // Images
@@ -32,9 +32,12 @@ const Header = () => {
 
     const headerRef = useRef(null);
 
+    const navigate = useNavigate();
+
     const {
         handleSubmit,
         register,
+        reset,
         formState: { errors }
     } = useForm();
 
@@ -245,11 +248,14 @@ const Header = () => {
             }</ul>
         )
     }
+    const handleBlurSearchbox = () => {
+        headerRef.current.classList.remove("active");
+        setLogoSrc(logoVerticalImg);
+        document.removeEventListener('click', handleClickOutside);
+    }
     const handleClickOutside = event => {
         if (headerRef.current && !headerRef.current.contains(event.target)) {
-            headerRef.current.classList.remove("active");
-            setLogoSrc(logoVerticalImg);
-            document.removeEventListener('click', handleClickOutside);
+            handleBlurSearchbox()
         }
     }
     const handleFocusSearchbox = () => {
@@ -262,7 +268,17 @@ const Header = () => {
         }
     }
     const onSearch = (data) => {
-        alert(data.search)
+        reset();
+        handleBlurSearchbox();
+        // Handle split keys
+        const keys = ['phong doi'];
+        let query = '/search?key='
+
+        keys.forEach(k => {
+            query += k 
+        })
+
+        navigate(query)
     }
 
     return (

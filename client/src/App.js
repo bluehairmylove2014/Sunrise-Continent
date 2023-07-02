@@ -34,6 +34,7 @@ import redux_store from './redux/store';
 
 // Code spliting, lazy loading component
 const HomePage = lazy(() => import('./pages/Home/Home'));
+const SearchPage = lazy(() => import('./pages/Search/Search'));
 const AuthenticationPage = lazy(() => import('./pages/Authentication/Authentication'));
 
 // Tạo mock cho axios
@@ -114,6 +115,13 @@ function App() {
                   <>
                     <Header></Header>
                     <HomePage></HomePage>
+                    <Footer></Footer>
+                  </>
+                } />
+                <Route path={PAGES.SEARCH} element={
+                  <>
+                    <Header></Header>
+                    <SearchPage></SearchPage>
                     <Footer></Footer>
                   </>
                 } />

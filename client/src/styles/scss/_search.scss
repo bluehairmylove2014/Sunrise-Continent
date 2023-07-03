@@ -1,0 +1,60 @@
+@import './mixin';
+
+.search {
+    .search__banner {
+        background-color: var(--linen);
+        width: 100vw;
+        height: 70px;
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, center, center, nowrap);
+
+        img {
+            height: 50%;
+            width: auto;
+            margin-right: 1rem;
+        }
+        h5 {
+            margin-right: 0.5rem;
+        }
+        button {
+            font-weight: 500;
+            margin-left: 1rem;
+            // border - border radius - background color - color - padding - font size
+            @include normal-btn(1px solid var(--butterfly-bush), 5px, transparent, var(--butterfly-bush), 6px 15px, 0.6rem);
+            
+            &:hover {
+                color: white;
+                background-color: var(--soft-blue);
+                border-color: var(--soft-blue);
+            }
+        }
+    }
+    .search__criteria-board {
+        width: 100vw;
+        height: 140px;
+        background-color: var(--butterfly-bush);
+        padding: 15px 0;
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, center, center, nowrap);
+        .search-cb__location {
+            background-color: white;
+            border-radius: 10px;
+            width: fit-content;
+            height: 50px;
+            padding: 0 15px; 
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, flex-start, center, nowrap);
+            input {
+                outline: none;
+                border: none;
+                font-family: Montserrat;
+            }
+        }
+    }
+    // .filterboard {
+
+    // }
+    // .hotalresult {
+
+    // }
+}

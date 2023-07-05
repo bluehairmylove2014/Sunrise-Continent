@@ -36,10 +36,11 @@
         padding: 15px 0;
         // direction - justify content - align items - flex wrap
         @include dflex(row, center, center, nowrap);
-        gap: 15px;
+        gap: 10px;
         .search__submit-btn {
+            height: 50px;
             // border - border radius - background color - color - padding - font size
-            @include normal-btn(none, 5px, var(--ultramarine-blue), white, 6px 15px, 0.6rem);
+            @include normal-btn(none, 10px, var(--ultramarine-blue), white, 6px 15px, 0.6rem);
         }
     }
     // .filterboard {

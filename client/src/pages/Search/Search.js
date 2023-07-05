@@ -5,11 +5,13 @@ import '../../styles/scss/_search.scss';
 import TravelImg from '../../assets/images/graphics/travel.png';
 
 // Component
-import Filterboard from './Filterboard';
-import HotelResult from './HotelResult';
+// import Filterboard from './Filterboard';
+// import HotelResult from './HotelResult';
+import BannerInput from '../../components/common/BannerInput';
 
 // React-hook-form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import { BANNER_INPUT_TYPE } from '../../constants/Variables.constants';
 
 const Search = () => {
     const criteriaBoardForm = useForm();
@@ -23,49 +25,26 @@ const Search = () => {
                     Tìm hiểu thêm
                 </button>
             </div>
-            <div className="search__criteria-board">
-                <div className="search-cb__location">
-                    <button>
-                        <i className="fi fi-rs-search"></i>
-                    </button>
-                    <Controller
-                        name='location'
-                        control={criteriaBoardForm.control}
-                        defaultValue={"Lodon"}
-                        rules={{
-                            require: true
-                        }}
-                        render={({ field }) => (
-                          <input
-                            {...field}
-                          />
-                        )}
-                    />
-                </div>
-                <div className="search-cb__time">
-                    <button>
-                        <i className="fi fi-rs-search"></i>
-                    </button>
-                    <Controller
-                        name='start_date'
-                        control={criteriaBoardForm.control}
-                        defaultValue={""}
-                        rules={{
-                            require: true
-                        }}
-                        render={({ field }) => (
-                            <>
-                                <label>
-                                </label>
-                                <input
-                                    {...field}
-                                    type='datetime-local'
-                                />
-                            </>
-                        )}
-                    />
-                </div>
-            </div>
+            <form className="search__criteria-board">
+                <BannerInput
+                    type={BANNER_INPUT_TYPE.LOCATION} 
+                    control = {criteriaBoardForm.control}
+                    defaultValue = {"London"}
+                />
+                <BannerInput
+                    type={BANNER_INPUT_TYPE.DATE_TIME_DOUBLE} 
+                    control = {criteriaBoardForm.control}
+                    defaultValue = {"London"}
+                />
+                <BannerInput
+                    type={BANNER_INPUT_TYPE.PEOPLE_AND_ROOM} 
+                    control = {criteriaBoardForm.control}
+                    defaultValue = {"London"}
+                />
+                <button type='submit' className='search__submit-btn'>
+                    Tìm kiếm
+                </button>
+            </form>
             {/* <Filterboard />
             <HotelResult /> */}
         </main>

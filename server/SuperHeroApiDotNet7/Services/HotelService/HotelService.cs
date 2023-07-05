@@ -32,7 +32,8 @@ namespace SunriseServer.Services.HotelService
 
         public async Task<List<Hotel>> GetAllHotels()
         {
-            var hotels = await _context.Hotels.ToListAsync();
+            var handler = new HotelHandler(_context);
+            var hotels = await handler.GetAll();
             return hotels;
         }
 

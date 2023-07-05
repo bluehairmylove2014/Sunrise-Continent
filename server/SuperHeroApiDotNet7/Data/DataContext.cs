@@ -16,7 +16,8 @@ namespace SunriseServer.Data
         {
             base.OnConfiguring(optionsBuilder);
             //optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=superherodb;Trusted_Connection=true;TrustServerCertificate=true;");
-            optionsBuilder.UseSqlServer("Data Source=LAPTOP-JPSCHNGH\\DATSQL;Initial Catalog=SunriseServer;Trusted_Connection=true;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Data Source=LAPTOP-F9GU6QVP;Initial Catalog=Sunrise_continent_db;Trusted_Connection=true;TrustServerCertificate=true");
+            // LAPTOP-JPSCHNGH\\DATSQL SunriseServer
             
         }
 

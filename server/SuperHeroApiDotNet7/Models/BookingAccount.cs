@@ -2,9 +2,9 @@
 {
     public class BookingAccount
     {
-        public int Id { get; set; }
+        public int AccountId { get; set; }
         public int HotelId { get; set; }
-        public string RoomType { get; set; } = string.Empty;
+        public int RoomTypeId { get; set; }
         public DateOnly CheckIn { get; set; }
         public DateOnly CheckOut { get; set; }
         public int NumberOfRoom { get; set; }

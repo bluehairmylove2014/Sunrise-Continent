@@ -1,25 +1,23 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import '../../styles/scss/_common_component.scss'
-
-// React hook form
 import { Controller } from 'react-hook-form';
-
-// Constants
-import { BANNER_INPUT_TYPE } from '../../constants/Variables.constants';
+import { BANNER_INPUT } from '../../constants/Variables.constants';
 import { formatDate } from '../../utils/helpers/ShortenDatetime';
+import { isDateGreaterThan } from '../../utils/helpers/Datetime';
+import { toggleClass } from '../../utils/helpers/ToggleClass';
 
 const BannerInput = ({
     name,
     title,
     description,
     type,
-    control,
-    watcher,
-    defaultValue,
-    min
+    form,
+    min,
 }) => {
+    const { control, watch, setValue } = form;
+    const perRef = useRef(null);
 
-    const renderLocationInput = (name, control, defaultVal) => {
+    const renderLocationInput = (name) => {
         return (
             <div className="common-component__banner-input">
                 <button>
@@ -28,13 +26,13 @@ const BannerInput = ({
                 <Controller
                     name={name}
                     control={control}
-                    defaultValue={defaultVal}
                     rules={{
                         require: true
                     }}
                     render={({ field }) => (
                         <input
                             {...field}
+                            placeholder='Tìm kiếm địa điểm'
                         />
                     )}
                 />
@@ -46,11 +44,13 @@ const BannerInput = ({
         input && input.showPicker();
     }
     const renderDatetimeDoubleInput = (
-        name,
-        control,
-        watcher,
-        defaultVal
+        name
     ) => {
+        const startDate = watch(name[0]);
+        const endDate = watch(name[1]);
+        const startDateMin = new Date().toISOString().substring(0,16);
+        const endDateMin = startDateMin;
+        // const endDateMin = startDate ? (isDateGreaterThan(startDateMin, startDate) ? startDateMin : startDate) : startDateMin;
         return (
             <>
                 <button
@@ -62,27 +62,31 @@ const BannerInput = ({
                     <Controller
                         name={name[0]}
                         control={control}
-                        defaultValue={defaultVal[0]}
                         rules={{
                             require: true
                         }}
                         render={({ field }) => (
-                            <>
-                                <input
-                                    {...field}
-                                    type='datetime-local'
-                                />
-                            </>
+                            <input
+                                {...field}
+                                type='datetime-local'
+                                min={startDateMin}
+                                onChange={(e) => {
+                                    setValue(name[0], e.target.value)
+                                    if(isDateGreaterThan(e.target.value, endDate)) {
+                                        setValue(name[1], e.target.value)
+                                    }
+                                }}
+                            />
                         )}
                     />
                     <div className="cc-banner-input__multiline-value">
                         <p>{
-                            formatDate(watcher(name[0]) || defaultVal[0]).dateMonthYear ||
-                            "Start date"
+                            formatDate(startDate).dateMonthYear ||
+                            "Ngày đến"
                         }</p>
-                        <p>{
-                            formatDate(watcher(name[0]) || defaultVal[0]).days
-                        }</p>
+                        <small>{
+                            formatDate(startDate).days
+                        }</small>
                     </div>
 
                 </button>
@@ -95,7 +99,6 @@ const BannerInput = ({
                     <Controller
                         name={name[1]}
                         control={control}
-                        defaultValue={defaultVal[1]}
                         rules={{
                             require: true
                         }}
@@ -104,18 +107,25 @@ const BannerInput = ({
                                 <input
                                     {...field}
                                     type='datetime-local'
+                                    min={endDateMin}
+                                    onChange={(e) => {
+                                        setValue(name[1], e.target.value)
+                                        if(!isDateGreaterThan(e.target.value, startDate)) {
+                                            setValue(name[0], e.target.value)
+                                        }
+                                    }}
                                 />
                             </>
                         )}
                     />
                     <div className="cc-banner-input__multiline-value">
                         <p>{
-                            formatDate(watcher(name[1]) || defaultVal[1]).dateMonthYear ||
-                            "End date"
+                            formatDate(endDate).dateMonthYear ||
+                            "Ngày đi"
                         }</p>
-                        <p>{
-                            formatDate(watcher(name[1]) || defaultVal[1]).days
-                        }</p>
+                        <small>{
+                            formatDate(endDate).days
+                        }</small>
                     </div>
                 </button>
             </>
@@ -124,44 +134,37 @@ const BannerInput = ({
     const renderOption = (
         input_name,
         description,
-        control,
-        watcher,
         label, 
-        defaultValue, 
         min
     ) => {
-        let isMin = false;
-        if(watcher) {
-            isMin = watcher(input_name) === min;
-        }
-        else {
-            isMin = defaultValue === min;
-        }
-        console.log({input_name,
-            description,
-            control,
-            watcher,
-            label, 
-            defaultValue, 
-            min})
+        const currentVal = watch(input_name) || min;
+        const isMin = (currentVal === min);
         return (
-            <div className="per-dropdown__option">
+            <div className="per-dropdown__option" key={label}>
                 <p>
                     {label}
                     <small><br/>{description}</small>
                 </p>
                 <div className="per-dropdown-option__counter">
                     <button
-                        className={`option-counter__btn--decrease ${isMin ? 'disable' : ''}`}
+                        type='button'
+                        className={`option-counter__btn--decrease`}
                         disabled={isMin}
+                        onClick={() => {
+                            setValue(input_name, currentVal - 1)
+                        }}
                     >
                         <i className="fi fi-rr-minus-small"></i>
                     </button>
                     <p className='option-counter__display-val'>
-                        {watcher(input_name) || defaultValue}
+                        {currentVal}
                     </p>
                     <button
+                        type='button'
                         className={`option-counter__btn--increase`}
+                        onClick={() => {
+                            setValue(input_name, currentVal + 1)
+                        }}
                     >
                         <i className="fi fi-rr-plus-small"></i>
                     </button>
@@ -169,7 +172,6 @@ const BannerInput = ({
                 <Controller
                         name={input_name}
                         control={control}
-                        defaultValue={defaultValue}
                         rules={{
                             require: true
                         }}
@@ -178,6 +180,7 @@ const BannerInput = ({
                                 <input
                                     {...field}
                                     type='number'
+                                    value={field.value ?? min}
                                 />
                             </>
                         )}
@@ -189,23 +192,23 @@ const BannerInput = ({
         name,
         title,
         description,
-        control,
-        watcher,
-        defaultValue,
         min
     ) => {
         return (
             <>
-                <div className="cc-banner-input__per-wrapper">
+                <div className="cc-banner-input__per-wrapper" ref={perRef}>
                     <button
                         className="cc-banner-input__people-e-room"
                         type='button'
-                        onClick={showPickerInput}
+                        onClick={() => toggleClass(perRef.current, 'active')}
                     >
                         <i className="fi fi-tr-people"></i>
                         <div className="cc-banner-input__multiline-value">
-                            <p>{`${watcher(name[1])} người lớn, ${watcher(name[2])} trẻ em`}</p>
-                            <p>{`${watcher(name[0])} phòng`}</p>
+                            <p>
+                                {`${watch(name[1]) || min[1]} người lớn, 
+                                ${watch(name[2]) || min[2]} trẻ em`}
+                            </p>
+                            <small>{`${watch(name[0]) || min[0]} phòng`}</small>
                         </div>
                     </button>
                     <div className="cc-banner-input__per-dropdown">
@@ -213,10 +216,7 @@ const BannerInput = ({
                             name.map((n, i) => renderOption(
                                 n,
                                 description[i],
-                                control,
-                                watcher,
                                 title[i], 
-                                defaultValue[i], 
                                 min[i]
                             ))
                         }
@@ -230,31 +230,23 @@ const BannerInput = ({
     return (
         <div className="common-component__banner-input-wrapper">
             {
-                type === BANNER_INPUT_TYPE.LOCATION &&
+                type === BANNER_INPUT.LOCATION.TYPE &&
                 renderLocationInput(
-                    name,
-                    control,
-                    defaultValue
+                    name
                 )
             }
             {
-                type === BANNER_INPUT_TYPE.DATE_TIME_DOUBLE &&
+                type === BANNER_INPUT.DATE_TIME_DOUBLE.TYPE &&
                 renderDatetimeDoubleInput(
-                    name,
-                    control,
-                    watcher,
-                    defaultValue
+                    name
                 )
             }
             {
-                type === BANNER_INPUT_TYPE.PEOPLE_AND_ROOM &&
+                type === BANNER_INPUT.PEOPLE_AND_ROOM.TYPE &&
                 renderPeopleRoomInput(
                     name,
                     title,
                     description,
-                    control,
-                    watcher,
-                    defaultValue,
                     min
                 )
             }

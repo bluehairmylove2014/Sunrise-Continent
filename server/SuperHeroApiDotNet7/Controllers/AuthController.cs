@@ -44,8 +44,9 @@ namespace SunriseServer.Controllers
             acc.PasswordHash = passwordHash;
             acc.PasswordSalt = passwordSalt;
 
+            var token = CreateToken(acc);
             var result = await _accService.AddAccount(acc);
-            return Ok(result);
+            return Ok(token);
         }
 
         [HttpPost("login")]

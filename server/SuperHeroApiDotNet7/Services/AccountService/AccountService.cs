@@ -17,9 +17,10 @@ namespace SunriseServer.Services.AccountService
 
         public async Task<List<Account>> AddAccount(Account acc)
         {
-            _context.Accounts.Add(acc);
-            await _context.SaveChangesAsync();
-            return await _context.Accounts.ToListAsync();
+            var handler = new AccountHandler(_context);
+
+            int rowAffected = await handler.Add(acc);
+            return await handler.GetAll();
         }
 
         public string GetMyName()

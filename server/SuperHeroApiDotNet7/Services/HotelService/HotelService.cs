@@ -39,7 +39,9 @@ namespace SunriseServer.Services.HotelService
 
         public async Task<Hotel?> GetSingleHotel(int id)
         {
-            var hotel = await _context.Hotels.FindAsync(id);
+            var handler = new HotelHandler(_context);
+            var hotel = await handler.GetSingle(id);
+
             if (hotel is null)
                 return null;
 

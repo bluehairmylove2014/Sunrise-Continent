@@ -107,6 +107,11 @@ GO
 
 --drop function dbo.USF_GetNextAccountId
 
+CREATE OR ALTER PROC USP_GetAllAccount
+AS
+	SELECT * FROM ACCOUNT
+GO
+
 CREATE OR ALTER PROC USP_GetNextAccountId(
 	@tablename SYSNAME,
 	@columnname SYSNAME
@@ -142,17 +147,14 @@ CREATE OR ALTER PROC USP_AddAccount
 	--@Id INTEGER,
 	--@MemberPoint INTEGER,
 	@Username VARCHAR(50),
-	@PasswordHash VARBINARY(100),
-	@PasswordSalt VARBINARY(100),
-	@RefreshToken VARCHAR(100),
-	@TokenCreated DATETIME,
-	@TokenExpires DATETIME
+	@PasswordHash VARCHAR(500),
+	@PasswordSalt VARCHAR(500)
 AS
 	BEGIN TRY
 		DECLARE @Id INT
 		EXEC @Id = USP_GetNextAccountId 'ACCOUNT', 'Id'
 
-		INSERT INTO ACCOUNT VALUES (@Id, 0, @Username, @PasswordHash, @PasswordSalt, @RefreshToken, @TokenCreated, @TokenExpires)
+		INSERT INTO ACCOUNT VALUES (@Id, 0, @Username, @PasswordHash, @PasswordSalt)
 		RETURN 0
 	END TRY
 
@@ -161,6 +163,9 @@ AS
 		RETURN 1
 	END CATCH
 GO
+
+Select * from ACCOUNT
+
 
 --declare @Test1 VARBINARY(100)
 --SET @Test1 = CONVERT(VARBINARY(100), '0x9473FBCCBC01AF', 1)
@@ -173,9 +178,14 @@ GO
 --	@TokenExpires = '07-21-2026';
 --GO
 
---Select * from ACCOUNT
+exec dbo.USP_AddAccount 
+	@Username = 'string', 
+	@PasswordHash = '02aae36cd942563781d4d6b585c6709bd98f3a956b02788441a44e36440a006783e3618ac5cfb3cca8e17ebde6b8fbe0bfb0ab86bcdb850cf25bffd1b880949f', 
+	@PasswordSalt = '36587a5573c37d53a9260a5da14d1738d7214010210011532a4de41f9c214d37b23bdc7df6a7df45d344862a778b40fa9132b383f419ed432d96339362c136f58e4afe1281bc8671d09f8d225a2a07ab42a014456f32a735216b3a73e33dbe39ab8bbb7a560040d3c021c8c103b8f92dc96df68f70bf35cd4d0f3e681b48832d';
 
---delete from ACCOUNT where Username like 'hahaha31247'
+
+select * from ACCOUNT
+delete from ACCOUNT where Username like 'string'
 --delete from ACCOUNT where Id in (3, 5)
 
 --DECLARE @IntVariable INT = -10;
@@ -196,16 +206,13 @@ GO
 --select count (Id) from ACCOUNT
 
 --GO
-
+GO
 CREATE OR ALTER PROC USP_UpdateAccount
 	@Id INTEGER,
 	@MemberPoint INTEGER,
 	@Username VARCHAR(50),
-	@PasswordHash VARBINARY(100),
-	@PasswordSalt VARBINARY(100),
-	@RefreshToken VARCHAR(100),
-	@TokenCreated DATETIME,
-	@TokenExpires DATETIME
+	@PasswordHash VARCHAR(500),
+	@PasswordSalt VARCHAR(500)
 AS
 	BEGIN TRY
 		IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @Id)
@@ -219,10 +226,7 @@ AS
 			MemberPoint = @MemberPoint,
 			Username = @Username,
 			PasswordHash = @PasswordHash,
-			PasswordSalt = @PasswordSalt,
-			RefreshToken = @RefreshToken,
-			TokenCreated = @TokenCreated,
-			TokenExpires = @TokenExpires
+			PasswordSalt = @PasswordSalt
 		WHERE Id = @Id
 		RETURN 0
 	END TRY

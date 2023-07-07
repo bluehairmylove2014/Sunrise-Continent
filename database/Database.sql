@@ -63,11 +63,8 @@ CREATE TABLE ACCOUNT
     MemberPoint INTEGER,
         
     Username VARCHAR(50),
-    PasswordHash VARBINARY(100),
-    PasswordSalt VARBINARY(100),
-    RefreshToken VARCHAR(100),
-    TokenCreated DATETIME,
-    TokenExpires DATETIME,
+    PasswordHash VARCHAR(500),
+    PasswordSalt VARCHAR(500),
 
 	PRIMARY KEY (Id)
 )

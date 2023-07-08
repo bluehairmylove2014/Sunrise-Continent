@@ -2,8 +2,8 @@
 {
     public class RoomType
     {
-        public int Id { get; set; }
         public int HotelId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int Vacancy { get; set; }
         public double Size { get; set; }

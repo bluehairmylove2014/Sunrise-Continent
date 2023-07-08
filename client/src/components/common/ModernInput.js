@@ -3,6 +3,8 @@ import '../../styles/scss/_common_component.scss';
 
 import { debounce } from 'lodash';
 
+import BudgetRange from './BudgetRange';
+
 // Helpers
 import {
     toggleClass
@@ -11,12 +13,9 @@ import {
     shortenDatetime
 } from '../../utils/helpers/ShortenDatetime'
 import {
-    convertNumberToCurrency,
-    convertCurrencyToNumber
+    convertNumberToCurrency
 } from '../../utils/helpers/MoneyConverter';
-
-// Slider library
-import Slider from "@mui/material/Slider";
+import { CONVERSION_FACTOR } from '../../constants/Variables.constants';
 
 
 const ModernInput = ({
@@ -26,9 +25,7 @@ const ModernInput = ({
     valMultipleLevel=false,
     inputType='text'
 }) => {
-    const conversion_factor = 100000;
     const [selectedDate, setSelectedDate] = useState(null);
-    const [priceRange, setPriceRange] = useState([0, 1000]);
 
     const [upLevelOps, setUpLevelOps] = useState([]);
     const [normalOps, setNormalOps] = useState([]);
@@ -86,12 +83,11 @@ const ModernInput = ({
         setSelectedDate(date);
         setInputVal(shortenDatetime(date))
     }
-    const handlePriceChange = (e, price) => {
-        setPriceRange(price);
+    const handlePriceChange = (price) => {
         const debouncedSetInputVal = debounce(() => setInputVal(`
-            ${convertNumberToCurrency('vietnamdong', price[0]*conversion_factor)}
+            ${convertNumberToCurrency('vietnamdong', price[0]*CONVERSION_FACTOR.ALL_TRIP)}
              đến 
-            ${convertNumberToCurrency('vietnamdong', price[1]*conversion_factor)}
+            ${convertNumberToCurrency('vietnamdong', price[1]*CONVERSION_FACTOR.ALL_TRIP)}
         `), 1000);
         debouncedSetInputVal();
     }
@@ -149,17 +145,7 @@ const ModernInput = ({
                 {inputType === 'price' && (
                     <>
                         <p>Ngân sách dự kiến</p>
-                        <Slider 
-                            value={priceRange} 
-                            onChange={handlePriceChange} 
-                            valueLabelDisplay="off"  
-                            min={0}
-                            max={1000}
-                        /> 
-                        <div className='cc-modern-input__price-detail'>
-                            <span>{convertNumberToCurrency('vietnamdong', priceRange[0]*conversion_factor)}</span>
-                            <span>{convertNumberToCurrency('vietnamdong', priceRange[1]*conversion_factor)}</span>
-                        </div>
+                        <BudgetRange callbackOnchange={handlePriceChange}/>
                     </>
                 )}
             </div>

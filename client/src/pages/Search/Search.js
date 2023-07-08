@@ -30,6 +30,7 @@ const Search = () => {
     const criteriaBoardForm = useForm({
         defaultValues
     });
+    const searchBoardForm = useForm();
 
     const onResearch = (data) => {
         setCriteria(data);
@@ -69,11 +70,37 @@ const Search = () => {
                     Tìm kiếm
                 </button>
             </form>
-            <Filterboard />
+            <Filterboard form={searchBoardForm}/>
+            <div className="search__results">
+                <div className="results__title-container">
+                    <h3 className='results__title'>
+                        Kết quả cho&nbsp;
+                        <span>
+                            {criteria[BANNER_INPUT.LOCATION.INPUT_NAME]}
+                        </span>
+                        <span>
+                            {Object.keys(criteria).length > 1 && ` và +${Object.keys(criteria).length} tuỳ chọn khác`}
+                        </span>
+                    </h3>
+                    <small>Hiển thị 0 - 20 trong {Number(4102014).toLocaleString('en')} kết quả</small>
+                </div>
+                <hr />
+                <div className="results__subtitle-container">
+                    <div className="result__subtitle">
+                        <p>Thời gian được tính theo giờ địa phương</p>
+                        <p>Đã bao gồm thuế và phí</p>
+                    </div>
+                    <div className="results__sort-container">
+                        <button>
+                            <span>Sắp xếp theo</span>
+                            <i className="fi fi-ts-angle-small-down"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
             {/* <HotelResult /> */}
         </main>
     );
 }
 
 export default Search;
-

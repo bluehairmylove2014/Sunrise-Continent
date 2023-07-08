@@ -19,3 +19,8 @@ export const BANNER_INPUT = {
         DESCRIPTION: ['', '18 tuổi trở lên', '0 - 17 tuổi']
     }
 };
+
+export const CONVERSION_FACTOR = {
+    ALL_TRIP: 100000,
+    PER_ONE: 100000
+}

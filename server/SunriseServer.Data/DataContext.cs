@@ -1,9 +1,9 @@
 ﻿global using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
-using SunriseServer.Models;
+using SunriseServerCore.Models;
 using System;
 
-namespace SunriseServer.Data
+namespace SunriseServerData
 {
     public class DataContext : DbContext
     {
@@ -14,11 +14,13 @@ namespace SunriseServer.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            // connection string: "Data Source=LAPTOP-F9GU6QVP;Initial Catalog=SunriseServer;Trusted_Connection=true;TrustServerCertificate=true"
             base.OnConfiguring(optionsBuilder);
-            //optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=superherodb;Trusted_Connection=true;TrustServerCertificate=true;");
-            optionsBuilder.UseSqlServer("Data Source=LAPTOP-F9GU6QVP;Initial Catalog=SunriseServer;Trusted_Connection=true;TrustServerCertificate=true");
-            // LAPTOP-JPSCHNGH\\DATSQL SunriseServer
-            
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Hotel> Hotels { get; set; }

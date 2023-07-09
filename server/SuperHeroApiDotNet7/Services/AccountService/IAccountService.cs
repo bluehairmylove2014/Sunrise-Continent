@@ -1,4 +1,6 @@
-﻿namespace SunriseServer.Services.AccountService
+﻿using SunriseServerCore.Models;
+
+namespace SunriseServer.Services.AccountService
 {
     public interface IAccountService
     {

@@ -1,46 +1,41 @@
 ﻿using SunriseServer.Services;
-
+using SunriseServerCore.Models;
+using SunriseServerData;
 namespace SunriseServer.Services.HotelService
 {
     public class HotelService : IHotelService
     {
-        private readonly DataContext _context;
+        private readonly UnitOfWork _unitOfWork;
 
-        public HotelService(DataContext context)
+        public HotelService(UnitOfWork uof)
         {
-            _context = context;
+            _unitOfWork = uof;
         }
 
-        public async Task<List<Hotel>> AddHotel(Hotel hotel)
+        public async Task<Hotel> AddHotel(Hotel hotel)
         {
-            _context.Hotels.Add(hotel);
-            await _context.SaveChangesAsync();
-            return await _context.Hotels.ToListAsync();
+            var result = _unitOfWork.HotelRepo.Create(hotel);
+            await _unitOfWork.SaveChangesAsync();
+            return result;
         }
 
-        public async Task<List<Hotel>?> DeleteHotel(int id)
+        public async Task<Hotel> DeleteHotel(int id)
         {
-            var hotel = await _context.Hotels.FindAsync(id);
-            if (hotel is null)
-                return null;
+            var result = _unitOfWork.HotelRepo.Delete(id);
+            await _unitOfWork.SaveChangesAsync();
 
-            _context.Hotels.Remove(hotel);
-            await _context.SaveChangesAsync();
-
-            return await _context.Hotels.ToListAsync();
+            return result;
         }
 
         public async Task<List<Hotel>> GetAllHotels()
         {
-            var handler = new HotelHandler(_context);
-            var hotels = await handler.GetAll();
-            return hotels;
+            var listHotels = await _unitOfWork.HotelRepo.GetAllAsync();
+            return listHotels.ToList();
         }
 
-        public async Task<Hotel?> GetSingleHotel(int id)
+        public async Task<Hotel> GetSingleHotel(int id)
         {
-            var handler = new HotelHandler(_context);
-            var hotel = await handler.GetSingle(id);
+            var hotel = await _unitOfWork.HotelRepo.GetByIdAsync(id);
 
             if (hotel is null)
                 return null;
@@ -48,24 +43,12 @@ namespace SunriseServer.Services.HotelService
             return hotel;
         }
 
-        public async Task<List<Hotel>?> UpdateHotel(int id, Hotel request)
+        public async Task<Hotel> UpdateHotel(int id, Hotel request)
         {
-            var hotel = await _context.Hotels.FindAsync(id);
-            if (hotel is null)
-                return null;
-            
-            hotel.Name = request.Name;
-            hotel.Country = request.Country;
-            hotel.ProvinceCity = request.ProvinceCity;
-            hotel.Address = request.Address;
-            hotel.Stars = request.Stars;
-            hotel.Rating = request.Rating;
-            hotel.Description = request.Description;
-            hotel.Image = request.Image;
+            var result = _unitOfWork.HotelRepo.Update(request);
+            await _unitOfWork.SaveChangesAsync();
 
-            await _context.SaveChangesAsync();
-
-            return await _context.Hotels.ToListAsync();
+            return result;
         }
     }
 }

@@ -1,14 +1,16 @@
 global using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
-using SunriseServer.Models;
+using SunriseServerData;
 using SunriseServer.Common.Helper;
 using System;
 using System.Text;
+using SunriseServerCore.Models;
 
 namespace SunriseServer.Data
 {
     class AccountHandler
     {
+        // khong chay proc trong day, chay trong folder Repositories
         private DataContext _context;
 
         public AccountHandler(DataContext context)

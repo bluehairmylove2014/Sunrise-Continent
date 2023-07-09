@@ -1,5 +1,5 @@
-global using SunriseServer.Models;
-global using SunriseServer.Data;
+global using SunriseServerCore.Models;
+global using SunriseServerData;
 using SunriseServer.Services.HotelService;
 using SunriseServer.Services.AccountService;
 using Microsoft.OpenApi.Models;
@@ -19,7 +19,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IHotelService, HotelService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddDbContext<DataContext>();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -50,6 +49,8 @@ builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
         policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
     }));
 
+builder.Services.AddServicesData();
+builder.Services.AddUnitOfWork(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Sunrise")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

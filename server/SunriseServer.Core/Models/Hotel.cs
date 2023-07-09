@@ -1,6 +1,6 @@
-﻿namespace SunriseServer.Models
+﻿namespace SunriseServerCore.Models
 {
-    public class Hotel
+    public class Hotel : ModelBase
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;

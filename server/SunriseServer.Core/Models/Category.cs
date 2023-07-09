@@ -1,4 +1,4 @@
-﻿namespace SunriseServer.Models
+﻿namespace SunriseServerCore.Models
 {
     public class Category
     {

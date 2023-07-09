@@ -3,10 +3,10 @@
     public interface IHotelService
     {
         Task<List<Hotel>> GetAllHotels();
-        Task<Hotel?> GetSingleHotel(int id);
-        Task<List<Hotel>> AddHotel(Hotel hero);
-        Task<List<Hotel>?> UpdateHotel(int id, Hotel request);
-        Task<List<Hotel>?> DeleteHotel(int id);
+        Task<Hotel> GetSingleHotel(int id);
+        Task<Hotel> AddHotel(Hotel hero);
+        Task<Hotel> UpdateHotel(int id, Hotel request);
+        Task<Hotel> DeleteHotel(int id);
     }
 };
 

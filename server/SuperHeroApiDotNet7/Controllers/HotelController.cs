@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SunriseServer.Common.Constant;
 using SunriseServer.Common.Enum;
-using SunriseServer.Models;
+using SunriseServerCore.Models;
 using SunriseServer.Services.HotelService;
 
 namespace SunriseServer.Controllers

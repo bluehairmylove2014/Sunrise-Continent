@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SunriseServer.Common.Constant;
-using SunriseServer.Common.Enum;
 using SunriseServer.Dtos;
-using SunriseServer.Models;
+using SunriseServerCore.Models;
 using SunriseServer.Services.AccountService;
-using SunriseServer.Services.HotelService;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;

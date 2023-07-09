@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SunriseServer.Models;
+using SunriseServerData;
+using SunriseServerCore.Models;
 using System.Security.Claims;
 
 namespace SunriseServer.Services.AccountService
@@ -17,10 +18,11 @@ namespace SunriseServer.Services.AccountService
 
         public async Task<List<Account>> AddAccount(Account acc)
         {
-            var handler = new AccountHandler(_context);
+            return null;
+            //var handler = new AccountHandler(_context);
 
-            int rowAffected = await handler.Add(acc);
-            return await handler.GetAll();
+            //int rowAffected = await handler.Add(acc);
+            //return await handler.GetAll();
         }
 
         public string GetMyName()

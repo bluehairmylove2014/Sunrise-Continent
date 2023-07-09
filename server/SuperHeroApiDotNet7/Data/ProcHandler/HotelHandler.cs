@@ -1,13 +1,15 @@
 global using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
-using SunriseServer.Models;
+using SunriseServerCore.Models;
+using SunriseServerData;
 using System;
 
 namespace SunriseServer.Data
 {
     class HotelHandler
     {
-        private DataContext _context;
+        // khong chay proc trong day, chay trong folder Repositories
+        private readonly DataContext _context;
 
         public HotelHandler(DataContext context)
         {
@@ -20,7 +22,7 @@ namespace SunriseServer.Data
             return result;
         }
 
-        public async Task<Hotel?> GetSingle(int id)
+        public async Task<Hotel> GetSingle(int id)
         {
             var result = await _context.Hotels.FromSqlInterpolated($"USP_GetHotelById @Id = {id}").ToListAsync();
             return result.FirstOrDefault();

@@ -10,7 +10,6 @@ const UserSidebar = ({isActive, callback}) => {
     const sidebarRef = useRef(null);
 
     useEffect(() => {
-        console.log('adasd')
         if(sidebarRef.current.classList.contains('active') && !isActive) {
             sidebarRef.current.classList.remove('active');
             callback(false)

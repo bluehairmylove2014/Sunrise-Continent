@@ -169,7 +169,6 @@ class AuthService {
         }
         else {
             // Session storage
-            console.log('session:', sessionStorage.getItem(VARIABLES.AUTH_TOKEN_LSKEY))
             return sessionStorage.getItem(VARIABLES.AUTH_TOKEN_LSKEY);
         }
     }

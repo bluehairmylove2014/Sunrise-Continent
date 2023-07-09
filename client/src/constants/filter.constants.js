@@ -110,23 +110,28 @@ export const GUEST_RATINGS = {
 export const ROOM_OPTIONS = {
     BREAKFAST_INCLUDED: {
         INPUT_NAME: "breakfast_included",
-        LABEL: "Có ăn sáng"
+        LABEL: "Có ăn sáng",
+        ICON: "fi fi-ss-soup"
     },
     DINNER_INCLUDED: {
         INPUT_NAME: "dinner_included",
-        LABEL: "Bao gồm bữa tối"
+        LABEL: "Bao gồm bữa tối",
+        ICON: "fi fi-sr-room-service"
     },
     FREE_SNACKS: {
         INPUT_NAME: "free_snacks",
-        LABEL: "Miễn phí đồ ăn nhẹ"
+        LABEL: "Miễn phí đồ ăn nhẹ",
+        ICON: "fi fi-sr-hamburger-soda"
     },
     LUNCH_INCLUDED: {
         INPUT_NAME: "lunch_included",
-        LABEL: "Bao gồm bữa trưa"
+        LABEL: "Bao gồm bữa trưa",
+        ICON: "fi fi-sr-burger-fries"
     },
     AFTERNOON_TEA: {
         INPUT_NAME: "afternoon_tea",
-        LABEL: "Trà chiều"
+        LABEL: "Trà chiều",
+        ICON: "fi fi-ss-mug-hot-alt"
     },
 }
 

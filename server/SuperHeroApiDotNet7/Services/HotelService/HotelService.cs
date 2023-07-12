@@ -14,8 +14,8 @@ namespace SunriseServer.Services.HotelService
 
         public async Task<Hotel> AddHotel(Hotel hotel)
         {
-            var result = _unitOfWork.HotelRepo.Create(hotel);
-            await _unitOfWork.SaveChangesAsync();
+            var result = await _unitOfWork.HotelRepo.CreateAsync(hotel);
+            // await _unitOfWork.SaveChangesAsync();
             return result;
         }
 

@@ -23,7 +23,7 @@ namespace SunriseServerData.Repositories
         {
             return _context.Add(entity).Entity;
         }
-        public async Task<TModel> CreateAsync(TModel entity)
+        public virtual async Task<TModel> CreateAsync(TModel entity)
         {
             var result = await _context.AddAsync(entity);
             return result.Entity;

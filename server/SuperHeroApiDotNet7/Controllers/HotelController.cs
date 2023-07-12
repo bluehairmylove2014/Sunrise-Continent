@@ -3,20 +3,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SunriseServer.Common.Constant;
 using SunriseServer.Common.Enum;
+using SunriseServer.Common.DataClass;
+using SunriseServer.Common.Helper;
 using SunriseServerCore.Models;
 using SunriseServer.Services.HotelService;
+using SunriseServer.Services.RoomService;
 
 namespace SunriseServer.Controllers
 {
+    
+
     [Route("api/[controller]")]
     [ApiController]
     public class HotelController : ControllerBase
     {
         readonly IHotelService _hotelService;
+        readonly IRoomService _roomService;
 
-        public HotelController(IHotelService hotelService)
+        public HotelController(IHotelService hotelService, IRoomService roomService)
         {
             _hotelService = hotelService;
+            _roomService = roomService;
         }
 
         [HttpGet]
@@ -35,6 +42,42 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
+        // Xin chào cu
+        [HttpGet("vailon")]
+        public async Task<ActionResult<List<HotelClientData>>> GetAllHotelInfo()
+        {
+            var result = await _hotelService.GetAllHotels();
+
+            var finalResult = new List<HotelClientData>();
+            foreach (var item in result)
+            {
+                var servicesList = new List<string>();
+                var facilitiesList = new List<string>();
+                var services = await _roomService.GetHotelServices(item.Id);
+                var facilities = await _roomService.GetHotelFacility(item.Id);
+
+                services.ForEach(p => {
+                    servicesList.Add(p.Value);
+                });
+
+                facilities.ForEach(p => {
+                    facilitiesList.Add(p.Value);
+                });
+
+                HotelClientData variable = new HotelClientData {};
+
+                SetPropValueByReflection.AddYToX(variable, item);
+
+                variable.Facilities = facilitiesList;
+                variable.Services = servicesList;
+
+                finalResult.Add(variable);
+            }
+
+            return Ok(finalResult);
+        }
+
+        // 
         [HttpPost, Authorize(Roles = GlobalConstant.Admin)]
         public async Task<ActionResult<List<Hotel>>> AddHotel(Hotel hotel)
         {

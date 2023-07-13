@@ -10,24 +10,16 @@ import toast from 'react-hot-toast';
 
 // Constant
 import { PAGES } from '../../constants/Link.constants';
-import { APICacheMarker } from '../../constants/APICacheMarker.constants';
 import { REGEX } from '../../constants/Regex';
-import { MESSAGE } from '../../constants/Message.constants';
 
 // Img
 import logo from "../../assets/images/logos/sc-non-white.png";
 import mountain_night from "../../assets/images/bgs/mountain-night.jpg";
 import mountain_day from "../../assets/images/bgs/mountain-day.jpg";
 
-// react-query
-import { useMutation, useQueryClient } from 'react-query';
-
-// Service
-import AuthService from '../../services/AuthService';
-import BroadcastService from '../../services/BroadcastService';
-
 // Form
 import { Controller, useForm } from 'react-hook-form';
+import { useLogin, useRegister } from '../../libs/business-logic/lib/auth';
 
 
 const Authentication = () => {
@@ -35,6 +27,7 @@ const Authentication = () => {
     const registerForm = useForm();
 
     const navigate = useNavigate();
+
     const location = useLocation();
 
     const [page, setPage] = useState('');
@@ -43,7 +36,8 @@ const Authentication = () => {
     const registerFormRef = useRef(null);
     const authenRef = useRef(null);
 
-    const queryClient = useQueryClient();
+    const { onLogin, isLoading: isLoginLoading } = useLogin();
+    const { onRegister, isLoading: isRegisterLoading } = useRegister();
 
     // Hook
     useEffect(() => {
@@ -86,39 +80,22 @@ const Authentication = () => {
         }
     }
 
-    const loginMutation = useMutation(AuthService.login, {
-        retry: 3,
-        onSuccess: (data) => {
-            queryClient.invalidateQueries(APICacheMarker.AUTH_LOGIN);
-            toast.success('Successfully! You will redirect to home page right now!')
-            setTimeout(() => {
-                BroadcastService.postMessage(MESSAGE.USER_LOGGED_IN);
-                navigate("/");
-            }, 2000)
-        },
-        onError: (error) => {
-            loginMutation.reset();
-            toast.error('Login error')
-        },
-    })
-    const registerMutation = useMutation(AuthService.register, {
-        retry: 3,
-        onSuccess: (data) => {
-            queryClient.invalidateQueries(APICacheMarker.AUTH_REGISTER);
-            toast.success('Successfully! Please check your email for verification')
-            setTimeout(() => {
-                BroadcastService.postMessage(MESSAGE.USER_REGISTER);
-                navigate("/login");
-            }, 2000)
-        },
-        onError: (error) => {
-            loginMutation.reset();
-            toast.error('Register error')
-        },
-    })
-
     const handleLogin = (data) => {
-        data && loginMutation.mutate(data)
+        onLogin(data.login_email, data.login_password, data.login_remember)
+            .then((res) => {
+                toast.success(res.message)
+                setTimeout(() => {
+                    navigate("/");
+                }, 2000)
+            })
+            .catch((err) => {
+                if (err.response && err.response.status === 401) {
+                    toast.error("Wrong email or password")
+                } else {
+                    console.error("Log error in component:", err);
+                    toast.error('Login error')
+                }
+            });
     }
     const handleLoginError = (errors) => {
         if (errors) {
@@ -137,7 +114,21 @@ const Authentication = () => {
             toast.error('Confirm password does not match')
             return;
         }
-        data && registerMutation.mutate(data.register_email, data.register_password)
+        onRegister(data.register_email, data.register_password)
+            .then((res) => {
+                toast.success(res.message)
+                setTimeout(() => {
+                    navigate("/");
+                }, 2000)
+            })
+            .catch((err) => {
+                if (err.response && err.response.status === 409) {
+                    toast.error("Email is exist");
+                } else {
+                    console.error("Log error in component:", err);
+                    toast.error('Register error')
+                }
+            });
     }
     const handleRegisterError = (errors) => {
         if (errors) {
@@ -356,9 +347,9 @@ const Authentication = () => {
                                 <button
                                     type='submit'
                                     className='authen-form__submit-btn'
-                                    disabled={loginMutation.isLoading}
+                                    disabled={isLoginLoading}
                                 >
-                                    {loginMutation.isLoading ? "Signing in..." : "Sign In"}
+                                    {isLoginLoading ? "Signing in..." : "Sign In"}
                                 </button>
                                 <button
                                     type='button'
@@ -464,9 +455,9 @@ const Authentication = () => {
                                 <button
                                     type='submit'
                                     className='authen-form__submit-btn'
-                                    disabled={registerMutation.isLoading}
+                                    disabled={isRegisterLoading}
                                 >
-                                    {registerMutation.isLoading ? "Wait a second..." : "Register now"}
+                                    {isRegisterLoading ? "Wait a second..." : "Register now"}
                                 </button>
                                 <button
                                     type='button'

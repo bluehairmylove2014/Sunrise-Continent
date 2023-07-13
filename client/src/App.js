@@ -1,24 +1,14 @@
 import {
-  Routes, Route, useNavigate, useLocation
+  Routes, Route
 } from 'react-router-dom';
 import { Suspense, lazy, useEffect, useState } from 'react';
-
-// Service
-import BroadcastService from './services/BroadcastService';
-
-// React-query
-import { QueryClient, QueryClientProvider } from "react-query";
-
-// Axios mock adapter
-import AxiosMockAdapter from "axios-mock-adapter";
-import axios from "axios";
+import { BusinessLogicProvider } from "./libs/business-logic/provider";
 
 // Notification library
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 // Constant
 import { PAGES } from './constants/Link.constants';
-import { MESSAGE } from './constants/Message.constants';
 
 // Global style
 import './App.scss';
@@ -35,62 +25,11 @@ import redux_store from './redux/store';
 // Code spliting, lazy loading component
 const HomePage = lazy(() => import('./pages/Home/Home'));
 const SearchPage = lazy(() => import('./pages/Search/Search'));
+const HotelDetail = lazy(() => import('./pages/HotelDetail/HotelDetail'));
 const AuthenticationPage = lazy(() => import('./pages/Authentication/Authentication'));
-
-// Tạo mock cho axios
-const mock = new AxiosMockAdapter(axios);
-mock.onGet("/api/v1/users").reply(200, [
-  { id: 1, name: "John Doe" },
-  { id: 2, name: "Jane Smith" },
-]);
-mock.onPost("http://localhost:2014/api/v1/auth/login").reply(() => {
-  // Simulate a 2-second delay before returning the response
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve([200, { token: 'NguyenBaPhuong', status_code: 200 }]);
-    }, 2000);
-  });
-});
-mock.onPost("http://localhost:2014/api/v1/auth/register").reply(() => {
-  // Simulate a 2-second delay before returning the response
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve([200, { token: 'NguyenBaPhuong', status_code: 200 }]);
-    }, 2000);
-  });
-});
-mock.onPost("http://localhost:2014/api/v1/auth/checkLogin").reply(200, { 
-  isValid: true, 
-  status_code: 200 
-});
-
-
-// Tạo instance cho QueryClient
-const queryClient = new QueryClient();
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  
-  BroadcastService.getChannel().onmessage = (event) => {
-    switch(event.data) {
-        case MESSAGE.USER_LOGGED_IN:
-            if (location.pathname === "/login" || location.pathname === "/register") {
-                navigate("/")
-            }
-            break;
-        case MESSAGE.USER_REGISTER:
-            if (location.pathname === "/register") {
-                navigate("/login")
-            }
-            break;
-        default :
-            toast.error('Error while broadcast channel was listening')
-            break;
-    }
-};
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -105,7 +44,7 @@ function App() {
 
   return (
     <Provider store={redux_store}>
-      <QueryClientProvider client={queryClient}>
+      <BusinessLogicProvider>
         <div className="App">
           <div className='app__notification'><Toaster /></div>
           <Suspense fallback={<PageLoader />}>
@@ -125,13 +64,20 @@ function App() {
                     <Footer></Footer>
                   </>
                 } />
+                <Route path={PAGES.HOTEL_DETAIL} element={
+                  <>
+                    <Header></Header>
+                    <HotelDetail></HotelDetail>
+                    <Footer></Footer>
+                  </>
+                } />
                 <Route exact path={PAGES.LOGIN} element={<AuthenticationPage/>} />
                 <Route exact path={PAGES.REGISTER} element={<AuthenticationPage/>} />
               </Routes>
             )}
           </Suspense>
         </div>
-      </QueryClientProvider>
+      </BusinessLogicProvider>
     </Provider>
   );
 }

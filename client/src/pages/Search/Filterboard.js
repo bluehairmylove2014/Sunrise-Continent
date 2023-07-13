@@ -21,6 +21,7 @@ const Filterboard = ({ form }) => {
             form={parentForm}
             name={checkboxData[k].INPUT_NAME}
             label={checkboxData[k].LABEL}
+            key={checkboxData[k].INPUT_NAME}
           />
         );
       });

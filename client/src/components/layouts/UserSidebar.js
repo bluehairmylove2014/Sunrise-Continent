@@ -2,12 +2,11 @@ import React, { useEffect, useRef } from 'react';
 import {
     Link 
 } from 'react-router-dom';
-
-// Service
-import AuthService from '../../services/AuthService';
+import { useLogout } from '../../libs/business-logic/lib/auth';
 
 const UserSidebar = ({isActive, callback}) => {
     const sidebarRef = useRef(null);
+    const { onLogout } = useLogout();
 
     useEffect(() => {
         if(sidebarRef.current.classList.contains('active') && !isActive) {
@@ -21,16 +20,18 @@ const UserSidebar = ({isActive, callback}) => {
 
     }, [isActive, sidebarRef, callback])
 
+    const handleClose = () => {
+        sidebarRef.current.classList.remove('active');
+        callback(false)
+    }
+
     return (
         <div className={`common-component__user-sidebar ${isActive ? 'active' : ''}`} ref={sidebarRef}>
             <div className='cc-user-sidebar__header'>
                 <div></div>
                 <button 
                     className='cc-user-sidebar-header__close-btn'
-                    onClick={() => {
-                        sidebarRef.current.classList.remove('active');
-                        callback(false)
-                    }}
+                    onClick={handleClose}
                 >
                     x
                 </button>
@@ -55,7 +56,10 @@ const UserSidebar = ({isActive, callback}) => {
                     </Link>
                 </li>
                 <li>
-                    <button onClick={() => AuthService.logout()}>
+                    <button onClick={() => {
+                        onLogout();
+                        handleClose();
+                    }}>
                         <i className="fi fi-rr-power"></i>
                         <span>Logout</span>
                     </button>

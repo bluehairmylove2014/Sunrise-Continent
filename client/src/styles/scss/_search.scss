@@ -188,6 +188,8 @@
                 overflow: hidden;
                 border: 1px solid var(--heavy-white-smoke);
                 box-shadow: 0px 5px 10px -3px var(--heavy-white-smoke);
+                color: black;
+                cursor: pointer;
                 // columns - row - gap
                 @include dgrid(30% 45% 1fr, auto, 0);
                 .hotel__images {

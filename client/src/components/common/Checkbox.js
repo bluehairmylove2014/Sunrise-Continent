@@ -8,7 +8,7 @@ const Checkbox = ({ form, name, label }) => {
         name={name}
         control={form.control}
         render={({ field }) => 
-        <label class="cc-checkbox__container">
+        <label className="cc-checkbox__container">
           <input {...field} type="checkbox" />
           <span className="checkmark">
             <i className="fi fi-br-check"></i>

@@ -3,6 +3,8 @@ import { ROOM_OPTIONS } from '../../constants/filter.constants';
 import {
     convertNumberToCurrency
 } from '../../utils/helpers/MoneyConverter';
+import { Link } from 'react-router-dom';
+import { PAGES } from '../../constants/Link.constants';
 
 const Hotel = ({data}) => {
 
@@ -10,7 +12,7 @@ const Hotel = ({data}) => {
         if (!Array.isArray(amenities)) return <></>;
         return amenities.map(am => {
             return (
-                <div className='infor__amenity'>
+                <div className='infor__amenity' key={`amenity@${am}`}>
                     {am}
                 </div>
             )
@@ -20,7 +22,7 @@ const Hotel = ({data}) => {
         if (!Array.isArray(services)) return <></>;
         return services.map(sv => {
             return (
-                <div className='infor__service-item'>
+                <div className='infor__service-item' key={`service@${ROOM_OPTIONS[sv].LABEL}`}>
                     <i className={ROOM_OPTIONS[sv].ICON}></i>
                     <span>{ROOM_OPTIONS[sv].LABEL}</span>
                 </div>
@@ -29,9 +31,9 @@ const Hotel = ({data}) => {
     }
 
     return (
-        <div className='hotel'>
+        <Link className='hotel' to={`${PAGES.HOTEL_DETAIL}?id=${data.id}`} key={data.id}>
             <div className="hotel__images">
-                <img src={data.image} alt="hotel-image" />
+                <img src={data.image} alt="hotel" />
             </div>
             <div className="hotel__infor">
                 <h4>{data.name}</h4>
@@ -67,7 +69,7 @@ const Hotel = ({data}) => {
                     </p>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }
 

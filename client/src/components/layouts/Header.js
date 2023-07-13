@@ -1,35 +1,25 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import '../../styles/scss/_header.scss';
-
-// Images
 import logoVerticalImg from '../../assets/images/logos/sc-vertical.png';
 import logoHorizontalImg from '../../assets/images/logos/sc-horizontal.png';
 import worker_gif from '../../assets/images/graphics/worker.gif';
-
-// Constant
 import { PAGES } from '../../constants/Link.constants';
-
-// Component
 import NavDropdown from '../common/NavDropdown';
 import UserSidebar from './UserSidebar';
-
-// Notification
-import { toast } from 'react-hot-toast';
-
-// Service
-import AuthService from '../../services/AuthService';
-
-// React-hook-form
 import { useForm } from 'react-hook-form';
+import {
+    useIsLogged
+} from '../../libs/business-logic/lib/auth'
 
 const Header = () => {
     const [categories, setCategories] = useState([]);
     const [languageChooser, setLanguageChooser] = useState([]);
     const [userSidebarStatus, setUserSidebarStatus] = useState(false);
     const [logoSrc, setLogoSrc] = useState(logoVerticalImg);
-    const [loginStatus, setLoginStatus] = useState(false);
+    const {isLogin} = useIsLogged();
 
+    
     const headerRef = useRef(null);
 
     const navigate = useNavigate();
@@ -38,18 +28,8 @@ const Header = () => {
         handleSubmit,
         register,
         reset,
-        formState: { errors }
+        // formState: { errors }
     } = useForm();
-
-    useEffect(() => {
-        AuthService.isLoggedIn()
-            .then(data => {
-                setLoginStatus(data.isValid);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }, []);
 
     
     useEffect(() => {
@@ -331,7 +311,7 @@ const Header = () => {
                                 </div>
                             </li>
                         </ul>
-                        <ul className={`header-main-nav__user-interact ${!loginStatus && 'active'}`}>
+                        <ul className={`header-main-nav__user-interact ${!isLogin && 'active'}`}>
                             <li>
                                 <Link to={PAGES.LOGIN} className='header-user-interact__login-btn'>
                                     Đăng nhập
@@ -344,7 +324,7 @@ const Header = () => {
                             </li>
                         </ul>
                         {/* user avatar when logged in */}
-                        <ul className={`header-main-nav__user-interact ${loginStatus && 'active'}`}>
+                        <ul className={`header-main-nav__user-interact ${isLogin && 'active'}`}>
                             <li className='header-main-nav__user-avatar'>
                                 <button onClick={() => setUserSidebarStatus(!userSidebarStatus)}>
                                     <img src="https://rialloer.sirv.com/Sunrise-Continent/Users/IMG_0615-min%20(1).jpg?w=500&h=500" alt="user-avatar" />

@@ -25,7 +25,7 @@ namespace SunriseServer.Controllers
         [HttpGet]
         public async Task<ActionResult<ResponseMessageDetails<List<Hotel>>>> GetAllHotels()
         {
-            return Ok(new ResponseMessageDetails<List<Hotel>>("Get hotels successfully", await _hotelService.GetAllHotels()));
+            return Ok(new ResponseMessageDetails<List<Hotel>>("Get hotels successfully.", await _hotelService.GetAllHotels()));
         }
 
         [HttpGet("{id}")]
@@ -44,7 +44,7 @@ namespace SunriseServer.Controllers
             var result = await _hotelService.AddHotel(hotel);
 
             if (result == null)
-                return BadRequest("Cannot add hotel");
+                return BadRequest("Cannot add hotel.");
 
             return Ok(new ResponseMessageDetails<Hotel>("Add hotel successfully", result));
         }

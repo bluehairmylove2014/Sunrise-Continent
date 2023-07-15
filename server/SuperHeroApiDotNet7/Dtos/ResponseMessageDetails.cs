@@ -1,17 +1,19 @@
-﻿namespace SunriseServer.Dtos
+﻿using SunriseServerCore.Common.Enum;
+
+namespace SunriseServer.Dtos
 {
-    public class ResponseMessageDetails<TMessage> : ResponseDetails
+    public class ResponseMessageDetails<TData> : ResponseDetails
     {
-        public ResponseMessageDetails(int statusCode, string requestId) : base(statusCode, requestId)
+        public ResponseMessageDetails(string message, ResponseStatusCode statusCode = ResponseStatusCode.Ok) : base(statusCode, message)
         {
-            Message = default;
+            Data = default;
         }
 
-        public ResponseMessageDetails(int statusCode, string requestId, TMessage message) : base(statusCode, requestId)
+        public ResponseMessageDetails(string message, TData data, ResponseStatusCode statusCode = ResponseStatusCode.Ok) : base(statusCode, message)
         {
-            Message = message;
+            Data = data;
         }
 
-        public TMessage Message { get; set; }
+        public TData Data { get; set; }
     }
 }

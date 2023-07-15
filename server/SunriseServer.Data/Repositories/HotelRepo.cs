@@ -22,13 +22,13 @@ namespace SunriseServerData.Repositories
 
         public override async Task<IEnumerable<Hotel>> GetAllAsync()
         {
-            var result = await _dataContext.Hotels.FromSqlInterpolated($"USP_GetAllHotel").ToListAsync();
+            var result = await _dataContext.Hotel.FromSqlInterpolated($"USP_GetAllHotel").ToListAsync();
             return result;
         }
 
         public override async Task<Hotel> GetByIdAsync(int id)
         {
-            var result = await _dataContext.Hotels.FromSqlInterpolated($"USP_GetHotelById @Id = {id}").ToListAsync();
+            var result = await _dataContext.Hotel.FromSqlInterpolated($"USP_GetHotelById @Id = {id}").ToListAsync();
             return result.FirstOrDefault();
         }
 

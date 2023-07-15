@@ -55,6 +55,19 @@ namespace SunriseServerData
         }
         #endregion
 
+        #region Account
+        private IAccountRepo _accountRepo;
+        public IAccountRepo AccountRepo
+        {
+            get
+            {
+                if (_accountRepo == null)
+                    _accountRepo = new AccountRepo(_dataContext);
+                return _accountRepo;
+            }
+        }
+        #endregion
+
         public async Task<bool> SaveChangesAsync()
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))

@@ -14,7 +14,6 @@ namespace SunriseServerData
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // connection string: "Data Source=LAPTOP-F9GU6QVP;Initial Catalog=SunriseServer;Trusted_Connection=true;TrustServerCertificate=true"
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -23,7 +22,7 @@ namespace SunriseServerData
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<Hotel> Hotels { get; set; }
-        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Hotel> Hotel { get; set; }
+        public DbSet<Account> Account { get; set; }
     }
 }

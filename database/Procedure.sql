@@ -154,7 +154,7 @@ AS
 		DECLARE @Id INT
 		EXEC @Id = USP_GetNextAccountId 'ACCOUNT', 'Id'
 
-		INSERT INTO ACCOUNT VALUES (@Id, 0, @Username, @PasswordHash, @PasswordSalt)
+		INSERT INTO ACCOUNT (Id, MemberPoint, Username, PasswordHash, PasswordSalt) VALUES (@Id, 0, @Username, @PasswordHash, @PasswordSalt)
 		RETURN 0
 	END TRY
 

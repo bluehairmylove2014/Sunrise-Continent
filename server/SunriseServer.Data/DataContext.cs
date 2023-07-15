@@ -22,7 +22,7 @@ namespace SunriseServerData
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<Hotel> Hotels { get; set; }
+        public DbSet<Hotel> Hotel { get; set; }
         public DbSet<Account> Account { get; set; }
     }
 }

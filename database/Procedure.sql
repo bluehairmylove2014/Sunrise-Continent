@@ -33,14 +33,75 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER FUNCTION USF_GetLocationLabel (@HotelId INT)
+RETURNS VARCHAR(100)
+BEGIN
+	declare @Value VARCHAR(100)
+	SET @Value = (	SELECT pl.Name FROM PLACE pl JOIN HOTEL ht ON pl.PlaceId = ht.PlaceId
+					WHERE ht.Id = @HotelId)
+	IF @Value IS NULL RETURN 'UNCATEGORIZED'
+    RETURN @Value
+END
+GO
 
-CREATE OR ALTER PROC USP_GetAllAccommodations 
+CREATE OR ALTER FUNCTION USF_GetHotelType (@HotelId INT)
+RETURNS VARCHAR(100)
+BEGIN
+	declare @Value VARCHAR(100)
+	SET @Value = (	SELECT cat.Name FROM CATEGORY cat JOIN HOTEL ht ON cat.CategoryId = ht.CategoryId
+					WHERE ht.Id = @HotelId)
+	IF @Value IS NULL RETURN 'UNCATEGORIZED'
+    RETURN @Value
+END
+GO
+
+CREATE OR ALTER PROC USP_GetNextColumnId(
+	@tablename SYSNAME,
+	@columnname SYSNAME
+)
 AS
-	SELECT Id, Name, Address, Stars, Image,
-			dbo.USF_GetReviewNum(Id) Reviews, 
-			dbo.USF_GetAvgReview(Id) Points,
-			dbo.USF_GetMinRoomPrice(Id) Price
-	FROM HOTEL
+	DECLARE @IntVariable INT = 0;  
+	DECLARE @SQLString NVARCHAR(MAX);  
+	DECLARE @ParmDefinition NVARCHAR(500);
+  
+	SET @SQLString = 
+		N'with cte as (select ' + @columnname + ' id, lead(' + @columnname + ') over (order by ' + @columnname + ') nextid from ' + @tablename + ')
+		select @gapstartOUT = MIN(id) from cte
+		where id < nextid - 1';
+	SET @ParmDefinition = N'@gapstartOUT INTEGER OUTPUT';  
+  
+	EXECUTE sp_executesql @SQLString, @ParmDefinition, @gapstartOUT = @IntVariable OUTPUT;  
+
+	IF (@IntVariable IS NULL)
+	BEGIN
+		DECLARE @SQL NVARCHAR(MAX);
+		SET @SQL = N'select @IdOUT = count(' + @columnname + ') from ' + @tablename + '';
+		SET @ParmDefinition = N'@IdOUT INTEGER OUTPUT';
+		EXEC sp_executesql @SQL, @ParmDefinition, @IdOUT = @IntVariable OUTPUT;
+
+		RETURN @IntVariable + 1;
+	END
+
+	RETURN @IntVariable + 1; 
+GO
+
+
+GO
+CREATE OR ALTER PROC USP_GetHotelRoomFacility 
+	@Id INT
+AS
+	SELECT DISTINCT room.FacilityId as Id, const.Value as Value FROM ROOM_FACILITY room 
+	JOIN FACILITY_CONST const ON room.FacilityId = const.Id
+	WHERE room.HotelId = @Id
+GO
+
+
+CREATE OR ALTER PROC USP_GetHotelRoomService
+	@Id INT
+AS
+	SELECT DISTINCT room.ServiceId as Id, const.Value as Value FROM ROOM_SERVICE room 
+	JOIN SERVICE_CONST const ON room.ServiceId = const.Id
+	WHERE room.HotelId = @Id
 GO
 
 
@@ -94,18 +155,57 @@ GO
 
 CREATE OR ALTER PROC USP_GetAllHotel
 AS
-	SELECT * FROM HOTEL
+	SELECT Id, Name,
+			dbo.USF_GetHotelType(Id) as HotelType,
+			dbo.USF_GetLocationLabel(Id) as ProvinceCity, 
+			Address, Stars, Rating, Description, Image
+			--dbo.USF_GetReviewNum(Id) Reviews, 
+			--dbo.USF_GetAvgReview(Id) Rating,
+			--dbo.USF_GetMinRoomPrice(Id) Price
+	FROM HOTEL
 GO
 
 
+--! 
 CREATE OR ALTER PROC USP_GetHotelById
 	@Id INTEGER
 AS
-	SELECT * FROM HOTEL WHERE Id = @Id
+	SELECT Id, Name,
+			dbo.USF_GetHotelType(Id) as HotelType,
+			dbo.USF_GetLocationLabel(Id) as ProvinceCity, 
+			Address, Stars, Rating, Description, Image
+			--dbo.USF_GetReviewNum(Id) Reviews, 
+			--dbo.USF_GetAvgReview(Id) Rating,
+			--dbo.USF_GetMinRoomPrice(Id) Price
+	FROM HOTEL WHERE Id = @Id
 GO
 
 
---drop function dbo.USF_GetNextAccountId
+CREATE OR ALTER PROC USP_AddHotel
+	--@Id INTEGER,
+	@Name NVARCHAR(100),
+	@HotelType VARCHAR(20),
+	@ProvinceCity NVARCHAR(20), -- not null
+	@Address NVARCHAR(100),
+	@Stars INT,
+	@Rating FLOAT,
+	@Description NVARCHAR(1000),
+	@Image NVARCHAR(1000)
+AS
+	BEGIN TRY
+		DECLARE @Id INT
+		EXEC @Id = USP_GetNextColumnId 'HOTEL', 'Id'
+
+		INSERT INTO HOTEL VALUES (@Id, @Name, @HotelType, @ProvinceCity, @Address, @Stars, @Rating, @Description, @Image)
+		RETURN @Id
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Hotel insertion error'
+		RETURN -1
+	END CATCH
+GO
+
 
 CREATE OR ALTER PROC USP_GetAllAccount
 AS
@@ -148,13 +248,17 @@ CREATE OR ALTER PROC USP_AddAccount
 	--@MemberPoint INTEGER,
 	@Username VARCHAR(50),
 	@PasswordHash VARCHAR(500),
-	@PasswordSalt VARCHAR(500)
+	@PasswordSalt VARCHAR(500),
+	@UserRole VARCHAR(50),
+	@RefreshToken VARCHAR(200),
+	@TokenCreated DATETIME,
+	@TokenExpires DATETIME
 AS
 	BEGIN TRY
 		DECLARE @Id INT
 		EXEC @Id = USP_GetNextAccountId 'ACCOUNT', 'Id'
 
-		INSERT INTO ACCOUNT VALUES (@Id, 0, @Username, @PasswordHash, @PasswordSalt)
+		INSERT INTO ACCOUNT VALUES (@Id, 0, @Username, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires)
 		RETURN 0
 	END TRY
 
@@ -190,26 +294,8 @@ exec dbo.USP_AddAccount
 
 select * from ACCOUNT
 delete from ACCOUNT where Username like 'string'
---delete from ACCOUNT where Id in (3, 5)
 
---DECLARE @IntVariable INT = -10;
---DECLARE @SQL NVARCHAR(MAX)
---DECLARE @ParmDefinition NVARCHAR(500);
---SET @SQL = N'select @IdOUT = count(Id) from ACCOUNT';
---SET @ParmDefinition = N'@IdOUT INTEGER OUTPUT';
---EXEC sp_executesql @SQL, @ParmDefinition, @IdOUT = @IntVariable OUTPUT;
---IF (@IntVariable IS NULL)
---	PRINT N'Vờ lờ'
---ELSE
---	PRINT @IntVariable
 
---DECLARE @res INT
---exec @res = USP_GetNextAccountId 'ACCOUNT', 'Id'
---print @res
-
---select count (Id) from ACCOUNT
-
---GO
 GO
 CREATE OR ALTER PROC USP_UpdateAccount
 	@Id INTEGER,
@@ -240,19 +326,6 @@ AS
 		RETURN 1
 	END CATCH
 GO
-
---declare @Test1 VARBINARY(100)
---SET @Test1 = CONVERT(VARBINARY(100), '0x9473FBCCBC01AF', 1)
---exec dbo.USP_UpdateAccount 
---	@Id = 3,
---	@MemberPoint = 10,
---	@Username = 'xinchao', 
---	@PasswordHash = @Test1, 
---	@PasswordSalt = @Test1, 
---	@RefreshToken = 'VCL', 
---	@TokenCreated = '07-21-2023', 
---	@TokenExpires = '07-21-2026';
---GO
 
 
 GO
@@ -658,7 +731,7 @@ BEGIN
     END TRY
     BEGIN CATCH
         ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi  
+        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
     END CATCH;
 END
 GO
@@ -939,3 +1012,4 @@ BEGIN
     WHERE BA.AccountId = @AccountId;
 END;
 GO
+

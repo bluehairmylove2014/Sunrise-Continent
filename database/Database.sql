@@ -115,6 +115,10 @@ CREATE TABLE ACCOUNT
     Username VARCHAR(50),
     PasswordHash VARCHAR(500),
     PasswordSalt VARCHAR(500),
+	UserRole VARCHAR(50),
+	RefreshToken VARCHAR(200),
+	TokenCreated DATETIME,
+	TokenExpires DATETIME,
 
 	PRIMARY KEY (Id)
 )
@@ -283,19 +287,19 @@ ADD
 	ON DELETE CASCADE
 -------------------------------------------------
 
---!add account
-INSERT INTO ACCOUNT VALUES (1,100, 'abc@gmail.com','abc123','abc456');
-INSERT INTO ACCOUNT VALUES (2,45,'bibizero@gmail.com', 'abc123','abc456');
-INSERT INTO ACCOUNT VALUES (3,20,'meme13@gmail.com', 'abc123','abc456');
-INSERT INTO ACCOUNT VALUES (4,120,'titanic9@gmail.com', 'abc123','abc456');
-INSERT INTO ACCOUNT VALUES (5,60,'gaianime@gmail.com', 'abc123','abc456');
+----!add account
+--INSERT INTO ACCOUNT VALUES (1,100, 'abc@gmail.com','abc123','abc456');
+--INSERT INTO ACCOUNT VALUES (2,45,'bibizero@gmail.com', 'abc123','abc456');
+--INSERT INTO ACCOUNT VALUES (3,20,'meme13@gmail.com', 'abc123','abc456');
+--INSERT INTO ACCOUNT VALUES (4,120,'titanic9@gmail.com', 'abc123','abc456');
+--INSERT INTO ACCOUNT VALUES (5,60,'gaianime@gmail.com', 'abc123','abc456');
 
-----!add personal information
-INSERT INTO PERSONAL_DETAILS VALUES (1, N'Trần Văn A', 'abc@gmail.com', '0966188620', '1990-01-01', N'Nam');
-INSERT INTO PERSONAL_DETAILS VALUES (2, N'Nguyễn Văn B', 'bibizero@gmail.com', '0966188621', '1999-02-01', N'Nữ');
-INSERT INTO PERSONAL_DETAILS VALUES (3, N'Ngô Bá K', 'meme13@gmail.com', '0966188622', '1980-01-03', N'Nam');
-INSERT INTO PERSONAL_DETAILS VALUES (4, N'Lê C', 'titanic9@gmail.com', '0966188623', '1990-01-05', N'Nữ');
-INSERT INTO PERSONAL_DETAILS VALUES (5, N'Trần D', 'gaianime@gmail.com', '0966188624', '1990-01-06', N'Nam');
+------!add personal information
+--INSERT INTO PERSONAL_DETAILS VALUES (1, N'Trần Văn A', 'abc@gmail.com', '0966188620', '1990-01-01', N'Nam');
+--INSERT INTO PERSONAL_DETAILS VALUES (2, N'Nguyễn Văn B', 'bibizero@gmail.com', '0966188621', '1999-02-01', N'Nữ');
+--INSERT INTO PERSONAL_DETAILS VALUES (3, N'Ngô Bá K', 'meme13@gmail.com', '0966188622', '1980-01-03', N'Nam');
+--INSERT INTO PERSONAL_DETAILS VALUES (4, N'Lê C', 'titanic9@gmail.com', '0966188623', '1990-01-05', N'Nữ');
+--INSERT INTO PERSONAL_DETAILS VALUES (5, N'Trần D', 'gaianime@gmail.com', '0966188624', '1990-01-06', N'Nam');
 
 --!add provine
 INSERT INTO PLACE VALUES(1,N'Ho Chi Minh City');
@@ -304,9 +308,9 @@ INSERT INTO PLACE VALUES(3,N'Hoi An');
 INSERT INTO PLACE VALUES(4,N'Nha Trang');
 
 --!add category
-INSERT INTO CATEGORY VALUES(1,'Hotels','');
-INSERT INTO CATEGORY VALUES(2,'Homestays','');
-INSERT INTO CATEGORY VALUES(3,'Apartments','');
+INSERT INTO CATEGORY VALUES(1,'HOTEL','');
+INSERT INTO CATEGORY VALUES(2,'HOMESTAY','');
+INSERT INTO CATEGORY VALUES(3,'SINGLE_APARTMENT','');
 
 --!add hotel 
 INSERT INTO HOTEL VALUES(1, N'Triple E Hotel Metro Ben Thanh',1,1,

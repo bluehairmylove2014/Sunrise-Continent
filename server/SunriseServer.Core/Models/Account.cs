@@ -1,6 +1,6 @@
 ﻿namespace SunriseServerCore.Models
 {
-    public class Account
+    public class Account : ModelBase
     {
         // basic info
         public int Id { get; set; }

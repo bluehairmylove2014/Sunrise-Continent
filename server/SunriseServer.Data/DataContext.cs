@@ -24,6 +24,6 @@ namespace SunriseServerData
         }
 
         public DbSet<Hotel> Hotels { get; set; }
-        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Account> Account { get; set; }
     }
 }

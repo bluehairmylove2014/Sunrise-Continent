@@ -35,14 +35,14 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpPost, Authorize(Roles = GlobalConstant.Admin)]
+        [HttpPost, Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<List<Hotel>>> AddHotel(Hotel hotel)
         {
             var result = await _hotelService.AddHotel(hotel);
             return Ok(result);
         }
 
-        [HttpPut("{id}"), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpPut("{id}"), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<List<Hotel>>> UpdateHotel(int id, Hotel request)
         {
             var result = await _hotelService.UpdateHotel(id, request);
@@ -52,7 +52,7 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id}"), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpDelete("{id}"), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<List<Hotel>>> DeleteHotel(int id)
         {
             var result = await _hotelService.DeleteHotel(id);

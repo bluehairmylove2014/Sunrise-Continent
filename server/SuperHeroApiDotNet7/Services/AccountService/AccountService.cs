@@ -8,21 +8,16 @@ namespace SunriseServer.Services.AccountService
     public class AccountService : IAccountService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly DataContext _context;
-
-        public AccountService(IHttpContextAccessor httpContextAccessor, DataContext dataContext)
+        private readonly UnitOfWork _unitOfWork;
+        public AccountService(IHttpContextAccessor httpContextAccessor, UnitOfWork unitOfWork)
         {
             _httpContextAccessor = httpContextAccessor;
-            _context = dataContext;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<Account>> AddAccount(Account acc)
+        public async Task<Account> AddAccount(Account acc)
         {
-            return null;
-            //var handler = new AccountHandler(_context);
-
-            //int rowAffected = await handler.Add(acc);
-            //return await handler.GetAll();
+            return await _unitOfWork.AccountRepo.CreateAsync(acc);
         }
 
         public string GetMyName()
@@ -33,6 +28,16 @@ namespace SunriseServer.Services.AccountService
                 result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
             }
             return result!;
+        }
+
+        public async Task<Account> GetByUsername(string username)
+        {
+            return await _unitOfWork.AccountRepo.GetByUsername(username);
+        }
+
+        public async Task<Account> UpdateAccount(Account acc)
+        {
+            return await _unitOfWork.AccountRepo.UpdateAsync(acc);
         }
     }
 }

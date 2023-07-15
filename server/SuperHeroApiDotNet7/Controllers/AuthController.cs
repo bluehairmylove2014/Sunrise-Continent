@@ -15,7 +15,6 @@ namespace SunriseServer.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static Account acc = new Account();
         readonly IConfiguration _configuration;
         readonly IAccountService _accService;
 
@@ -33,43 +32,54 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<Account>> Register(AccountDto request)
+        public async Task<ActionResult<string>> Register(AccountDto request)
         {
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            var acc = await _accService.GetByUsername(request.Username);
 
+            if (acc != null)
+            {
+                return BadRequest("Username exists");
+            }
+
+            acc = new Account();
+            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             acc.Username = request.Username;
             acc.PasswordHash = passwordHash;
             acc.PasswordSalt = passwordSalt;
 
             var token = CreateToken(acc);
-            var result = await _accService.AddAccount(acc);
+            await _accService.AddAccount(acc);
             return Ok(token);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(AccountDto request)
         {
-            if (acc.Username != request.Username)
+            var account = await _accService.GetByUsername(request.Username);
+
+            if (account == null)
             {
-                return BadRequest("User not found.");
+                return NotFound();
             }
 
-            if (!VerifyPasswordHash(request.Password, acc.PasswordHash, acc.PasswordSalt))
+            if (account.Username != request.Username ||
+                !VerifyPasswordHash(request.Password, account.PasswordHash, account.PasswordSalt))
             {
-                return BadRequest("Wrong password.");
+                return BadRequest("Wrong credentials");
             }
 
-            string token = CreateToken(acc);
+            string token = CreateToken(account);
 
             var refreshToken = GenerateRefreshToken();
-            SetRefreshToken(refreshToken);
+            SetRefreshToken(refreshToken, account);
 
             return Ok(token);
         }
 
-        [HttpPost("refresh-token")]
+        [HttpPost("refresh-token"), Authorize]
         public async Task<ActionResult<string>> RefreshToken()
         {
+            var acc = await _accService.GetByUsername(User.Identity.Name);
             var refreshToken = Request.Cookies["refreshToken"];
 
             if (!acc.RefreshToken.Equals(refreshToken))
@@ -83,7 +93,7 @@ namespace SunriseServer.Controllers
 
             string token = CreateToken(acc);
             var newRefreshToken = GenerateRefreshToken();
-            SetRefreshToken(newRefreshToken);
+            SetRefreshToken(newRefreshToken, acc);
 
             return Ok(token);
         }
@@ -100,7 +110,7 @@ namespace SunriseServer.Controllers
             return refreshToken;
         }
 
-        private void SetRefreshToken(RefreshToken newRefreshToken)
+        private void SetRefreshToken(RefreshToken newRefreshToken, Account acc)
         {
             var cookieOptions = new CookieOptions
             {

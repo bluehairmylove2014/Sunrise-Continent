@@ -9,5 +9,6 @@ namespace SunriseServer.Services.AccountService
         Task<Account> AddAccount(Account acc);
         Task<Account> GetByUsername(string username);
         Task<Account> UpdateAccount(Account acc);
+        void SaveChanges();
     }
 }

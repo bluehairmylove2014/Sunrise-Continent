@@ -39,5 +39,10 @@ namespace SunriseServer.Services.AccountService
         {
             return await _unitOfWork.AccountRepo.UpdateAsync(acc);
         }
+
+        public void SaveChanges()
+        {
+            _unitOfWork.SaveChanges();
+        }
     }
 }

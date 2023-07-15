@@ -65,9 +65,10 @@ CREATE TABLE ACCOUNT
     Username VARCHAR(50),
     PasswordHash VARCHAR(500),
     PasswordSalt VARCHAR(500),
+	UserRole VARCHAR(50),
 	RefreshToken VARCHAR(200),
 	TokenCreated DATETIME,
-	TokenExpires DATETIME
+	TokenExpires DATETIME,
 
 	PRIMARY KEY (Id)
 )

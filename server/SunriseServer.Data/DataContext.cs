@@ -14,7 +14,6 @@ namespace SunriseServerData
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // connection string: "Data Source=LAPTOP-F9GU6QVP;Initial Catalog=SunriseServer;Trusted_Connection=true;TrustServerCertificate=true"
             base.OnConfiguring(optionsBuilder);
         }
 

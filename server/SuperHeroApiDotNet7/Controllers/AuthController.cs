@@ -8,6 +8,7 @@ using SunriseServer.Services.AccountService;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using SunriseServerCore.Common.Helper;
 
 namespace SunriseServer.Controllers
 {
@@ -31,8 +32,8 @@ namespace SunriseServer.Controllers
             return Ok(userName);
         }
 
-        [HttpPost("register")]
-        public async Task<ActionResult<string>> Register(AccountDto request)
+        [HttpPost("register-admin")]
+        public async Task<ActionResult<string>> RegisterAdmin(LoginDto request)
         {
             var acc = await _accService.GetByUsername(request.Username);
 
@@ -44,16 +45,41 @@ namespace SunriseServer.Controllers
             acc = new Account();
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             acc.Username = request.Username;
-            acc.PasswordHash = passwordHash;
-            acc.PasswordSalt = passwordSalt;
+            acc.PasswordHash = Helper.ByteArrayToString(passwordHash);
+            acc.PasswordSalt = Helper.ByteArrayToString(passwordSalt);
+            acc.UserRole = GlobalConstant.Admin;
 
-            var token = CreateToken(acc);
+            var token = CreateToken(acc, GlobalConstant.Admin);
             await _accService.AddAccount(acc);
             return Ok(token);
         }
 
+        [HttpPost("register")]
+        public async Task<ActionResult<string>> Register(LoginDto request)
+        {
+            var acc = await _accService.GetByUsername(request.Username);
+
+            if (acc != null)
+            {
+                return BadRequest("Username exists");
+            }
+
+            acc = new Account();
+            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            acc.Username = request.Username;
+            acc.PasswordHash = Helper.ByteArrayToString(passwordHash);
+            acc.PasswordSalt = Helper.ByteArrayToString(passwordSalt);
+            acc.UserRole = GlobalConstant.User;
+
+            var token = CreateToken(acc, GlobalConstant.User);
+            await _accService.AddAccount(acc);
+            var refreshToken = GenerateRefreshToken();
+            SetRefreshToken(refreshToken, acc);
+            return Ok(token);
+        }
+
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(AccountDto request)
+        public async Task<ActionResult<string>> Login(LoginDto request)
         {
             var account = await _accService.GetByUsername(request.Username);
 
@@ -63,12 +89,12 @@ namespace SunriseServer.Controllers
             }
 
             if (account.Username != request.Username ||
-                !VerifyPasswordHash(request.Password, account.PasswordHash, account.PasswordSalt))
+                !VerifyPasswordHash(request.Password, Helper.StringToByteArray(account.PasswordHash), Helper.StringToByteArray(account.PasswordSalt)))
             {
                 return BadRequest("Wrong credentials");
             }
 
-            string token = CreateToken(account);
+            string token = CreateToken(account, account.UserRole);
 
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, account);
@@ -91,7 +117,7 @@ namespace SunriseServer.Controllers
                 return Unauthorized("Token expired.");
             }
 
-            string token = CreateToken(acc);
+            string token = CreateToken(acc, acc.UserRole);
             var newRefreshToken = GenerateRefreshToken();
             SetRefreshToken(newRefreshToken, acc);
 
@@ -122,14 +148,15 @@ namespace SunriseServer.Controllers
             acc.RefreshToken = newRefreshToken.Token;
             acc.TokenCreated = newRefreshToken.Created;
             acc.TokenExpires = newRefreshToken.Expires;
+            _accService.SaveChanges();
         }
 
-        private string CreateToken(Account acc)
+        private string CreateToken(Account acc, string role)
         {
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, acc.Username),
-                new Claim(ClaimTypes.Role, GlobalConstant.User)
+                new Claim(ClaimTypes.Role, role)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(

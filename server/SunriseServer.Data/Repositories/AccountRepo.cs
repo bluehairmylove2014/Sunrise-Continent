@@ -37,7 +37,7 @@ namespace SunriseServerData.Repositories
 
         public async Task<Account> GetByUsername(string username)
         {
-            var result =  await _dataContext.Account.FirstOrDefaultAsync(x => x.Username == username);
+            var result =  await _dataContext.Accounts.FirstOrDefaultAsync(x => x.Username == username);
             return result;
         }
     }

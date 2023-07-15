@@ -37,3 +37,21 @@ export function revertShortenedDatetime(datetime) {
 }
 
 
+export function formatDate(dateObj) {
+  if (!dateObj) return {
+    dateMonthYear: null,
+    days: null
+  };
+  const dateRaw = new Date(dateObj);
+  let days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+  let dayOfWeek = days[dateRaw.getDay()];
+  let date = dateRaw.getDate();
+  let month = dateRaw.getMonth() + 1; // Months are zero based
+  let year = dateRaw.getFullYear();
+
+  return {
+    dateMonthYear: `${date} tháng ${month} ${year}`,
+    days: dayOfWeek
+  };
+}
+

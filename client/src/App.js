@@ -2,6 +2,7 @@ import {
   Routes, Route
 } from 'react-router-dom';
 import { Suspense, lazy, useEffect, useState } from 'react';
+import { BusinessLogicProvider } from "./libs/business-logic/provider";
 
 // Notification library
 import { Toaster } from 'react-hot-toast';
@@ -23,6 +24,8 @@ import redux_store from './redux/store';
 
 // Code spliting, lazy loading component
 const HomePage = lazy(() => import('./pages/Home/Home'));
+const SearchPage = lazy(() => import('./pages/Search/Search'));
+const HotelDetail = lazy(() => import('./pages/HotelDetail/HotelDetail'));
 const AuthenticationPage = lazy(() => import('./pages/Authentication/Authentication'));
 
 function App() {
@@ -31,30 +34,50 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 1000);
 
-    return () => clearTimeout(timer);
+    // Dọn dẹp khi component unmount
+    return () => {
+      clearTimeout(timer)
+    };
   }, []);
+
   return (
     <Provider store={redux_store}>
-      <div className="App">
-        <div className='app__notification'><Toaster/></div>
-        <Suspense fallback={<PageLoader />}>
-          {isLoading ? (<PageLoader />) : (
-            <Routes>
-              <Route exact path={PAGES.HOME} element={
-                <>
-                  <Header></Header>
-                  <HomePage></HomePage>
-                  <Footer></Footer>
-                </>
-              } />
-              <Route exact path={PAGES.LOGIN} element={<AuthenticationPage />} />
-              <Route exact path={PAGES.REGISTER} element={<AuthenticationPage />} />
-            </Routes>
-          )}
-        </Suspense>
-      </div>
+      <BusinessLogicProvider>
+        <div className="App">
+          <div className='app__notification'><Toaster /></div>
+          <Suspense fallback={<PageLoader />}>
+            {isLoading ? (<PageLoader />) : (
+              <Routes>
+                <Route exact path={PAGES.HOME} element={
+                  <>
+                    <Header></Header>
+                    <HomePage></HomePage>
+                    <Footer></Footer>
+                  </>
+                } />
+                <Route path={PAGES.SEARCH} element={
+                  <>
+                    <Header></Header>
+                    <SearchPage></SearchPage>
+                    <Footer></Footer>
+                  </>
+                } />
+                <Route path={PAGES.HOTEL_DETAIL} element={
+                  <>
+                    <Header></Header>
+                    <HotelDetail></HotelDetail>
+                    <Footer></Footer>
+                  </>
+                } />
+                <Route exact path={PAGES.LOGIN} element={<AuthenticationPage/>} />
+                <Route exact path={PAGES.REGISTER} element={<AuthenticationPage/>} />
+              </Routes>
+            )}
+          </Suspense>
+        </div>
+      </BusinessLogicProvider>
     </Provider>
   );
 }

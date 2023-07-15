@@ -1,21 +1,37 @@
-
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
 import '../../styles/scss/_header.scss';
-
-// Images
-import logo_img from '../../assets/images/logos/sc-vertical.png';
-
-// Constant
+import logoVerticalImg from '../../assets/images/logos/sc-vertical.png';
+import logoHorizontalImg from '../../assets/images/logos/sc-horizontal.png';
+import worker_gif from '../../assets/images/graphics/worker.gif';
 import { PAGES } from '../../constants/Link.constants';
-
-// Component
 import NavDropdown from '../common/NavDropdown';
+import UserSidebar from './UserSidebar';
+import { useForm } from 'react-hook-form';
+import {
+    useIsLogged
+} from '../../libs/business-logic/lib/auth'
 
 const Header = () => {
     const [categories, setCategories] = useState([]);
     const [languageChooser, setLanguageChooser] = useState([]);
+    const [userSidebarStatus, setUserSidebarStatus] = useState(false);
+    const [logoSrc, setLogoSrc] = useState(logoVerticalImg);
+    const {isLogin} = useIsLogged();
 
+    
+    const headerRef = useRef(null);
+
+    const navigate = useNavigate();
+
+    const {
+        handleSubmit,
+        register,
+        reset,
+        // formState: { errors }
+    } = useForm();
+
+    
     useEffect(() => {
         setCategories([
             {
@@ -193,6 +209,7 @@ const Header = () => {
         ])
     }, [])
 
+
     // Methods
     const renderCategories = (catelist) => {
         return (
@@ -211,74 +228,138 @@ const Header = () => {
             }</ul>
         )
     }
+    const handleBlurSearchbox = () => {
+        headerRef.current.classList.remove("active");
+        setLogoSrc(logoVerticalImg);
+        document.removeEventListener('click', handleClickOutside);
+    }
+    const handleClickOutside = event => {
+        if (headerRef.current && !headerRef.current.contains(event.target)) {
+            handleBlurSearchbox()
+        }
+    }
+    const handleFocusSearchbox = () => {
+        if(headerRef.current) {
+            if(!headerRef.current.classList.contains('active')) {
+                headerRef.current.classList.add("active")
+                setLogoSrc(logoHorizontalImg);
+                document.addEventListener('click', handleClickOutside);
+            }
+        }
+    }
+    const onSearch = (data) => {
+        reset();
+        handleBlurSearchbox();
+        // Handle split keys
+        const keys = ['phong doi'];
+        let query = '/search?key='
+
+        keys.forEach(k => {
+            query += k 
+        })
+
+        navigate(query)
+    }
 
     return (
-        <header className='header'>
-            <div className="header__logo-container">
-                <img
-                    src={logo_img}
-                    alt="Sunrise Continent"
-                    className="header__logo-img"
-                />
-            </div>
-            <div className="header__search">
-                <form>
-                    <i className="fi fi-rr-search"></i>
-                    <input type="text" placeholder='Bạn muốn đặt chân đến nơi nào?' />
-                </form>
-                <nav className="header__main-nav">
-                    <ul className='header-main-nav__infor'>
-                        <li><Link to={PAGES.ABOUT}>Về chúng tôi</Link></li>
-                        <li><Link to={PAGES.CONTACT}>Liên hệ</Link></li>
-                        <li>
-                            <div className="header-main-nav__language">
-                                {/* <button>
-                                    <i className="fi fi-rs-language"></i>
-                                    Tiếng Việt
-                                    <i className="fi fi-ts-angle-small-down"></i>
+        <React.Fragment>
+            <header className='header' ref={headerRef}>
+                <div className='header__overlay'></div>
+                <div className="header__logo-container">
+                    <img
+                        src={logoSrc}
+                        alt="Sunrise Continent"
+                        className="header__logo-img"
+                        id="header-logo"
+                    />
+                </div>
+                <div className="header__search">
+                    <div className="search-box__wrapper">
+                        <form onSubmit={handleSubmit(onSearch)}>
+                            <button type="submit">
+                                <i className="fi fi-rr-search"></i>
+                            </button>
+                            <input 
+                                name="search"
+                                defaultValue=""
+                                type="text" 
+                                placeholder='Bạn muốn đặt chân đến nơi nào?' 
+                                onFocus={handleFocusSearchbox}
+                                onKeyDown={e => {
+                                    if(e.key === 'Enter') {
+                                        handleSubmit(onSearch)
+                                    }
+                                }}
+                                {...register("search", {
+                                    required: true
+                                })}
+                            />
+                        </form>
+                    </div>
+                    <nav className="header__main-nav">
+                        <ul className='header-main-nav__infor'>
+                            <li><Link to={PAGES.ABOUT}>Về chúng tôi</Link></li>
+                            <li><Link to={PAGES.CONTACT}>Liên hệ</Link></li>
+                            <li>
+                                <div className="header-main-nav__language">
+                                    <NavDropdown 
+                                        name='Tiếng Việt'
+                                        name_il={'fi fi-rs-language'}
+                                        name_ir={'fi fi-ts-angle-small-down'}
+                                        options={languageChooser}
+                                    />
+                                </div>
+                            </li>
+                        </ul>
+                        <ul className={`header-main-nav__user-interact ${!isLogin && 'active'}`}>
+                            <li>
+                                <Link to={PAGES.LOGIN} className='header-user-interact__login-btn'>
+                                    Đăng nhập
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to={PAGES.REGISTER} className='header-user-interact__register-btn'>
+                                    Tham gia ngay!
+                                </Link>
+                            </li>
+                        </ul>
+                        {/* user avatar when logged in */}
+                        <ul className={`header-main-nav__user-interact ${isLogin && 'active'}`}>
+                            <li className='header-main-nav__user-avatar'>
+                                <button onClick={() => setUserSidebarStatus(!userSidebarStatus)}>
+                                    <img src="https://rialloer.sirv.com/Sunrise-Continent/Users/IMG_0615-min%20(1).jpg?w=500&h=500" alt="user-avatar" />
                                 </button>
-                                <div className="language__dropdown">
-
-                                </div> */}
-                                
-                                <NavDropdown 
-                                    name='Tiếng Việt'
-                                    name_il={'fi fi-rs-language'}
-                                    name_ir={'fi fi-ts-angle-small-down'}
-                                    options={languageChooser}
-                                />
-                            </div>
-                        </li>
-                    </ul>
-                    <ul className='header-main-nav__user-interact'>
-                        <li>
-                            <Link to={PAGES.LOGIN} className='header-user-interact__login-btn'>
-                                Đăng nhập
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to={PAGES.REGISTER} className='header-user-interact__register-btn'>
-                                Tham gia ngay!
-                            </Link>
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <nav className="header__product-nav">
+                    {renderCategories(categories)}
+                    <button className='product-nav__wish-list'>
+                        <span className='wishlist-btn__label'>
+                            <i className="fi fi-rs-heart"></i>
+                            Wish List
+                        </span>
+                        <span className='wishlist-btn__content'>0&nbsp;</span>
+                        <span className='wishlist-btn__content'>i</span>
+                        <span className='wishlist-btn__content'>t</span>
+                        <span className='wishlist-btn__content'>e</span>
+                        <span className='wishlist-btn__content'>m</span>
+                    </button>
                 </nav>
-            </div>
-            <nav className="header__product-nav">
-                {renderCategories(categories)}
-                <button className='product-nav__wish-list'>
-                    <span className='wishlist-btn__label'>
-                        <i className="fi fi-rs-heart"></i>
-                        Wish List
-                    </span>
-                    <span className='wishlist-btn__content'>0&nbsp;</span>
-                    <span className='wishlist-btn__content'>i</span>
-                    <span className='wishlist-btn__content'>t</span>
-                    <span className='wishlist-btn__content'>e</span>
-                    <span className='wishlist-btn__content'>m</span>
-                </button>
-            </nav>
-        </header>
+                <div className="search-box__introduction">
+                    <img src={worker_gif} alt="worker_gif" />
+                    <div>
+                        <h3>Hãy thoải mái yêu cầu những gì bạn muốn!</h3>
+                        <p>Bạn có thể nhập bất kỳ yêu cầu gì với bất kì văn phong nào.
+                            Chúng tôi sẽ tự phân tích và tìm ra kết quả hợp lý nhất cho bạn.
+                        </p>
+                        <small>Ví dụ: Hãy tìm cho tôi một căn Villa tại Đà Lạt với hai phòng đơn, một phòng đôi và có bồn tắm ngoài trời </small>
+                    </div>
+                </div>
+            </header>
+            <UserSidebar isActive={userSidebarStatus} callback={useCallback((status) => setUserSidebarStatus(status), [setUserSidebarStatus])}/>
+        </React.Fragment>
     );
 }
 

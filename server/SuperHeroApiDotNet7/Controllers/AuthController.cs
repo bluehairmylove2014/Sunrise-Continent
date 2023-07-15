@@ -72,9 +72,9 @@ namespace SunriseServer.Controllers
             acc.UserRole = GlobalConstant.User;
 
             var token = CreateToken(acc, GlobalConstant.User);
-            await _accService.AddAccount(acc);
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, acc);
+            await _accService.AddAccount(acc);
             return Ok(token);
         }
 
@@ -120,7 +120,7 @@ namespace SunriseServer.Controllers
             string token = CreateToken(acc, acc.UserRole);
             var newRefreshToken = GenerateRefreshToken();
             SetRefreshToken(newRefreshToken, acc);
-
+            _accService.SaveChanges();
             return Ok(token);
         }
 
@@ -148,7 +148,6 @@ namespace SunriseServer.Controllers
             acc.RefreshToken = newRefreshToken.Token;
             acc.TokenCreated = newRefreshToken.Created;
             acc.TokenExpires = newRefreshToken.Expires;
-            _accService.SaveChanges();
         }
 
         private string CreateToken(Account acc, string role)

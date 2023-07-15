@@ -25,7 +25,10 @@ namespace SunriseServerData.Repositories
             builder.Append($"@Username = \'{acc.Username}\', ");
             builder.Append($"@PasswordHash = \'{acc.PasswordHash}\', ");
             builder.Append($"@PasswordSalt = \'{acc.PasswordSalt}\', ");
-            builder.Append($"@UserRole = \'{acc.UserRole}\';");
+            builder.Append($"@UserRole = \'{acc.UserRole}\', ");
+            builder.Append($"@RefreshToken = \'{acc.RefreshToken}\', ");
+            builder.Append($"@TokenCreated = \'{acc.TokenCreated}\', ");
+            builder.Append($"@TokenExpires = \'{acc.TokenExpires}\';");
 
             Console.WriteLine(builder.ToString());
             await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE sp_executesql {builder.ToString()}");

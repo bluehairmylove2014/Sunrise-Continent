@@ -1,7 +1,6 @@
 global using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using SunriseServerData;
-using SunriseServer.Common.Helper;
 using System;
 using System.Text;
 using SunriseServerCore.Models;
@@ -22,7 +21,7 @@ namespace SunriseServer.Data
         {
             // Cần chỉnh lại schema hoặc tạo một schema mới để gọi dữ liệu từ server.
 
-            var result = await _context.Accounts.FromSqlInterpolated($"USP_GetAllAccount").ToListAsync();
+            var result = await _context.Account.FromSqlInterpolated($"USP_GetAllAccount").ToListAsync();
             return result;
         }
 
@@ -30,8 +29,8 @@ namespace SunriseServer.Data
         {
             var builder = new StringBuilder("EXECUTE dbo.USP_AddAccount ");
             builder.Append($"@Username = \'{acc.Username}\', ");
-            builder.Append($"@PasswordHash = \'{Helper.ByteArrayToString(acc.PasswordHash)}\', ");
-            builder.Append($"@PasswordSalt = \'{Helper.ByteArrayToString(acc.PasswordSalt)}\';");
+            //builder.Append($"@PasswordHash = \'{Helper.ByteArrayToString(acc.PasswordHash)}\', ");
+            //builder.Append($"@PasswordSalt = \'{Helper.ByteArrayToString(acc.PasswordSalt)}\';");
 
             Console.WriteLine(builder.ToString());
 

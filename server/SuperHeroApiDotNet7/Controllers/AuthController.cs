@@ -8,6 +8,7 @@ using SunriseServer.Services.AccountService;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using SunriseServerCore.Common.Helper;
 
 namespace SunriseServer.Controllers
 {
@@ -15,7 +16,6 @@ namespace SunriseServer.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static Account acc = new Account();
         readonly IConfiguration _configuration;
         readonly IAccountService _accService;
 
@@ -32,44 +32,80 @@ namespace SunriseServer.Controllers
             return Ok(userName);
         }
 
-        [HttpPost("register")]
-        public async Task<ActionResult<Account>> Register(AccountDto request)
+        [HttpPost("register-admin")]
+        public async Task<ActionResult<string>> RegisterAdmin(LoginDto request)
         {
+            var acc = await _accService.GetByUsername(request.Username);
+
+            if (acc != null)
+            {
+                return BadRequest("Username exists");
+            }
+
+            acc = new Account();
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-
             acc.Username = request.Username;
-            acc.PasswordHash = passwordHash;
-            acc.PasswordSalt = passwordSalt;
+            acc.PasswordHash = Helper.ByteArrayToString(passwordHash);
+            acc.PasswordSalt = Helper.ByteArrayToString(passwordSalt);
+            acc.UserRole = GlobalConstant.Admin;
 
-            var token = CreateToken(acc);
-            var result = await _accService.AddAccount(acc);
+            var token = CreateToken(acc, GlobalConstant.Admin);
+            await _accService.AddAccount(acc);
+            return Ok(token);
+        }
+
+        [HttpPost("register")]
+        public async Task<ActionResult<string>> Register(LoginDto request)
+        {
+            var acc = await _accService.GetByUsername(request.Username);
+
+            if (acc != null)
+            {
+                return BadRequest("Username exists");
+            }
+
+            acc = new Account();
+            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            acc.Username = request.Username;
+            acc.PasswordHash = Helper.ByteArrayToString(passwordHash);
+            acc.PasswordSalt = Helper.ByteArrayToString(passwordSalt);
+            acc.UserRole = GlobalConstant.User;
+
+            var token = CreateToken(acc, GlobalConstant.User);
+            var refreshToken = GenerateRefreshToken();
+            SetRefreshToken(refreshToken, acc);
+            await _accService.AddAccount(acc);
             return Ok(token);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(AccountDto request)
+        public async Task<ActionResult<string>> Login(LoginDto request)
         {
-            if (acc.Username != request.Username)
+            var account = await _accService.GetByUsername(request.Username);
+
+            if (account == null)
             {
-                return BadRequest("User not found.");
+                return NotFound();
             }
 
-            if (!VerifyPasswordHash(request.Password, acc.PasswordHash, acc.PasswordSalt))
+            if (account.Username != request.Username ||
+                !VerifyPasswordHash(request.Password, Helper.StringToByteArray(account.PasswordHash), Helper.StringToByteArray(account.PasswordSalt)))
             {
-                return BadRequest("Wrong password.");
+                return BadRequest("Wrong credentials");
             }
 
-            string token = CreateToken(acc);
+            string token = CreateToken(account, account.UserRole);
 
             var refreshToken = GenerateRefreshToken();
-            SetRefreshToken(refreshToken);
+            SetRefreshToken(refreshToken, account);
 
             return Ok(token);
         }
 
-        [HttpPost("refresh-token")]
+        [HttpPost("refresh-token"), Authorize]
         public async Task<ActionResult<string>> RefreshToken()
         {
+            var acc = await _accService.GetByUsername(User.Identity.Name);
             var refreshToken = Request.Cookies["refreshToken"];
 
             if (!acc.RefreshToken.Equals(refreshToken))
@@ -81,10 +117,10 @@ namespace SunriseServer.Controllers
                 return Unauthorized("Token expired.");
             }
 
-            string token = CreateToken(acc);
+            string token = CreateToken(acc, acc.UserRole);
             var newRefreshToken = GenerateRefreshToken();
-            SetRefreshToken(newRefreshToken);
-
+            SetRefreshToken(newRefreshToken, acc);
+            _accService.SaveChanges();
             return Ok(token);
         }
 
@@ -100,7 +136,7 @@ namespace SunriseServer.Controllers
             return refreshToken;
         }
 
-        private void SetRefreshToken(RefreshToken newRefreshToken)
+        private void SetRefreshToken(RefreshToken newRefreshToken, Account acc)
         {
             var cookieOptions = new CookieOptions
             {
@@ -114,12 +150,12 @@ namespace SunriseServer.Controllers
             acc.TokenExpires = newRefreshToken.Expires;
         }
 
-        private string CreateToken(Account acc)
+        private string CreateToken(Account acc, string role)
         {
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, acc.Username),
-                new Claim(ClaimTypes.Role, GlobalConstant.User)
+                new Claim(ClaimTypes.Role, role)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(

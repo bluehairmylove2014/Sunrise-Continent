@@ -1,16 +1,17 @@
 ﻿using Newtonsoft.Json;
+using SunriseServerCore.Common.Enum;
 
 namespace SunriseServer.Dtos
 {
     public class ResponseDetails
     {
-        public ResponseDetails(int statusCode, string requestId) {
+        public ResponseDetails(ResponseStatusCode statusCode, string message) {
             StatusCode = statusCode;
-            RequestId = requestId;
+            Message = message;
         }
 
-        public int StatusCode { get; protected set; }
-        public string RequestId { get; protected set;}
+        public ResponseStatusCode StatusCode { get; protected set; } = ResponseStatusCode.Ok;
+        public string Message { get; protected set; }
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);

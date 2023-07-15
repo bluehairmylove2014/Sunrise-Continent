@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SunriseServer.Common.Constant;
 using SunriseServer.Dtos;
-using SunriseServerCore.Models;
 using SunriseServer.Services.AccountService;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -33,7 +32,7 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPost("register-admin")]
-        public async Task<ActionResult<string>> RegisterAdmin(LoginDto request)
+        public async Task<ActionResult<ResponseMessageDetails<string>>> RegisterAdmin(LoginDto request)
         {
             var acc = await _accService.GetByUsername(request.Username);
 
@@ -50,12 +49,14 @@ namespace SunriseServer.Controllers
             acc.UserRole = GlobalConstant.Admin;
 
             var token = CreateToken(acc, GlobalConstant.Admin);
+            var refreshToken = GenerateRefreshToken();
+            SetRefreshToken(refreshToken, acc);
             await _accService.AddAccount(acc);
-            return Ok(token);
+            return Ok(new ResponseMessageDetails<string>("Register admin successfully", token));
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<string>> Register(LoginDto request)
+        public async Task<ActionResult<ResponseMessageDetails<string>>> Register(LoginDto request)
         {
             var acc = await _accService.GetByUsername(request.Username);
 
@@ -75,11 +76,11 @@ namespace SunriseServer.Controllers
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, acc);
             await _accService.AddAccount(acc);
-            return Ok(token);
+            return Ok(new ResponseMessageDetails<string>("Register user successfully", token));
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(LoginDto request)
+        public async Task<ActionResult<ResponseMessageDetails<string>>> Login(LoginDto request)
         {
             var account = await _accService.GetByUsername(request.Username);
 
@@ -99,11 +100,11 @@ namespace SunriseServer.Controllers
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, account);
 
-            return Ok(token);
+            return Ok(new ResponseMessageDetails<string>("Login user successfully", token));
         }
 
         [HttpPost("refresh-token"), Authorize]
-        public async Task<ActionResult<string>> RefreshToken()
+        public async Task<ActionResult<ResponseMessageDetails<string>>> RefreshToken()
         {
             var acc = await _accService.GetByUsername(User.Identity.Name);
             var refreshToken = Request.Cookies["refreshToken"];
@@ -121,7 +122,7 @@ namespace SunriseServer.Controllers
             var newRefreshToken = GenerateRefreshToken();
             SetRefreshToken(newRefreshToken, acc);
             _accService.SaveChanges();
-            return Ok(token);
+            return Ok(new ResponseMessageDetails<string>("Refresh token successfully", token));
         }
 
         private RefreshToken GenerateRefreshToken()

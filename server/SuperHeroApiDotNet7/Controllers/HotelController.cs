@@ -42,8 +42,8 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        // Xin chào cu
-        [HttpGet("vailon")]
+        // Alternative GetAll API
+        [HttpGet("DisplayHotelData")]
         public async Task<ActionResult<List<HotelClientData>>> GetAllHotelInfo()
         {
             var result = await _hotelService.GetAllHotels();

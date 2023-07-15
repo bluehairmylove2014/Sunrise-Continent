@@ -39,7 +39,6 @@ namespace SunriseServerData.Repositories
                 EXEC @result = dbo.USP_AddHotel ");
             builder.Append($"@Name = \'{entity.Name}\', ");
             builder.Append($"@HotelType = \'{entity.HotelType}\', ");
-            builder.Append($"@Country = \'{entity.Country}\', ");
             builder.Append($"@ProvinceCity = \'{entity.ProvinceCity}\', ");
             builder.Append($"@Address = \'{entity.Address}\', ");
             builder.Append($"@Stars = {entity.Stars}, ");

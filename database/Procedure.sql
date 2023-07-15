@@ -511,7 +511,6 @@ BEGIN
     BEGIN CATCH
         ROLLBACK;
         SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
-        THROW; -- Ném lỗi để xử lý tại mức cao hơn
     END CATCH;
 END
 GO
@@ -541,7 +540,6 @@ BEGIN
     BEGIN CATCH
         ROLLBACK;
         SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
-        THROW; -- Ném lỗi để xử lý tại mức cao hơn
     END CATCH;
 END
 GO
@@ -573,7 +571,6 @@ BEGIN
     BEGIN CATCH
         ROLLBACK;
         SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
-        THROW; -- Ném lỗi để xử lý tại mức cao hơn
     END CATCH;
 END
 GO
@@ -602,7 +599,6 @@ BEGIN
     BEGIN CATCH
         ROLLBACK;
         SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
-        THROW; -- Ném lỗi để xử lý tại mức cao hơn
     END CATCH;
 END
 GO 
@@ -632,7 +628,6 @@ BEGIN
     BEGIN CATCH
         ROLLBACK;
         SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
-        THROW; -- Ném lỗi để xử lý tại mức cao hơn
     END CATCH;
 END
 GO 
@@ -664,8 +659,283 @@ BEGIN
     BEGIN CATCH
         ROLLBACK;
         SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi  
-        THROW; -- Ném lỗi để xử lý tại mức cao hơn
     END CATCH;
 END
 GO
 
+--TODO PROC CRUD REVIEW
+--!THÊM
+CREATE OR ALTER PROCEDURE USP_AddReview
+    @AccountId INT,
+    @HotelId INT,
+    @Points FLOAT,
+    @Content NVARCHAR(1000),
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        -- Thêm review mới
+        INSERT INTO REVIEW (AccountId, HotelId, Points, Content)
+        VALUES (@AccountId, @HotelId, @Points, @Content);
+
+        COMMIT;
+        SET @Result = 1; -- Trả về kết quả 1 khi thêm thành công
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+    END CATCH;
+END;
+GO
+
+--!XÓA
+CREATE OR ALTER PROCEDURE USP_DeleteReview
+    @AccountId INT,
+    @HotelId INT,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        -- Xóa review
+        DELETE FROM REVIEW
+        WHERE AccountId = @AccountId AND HotelId = @HotelId;
+
+        COMMIT;
+        SET @Result = 1; -- Trả về kết quả 1 khi xóa thành công
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+    END CATCH;
+END;
+GO
+
+--!SỬA
+CREATE OR ALTER PROCEDURE USP_UpdateReview
+    @AccountId INT,
+    @HotelId INT,
+    @Points FLOAT,
+    @Content NVARCHAR(1000),
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        -- Cập nhật review
+        UPDATE REVIEW
+        SET Points = @Points, Content = @Content
+        WHERE AccountId = @AccountId AND HotelId = @HotelId;
+
+        COMMIT;
+        SET @Result = 1; -- Trả về kết quả 1 khi cập nhật thành công
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+        THROW; -- Ném lỗi để xử lý tại mức cao hơn
+    END CATCH;
+END;
+GO
+
+--TODO PROC CRUD ẢNH CỦA REVIEW
+--!THÊM
+CREATE OR ALTER PROCEDURE USP_InsertReviewImage
+    @AccountId INT,
+    @HotelId INT,
+    @ImageId INT,
+    @ImageLink VARCHAR(1000),
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        -- Thêm REVIEW_IMAGE mới
+        INSERT INTO REVIEW_IMAGE (AccountId, HotelId, ImageId, ImageLink)
+        VALUES (@AccountId, @HotelId, @ImageId, @ImageLink);
+
+        COMMIT;
+        SET @Result = 1; -- Trả về kết quả 1 khi thêm thành công
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+    END CATCH;
+END
+GO
+
+--!XÓA
+CREATE OR ALTER PROCEDURE USP_DeleteReviewImage
+    @AccountId INT,
+    @HotelId INT,
+    @ImageId INT,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        -- Xóa REVIEW_IMAGE
+        DELETE FROM REVIEW_IMAGE
+        WHERE AccountId = @AccountId
+        AND HotelId = @HotelId
+        AND ImageId = @ImageId;
+
+        COMMIT;
+        SET @Result = 1; -- Trả về kết quả 1 khi xóa thành công
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+    END CATCH;
+END
+GO
+
+--!SỬA
+CREATE OR ALTER PROCEDURE USP_UpdateReviewImage
+    @AccountId INT,
+    @HotelId INT,
+    @ImageId INT,
+    @NewImageLink VARCHAR(1000),
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        -- Cập nhật thông tin REVIEW_IMAGE
+        UPDATE REVIEW_IMAGE
+        SET ImageLink = @NewImageLink
+        WHERE AccountId = @AccountId
+        AND HotelId = @HotelId
+        AND ImageId = @ImageId;
+
+        COMMIT;
+        SET @Result = 1; -- Trả về kết quả 1 khi cập nhật thành công
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+    END CATCH;
+END
+GO
+
+--TODO PROCEDURE CRUD ĐƠN BOOK PHÒNG
+--!THÊM
+CREATE OR ALTER PROCEDURE USP_AddBooking
+    @AccountId INT,
+    @HotelId INT,
+    @RoomTypeId INT,
+    @CheckIn DATE,
+    @CheckOut DATE,
+    @NumberOfRoom INT,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        -- Thêm đơn đặt chỗ mới
+        INSERT INTO BOOKING_ACCOUNT (AccountId, HotelId, RoomTypeId, CheckIn, CheckOut, NumberOfRoom)
+        VALUES (@AccountId, @HotelId, @RoomTypeId, @CheckIn, @CheckOut, @NumberOfRoom);
+
+        COMMIT;
+        SET @Result = 1; -- Trả về kết quả 1 khi thêm thành công
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+    END CATCH;
+END;
+GO
+
+--!XÓA
+CREATE OR ALTER PROCEDURE USP_DeleteBooking
+    @AccountId INT,
+    @HotelId INT,
+    @RoomTypeId INT,
+    @CheckIn DATE,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        -- Xóa đơn đặt chỗ
+        DELETE FROM BOOKING_ACCOUNT
+        WHERE AccountId = @AccountId AND HotelId = @HotelId AND RoomTypeId = @RoomTypeId AND CheckIn = @CheckIn;
+
+        COMMIT;
+        SET @Result = 1; -- Trả về kết quả 1 khi xóa thành công
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+    END CATCH;
+END;
+GO
+
+--!SỬA
+CREATE OR ALTER PROCEDURE USP_UpdateBooking
+    @AccountId INT,
+    @HotelId INT,
+    @RoomTypeId INT,
+    @CheckIn DATE,
+    @CheckOut DATE,
+    @NumberOfRoom INT,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        -- Cập nhật đơn đặt chỗ
+        UPDATE BOOKING_ACCOUNT
+        SET CheckOut = @CheckOut, NumberOfRoom = @NumberOfRoom
+        WHERE AccountId = @AccountId AND HotelId = @HotelId AND RoomTypeId = @RoomTypeId AND CheckIn = @CheckIn;
+
+        COMMIT;
+        SET @Result = 1; -- Trả về kết quả 1 khi cập nhật thành công
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+    END CATCH;
+END;
+GO
+
+--TODO PROCE XEM LỊCH SỬ CÁC ĐƠN BOOKING CỦA TÀI KHOẢN 
+CREATE OR ALTER PROCEDURE dbo.USP_ViewBookingHistory
+    @AccountId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT BA.AccountId, BA.HotelId, BA.RoomTypeId, BA.CheckIn, BA.CheckOut, BA.NumberOfRoom
+    FROM BOOKING_ACCOUNT BA
+    WHERE BA.AccountId = @AccountId;
+END;
+GO

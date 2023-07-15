@@ -18,6 +18,16 @@ namespace SunriseServer.Controllers
             _accountService = accountService;
         }
 
+        [HttpGet("current-account"), Authorize(Roles = GlobalConstant.User)]
+        public async Task<ActionResult<Hotel>> GetCurrentAccount()
+        {
+            var result = await _accountService.GetByUsername(User.Identity.Name);
+            if (result is null)
+                return NotFound("Account not found");
+
+            return Ok(result);
+        }
+
         [HttpGet("{username}"), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<Hotel>> GetAccountByUsername(string username)
         {

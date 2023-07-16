@@ -8,6 +8,12 @@ using SunriseServer.Services.BookingService;
 using CoreApiResponse;
 using SunriseServer.Dtos;
 using SunriseServerCore.Common.Enum;
+using SunriseServer.Services.AccountService;
+using Microsoft.AspNetCore.Http.HttpResults;
+using SunriseServer.Common.DataClass;
+using SunriseServer.Common.Helper;
+using SunriseServer.Dtos.Booking;
+using SunriseServer.Services.HotelService;
 
 namespace SunriseServer.Controllers
 {
@@ -16,16 +22,37 @@ namespace SunriseServer.Controllers
     public class BookingController : ControllerBase
     {
         readonly IBookingService _bookingService;
+        readonly IAccountService _accountService;
+        readonly IHotelService _hotelService;
 
-        public BookingController(IBookingService bookingService)
+        public BookingController(IBookingService bookingService, IAccountService accountService, IHotelService hotelService)
         {
             _bookingService = bookingService;
+            _accountService = accountService;
+            _hotelService = hotelService;
         }
 
-        [HttpGet]
+        [HttpGet("GetBookingsCurrentAccount")]
         public async Task<ActionResult<ResponseMessageDetails<List<BookingAccount>>>> GetAllBookings()
         {
-            return Ok(new ResponseMessageDetails<List<BookingAccount>>("Get bookings successfully.", await _bookingService.GetAllBookings()));
+            var result = await _bookingService.GetAllBookings();
+            var finalResult = new List<BookingDto>();
+            foreach (var item in result)
+            {
+                var account = await _accountService.GetById(item.AccountId);
+                var hotel = await _hotelService.GetSingleHotel(item.HotelId);
+
+                BookingDto variable = new BookingDto { };
+
+                SetPropValueByReflection.AddYToX(variable, item);
+
+                variable.Account = account;
+                variable.Hotel = hotel;
+
+                finalResult.Add(variable);
+            }
+
+            return Ok(new ResponseMessageDetails<List<BookingDto>>("Get bookings successfully", finalResult));
         }
 
         [HttpPost, Authorize(Roles = GlobalConstant.User)]

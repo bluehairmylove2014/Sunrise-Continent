@@ -1,9 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SunriseServer", "SuperHeroApiDotNet7\SunriseServer.csproj", "{939FF4DD-76EB-41A5-A3EE-6057B89F6C12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SunriseServer", "SunriseServer\SunriseServer.csproj", "{939FF4DD-76EB-41A5-A3EE-6057B89F6C12}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SunriseServerData", "SunriseServer.Data\SunriseServerData.csproj", "{96CDCCC5-AC45-4934-AEA8-7D66C1996FE5}"
 EndProject

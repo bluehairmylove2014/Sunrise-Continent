@@ -21,24 +21,35 @@ namespace SunriseServerData.Repositories
 
         public override async Task<Account> CreateAsync(Account acc)
         {
-            var builder = new StringBuilder("EXECUTE dbo.USP_AddAccount ");
+            var builder = new StringBuilder(@"
+                DECLARE @result INT
+                EXEC @result = dbo.USP_AddAccount ");
             builder.Append($"@Username = \'{acc.Username}\', ");
             builder.Append($"@PasswordHash = \'{acc.PasswordHash}\', ");
             builder.Append($"@PasswordSalt = \'{acc.PasswordSalt}\', ");
             builder.Append($"@UserRole = \'{acc.UserRole}\', ");
             builder.Append($"@RefreshToken = \'{acc.RefreshToken}\', ");
             builder.Append($"@TokenCreated = \'{acc.TokenCreated}\', ");
-            builder.Append($"@TokenExpires = \'{acc.TokenExpires}\';");
+            builder.Append($"@TokenExpires = \'{acc.TokenExpires}\';\n");
 
-            Console.WriteLine(builder.ToString());
-            await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE sp_executesql {builder.ToString()}");
-            return acc;
+            builder.Append($"EXEC USP_GetAccountById @Id = @result;");
+
+            // Console.WriteLine(builder.ToString());
+            var result = await _dataContext.Accounts.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            return result.FirstOrDefault();
         }
 
         public async Task<Account> GetByUsername(string username)
         {
-            var result =  await _dataContext.Accounts.FirstOrDefaultAsync(x => x.Username == username);
-            return result;
+            // đ.chí đừng có chạy mấy cái code như này :v, đ.chí liệt kê tui mấy cái danh sách proc cần làm đi
+            // Do tên bảng đồ khác nhau tk EF ko làm đc đâu :v
+            // Tui chạy trên server tui sẽ ra lỗi :v, có j đ.chí cho tui cái danh sách tui làm r gọi chạy mới trơn :v
+
+            var builder = new StringBuilder($"dbo.USP_GetAccountByUsername @Username = \'{username}\';");
+
+            Console.WriteLine(builder.ToString());
+            var result = await _dataContext.Accounts.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            return result.FirstOrDefault();
         }
     }
 }

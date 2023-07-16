@@ -47,7 +47,7 @@ namespace SunriseServer.Controllers
 
         // Alternative GetAll API
         [HttpGet("DisplayHotelData")]
-        public async Task<ActionResult<List<HotelClientData>>> GetAllHotelInfo()
+        public async Task<ActionResult<ResponseMessageDetails<List<HotelClientData>>>> GetAllHotelInfo()
         {
             var result = await _hotelService.GetAllHotels();
 
@@ -77,7 +77,7 @@ namespace SunriseServer.Controllers
                 finalResult.Add(variable);
             }
 
-            return Ok(finalResult);
+            return Ok(new ResponseMessageDetails<List<HotelClientData>>("Get hotel successfully", finalResult));
         }
 
         [HttpPost, Authorize(Roles = GlobalConstant.Admin)]

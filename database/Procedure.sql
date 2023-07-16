@@ -170,6 +170,11 @@ GO
 CREATE OR ALTER PROC USP_GetHotelById
 	@Id INTEGER
 AS
+	IF (@Id = -1)
+	BEGIN
+		SELECT null;
+	END
+
 	SELECT Id, Name,
 			dbo.USF_GetHotelType(Id) as HotelType,
 			dbo.USF_GetLocationLabel(Id) as ProvinceCity, 
@@ -207,11 +212,6 @@ AS
 GO
 
 
-CREATE OR ALTER PROC USP_GetAllAccount
-AS
-	SELECT * FROM ACCOUNT
-GO
-
 CREATE OR ALTER PROC USP_GetNextAccountId(
 	@tablename SYSNAME,
 	@columnname SYSNAME
@@ -243,6 +243,31 @@ AS
 GO
 
 
+CREATE OR ALTER PROC USP_GetAllAccount
+AS
+	SELECT * FROM ACCOUNT
+GO
+
+
+CREATE OR ALTER PROC USP_GetAccountByUsername
+	@Username VARCHAR(50)
+AS
+	SELECT * FROM ACCOUNT where Username like @Username
+GO
+
+
+CREATE OR ALTER PROC USP_GetAccountById
+	@Id INT
+AS
+	IF (@Id = -1)
+	BEGIN
+		SELECT null;
+	END
+
+	SELECT * FROM ACCOUNT where Id = @Id;
+GO
+
+
 CREATE OR ALTER PROC USP_AddAccount
 	--@Id INTEGER,
 	--@MemberPoint INTEGER,
@@ -259,44 +284,14 @@ AS
 		EXEC @Id = USP_GetNextAccountId 'ACCOUNT', 'Id'
 
 		INSERT INTO ACCOUNT VALUES (@Id, 0, @Username, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires)
-		RETURN 0
+		RETURN @Id
 	END TRY
 
 	BEGIN CATCH
 		PRINT N'Account insertion error'
-		RETURN 1
+		RETURN -1
 	END CATCH
 GO
-
---Select * from ACCOUNT
-
-
---declare @Test1 VARBINARY(100)
---SET @Test1 = CONVERT(VARBINARY(100), '0x9473FBCCBC01AF', 1)
---exec dbo.USP_AddAccount
---	@Username = 'hahaha31247', 
---	@PasswordHash = @Test1, 
---	@PasswordSalt = @Test1, 
---	@RefreshToken = 'VCL', 
---	@TokenCreated = '07-21-2023', 
---	@TokenExpires = '07-21-2026';
---GO
-
-DECLARE @Id INT
-EXEC @Id = USP_GetNextAccountId 'ACCOUNT', 'Id'
-PRINT @Id
-
-exec dbo.USP_AddAccount 
-	@Username = 'string', 
-	@PasswordHash = '02aae36cd942563781d4d6b585c6709bd98f3a956b02788441a44e36440a006783e3618ac5cfb3cca8e17ebde6b8fbe0bfb0ab86bcdb850cf25bffd1b880949f', 
-	@PasswordSalt = '36587a5573c37d53a9260a5da14d1738d7214010210011532a4de41f9c214d37b23bdc7df6a7df45d344862a778b40fa9132b383f419ed432d96339362c136f58e4afe1281bc8671d09f8d225a2a07ab42a014456f32a735216b3a73e33dbe39ab8bbb7a560040d3c021c8c103b8f92dc96df68f70bf35cd4d0f3e681b48832d',
-	@UserRole = "User",
-	@RefreshToken = "No token",
-	@TokenCreated = '07-21-2023',
-	@TokenExpires = '07-22-2023'
-
-select * from ACCOUNT
-delete from ACCOUNT where Username like 'string'
 
 
 GO
@@ -310,7 +305,7 @@ AS
 	BEGIN TRY
 		IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @Id)
 		BEGIN
-			PRINT N'Account Id existed'
+			PRINT N'Account Id not existed'
 			RETURN 1
 		END
 

@@ -27,11 +27,12 @@ namespace SunriseServerData.Repositories
         {
             var builder = new StringBuilder("EXECUTE dbo.USP_AddBooking ");
             builder.Append($"@AccountId = \'{booking.AccountId}\', ");
-            builder.Append($"@HoteId = \'{booking.HotelId}\', ");
+            builder.Append($"@HotelId = \'{booking.HotelId}\', ");
             builder.Append($"@RoomTypeId = \'{booking.RoomTypeId}\', ");
             builder.Append($"@CheckIn = \'{booking.CheckIn}\', ");
             builder.Append($"@CheckOut = \'{booking.CheckOut}\', ");
-            builder.Append($"@NumberOfRoom = \'{booking.NumberOfRoom}\';");
+            builder.Append($"@NumberOfRoom = \'{booking.NumberOfRoom}\', ");
+            builder.Append($"@Result = \'{0}\';");
 
             Console.WriteLine(builder.ToString());
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE sp_executesql {builder.ToString()}");
@@ -43,11 +44,12 @@ namespace SunriseServerData.Repositories
         {
             var builder = new StringBuilder("EXECUTE dbo.USP_UpdateBooking ");
             builder.Append($"@AccountId = \'{booking.AccountId}\', ");
-            builder.Append($"@HoteId = \'{booking.HotelId}\', ");
+            builder.Append($"@HotelId = \'{booking.HotelId}\', ");
             builder.Append($"@RoomTypeId = \'{booking.RoomTypeId}\', ");
             builder.Append($"@CheckIn = \'{booking.CheckIn}\', ");
             builder.Append($"@CheckOut = \'{booking.CheckOut}\', ");
-            builder.Append($"@NumberOfRoom = \'{booking.NumberOfRoom}\';");
+            builder.Append($"@NumberOfRoom = \'{booking.NumberOfRoom}\', ");
+            builder.Append($"@Result = \'{0}\';");
 
             Console.WriteLine(builder.ToString());
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE sp_executesql {builder.ToString()}");

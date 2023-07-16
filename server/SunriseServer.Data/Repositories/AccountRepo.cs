@@ -35,7 +35,7 @@ namespace SunriseServerData.Repositories
             builder.Append($"EXEC USP_GetAccountById @Id = @result;");
 
             // Console.WriteLine(builder.ToString());
-            var result = await _dataContext.Accounts.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            var result = await _dataContext.Account.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
             return result.FirstOrDefault();
         }
 
@@ -48,7 +48,7 @@ namespace SunriseServerData.Repositories
             var builder = new StringBuilder($"dbo.USP_GetAccountByUsername @Username = \'{username}\';");
 
             Console.WriteLine(builder.ToString());
-            var result = await _dataContext.Accounts.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            var result = await _dataContext.Account.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
             return result.FirstOrDefault();
         }
     }

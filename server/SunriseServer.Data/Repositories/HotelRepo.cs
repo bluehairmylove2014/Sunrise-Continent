@@ -22,13 +22,13 @@ namespace SunriseServerData.Repositories
 
         public override async Task<IEnumerable<Hotel>> GetAllAsync()
         {
-            var result = await _dataContext.Hotels.FromSqlInterpolated($"USP_GetAllHotel").ToListAsync();
+            var result = await _dataContext.Hotel.FromSqlInterpolated($"USP_GetAllHotel").ToListAsync();
             return result;
         }
 
         public override async Task<Hotel> GetByIdAsync(int id)
         {
-            var result = await _dataContext.Hotels.FromSqlInterpolated($"USP_GetHotelById @Id = {id}").ToListAsync();
+            var result = await _dataContext.Hotel.FromSqlInterpolated($"USP_GetHotelById @Id = {id}").ToListAsync();
             return result.FirstOrDefault();
         }
 
@@ -48,7 +48,7 @@ namespace SunriseServerData.Repositories
 
             builder.Append($"EXEC USP_GetHotelById @Id = @result");
 
-            var result = await _dataContext.Hotels.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            var result = await _dataContext.Hotel.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
             return result.FirstOrDefault();
         }
 

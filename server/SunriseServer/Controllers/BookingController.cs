@@ -55,6 +55,7 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<List<BookingDto>>("Get bookings successfully", finalResult));
         }
 
+        // chua hoan thien lam
         [HttpPost, Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<List<BookingAccount>>>> AddBooking(BookingAccount booking)
         {
@@ -66,6 +67,7 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<BookingAccount>("Add booking successfully", result));
         }
 
+        // chua hoan thien lam
         [HttpPut("{id}"), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> UpdateBooking(int id, BookingAccount request)
         {
@@ -76,6 +78,7 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<BookingAccount>("Update booking successfully", result));
         }
 
+        // chua hoan thien lam
         [HttpDelete("{id}"), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> DeleteBooking(int id)
         {

@@ -115,12 +115,12 @@ CREATE TABLE ACCOUNT
     Username VARCHAR(50),
     PasswordHash VARCHAR(500),
     PasswordSalt VARCHAR(500),
-	UserRole VARCHAR(50),
-	RefreshToken VARCHAR(200),
-	TokenCreated DATETIME,
-	TokenExpires DATETIME,
+    UserRole VARCHAR(50),
+    RefreshToken VARCHAR(200),
+    TokenCreated DATETIME,
+    TokenExpires DATETIME,
 
-	PRIMARY KEY (Id)
+    PRIMARY KEY (Id)
 )
 
 CREATE TABLE PERSONAL_DETAILS

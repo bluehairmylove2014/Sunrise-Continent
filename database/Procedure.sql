@@ -86,23 +86,6 @@ AS
 GO
 
 
-GO
-CREATE OR ALTER PROC USP_GetHotelRoomFacility 
-	@Id INT
-AS
-	SELECT DISTINCT room.FacilityId as Id, const.Value as Value FROM ROOM_FACILITY room 
-	JOIN FACILITY_CONST const ON room.FacilityId = const.Id
-	WHERE room.HotelId = @Id
-GO
-
-
-CREATE OR ALTER PROC USP_GetHotelRoomService
-	@Id INT
-AS
-	SELECT DISTINCT room.ServiceId as Id, const.Value as Value FROM ROOM_SERVICE room 
-	JOIN SERVICE_CONST const ON room.ServiceId = const.Id
-	WHERE room.HotelId = @Id
-GO
 
 
 CREATE OR ALTER PROC USP_SearchByName 
@@ -121,6 +104,25 @@ AS
 	WHERE Description like (N'%' + @search_query + N'%')
 
 	RETURN 1
+GO
+
+
+GO
+CREATE OR ALTER PROC USP_GetHotelRoomFacility 
+	@Id INT
+AS
+	SELECT DISTINCT room.FacilityId as Id, const.Value as Value FROM ROOM_FACILITY room 
+	JOIN FACILITY_CONST const ON room.FacilityId = const.Id
+	WHERE room.HotelId = @Id
+GO
+
+
+CREATE OR ALTER PROC USP_GetHotelRoomService
+	@Id INT
+AS
+	SELECT DISTINCT room.ServiceId as Id, const.Value as Value FROM ROOM_SERVICE room 
+	JOIN SERVICE_CONST const ON room.ServiceId = const.Id
+	WHERE room.HotelId = @Id
 GO
 
 
@@ -153,9 +155,11 @@ AS
 	RETURN 1
 GO
 
+
+
 CREATE OR ALTER PROC USP_GetAllHotel
 AS
-	SELECT Id, Name,
+	SELECT Id, Name, Country,
 			dbo.USF_GetHotelType(Id) as HotelType,
 			dbo.USF_GetLocationLabel(Id) as ProvinceCity, 
 			Address, Stars, Rating, Description, Image
@@ -175,7 +179,7 @@ AS
 		SELECT null;
 	END
 
-	SELECT Id, Name,
+	SELECT Id, Name, Country,
 			dbo.USF_GetHotelType(Id) as HotelType,
 			dbo.USF_GetLocationLabel(Id) as ProvinceCity, 
 			Address, Stars, Rating, Description, Image
@@ -189,6 +193,7 @@ GO
 CREATE OR ALTER PROC USP_AddHotel
 	--@Id INTEGER,
 	@Name NVARCHAR(100),
+	@Country NVARCHAR(100),
 	@HotelType VARCHAR(20),
 	@ProvinceCity NVARCHAR(20), -- not null
 	@Address NVARCHAR(100),
@@ -201,7 +206,7 @@ AS
 		DECLARE @Id INT
 		EXEC @Id = USP_GetNextColumnId 'HOTEL', 'Id'
 
-		INSERT INTO HOTEL VALUES (@Id, @Name, @HotelType, @ProvinceCity, @Address, @Stars, @Rating, @Description, @Image)
+		INSERT INTO HOTEL VALUES (@Id, @Name, @Country, @HotelType, @ProvinceCity, @Address, @Stars, @Rating, @Description, @Image)
 		RETURN @Id
 	END TRY
 

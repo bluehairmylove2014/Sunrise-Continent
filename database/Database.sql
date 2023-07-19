@@ -17,6 +17,7 @@ CREATE TABLE HOTEL
 (
 	Id INT,
 	Name NVARCHAR(100),
+	Country NVARCHAR(100),
 	CategoryId INT,
 	PlaceId INT,  
 	Address NVARCHAR(100),
@@ -313,61 +314,61 @@ INSERT INTO CATEGORY VALUES(2,'HOMESTAY','');
 INSERT INTO CATEGORY VALUES(3,'SINGLE_APARTMENT','');
 
 --!add hotel 
-INSERT INTO HOTEL VALUES(1, N'Triple E Hotel Metro Ben Thanh',1,1,
+INSERT INTO HOTEL VALUES(1, N'Triple E Hotel Metro Ben Thanh',N'Việt Nam',1,1,
 	 N'Phường Nguyễn Thái Bình 146- 148 Đường Ký Con, District 1, Ho Chi Minh City, Vietnam',
 	 3, 8.8, 
 	 N'Tọa lạc ở Thành phố Hồ Chí Minh, cách Bảo tàng Mỹ thuật 300 m, Triple E Hotel Metro Ben Thanh cung cấp chỗ nghỉ 3 sao với trung tâm thể dục.Khách sạn 3 sao này cung cấp WiFi miễn phí, dịch vụ phòng và dịch vụ lễ tân 24 giờ. Nhân viên tại đây có thể thu xếp dịch vụ đưa đón cho khách.',
 	 N'temp 1');
 
-INSERT INTO HOTEL VALUES(2, N'Nexus House Thao Dien',2,1,
+INSERT INTO HOTEL VALUES(2, N'Nexus House Thao Dien',N'Việt Nam',2,1,
 	N'8/9 Võ Trường Toản, An Phú, Quận 2, TP. Hồ Chí Minh, Việt Nam',
  	0, 9.5,
 	N'Located 6.3 km from Vietnam History Museum, Nexus House Thao Dien offers a garden, a terrace and air-conditioned accommodation with a balcony and free WiFi.',
 	N'temp 2');
 
-INSERT INTO HOTEL VALUES(3, N'Landmark Plus Luxury - Vinhomes Central Park',3,1, 
+INSERT INTO HOTEL VALUES(3, N'Landmark Plus Luxury - Vinhomes Central Park',N'Việt Nam',3,1, 
 	N'Phường Nguyễn Thái Bình 146- 148 Đường Ký Con, District 1, Ho Chi Minh City, Vietnam',
 	0, 8.1, 
 	N'Tọa lạc tại Thành phố Hồ Chí Minh, Landmark Plus Luxury - Vinhomes Central Park cung cấp chỗ nghỉ với hồ bơi ngoài trời, khu vườn, sảnh khách chung, sân hiên, quầy bar và tầm nhìn ra thành phố.',
 	N'temp 3');
 
-INSERT INTO HOTEL VALUES(4, N'Musketeers Guest House',1,2, 
+INSERT INTO HOTEL VALUES(4, N'Musketeers Guest House',N'Việt Nam',1,2, 
 	N'21 Ngõ 67 Tô Ngọc Vân Quảng An, Quận Tây Hồ, Hà Nội, Việt Nam',
 	0, 9.7, 
 	N'Located in Hanoi, 3.2 km from West Lake, Musketeers Guest House provides accommodation with a shared lounge, free private parking, a terrace and a bar. Among the facilities at this property are a 24-hour front desk and a concierge service, along with free WiFi throughout the property. Guests can enjoy garden views.',
 	N'temp 4');
 
-INSERT INTO HOTEL VALUES(5, N'Cristina Boutique Hotel',1,2, 
+INSERT INTO HOTEL VALUES(5, N'Cristina Boutique Hotel',N'Việt Nam',1,2, 
 	N'4A Ngõ Phất Lộc, Quận Hoàn Kiếm, Hà Nội, Việt Nam',
 	3, 9.1, 
 	N'Situated conveniently in the centre of Hanoi, Cristina Boutique Hotel features 3-star accommodation close to Hanoi Old City Gate and Thang Long Water Puppet Theater. This 3-star hotel has air-conditioned rooms with a private bathroom. The accommodation offers a 24-hour front desk, airport transfers, room service and free WiFi.',
 	N'temp 5');
 
-INSERT INTO HOTEL VALUES(6, N'SMARANA Hanoi HERITAGE',1,2, 
+INSERT INTO HOTEL VALUES(6, N'SMARANA Hanoi HERITAGE',N'Việt Nam',1,2, 
 	N'Phường Dịch Vọng Hầu, Quận Cầu Giấy Số 5, Ngõ 82/1 Dịch Vọng Hậu, Cau Giay, Hà Nội, Việt Nam',
 	5, 9.7, 
 	N'Tọa lạc tại thành phố Hà Nội, cách Bảo tàng Dân tộc học Việt Nam 2,4 km, SMARANA Hanoi HERITAGE có dịch vụ tiền sảnh, phòng nghỉ không hút thuốc, sân hiên, WiFi miễn phí trong toàn bộ khuôn viên và nhà hàng. Khách sạn 5 sao này cung cấp dịch vụ phòng, dịch vụ lễ tân 24 giờ, dịch vụ đưa đón sân bay và dịch vụ cho thuê xe đạp.',
 	N'temp 6');
 
-INSERT INTO HOTEL VALUES(7, N'An Hiên Homestay Hội An',2,3, 
+INSERT INTO HOTEL VALUES(7, N'An Hiên Homestay Hội An',N'Việt Nam',2,3, 
 	N'164 Lý Thái Tổ, phường Cẩm Châu, Cẩm Châu, Hội An, Việt Nam',
 	0, 9.6, 
 	N'Located in Hoi An, 1.2 km from Hoi An Historic Museum and 1.6 km from Assembly Hall of Chaozhou Chinese Congregation, An Hiên Homestay Hội An provides accommodation with free WiFi, air conditioning, free bikes and a garden.',
 	N'temp 7');
 
-INSERT INTO HOTEL VALUES(8, N'iHome Hoi An',1,3, 
+INSERT INTO HOTEL VALUES(8, N'iHome Hoi An',N'Việt Nam',1,3, 
 	N'54 Nguyễn Tri Phương, Cẩm Nam, Hội An, Việt Nam',
 	3, 9.2, 
 	N'Tọa lạc tại thành phố Hội An, cách Hội quán Triều Châu 600 m, iHome Hoi An cung cấp chỗ nghỉ với trung tâm thể dục, chỗ đỗ xe riêng miễn phí, sân hiên và quầy bar. Khách sạn 3 sao này có dịch vụ phòng và lễ tân 24 giờ. Sân golf Montgomerie Links và CLB chơi golf Montgomerie Links Vietnam đều nằm trong bán kính 15 km từ khách sạn.',
 	N'temp 8');
 
-INSERT INTO HOTEL VALUES(9, N'Florida Nha Trang Hotel',1,4, 
+INSERT INTO HOTEL VALUES(9, N'Florida Nha Trang Hotel',N'Việt Nam',1,4, 
 	N'66 Quang Trung, Nha Trang, Việt Nam',
 	5, 8.4, 
 	N'Tọa lạc tại thành phố Nha Trang, cách Bãi biển Nha Trang 1,5 km, Florida Nha Trang Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, trung tâm thể dục và sảnh khách chung. Khách sạn 5 sao này có CLB trẻ em, dịch vụ phòng, WiFi miễn phí, sân hiên và tầm nhìn ra thành phố. Du khách có thể dùng bữa tại nhà hàng hoặc nhâm nhi đồ uống ở quầy bar.',
 	N'temp 9');
 
-INSERT INTO HOTEL VALUES(10, N'Crown Hotel Nha Trang',1,4, 
+INSERT INTO HOTEL VALUES(10, N'Crown Hotel Nha Trang',N'Việt Nam',1,4, 
 	N'19 Dã Tượng, Nha Trang, Việt Nam',
 	4, 8.1, 
 	N'Tọa lạc tại thành phố Nha Trang, cách Bãi biển Nha Trang 300 m, Crown Hotel Nha Trang cung cấp chỗ nghỉ với trung tâm thể dục, chỗ đỗ xe riêng miễn phí, sảnh khách chung và nhà hàng. Khách sạn 4 sao này có dịch vụ tiền sảnh, bàn đặt tour, lễ tân 24 giờ, dịch vụ đưa đón sân bay, dịch vụ phòng và WiFi miễn phí.',

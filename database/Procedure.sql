@@ -86,23 +86,6 @@ AS
 GO
 
 
-GO
-CREATE OR ALTER PROC USP_GetHotelRoomFacility 
-	@Id INT
-AS
-	SELECT DISTINCT room.FacilityId as Id, const.Value as Value FROM ROOM_FACILITY room 
-	JOIN FACILITY_CONST const ON room.FacilityId = const.Id
-	WHERE room.HotelId = @Id
-GO
-
-
-CREATE OR ALTER PROC USP_GetHotelRoomService
-	@Id INT
-AS
-	SELECT DISTINCT room.ServiceId as Id, const.Value as Value FROM ROOM_SERVICE room 
-	JOIN SERVICE_CONST const ON room.ServiceId = const.Id
-	WHERE room.HotelId = @Id
-GO
 
 
 CREATE OR ALTER PROC USP_SearchByName 
@@ -124,44 +107,91 @@ AS
 GO
 
 
+GO
+CREATE OR ALTER PROC USP_GetHotelRoomFacility 
+	@Id INT
+AS
+	SELECT DISTINCT room.FacilityId as Id, const.Value as Value FROM ROOM_FACILITY room 
+	JOIN FACILITY_CONST const ON room.FacilityId = const.Id
+	WHERE room.HotelId = @Id
+GO
+
+
+CREATE OR ALTER PROC USP_GetHotelRoomService
+	@Id INT
+AS
+	SELECT DISTINCT room.ServiceId as Id, const.Value as Value FROM ROOM_SERVICE room 
+	JOIN SERVICE_CONST const ON room.ServiceId = const.Id
+	WHERE room.HotelId = @Id
+GO
+
+CREATE OR ALTER PROC USP_GetHotelRoomPicture
+	@Id INT
+AS
+	SELECT * FROM ROOM_PICTURE WHERE HotelId = @Id
+GO
+
+
 CREATE OR ALTER PROC USP_GetHotelRoomType 
 	@HotelId INT
 AS
-	IF NOT EXISTS (select * from HOTEL where Id = @HotelId)
-	BEGIN
-		RETURN 0
-	END
-
 	select * from ROOM_TYPE rt
 	where rt.HotelId = @HotelId
-
-	RETURN 1
 GO
 
-CREATE OR ALTER PROC USP_GetHotelRoomPicture 
+
+-- =================
+CREATE OR ALTER PROC USP_GetRoomType 
+	@HotelId INT,
+	@Id INT
+AS
+	select * from ROOM_TYPE rt
+	where rt.HotelId = @HotelId and Id = @Id
+GO
+
+
+CREATE OR ALTER PROC USP_GetRoomPicture 
 	@HotelId INT,
 	@RoomId INT
 AS
-	IF NOT EXISTS (select * from HOTEL where Id = @HotelId)
-	BEGIN
-		RETURN 0
-	END
-
 	select * from ROOM_PICTURE rp
 	where rp.HotelId = @HotelId and rp.RoomTypeId = @RoomId
-
-	RETURN 1
 GO
+
+CREATE OR ALTER PROC USP_GetRoomFacility
+	@HotelId INT,
+	@RoomId INT
+AS
+	SELECT room.FacilityId as Id, const.Value as Value FROM ROOM_FACILITY room 
+	JOIN FACILITY_CONST const ON room.FacilityId = const.Id
+	WHERE room.HotelId = @HotelId AND room.RoomId = @RoomId
+GO
+
+CREATE OR ALTER PROC USP_GetRoomService 
+	@HotelId INT,
+	@RoomId INT
+AS
+	SELECT room.ServiceId as Id, const.Value as Value FROM ROOM_SERVICE room 
+	JOIN SERVICE_CONST const ON room.ServiceId = const.Id
+	WHERE room.HotelId = @HotelId AND room.RoomId = @RoomId
+GO
+
+
+exec USP_GetHotelRoomType 11
+exec USP_GetRoomPicture 1, 1
+GO
+
+--! Hotel ==================
 
 CREATE OR ALTER PROC USP_GetAllHotel
 AS
-	SELECT Id, Name,
+	SELECT Id, Name, Country,
 			dbo.USF_GetHotelType(Id) as HotelType,
 			dbo.USF_GetLocationLabel(Id) as ProvinceCity, 
-			Address, Stars, Rating, Description, Image
+			Address, Stars, Rating, Description, Image,
+			dbo.USF_GetMinRoomPrice(Id) Price
 			--dbo.USF_GetReviewNum(Id) Reviews, 
 			--dbo.USF_GetAvgReview(Id) Rating,
-			--dbo.USF_GetMinRoomPrice(Id) Price
 	FROM HOTEL
 GO
 
@@ -175,13 +205,13 @@ AS
 		SELECT null;
 	END
 
-	SELECT Id, Name,
+	SELECT Id, Name, Country,
 			dbo.USF_GetHotelType(Id) as HotelType,
 			dbo.USF_GetLocationLabel(Id) as ProvinceCity, 
-			Address, Stars, Rating, Description, Image
+			Address, Stars, Rating, Description, Image,
+			dbo.USF_GetMinRoomPrice(Id) Price
 			--dbo.USF_GetReviewNum(Id) Reviews, 
 			--dbo.USF_GetAvgReview(Id) Rating,
-			--dbo.USF_GetMinRoomPrice(Id) Price
 	FROM HOTEL WHERE Id = @Id
 GO
 
@@ -189,6 +219,7 @@ GO
 CREATE OR ALTER PROC USP_AddHotel
 	--@Id INTEGER,
 	@Name NVARCHAR(100),
+	@Country NVARCHAR(100),
 	@HotelType VARCHAR(20),
 	@ProvinceCity NVARCHAR(20), -- not null
 	@Address NVARCHAR(100),
@@ -201,7 +232,7 @@ AS
 		DECLARE @Id INT
 		EXEC @Id = USP_GetNextColumnId 'HOTEL', 'Id'
 
-		INSERT INTO HOTEL VALUES (@Id, @Name, @HotelType, @ProvinceCity, @Address, @Stars, @Rating, @Description, @Image)
+		INSERT INTO HOTEL VALUES (@Id, @Name, @Country, @HotelType, @ProvinceCity, @Address, @Stars, @Rating, @Description, @Image)
 		RETURN @Id
 	END TRY
 
@@ -474,7 +505,7 @@ GO
 CREATE OR ALTER PROCEDURE USP_InsertRoomPicture
     @HotelId INT,
     @RoomTypeId INT,
-    @PictureId INT,
+    @Id INT,
     @PictureLink VARCHAR(1000),
     @Result INT OUTPUT
 AS
@@ -485,8 +516,8 @@ BEGIN
 
     BEGIN TRY
         -- Thêm ảnh phòng mới
-        INSERT INTO ROOM_PICTURE (HotelId, RoomTypeId, PictureId, PictureLink)
-        VALUES (@HotelId, @RoomTypeId, @PictureId, @PictureLink);
+        INSERT INTO ROOM_PICTURE (HotelId, RoomTypeId, Id, PictureLink)
+        VALUES (@HotelId, @RoomTypeId, @Id, @PictureLink);
 
         COMMIT;
         SET @Result = 1; -- Trả về kết quả 1 khi thêm thành công
@@ -502,7 +533,7 @@ GO
 CREATE OR ALTER PROCEDURE USP_UpdateRoomPicture
     @HotelId INT,
     @RoomTypeId INT,
-    @PictureId INT,
+    @Id INT,
     @PictureLink VARCHAR(1000),
     @Result INT OUTPUT
 AS
@@ -517,7 +548,7 @@ BEGIN
         SET PictureLink = @PictureLink
         WHERE HotelId = @HotelId
         AND RoomTypeId = @RoomTypeId
-        AND PictureId = @PictureId;
+        AND Id = @Id;
 
         COMMIT;
         SET @Result = 1; -- Trả về kết quả 1 khi cập nhật thành công
@@ -533,7 +564,7 @@ GO
 CREATE OR ALTER PROCEDURE USP_DeleteRoomPicture
     @HotelId INT,
     @RoomTypeId INT,
-    @PictureId INT,
+    @Id INT,
     @Result INT OUTPUT
 AS
 BEGIN
@@ -546,7 +577,7 @@ BEGIN
         DELETE FROM ROOM_PICTURE
         WHERE HotelId = @HotelId
         AND RoomTypeId = @RoomTypeId
-        AND PictureId = @PictureId;
+        AND Id = @Id;
 
         COMMIT;
         SET @Result = 1; -- Trả về kết quả 1 khi xóa thành công

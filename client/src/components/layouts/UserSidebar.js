@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import {
     Link 
 } from 'react-router-dom';
-import { useLogout } from '../../libs/business-logic/lib/auth';
+import { useLogout } from '../../libs/business-logic/src/lib/auth';
 
 const UserSidebar = ({isActive, callback}) => {
     const sidebarRef = useRef(null);

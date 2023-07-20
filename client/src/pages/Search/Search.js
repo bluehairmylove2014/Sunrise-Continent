@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import '../../styles/scss/_search.scss';
+import '../../styles/scss/search.scss';
 import TravelImg from '../../assets/images/graphics/travel.png';
 import Filterboard from './Filterboard';
 import BannerInput from '../../components/common/BannerInput';
@@ -12,7 +12,7 @@ import {
 } from '../../utils/helpers/params';
 import Hotel from './Hotel';
 import { toggleClass } from '../../utils/helpers/ToggleClass';
-import { useSearch } from '../../libs/business-logic/lib/hotel';
+import { useSearch } from '../../libs/business-logic/src/lib/hotel';
 import SmallPageLoader from '../../components/common/SmallPageLoader';
 
 const Search = () => {

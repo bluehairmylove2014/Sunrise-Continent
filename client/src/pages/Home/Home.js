@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import '../../styles/scss/_home.scss';
+import '../../styles/scss/home.scss';
 
 // subcomponent
 import Banners from './Banners';

@@ -1,0 +1,207 @@
+@import './mixin';
+
+.authen {
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+    transition: all 0.5s ease-in;
+    .authen__header {
+        position: relative;
+        z-index: 99;
+        width: 100%;
+        height: 60px;
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, flex-end, center, nowrap);
+        nav ul {
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, flex-end, center, nowrap);
+            li {
+                margin-right: 2rem;
+                a {
+                    font-size: 0.75rem;
+                    color: white;
+                    font-weight: 600;
+                    cursor: pointer;
+                    &.active {
+                        color: black;
+                        background-color: white;
+                        border-radius: 1rem;
+                        padding: 8px 25px;
+                    }
+                }
+            }
+        }
+    }
+    .authen__main {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        .authen__wrapper {
+            @include absolute-center;
+            width: 1200px;
+            height: 500px;
+            border-radius: 1rem;
+            overflow: hidden;
+            
+            .authen__container {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                .authen__bg {
+                    @include absolute-center;
+                    background-color: rgba($color: #372C57, $alpha: 0.5);
+                    width: 100%;
+                    height: 100%;
+                    z-index: -1;
+                }
+                .authen__intro {
+                    padding: 3rem 4rem 4rem 4rem;
+                    color: white;
+                    width: calc(60% - 8rem);
+                    height: calc(100% - 7rem);
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(column, space-between, flex-start, nowrap);
+                    .authen-intro__logo {
+                        width: auto;
+                        height: 70px;
+                        img {
+                            height: 100%;
+                            width: auto;
+                        }
+                    }
+                    p {
+                        opacity: 0.8;
+                        margin: 1rem 0; 
+                    }
+                    .authen-intro__social-link {
+                        // direction - justify content - align items - flex wrap
+                        @include dflex(row, flex-start, center, nowrap);
+                        a {
+                            color: white;
+                            margin: 0 1rem 0 0.5rem;
+                            transition: transform 0.2s ease-in;
+                            &:hover {
+                                transform: scale(1.4);
+                            }
+                        }
+                    }
+                }
+                .loginForm, .registerForm {
+                    position: absolute;
+                    top: 50%;
+                    right: 4rem;
+                    transform: translateY(-50%);
+                    width: calc(40% - 4rem);
+                    color: white;
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(column, center, center, nowrap);
+                    gap: 1rem;
+                    transition: all 0.5s ease-in;
+                    visibility: hidden;
+                    opacity: 0;
+                    pointer-events: none;
+
+                    .authen-form__input-field {
+                        width: 100%;
+                        height: 50px;
+                        position: relative;
+                        border-bottom: 2px solid white;
+                        input {
+                            width: 100%;
+                            height: 100%;
+                            background-color: transparent;
+                            outline: none;
+                            border: none;
+                            color: white;
+                            font-size: 0.8rem;
+                        }
+                        i, label {
+                            font-size: 0.8rem;
+                            position: absolute;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            pointer-events: none;
+                        }
+                        label {
+                            left: 0;
+                            visibility: hidden;
+                            opacity: 0;
+                            transition: all 0.2s ease-in;
+                            &.active {
+                                visibility: visible;
+                                opacity: 1;
+                            }
+                        }
+                        i {
+                            right: 0;
+                        }
+                    }
+                    .authen-form__interact-field {
+                        width: 100%;
+                        // direction - justify content - align items - flex wrap
+                        @include dflex(row, space-between, center, nowrap);
+                        label, a {
+                            font-size: 0.6rem;
+                            color: white;
+                            font-weight: 600;
+                        }
+                        div {
+                            // direction - justify content - align items - flex wrap
+                            @include dflex(row, center, center, nowrap);
+                        }
+                    }
+                    .authen-form__register-btn {
+                        width: 100%;
+                        // border - border radius - background color - color - padding - font size
+                        @include normal-btn(none, 5px, transparent, white, 0, 14px);
+                        font-weight: 500;
+                        &:hover {
+                            color: var(--soft-blue);
+                        }
+                    }
+
+                    &.active {
+                        visibility: visible;
+                        opacity: 1;
+                        pointer-events: all;
+                    }
+                }
+                .loginForm {
+                    .authen-form__submit-btn {
+                        width: 100%;
+                        height: 40px;
+                        // border - border radius - background color - color - padding - font size
+                        @include normal-btn(none, 5px, var(--soft-blue), white, 0, 14px);
+                        &:hover {
+                            background-color: var(--ultramarine-blue);
+                        }
+                        &:disabled {
+                            cursor: not-allowed;
+                            pointer-events: none;
+                            background-color: var(--quill-grey);
+                        }
+                    }
+                }
+                .registerForm {
+                    .authen-form__submit-btn {
+                        width: 100%;
+                        height: 40px;
+                        // border - border radius - background color - color - padding - font size
+                        @include normal-btn(none, 5px, var(--toxic-green), white, 0, 14px);
+                        &:hover {
+                            background-color: var(--kelly-green);
+                        }
+                        &:disabled {
+                            cursor: not-allowed;
+                            pointer-events: none;
+                            background-color: var(--quill-grey);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -142,70 +142,72 @@ const Search = () => {
                     Tìm kiếm
                 </button>
             </form>
-            <Filterboard form={searchBoardForm} />
-            {
-                isSearching ? <SmallPageLoader /> :
-                <>
-                    <div className="search__results">
-                        <div className="results__title-container">
-                            <h3 className='results__title'>
-                                Kết quả cho&nbsp;
-                                <span>
-                                    {criteria[BANNER_INPUT.LOCATION.INPUT_NAME]}
-                                </span>
-                                <span>
-                                    {Object.keys(criteria).length > 1 && ` và +${Object.keys(criteria).length} tuỳ chọn khác`}
-                                </span>
-                            </h3>
-                            <small>Hiển thị 0 - 14 trong {Number(4102014).toLocaleString('en')} kết quả</small>
-                        </div>
-                        <hr />
-                        <div className="results__subtitle-container">
-                            <div className="result__subtitle">
-                                <p>Thời gian được tính theo giờ địa phương</p>
-                                <p>Đã bao gồm thuế và phí</p>
+            <div className="container main__wrapper">
+                <Filterboard form={searchBoardForm} />
+                {
+                    isSearching ? <SmallPageLoader /> :
+                    <>
+                        <div className="search__results">
+                            <div className="results__title-container">
+                                <h3 className='results__title'>
+                                    Kết quả cho&nbsp;
+                                    <span>
+                                        {criteria[BANNER_INPUT.LOCATION.INPUT_NAME]}
+                                    </span>
+                                    <span>
+                                        {Object.keys(criteria).length > 1 && ` và +${Object.keys(criteria).length} tuỳ chọn khác`}
+                                    </span>
+                                </h3>
+                                <small>Hiển thị 0 - 14 trong {Number(4102014).toLocaleString('en')} kết quả</small>
                             </div>
-                            <div className="results__sort-container">
-                                <button
-                                    onClick={() => toggleClass(sortDropdownRef.current, 'active')}
-                                >
-                                    <span>Sắp xếp theo</span>
-                                    <i className="fi fi-ts-angle-small-down"></i>
-                                </button>
-                                <div className="results-sort__dropdown" ref={sortDropdownRef}>
-                                    <button>Phổ biến nhất</button>
-                                    <button>Giá tăng dần</button>
-                                    <button>Giá giảm dần</button>
+                            <hr />
+                            <div className="results__subtitle-container">
+                                <div className="result__subtitle">
+                                    <p>Thời gian được tính theo giờ địa phương</p>
+                                    <p>Đã bao gồm thuế và phí</p>
+                                </div>
+                                <div className="results__sort-container">
+                                    <button
+                                        onClick={() => toggleClass(sortDropdownRef.current, 'active')}
+                                    >
+                                        <span>Sắp xếp theo</span>
+                                        <i className="fi fi-ts-angle-small-down"></i>
+                                    </button>
+                                    <div className="results-sort__dropdown" ref={sortDropdownRef}>
+                                        <button>Phổ biến nhất</button>
+                                        <button>Giá tăng dần</button>
+                                        <button>Giá giảm dần</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="results__list">
+                                {renderHotels(hotels)}
+                                <div className="results__page-pagination-wrapper">
+                                    {
+                                        <div className="results__page-pagination">
+                                            <button>
+                                                <i className="fi fi-rs-angle-double-small-left"></i>
+                                            </button>
+                                            <button>
+                                                <i className="fi fi-rs-angle-small-left"></i>
+                                            </button>
+            
+                                            {renderPagePaginationNumberBtn(currentPage, 10)}
+            
+                                            <button>
+                                                <i className="fi fi-rs-angle-small-right"></i>
+                                            </button>
+                                            <button>
+                                                <i className="fi fi-rs-angle-double-small-right"></i>
+                                            </button>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
-                        <div className="results__list">
-                            {renderHotels(hotels)}
-                            <div className="results__page-pagination-wrapper">
-                                {
-                                    <div className="results__page-pagination">
-                                        <button>
-                                            <i className="fi fi-rs-angle-double-small-left"></i>
-                                        </button>
-                                        <button>
-                                            <i className="fi fi-rs-angle-small-left"></i>
-                                        </button>
-        
-                                        {renderPagePaginationNumberBtn(currentPage, 10)}
-        
-                                        <button>
-                                            <i className="fi fi-rs-angle-small-right"></i>
-                                        </button>
-                                        <button>
-                                            <i className="fi fi-rs-angle-double-small-right"></i>
-                                        </button>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </>
-            }
+                    </>
+                }
+            </div>
         </main>
     );
 }

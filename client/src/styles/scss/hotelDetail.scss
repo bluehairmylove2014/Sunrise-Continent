@@ -1,0 +1,328 @@
+@import './mixin';
+
+.hotel-detail {
+    width: 100vw;
+    .hotel-detail__overall-wrapper {
+        background-color: white;
+        width: 100%;
+        height: fit-content;
+        padding: 50px 0;
+        .hotel-detail__overall {
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, space-between, center, nowrap);
+            .overall__infor {
+                .overall-infor__address {
+                    font-weight: 600;
+                    opacity: 0.5;
+                    margin: 0.25rem 0 0.75rem 0;
+                }
+                .overall-infor__review {
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(row, flex-start, center, nowrap);
+                    gap: 10px;
+                    .review__point {
+                        padding: 8px 8px;
+                        background-color: var(--butterfly-bush);
+                        border-radius: 5px;
+                        color: white;
+                        font-weight: 600;
+                        font-size: 0.7rem;
+                    }
+                    .review__label {
+                        font-weight: 700;
+                        font-size: 0.8rem;
+                    }
+                    .review__count {
+                        font-size: 0.6rem;
+                        font-weight: 600;
+                        opacity: 0.5;
+                    }
+                }
+            }
+            .overall__booking-price {
+                // direction - justify content - align items - flex wrap
+                @include dflex(column, flex-start, flex-end, nowrap);
+                .booking-price__price-per-night {
+                    span {
+                        color: var(--butterfly-bush);
+                        font-weight: 700;
+                        font-size: 1rem;
+                    }
+                }
+                .booking-price__interact {
+                    margin-top: 0.75rem;
+                    button {
+                        &:nth-child(1) {
+                            margin-right: 1rem;
+                            // border - border radius - background color - color - padding - font size
+                            @include normal-btn(1px solid black, 5px, white, black, 10px 20px, 0.75rem);
+
+                            i {
+                                margin-right: 0.5rem;
+                            }
+                        }
+                        &:nth-child(2) {
+                            // border - border radius - background color - color - padding - font size
+                            @include normal-btn(1px solid black, 5px, orange, black, 10px 30px, 0.75rem);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .hotel-detail__gallery {
+        position: relative;
+        // columns - row - gap
+        @include dgrid(repeat(4, 1fr), auto auto, 20px);
+
+        button {
+            cursor: pointer;
+            padding: 0;
+            img {
+                width: 100%;
+                height: 100%;
+            }
+            &:nth-child(1) {
+                grid-column: 1 /span 2;
+                grid-row: 1 /span 2;
+                img {
+                    border-radius: 15px 0 0 15px;
+                }
+            }
+            &:nth-child(2) {
+                grid-column: 3;
+                grid-row: 1;
+            }
+            &:nth-child(3) {
+                grid-column: 4;
+                grid-row: 1;
+                img {
+                    border-radius: 0 15px 0 0;
+                }
+            }
+            &:nth-child(4) {
+                grid-column: 3;
+                grid-row: 2;
+            }
+            &:nth-child(5) {
+                grid-column: 4;
+                grid-row: 2;
+                img {
+                    border-radius: 0 0 15px 0;
+                }
+            }
+        }
+        .gallery__view-all-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            // border - border radius - background color - color - padding - font size
+            @include normal-btn(none, 5px, var(--desert-storm), black, 8px 30px, 14px);
+            opacity: 0.6;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+    .hotel-detail__description {
+        h3 {
+            margin-bottom: 1rem;
+        }
+        & > p {
+            font-size: 0.875rem;
+        }
+        .description__room-options {
+            margin-top: 1.5rem;
+            .room-option-wrapper {
+                i {
+                    margin-right: 0.75rem;
+                    color: var(--dirty-orange)
+                }
+                span {
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    opacity: 0.8;
+                }
+            }
+        }
+        .description__moreinfo-wrapper {
+            margin-top: 50px;
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, space-evenly, center, nowrap);
+            gap: 20px;
+
+            $amenities-column: 8;
+            .moreinfo-wrapper__amenities,
+            .moreinfo-wrapper__room-options {
+                padding: 30px;
+                border-radius: 10px;
+                border: 1px solid black;
+                width: 100%;
+
+                h5 {
+                    grid-column: 1 /span $amenities-column;
+                    width: 100%;
+                    margin-bottom: 20px;
+                    text-align: center
+                }
+            }
+
+            .moreinfo-wrapper__amenities {
+                // columns - row - gap
+                @include dgrid(repeat($amenities-column, 1fr), auto, 1rem);
+                gap: 30px;
+                .amenities-wrapper {
+                    img {
+                        max-width: 50px;
+                        max-height: 50px;
+                    }
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(column, center, center, nowrap);
+
+                    span {
+                        margin-top: 0.5rem;
+                        font-weight: 600;
+                        font-size: 0.75rem;
+                        text-align: center;
+                    }
+                }
+            }
+            .moreinfo-wrapper__room-options {
+
+            }
+        }
+    }
+    .hotel-detail__neighborhood {
+        h3 {
+            margin-bottom: 2rem;
+        }
+        & > img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+        }
+
+        h5 {
+            margin: 2rem 0 1.5rem 0;
+        }
+        .neighborhood__location-list {
+            // columns - row - gap
+            @include dgrid(repeat(2, 1fr), auto, 1rem);
+
+            span {
+                &:nth-child(2) {
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+    .hotel-detail__reviews {
+        margin-bottom: 100px;
+        .reviews__total-result {
+            margin: 1rem 0 2rem 0;
+            width: fit-content;
+            // columns - row - gap
+            @include dgrid(20% 1fr, auto auto, 0);
+            strong {
+                grid-column: 1;
+                grid-row: 1 /span 2;
+                font-size: 45px;
+                margin-right: 0.5rem;
+            }
+            p {
+                grid-column: 2;
+                white-space: nowrap;
+                &:nth-child(2) {
+                    grid-row: 1;
+                }
+            }
+            .total-result__label {
+                font-size: 0.875rem;
+                font-weight: 700;
+            }
+        }
+        .reviews__user-review {
+            border: 1px solid black;
+            border-radius: 0.25rem;
+            padding: 20px;
+            margin-bottom: 20px;
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, flex-start, flex-start, nowrap);
+            gap: 10px;
+            .user-review__avatar-wrapper {
+                min-width: 70px;
+                .user-review__avatar {
+                    border-radius: 50%;
+                    overflow: hidden;
+                    width: 60px;
+                    height: 60px;
+                    flex-grow: 1;
+                }
+            }
+            .user-review__main {
+                flex-shrink: 1;
+                .user-review__rating {
+                    margin-bottom: 0.5rem;
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(row, flex-start, center, nowrap);
+                    strong,
+                    span,
+                    p {
+                        margin: 0 0.25rem;
+                    }
+                    strong {
+                        margin-left: 0;
+                    }
+                    span {
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                    }
+                }
+                .user-review__content {
+                    .content__media {
+                        // direction - justify content - align items - flex wrap
+                        @include dflex(row, flex-start, center, nowrap);
+                        gap: 10px;
+                        .content__img-wrapper {
+                            margin-top: 1rem;
+                            width: 150px;
+                            height: 150px;
+                            position: relative;
+                            border-radius: 5px;
+                            overflow: hidden;
+    
+                            img {
+                                @include absolute-center;
+                                object-fit: cover;
+                                width: 100%;
+                                height: 100%;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .reviews__pagination {
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, flex-end, center, nowrap);
+            .pagination__coordination {
+                // border - border radius - background color - color - padding - font size
+                @include normal-btn(1px solid black, 5px, white, black, 8px 20px, 0.8rem);
+
+                &:hover {
+                    background-color: var(--desert-storm);
+                    transform: scale(1.05);
+                }
+                &:disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                    pointer-events: none;
+                }
+            }
+            p {
+                margin: 0 1rem;
+            }
+        }
+    }
+}

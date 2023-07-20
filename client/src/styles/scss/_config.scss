@@ -3,6 +3,8 @@ $desktop-breakpoint: 1024px;
 $tablet-breakpoint: 768px;
 $mobile-breakpoint: 480px;
 
+$container-width: 1400px;
+
 // Color define
 :root {
     --quill-grey: #d3d3d3;
@@ -100,9 +102,11 @@ body {
     /* Firefox */
 }
 
+
 .container {
     margin: 0px auto;
     padding: 0px 100px;
+    max-width: $container-width;
 }
 
 @media (max-width: $desktop-breakpoint) {
@@ -188,4 +192,22 @@ a {
 i {
     position: relative;
     bottom: -2px;
+}
+.custom-line-template {
+    width: $container-width;
+    position: relative;
+    border-top: dashed 3px #7e7e7e;
+    height: 2px;
+    text-align: center;
+    margin: 80px auto;
+
+    img {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -60%);
+        width: 50px;
+        height: 50px;
+        background-color: white;
+        padding: 0 10px;
+    }
 }

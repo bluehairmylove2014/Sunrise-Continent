@@ -33,27 +33,6 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER FUNCTION USF_GetLocationLabel (@HotelId INT)
-RETURNS VARCHAR(100)
-BEGIN
-	declare @Value VARCHAR(100)
-	SET @Value = (	SELECT pl.Name FROM PLACE pl JOIN HOTEL ht ON pl.PlaceId = ht.PlaceId
-					WHERE ht.Id = @HotelId)
-	IF @Value IS NULL RETURN 'UNCATEGORIZED'
-    RETURN @Value
-END
-GO
-
-CREATE OR ALTER FUNCTION USF_GetHotelType (@HotelId INT)
-RETURNS VARCHAR(100)
-BEGIN
-	declare @Value VARCHAR(100)
-	SET @Value = (	SELECT cat.Name FROM CATEGORY cat JOIN HOTEL ht ON cat.CategoryId = ht.CategoryId
-					WHERE ht.Id = @HotelId)
-	IF @Value IS NULL RETURN 'UNCATEGORIZED'
-    RETURN @Value
-END
-GO
 
 CREATE OR ALTER PROC USP_GetNextColumnId(
 	@tablename SYSNAME,
@@ -185,16 +164,16 @@ GO
 
 CREATE OR ALTER PROC USP_GetAllHotel
 AS
-	SELECT Id, Name, Country,
-			dbo.USF_GetHotelType(Id) as HotelType,
-			dbo.USF_GetLocationLabel(Id) as ProvinceCity, 
+	SELECT Id, Name, Country, HotelType, ProvinceCity, 
 			Address, Stars, Rating, Description, Image,
 			dbo.USF_GetMinRoomPrice(Id) Price
 			--dbo.USF_GetReviewNum(Id) Reviews, 
 			--dbo.USF_GetAvgReview(Id) Rating,
 	FROM HOTEL
 GO
-
+exec USP_GetAllHotel
+delete from HOTEL where Id = 11
+go
 
 --! 
 CREATE OR ALTER PROC USP_GetHotelById
@@ -205,9 +184,7 @@ AS
 		SELECT null;
 	END
 
-	SELECT Id, Name, Country,
-			dbo.USF_GetHotelType(Id) as HotelType,
-			dbo.USF_GetLocationLabel(Id) as ProvinceCity, 
+	SELECT Id, Name, Country, HotelType, ProvinceCity, 
 			Address, Stars, Rating, Description, Image,
 			dbo.USF_GetMinRoomPrice(Id) Price
 			--dbo.USF_GetReviewNum(Id) Reviews, 
@@ -217,11 +194,11 @@ GO
 
 
 CREATE OR ALTER PROC USP_AddHotel
-	--@Id INTEGER,
+	--@Id INT,
 	@Name NVARCHAR(100),
 	@Country NVARCHAR(100),
-	@HotelType VARCHAR(20),
-	@ProvinceCity NVARCHAR(20), -- not null
+	@HotelType NVARCHAR(100),
+	@ProvinceCity VARCHAR(100),  
 	@Address NVARCHAR(100),
 	@Stars INT,
 	@Rating FLOAT,
@@ -230,8 +207,8 @@ CREATE OR ALTER PROC USP_AddHotel
 AS
 	BEGIN TRY
 		DECLARE @Id INT
-		EXEC @Id = USP_GetNextColumnId 'HOTEL', 'Id'
-
+		EXEC @Id = USP_GetNextColumnId 'HOTEL', 'Id';
+		
 		INSERT INTO HOTEL VALUES (@Id, @Name, @Country, @HotelType, @ProvinceCity, @Address, @Stars, @Rating, @Description, @Image)
 		RETURN @Id
 	END TRY
@@ -241,6 +218,7 @@ AS
 		RETURN -1
 	END CATCH
 GO
+
 
 
 CREATE OR ALTER PROC USP_GetNextAccountId(
@@ -473,15 +451,14 @@ GO
 --!Sửa thông tin loại phòng
 CREATE OR ALTER PROCEDURE USP_UpdateRoomType
     @HotelId INT,
-    @RoomId INT,
+    @Id INT,
     @Name NVARCHAR(100),
     @Vacancy INT,
     @Size FLOAT,
     @Price FLOAT,
     @RoomInfo NVARCHAR(1000),
     @RoomView NVARCHAR(1000),
-    @BedType VARCHAR(100),
-    @Result INT OUTPUT
+    @BedType VARCHAR(100)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -489,13 +466,13 @@ BEGIN
     BEGIN TRY
         UPDATE ROOM_TYPE
         SET Name = @Name, Vacancy = @Vacancy, Size = @Size, Price = @Price, RoomInfo = @RoomInfo, RoomView = @RoomView, BedType = @BedType
-        WHERE HotelId = @HotelId AND Id = @RoomId
+        WHERE HotelId = @HotelId AND Id = @Id
 
-        SET @Result = 1; -- thành công
+        RETURN 1; -- thành công
 	END TRY
 
     BEGIN CATCH
-        SET @Result = 0; -- thất bại
+        RETURN 0; -- thất bại
     END CATCH;
 END
 GO

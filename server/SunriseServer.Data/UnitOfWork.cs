@@ -31,6 +31,30 @@ namespace SunriseServerData
         }
         #endregion
 
+        #region Room
+        private IHotelRoomServiceRepo _hotelRoomServiceRepo;
+        public IHotelRoomServiceRepo HotelRoomServiceRepo
+        {
+            get
+            {
+                if (_hotelRoomServiceRepo == null)
+                    _hotelRoomServiceRepo = new RoomServiceRepo(_dataContext);
+                return _hotelRoomServiceRepo;
+            }
+        }
+
+        private IHotelRoomFacilityRepo _hotelRoomFacilityRepo;
+        public IHotelRoomFacilityRepo HotelRoomFacilityRepo
+        {
+            get
+            {
+                if (_hotelRoomFacilityRepo == null)
+                    _hotelRoomFacilityRepo = new HotelRoomFacilityRepo(_dataContext);
+                return _hotelRoomFacilityRepo;
+            }
+        }
+        #endregion
+
         #region Account
         private IAccountRepo _accountRepo;
         public IAccountRepo AccountRepo

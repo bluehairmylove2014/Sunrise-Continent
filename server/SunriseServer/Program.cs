@@ -1,12 +1,14 @@
 global using SunriseServerCore.Models;
 global using SunriseServerData;
 using SunriseServer.Services.HotelService;
+using SunriseServer.Services.RoomService;
 using SunriseServer.Services.AccountService;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IHotelService, HotelService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(options =>
 {

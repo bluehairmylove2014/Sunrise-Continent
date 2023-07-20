@@ -1,6 +1,6 @@
 ﻿namespace SunriseServerCore.Models
 {
-    public class RoomType
+    public class RoomType : ModelBase
     {
         public int HotelId { get; set; }
         public int Id { get; set; }
@@ -10,7 +10,6 @@
         public double Price { get; set; }
         public string RoomInfo { get; set; } = string.Empty;
         public string RoomView { get; set; } = string.Empty;
-        public string Facilites { get; set; } = string.Empty;
-        public string Smoking { get; set; } = string.Empty;
+        public string BedType { get; set; } = string.Empty;
     }
 }

@@ -9,5 +9,11 @@ namespace SunriseServerCore.RepoInterfaces
 {
     public interface IHotelRepo : IRepository<Hotel>
     {
+
+
+        // More info
+        Task<List<HotelRoomFacility>> GetHotelFacilityAsync(int id);
+        Task<List<HotelRoomService>> GetHotelServiceAsync(int id);
+        Task<List<RoomPicture>> GetHotelPictureAsync(int id);
     }
 }

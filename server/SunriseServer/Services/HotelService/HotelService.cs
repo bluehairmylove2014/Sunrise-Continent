@@ -50,5 +50,24 @@ namespace SunriseServer.Services.HotelService
 
             return result;
         }
+
+        // More Info
+        public async Task<List<HotelRoomService>> GetHotelServices(int id)
+        {
+            var servicesList = await _unitOfWork.HotelRepo.GetHotelServiceAsync(id);
+            return servicesList;
+        }
+
+        public async Task<List<HotelRoomFacility>> GetHotelFacility(int id)
+        {
+            var servicesList = await _unitOfWork.HotelRepo.GetHotelFacilityAsync(id);
+            return servicesList;
+        }
+
+        public async Task<List<RoomPicture>> GetHotelPicture(int id)
+        {
+            var servicesList = await _unitOfWork.HotelRepo.GetHotelPictureAsync(id);
+            return servicesList;
+        }
     }
 }

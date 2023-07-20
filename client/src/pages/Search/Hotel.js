@@ -1,5 +1,5 @@
 import React from 'react';
-import { ROOM_OPTIONS } from '../../constants/filter.constants';
+import { ROOM_OPTIONS } from '../../constants/Filter.constants';
 import {
     convertNumberToCurrency
 } from '../../utils/helpers/MoneyConverter';

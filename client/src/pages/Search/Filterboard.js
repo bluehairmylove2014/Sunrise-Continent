@@ -4,10 +4,10 @@ import {
   FILTER_SEARCH,
   LOCATION_TYPES,
   BED_TYPES,
-  GUEST_RATINGS,
   ROOM_OPTIONS,
   ACCOMMODATION_FACILITIES
-} from "../../constants/filter.constants";
+} from "../../constants/Filter.constants";
+import { GUEST_RATINGS } from "../../constants/Rating.constant";
 import BudgetRange from "../../components/common/BudgetRange";
 import Checkbox from "../../components/common/Checkbox";
 

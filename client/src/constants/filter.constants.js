@@ -89,24 +89,6 @@ export const BED_TYPES = {
         LABEL: "Giường tầng"
     }
 }
-export const GUEST_RATINGS = {
-    EXCELLENT: {
-        INPUT_NAME: "excellent",
-        LABEL: "Trên cả tuyệt vời (9+)"
-    },
-    GREAT: {
-        INPUT_NAME: "great",
-        LABEL: "Xuất sắc (8+)"
-    },
-    VERY_GOOD: {
-        INPUT_NAME: "very_good",
-        LABEL: "Rất tốt (7+)"
-    },
-    SATISFIED: {
-        INPUT_NAME: "satisfied",
-        LABEL: "Hài lòng (6+)"
-    }
-}
 export const ROOM_OPTIONS = {
     BREAKFAST_INCLUDED: {
         INPUT_NAME: "breakfast_included",

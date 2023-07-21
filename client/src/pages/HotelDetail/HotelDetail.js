@@ -6,12 +6,16 @@ import { convertNumberToCurrency } from '../../utils/helpers/MoneyConverter';
 import '../../styles/scss/hotelDetail.scss';
 import { icon } from './Data';
 import { ACCOMMODATION_FACILITIES, ROOM_OPTIONS } from '../../constants/filter.constants';
+import map_img from '../../assets/images/graphics/image 31.png'
+import Rooms from './Rooms';
+import { useGetRooms } from '../../libs/business-logic/src/lib/hotel/process/hooks';
 
-
-import ggmap from '../../assets/images/graphics/image 31.png'
-
-const HotelDetail = ({hotelID}) => {
+const HotelDetail = () => {
     const [hotelDetail, setHotelDetail] = useState(null);
+    const urlParams = new URLSearchParams(window.location.search);
+    const hotelId = urlParams.get('id');
+    console.log("Hotel ID: ", hotelId)
+    const roomsData = useGetRooms("2")
 
     useEffect(() => {
         setHotelDetail({
@@ -45,7 +49,7 @@ const HotelDetail = ({hotelID}) => {
             const icon = ACCOMMODATION_FACILITIES[am].ICON;
             const label = ACCOMMODATION_FACILITIES[am].LABEL
             return (
-                <div className="amenities-wrapper">
+                <div className="amenities-wrapper" key={ACCOMMODATION_FACILITIES[am].LABEL}>
                     <img src={icon} alt="amentities" />
                     <span>{label}</span>
                 </div>
@@ -59,7 +63,7 @@ const HotelDetail = ({hotelID}) => {
             const icon = ROOM_OPTIONS[sv].ICON;
             const label = ROOM_OPTIONS[sv].LABEL
             return (
-                <div className="room-option-wrapper">
+                <div className="room-option-wrapper" key={ROOM_OPTIONS[sv].LABEL}>
                     <i className={icon}></i>
                     <span>{label}</span>
                 </div>
@@ -171,7 +175,7 @@ const HotelDetail = ({hotelID}) => {
                 <section className="hotel-detail__neighborhood">
                     <h3>Thành Phố và Khu Vực Lân Cận</h3>
 
-                    <img src={ggmap} alt="ggmap" />
+                    <img src={map_img} alt="ggmap" />
 
                     <h5>Gần với</h5>
 
@@ -330,6 +334,14 @@ const HotelDetail = ({hotelID}) => {
                         <p>{`1`} trên {`8`}</p>
                         <button disabled={false} className='pagination__coordination'>Next</button>
                     </div>
+                </section>
+                <div className="custom-line-template">
+                    <img src={icon.lineIcon} alt="lineIcon" />
+                </div>
+                <section className="hotel-detail__rooms">
+                    <h3>Chọn phòng</h3>
+
+                    <Rooms rooms_data={roomsData}/>
                 </section>
             </div>
         </main> : <SmallPageLoader/>

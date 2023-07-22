@@ -14,6 +14,7 @@ namespace SunriseServerCore.Common.Enum
         BadRequest = 500,
         Unauthorized = 401,
         Forbidden = 403,
+        NotFound = 404,
         InternalServerError = 500
     }
 }

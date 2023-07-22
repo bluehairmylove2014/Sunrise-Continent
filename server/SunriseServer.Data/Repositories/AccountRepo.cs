@@ -41,11 +41,16 @@ namespace SunriseServerData.Repositories
 
         public async Task<Account> GetByUsername(string username)
         {
-            // đ.chí đừng có chạy mấy cái code như này :v, đ.chí liệt kê tui mấy cái danh sách proc cần làm đi
-            // Do tên bảng đồ khác nhau tk EF ko làm đc đâu :v
-            // Tui chạy trên server tui sẽ ra lỗi :v, có j đ.chí cho tui cái danh sách tui làm r gọi chạy mới trơn :v
-
             var builder = new StringBuilder($"dbo.USP_GetAccountByUsername @Username = \'{username}\';");
+
+            Console.WriteLine(builder.ToString());
+            var result = await _dataContext.Account.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            return result.FirstOrDefault();
+        }
+
+        public override async Task<Account> GetByIdAsync(int id)
+        {
+            var builder = new StringBuilder($"dbo.USP_GetAccountById @Id = \'{id}\';");
 
             Console.WriteLine(builder.ToString());
             var result = await _dataContext.Account.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();

@@ -35,6 +35,11 @@ namespace SunriseServer.Services.AccountService
             return await _unitOfWork.AccountRepo.GetByUsername(username);
         }
 
+        public async Task<Account> GetByUsername(int id)
+        {
+            return await _unitOfWork.AccountRepo.GetByIdAsync(id);
+        }
+
         public async Task<Account> UpdateAccount(Account acc)
         {
             return await _unitOfWork.AccountRepo.UpdateAsync(acc);
@@ -43,6 +48,11 @@ namespace SunriseServer.Services.AccountService
         public void SaveChanges()
         {
             _unitOfWork.SaveChanges();
+        }
+
+        public async Task<Account> GetById(int id)
+        {
+            return await _unitOfWork.AccountRepo.GetByIdAsync(id);
         }
     }
 }

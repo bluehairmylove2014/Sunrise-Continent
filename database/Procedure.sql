@@ -402,27 +402,32 @@ GO
 --!Thêm loại phòng
 CREATE OR ALTER PROCEDURE USP_AddRoomType
     @HotelId INT,
-    @RoomId INT,
+    @Id INT,
     @Name NVARCHAR(100),
     @Vacancy INT,
     @Size FLOAT,
     @Price FLOAT,
     @RoomInfo NVARCHAR(1000),
     @RoomView NVARCHAR(1000),
-    @BedType VARCHAR(100),
-    @Result INT OUTPUT
+    @BedType VARCHAR(100)
 AS
 BEGIN
-    SET NOCOUNT ON;
+    --SET NOCOUNT ON;
 
     BEGIN TRY
-        INSERT INTO ROOM_TYPE (HotelId, Id, Name, Vacancy, Size, Price, RoomInfo, RoomView, BedType)
-        VALUES (@HotelId, @RoomId, @Name, @Vacancy, @Size, @Price, @RoomInfo, @RoomView, @BedType)
+		IF EXISTS (select * FROM ROOM_TYPE WHERE HotelId=@HotelId and Id=@Id)
+		BEGIN
+			RETURN -1
+		END
 
-        SET @Result = 1; --thành công
+        INSERT INTO ROOM_TYPE (HotelId, Id, Name, Vacancy, Size, Price, RoomInfo, RoomView, BedType)
+        VALUES (@HotelId, @Id, @Name, @Vacancy, @Size, @Price, @RoomInfo, @RoomView, @BedType)
+
+		RETURN 0
     END TRY
+
     BEGIN CATCH
-        SET @Result = 0; -- thất bại
+		RETURN -1
     END CATCH;
 END
 GO
@@ -430,20 +435,23 @@ GO
 --!Xóa loại phòng
 CREATE OR ALTER PROCEDURE USP_DeleteRoomType
     @HotelId INT,
-    @RoomId INT,
-    @Result INT OUTPUT
+    @Id INT
 AS
 BEGIN
-    SET NOCOUNT ON;
 
     BEGIN TRY
-        DELETE FROM ROOM_TYPE
-        WHERE HotelId = @HotelId AND Id = @RoomId
+		IF NOT EXISTS (select * FROM ROOM_TYPE WHERE HotelId=@HotelId and Id=@Id)
+		BEGIN
+			RETURN -1
+		END
 
-        SET @Result = 1; -- thành công
+        DELETE FROM ROOM_TYPE
+        WHERE HotelId = @HotelId AND Id = @Id
+
+        RETURN 0; -- thành công
     END TRY
     BEGIN CATCH
-        SET @Result = 0; -- thất bại
+        RETURN -1; -- thất bại
     END CATCH;
 END
 GO
@@ -464,46 +472,50 @@ BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
+		IF NOT EXISTS (select * FROM ROOM_TYPE WHERE HotelId=@HotelId and Id=@Id)
+		BEGIN
+			RETURN -1
+		END
+
         UPDATE ROOM_TYPE
         SET Name = @Name, Vacancy = @Vacancy, Size = @Size, Price = @Price, RoomInfo = @RoomInfo, RoomView = @RoomView, BedType = @BedType
         WHERE HotelId = @HotelId AND Id = @Id
 
-        RETURN 1; -- thành công
+        RETURN 0; -- thành công
 	END TRY
 
     BEGIN CATCH
-        RETURN 0; -- thất bại
+        RETURN -1; -- thất bại
     END CATCH;
 END
 GO
 
 --todo PROCEDURE CRUD ẢNH PHÒNG
 --! THÊM ẢNH
-CREATE OR ALTER PROCEDURE USP_InsertRoomPicture
+CREATE OR ALTER PROCEDURE USP_AddRoomPicture
     @HotelId INT,
     @RoomTypeId INT,
     @Id INT,
-    @PictureLink VARCHAR(1000),
-    @Result INT OUTPUT
+    @PictureLink VARCHAR(1000)
 AS
-BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRANSACTION;
+set transaction isolation level read committed
+BEGIN TRAN
+    --SET NOCOUNT ON;
 
     BEGIN TRY
         -- Thêm ảnh phòng mới
         INSERT INTO ROOM_PICTURE (HotelId, RoomTypeId, Id, PictureLink)
         VALUES (@HotelId, @RoomTypeId, @Id, @PictureLink);
-
-        COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi thêm thành công
+		
     END TRY
+
     BEGIN CATCH
-        ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+		ROLLBACK;
+        RETURN -1; -- Trả về kết quả 0 khi xảy ra lỗi
     END CATCH;
-END
+
+COMMIT TRANSACTION 
+RETURN 0;  -- Trả về kết quả 1 khi thêm thành công
 GO
 
 --!SỬA ẢNH
@@ -511,13 +523,10 @@ CREATE OR ALTER PROCEDURE USP_UpdateRoomPicture
     @HotelId INT,
     @RoomTypeId INT,
     @Id INT,
-    @PictureLink VARCHAR(1000),
-    @Result INT OUTPUT
+    @PictureLink VARCHAR(1000)
 AS
 BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRANSACTION;
+    --SET NOCOUNT ON;
 
     BEGIN TRY
         -- Cập nhật thông tin ảnh phòng
@@ -527,12 +536,10 @@ BEGIN
         AND RoomTypeId = @RoomTypeId
         AND Id = @Id;
 
-        COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi cập nhật thành công
+        RETURN 0; -- Trả về kết quả 1 khi cập nhật thành công
     END TRY
     BEGIN CATCH
-        ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+        RETURN -1; -- Trả về kết quả 0 khi xảy ra lỗi
     END CATCH;
 END
 GO
@@ -568,14 +575,13 @@ GO
 
 --TODO PROCEDURE CRUD CƠ SỞ VẬT CHẤT PHÒNG
 --! THÊM 
-CREATE OR ALTER PROCEDURE USP_InsertRoomFacility
+CREATE OR ALTER PROCEDURE USP_AddRoomFacility
     @HotelId INT,
     @RoomId INT,
-    @FacilityId INT,
-    @Result INT OUTPUT
+    @FacilityId INT
 AS
 BEGIN
-    SET NOCOUNT ON;
+    --SET NOCOUNT ON;
 
     BEGIN TRANSACTION;
 
@@ -585,11 +591,11 @@ BEGIN
         VALUES (@HotelId, @RoomId, @FacilityId);
 
         COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi thêm thành công
+        RETURN 0; -- Trả về kết quả 0 khi thêm thành công
     END TRY
     BEGIN CATCH
         ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+        RETURN -1; -- Trả về kết quả -1 khi xảy ra lỗi
     END CATCH;
 END
 GO
@@ -598,8 +604,7 @@ GO
 CREATE OR ALTER PROCEDURE USP_DeleteRoomFacility
     @HotelId INT,
     @RoomId INT,
-    @FacilityId INT,
-    @Result INT OUTPUT
+    @FacilityId INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -607,6 +612,15 @@ BEGIN
     BEGIN TRANSACTION;
 
     BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM ROOM_FACILITY
+			WHERE HotelId = @HotelId
+			AND RoomId = @RoomId
+			AND FacilityId = @FacilityId)
+		BEGIN
+			ROLLBACK;
+			RETURN -1;
+		END
+
         -- Xóa cơ sở vật chất phòng
         DELETE FROM ROOM_FACILITY
         WHERE HotelId = @HotelId
@@ -614,11 +628,12 @@ BEGIN
         AND FacilityId = @FacilityId;
 
         COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi xóa thành công
+        RETURN 0; -- Trả về kết quả 1 khi xóa thành công
     END TRY
+
     BEGIN CATCH
         ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+        RETURN -1; -- Trả về kết quả 0 khi xảy ra lỗi
     END CATCH;
 END
 GO
@@ -656,14 +671,13 @@ GO
 
 --TODO PROCEDURE CRUD DỊCH VỤ PHÒNG
 --!THÊM
-CREATE OR ALTER PROCEDURE USP_InsertRoomService
+CREATE OR ALTER PROCEDURE USP_AddRoomService
     @HotelId INT,
     @RoomId INT,
-    @ServiceId INT,
-    @Result INT OUTPUT
+    @ServiceId INT
 AS
 BEGIN
-    SET NOCOUNT ON;
+    --SET NOCOUNT ON;
 
     BEGIN TRANSACTION;
 
@@ -673,11 +687,11 @@ BEGIN
         VALUES (@HotelId, @RoomId, @ServiceId);
 
         COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi thêm thành công
+        RETURN 0; -- Trả về kết quả 1 khi thêm thành công
     END TRY
     BEGIN CATCH
         ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+        RETURN -1; -- Trả về kết quả 0 khi xảy ra lỗi
     END CATCH;
 END
 GO 
@@ -829,7 +843,7 @@ GO
 
 --TODO PROC CRUD ẢNH CỦA REVIEW
 --!THÊM
-CREATE OR ALTER PROCEDURE USP_InsertReviewImage
+CREATE OR ALTER PROCEDURE USP_AddReviewImage
     @AccountId INT,
     @HotelId INT,
     @ImageId INT,

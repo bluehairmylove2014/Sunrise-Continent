@@ -951,27 +951,18 @@ GO
 CREATE OR ALTER PROCEDURE USP_DeleteBooking
     @AccountId INT,
     @HotelId INT,
-    @RoomTypeId INT,
-    @CheckIn DATE,
-    @Result INT OUTPUT
+    @RoomTypeId INT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRANSACTION;
 
-    BEGIN TRY
-        -- Xóa đơn đặt chỗ
-        DELETE FROM BOOKING_ACCOUNT
-        WHERE AccountId = @AccountId AND HotelId = @HotelId AND RoomTypeId = @RoomTypeId AND CheckIn = @CheckIn;
+    -- Xóa đơn đặt chỗ
+    DELETE FROM BOOKING_ACCOUNT
+    WHERE AccountId = @AccountId AND HotelId = @HotelId AND RoomTypeId = @RoomTypeId;
 
-        COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi xóa thành công
-    END TRY
-    BEGIN CATCH
-        ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
-    END CATCH;
+    COMMIT;
 END;
 GO
 

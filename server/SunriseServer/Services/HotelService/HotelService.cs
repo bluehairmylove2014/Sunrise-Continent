@@ -3,7 +3,7 @@ using SunriseServerCore.Models;
 using SunriseServerData;
 namespace SunriseServer.Services.HotelService
 {
-    public class HotelService : IHotelService
+    public class HotelService : IPaymentService
     {
         private readonly UnitOfWork _unitOfWork;
 

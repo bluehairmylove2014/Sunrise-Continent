@@ -1,4 +1,5 @@
 ﻿using Microsoft.Identity.Client;
+using SunriseServerCore.Dtos.Booking;
 using SunriseServerCore.Models;
 using SunriseServerCore.RepoInterfaces;
 using System;
@@ -40,7 +41,7 @@ namespace SunriseServerData.Repositories
             return booking;
         }
 
-        public override async Task<BookingAccount> UpdateAsync(BookingAccount booking)
+        public new async Task<int> UpdateAsync(BookingAccount booking)
         {
             var builder = new StringBuilder("EXECUTE dbo.USP_UpdateBooking ");
             builder.Append($"@AccountId = \'{booking.AccountId}\', ");
@@ -52,15 +53,18 @@ namespace SunriseServerData.Repositories
             builder.Append($"@Result = \'{0}\';");
 
             Console.WriteLine(builder.ToString());
-            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE sp_executesql {builder.ToString()}");
-            if (result == 0) return null;
-            return booking;
+            return await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE sp_executesql {builder.ToString()}");
         }
 
-        public override async Task<BookingAccount> DeleteAsync(int accountId)
+        public async Task<int> DeleteAsync(DeleteBookingDto deleteBooking)
         {
-            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"USP_DeleteBooking @AccountId = {accountId}");
-            return null;
+            var builder = new StringBuilder("EXECUTE dbo.USP_DeleteBooking ");
+            builder.Append($"@AccountId = \'{deleteBooking.AccountId}\', ");
+            builder.Append($"@HotelId = \'{deleteBooking.HotelId}\', ");
+            builder.Append($"@RoomTypeId = \'{deleteBooking.RoomTypeId}\';");
+
+            Console.WriteLine(builder.ToString());
+            return await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE sp_executesql {builder.ToString()}");
         }
     }
 }

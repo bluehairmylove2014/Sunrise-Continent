@@ -1,19 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SunriseServer.Common.Constant;
-using SunriseServer.Common.Enum;
-using SunriseServerCore.Models;
 using SunriseServer.Services.BookingService;
-using CoreApiResponse;
-using SunriseServer.Dtos;
-using SunriseServerCore.Common.Enum;
 using SunriseServer.Services.AccountService;
-using Microsoft.AspNetCore.Http.HttpResults;
-using SunriseServer.Common.DataClass;
 using SunriseServer.Common.Helper;
-using SunriseServer.Dtos.Booking;
+using SunriseServerCore.Dtos.Booking;
 using SunriseServer.Services.HotelService;
+using System.Security.Claims;
+using SunriseServerCore.Dtos;
+using SunriseServerCore.Common.Enum;
 
 namespace SunriseServer.Controllers
 {
@@ -23,19 +18,20 @@ namespace SunriseServer.Controllers
     {
         readonly IBookingService _bookingService;
         readonly IAccountService _accountService;
-        readonly IHotelService _hotelService;
+        readonly IPaymentService _hotelService;
 
-        public BookingController(IBookingService bookingService, IAccountService accountService, IHotelService hotelService)
+        public BookingController(IBookingService bookingService, IAccountService accountService, IPaymentService hotelService)
         {
             _bookingService = bookingService;
             _accountService = accountService;
             _hotelService = hotelService;
         }
 
-        [HttpGet("GetBookingsCurrentAccount")]
+        [HttpGet("GetBookingsCurrentAccount"), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<List<BookingAccount>>>> GetAllBookings()
         {
-            var result = await _bookingService.GetAllBookings();
+            Account currentAcc = await _accountService.GetByUsername(User.Identity.Name);
+            var result = await _bookingService.GetAllBookings(currentAcc.Id);
             var finalResult = new List<BookingDto>();
             foreach (var item in result)
             {
@@ -55,7 +51,6 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<List<BookingDto>>("Get bookings successfully", finalResult));
         }
 
-        // chua hoan thien lam
         [HttpPost, Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<List<BookingAccount>>>> AddBooking(BookingAccount booking)
         {
@@ -68,25 +63,27 @@ namespace SunriseServer.Controllers
         }
 
         // chua hoan thien lam
-        [HttpPut("{id}"), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> UpdateBooking(int id, BookingAccount request)
+        [HttpPut, Authorize(Roles = GlobalConstant.User)]
+        public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> UpdateBooking(BookingAccount request)
         {
-            var result = await _bookingService.UpdateBooking(id, request);
-            if (result is null)
+            var result = await _bookingService.UpdateBooking(request);
+            if (result == 0)
                 return NotFound("Booking not found.");
 
-            return Ok(new ResponseMessageDetails<BookingAccount>("Update booking successfully", result));
+            return Ok(new ResponseMessageDetails<BookingAccount>("Update booking successfully", ResponseStatusCode.Ok));
         }
 
-        // chua hoan thien lam
-        [HttpDelete("{id}"), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> DeleteBooking(int id)
+        [HttpDelete, Authorize(Roles = GlobalConstant.User)]
+        public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> DeleteBooking(DeleteBookingDto deleteDto)
         {
-            var result = await _bookingService.DeleteBooking(id);
-            if (result is null)
+            Account currentAcc = await _accountService.GetByUsername(User.Identity.Name);
+            deleteDto.AccountId = currentAcc.Id;
+
+            var result = await _bookingService.DeleteBooking(deleteDto);
+            if (result == 0)
                 return NotFound("Booking not found.");
 
-            return Ok(new ResponseMessageDetails<BookingAccount>("Delete booking successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Delete booking successfully", ResponseStatusCode.Ok));
         }
     }
 }

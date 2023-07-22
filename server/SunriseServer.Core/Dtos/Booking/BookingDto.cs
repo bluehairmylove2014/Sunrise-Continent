@@ -1,4 +1,6 @@
-﻿namespace SunriseServer.Dtos.Booking
+﻿using SunriseServerCore.Models;
+
+namespace SunriseServerCore.Dtos.Booking
 {
     public class BookingDto
     {

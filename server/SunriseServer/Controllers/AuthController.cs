@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SunriseServer.Common.Constant;
-using SunriseServer.Dtos;
+using SunriseServerCore.Dtos;
 using SunriseServer.Services.AccountService;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using SunriseServerCore.Common.Helper;
+using SunriseServerCore.Common.Enum;
 
 namespace SunriseServer.Controllers
 {
@@ -86,7 +87,7 @@ namespace SunriseServer.Controllers
 
             if (account == null)
             {
-                return NotFound();
+                return NotFound(new ResponseMessageDetails<string>("User not found", ResponseStatusCode.NotFound));
             }
 
             if (account.Username != request.Username ||

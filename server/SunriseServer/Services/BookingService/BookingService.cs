@@ -1,4 +1,5 @@
-﻿using SunriseServer.Services;
+﻿using SunriseServerCore.Dtos.Booking;
+using SunriseServer.Services;
 using SunriseServerCore.Models;
 using SunriseServerData;
 namespace SunriseServer.Services.BookingService
@@ -19,21 +20,21 @@ namespace SunriseServer.Services.BookingService
             return result;
         }
 
-        public async Task<BookingAccount> DeleteBooking(int id)
+        public async Task<int> DeleteBooking(DeleteBookingDto deleteBooking)
         {
-            var result = _unitOfWork.BookingRepo.Delete(id);
+            var result = await _unitOfWork.BookingRepo.DeleteAsync(deleteBooking);
             await _unitOfWork.SaveChangesAsync();
 
             return result;
         }
 
-        public async Task<List<BookingAccount>> GetAllBookings()
+        public async Task<List<BookingAccount>> GetAllBookings(int accountId)
         {
-            var listBookingAccounts = await _unitOfWork.BookingRepo.GetAllAsync();
+            var listBookingAccounts = await _unitOfWork.BookingRepo.GetAllAsync(accountId);
             return listBookingAccounts.ToList();
         }
 
-        public async Task<BookingAccount> UpdateBooking(int id, BookingAccount request)
+        public async Task<int> UpdateBooking(BookingAccount request)
         {
             var result = await _unitOfWork.BookingRepo.UpdateAsync(request);
             await _unitOfWork.SaveChangesAsync();

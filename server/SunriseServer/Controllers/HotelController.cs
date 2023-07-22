@@ -7,7 +7,7 @@ using SunriseServer.Common.Helper;
 using SunriseServerCore.Models;
 using SunriseServer.Services.HotelService;
 using CoreApiResponse;
-using SunriseServer.Dtos;
+using SunriseServerCore.Dtos;
 using SunriseServerCore.Common.Enum;
 using SunriseServer.Services.RoomService;
 
@@ -19,10 +19,10 @@ namespace SunriseServer.Controllers
     [ApiController]
     public class HotelController : ControllerBase
     {
-        readonly IHotelService _hotelService;
+        readonly IPaymentService _hotelService;
         readonly IRoomService _roomService;
 
-        public HotelController(IHotelService hotelService, IRoomService roomService)
+        public HotelController(IPaymentService hotelService, IRoomService roomService)
         {
             _hotelService = hotelService;
             _roomService = roomService;

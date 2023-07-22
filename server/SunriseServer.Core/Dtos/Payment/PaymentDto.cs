@@ -1,4 +1,4 @@
-﻿namespace SunriseServer.Dtos.Payment
+﻿namespace SunriseServerCore.Dtos.Payment
 {
     public class PaymentDto
     {

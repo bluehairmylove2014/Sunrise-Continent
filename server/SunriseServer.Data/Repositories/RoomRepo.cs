@@ -12,32 +12,45 @@ using SunriseServerCore.RepoInterfaces;
 namespace SunriseServerData.Repositories
 {
     // IHotelRoomInfomationRepo
-    public class RoomServiceRepo : RepositoryBase<HotelRoomService>, IHotelRoomServiceRepo
+    
+
+    
+
+    public class RoomTypeRepo : RepositoryBase<RoomType>, IRoomType
     {
         readonly DataContext _dataContext;
-        public RoomServiceRepo(DataContext dbContext) : base(dbContext) 
+        public RoomTypeRepo(DataContext dbContext) : base(dbContext) 
         {
             _dataContext = dbContext;
         }
 
-        public async Task<List<HotelRoomService>> GetHotelServiceAsync(int id)
+        public async Task<List<RoomType>> GetAllRoomTypeAsync(int hotelId)
         {
-            var result = await _dataContext.HotelRoomServices.FromSqlInterpolated($"exec USP_GetHotelRoomService @Id={id};").ToListAsync();
+            var result = await _dataContext.RoomType.FromSqlInterpolated($"exec USP_GetHotelRoomType @HotelId={hotelId};").ToListAsync();
             return result;
         }
-    }
 
-    public class HotelRoomFacilityRepo : RepositoryBase<HotelRoomFacility>, IHotelRoomFacilityRepo
-    {
-        readonly DataContext _dataContext;
-        public HotelRoomFacilityRepo(DataContext dbContext) : base(dbContext) 
+        public async Task<RoomType> GetSingleRoomTypeAsync(int hotelId, int id)
         {
-            _dataContext = dbContext;
+            var result = await _dataContext.RoomType.FromSqlInterpolated($"exec USP_GetRoomType @HotelId={hotelId}, @Id={id};").ToListAsync();
+            return result.FirstOrDefault();
         }
 
-        public async Task<List<HotelRoomFacility>> GetHotelFacilityAsync(int id)
+        public async Task<List<RoomPicture>> GetRoomPictureAsync(int hotelId, int id)
         {
-            var result = await _dataContext.HotelRoomFacilities.FromSqlInterpolated($"exec USP_GetHotelRoomFacility @Id={id};").ToListAsync();
+            var result = await _dataContext.RoomPicture.FromSqlInterpolated($"exec USP_GetRoomPicture @HotelId={hotelId}, @RoomId={id};").ToListAsync();
+            return result;
+        }
+
+        public async Task<List<HotelRoomFacility>> GetRoomFacilityAsync(int hotelId, int id)
+        {
+            var result = await _dataContext.HotelRoomFacilities.FromSqlInterpolated($"exec USP_GetRoomFacility @HotelId={hotelId}, @RoomId={id};").ToListAsync();
+            return result;
+        }
+
+        public async Task<List<HotelRoomService>> GetRoomServiceAsync(int hotelId, int id)
+        {
+            var result = await _dataContext.HotelRoomServices.FromSqlInterpolated($"exec USP_GetRoomService @HotelId={hotelId}, @RoomId={id};").ToListAsync();
             return result;
         }
     }

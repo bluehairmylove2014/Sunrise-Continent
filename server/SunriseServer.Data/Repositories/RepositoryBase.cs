@@ -62,7 +62,7 @@ namespace SunriseServerData.Repositories
             return _context.Update(entity).Entity;
         }
 
-        public async Task<TModel> UpdateAsync(TModel entity)
+        public virtual async Task<TModel> UpdateAsync(TModel entity)
         {
             return await Task.Run(() =>
             {
@@ -73,6 +73,15 @@ namespace SunriseServerData.Repositories
         {
             var entity = GetById(id);
             return _context.Remove(entity).Entity;
+        }
+
+        public virtual async Task<TModel> DeleteAsync(int id)
+        {
+            return await Task.Run(() =>
+            {
+                var entity = GetById(id);
+                return _context.Remove(entity).Entity;
+            });
         }
     }
 }

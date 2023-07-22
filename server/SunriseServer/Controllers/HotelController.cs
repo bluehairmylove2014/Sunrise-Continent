@@ -3,12 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SunriseServer.Common.Constant;
 using SunriseServer.Common.Enum;
-using SunriseServer.Common.DataClass;
 using SunriseServer.Common.Helper;
 using SunriseServerCore.Models;
 using SunriseServer.Services.HotelService;
 using CoreApiResponse;
-using SunriseServer.Dtos;
+using SunriseServerCore.Dtos;
 using SunriseServerCore.Common.Enum;
 using SunriseServer.Services.RoomService;
 
@@ -20,10 +19,10 @@ namespace SunriseServer.Controllers
     [ApiController]
     public class HotelController : ControllerBase
     {
-        readonly IHotelService _hotelService;
+        readonly IPaymentService _hotelService;
         readonly IRoomService _roomService;
 
-        public HotelController(IHotelService hotelService, IRoomService roomService)
+        public HotelController(IPaymentService hotelService, IRoomService roomService)
         {
             _hotelService = hotelService;
             _roomService = roomService;
@@ -47,27 +46,25 @@ namespace SunriseServer.Controllers
 
         // Alternative GetAll API
         [HttpGet("DisplayHotelData")]
-        public async Task<ActionResult<ResponseMessageDetails<List<HotelClientData>>>> GetAllHotelInfo()
+        public async Task<ActionResult<ResponseMessageDetails<List<HotelDto>>>> GetAllHotelInfo()
         {
             var result = await _hotelService.GetAllHotels();
 
-            var finalResult = new List<HotelClientData>();
+            var finalResult = new List<HotelDto>();
             foreach (var item in result)
             {
                 var servicesList = new List<string>();
                 var facilitiesList = new List<string>();
-                var services = await _roomService.GetHotelServices(item.Id);
-                var facilities = await _roomService.GetHotelFacility(item.Id);
 
-                services.ForEach(p => {
+                (await _hotelService.GetHotelServices(item.Id)).ForEach(p => {
                     servicesList.Add(p.Value);
                 });
 
-                facilities.ForEach(p => {
+                (await _hotelService.GetHotelFacility(item.Id)).ForEach(p => {
                     facilitiesList.Add(p.Value);
                 });
 
-                HotelClientData variable = new HotelClientData {};
+                HotelDto variable = new HotelDto {};
 
                 SetPropValueByReflection.AddYToX(variable, item);
 
@@ -77,7 +74,22 @@ namespace SunriseServer.Controllers
                 finalResult.Add(variable);
             }
 
-            return Ok(new ResponseMessageDetails<List<HotelClientData>>("Get hotel successfully", finalResult));
+            return Ok(new ResponseMessageDetails<List<HotelDto>>("Get hotel successfully", finalResult));
+        }
+
+        [HttpGet("{id}/Picture")]
+        public async Task<ActionResult<ResponseMessageDetails<PictureDto>>> GetAllHotelPicture(int id)
+        {
+            PictureDto result = new PictureDto() { HotelImg = new List<string>(), };
+            // var test = await _hotelService.GetHotelPicture(id);
+            (await _hotelService.GetHotelPicture(id)).ForEach(p => {
+                result.HotelImg.Add(p.PictureLink);
+            });
+            // if (test is not null) {
+            //     test.ForEach(p => Console.WriteLine(p.PictureLink)); 
+            // }
+
+            return Ok(new ResponseMessageDetails<PictureDto>("Get hotel successfully", result));
         }
 
         [HttpPost, Authorize(Roles = GlobalConstant.Admin)]

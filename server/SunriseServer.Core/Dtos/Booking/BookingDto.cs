@@ -1,6 +1,8 @@
-﻿namespace SunriseServerCore.Models
+﻿using SunriseServerCore.Models;
+
+namespace SunriseServerCore.Dtos.Booking
 {
-    public class BookingAccount : ModelBase
+    public class BookingDto
     {
         public int AccountId { get; set; }
         public int HotelId { get; set; }
@@ -8,5 +10,8 @@
         public DateTime CheckIn { get; set; }
         public DateTime CheckOut { get; set; }
         public int NumberOfRoom { get; set; } = 1;
+        public Account Account { get; set; }
+        public Hotel Hotel { get; set; }
+        public RoomType RoomType { get; set; }
     }
 }

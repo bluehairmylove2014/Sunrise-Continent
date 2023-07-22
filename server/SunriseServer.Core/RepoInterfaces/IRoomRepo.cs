@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace SunriseServerCore.RepoInterfaces
 {
-    public interface IHotelRoomFacilityRepo : IRepository<HotelRoomFacility>
+    public interface IRoomType : IRepository<RoomType>
     {
-        Task<List<HotelRoomFacility>> GetHotelFacilityAsync(int id);
-    }
+        Task<List<RoomType>> GetAllRoomTypeAsync(int hotelId);
+        Task<RoomType> GetSingleRoomTypeAsync(int hotelId, int id);
+        Task<List<RoomPicture>> GetRoomPictureAsync(int hotelId, int id);
+        Task<List<HotelRoomFacility>> GetRoomFacilityAsync(int hotelId, int id);
+        Task<List<HotelRoomService>> GetRoomServiceAsync(int hotelId, int id);
 
-    public interface IHotelRoomServiceRepo : IRepository<HotelRoomService>
-    {
-        Task<List<HotelRoomService>> GetHotelServiceAsync(int id);
     }
 }

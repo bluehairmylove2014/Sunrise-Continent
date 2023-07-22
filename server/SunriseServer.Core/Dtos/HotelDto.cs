@@ -1,6 +1,6 @@
-﻿namespace SunriseServerCore.Models
+namespace SunriseServerCore.Dtos
 {
-    public class Hotel : ModelBase
+    public class HotelDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -13,5 +13,7 @@
         public string Description { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
         public double Price { get; set; }
+        public List<string> Facilities { get; set; }
+        public List<string> Services { get; set; }
     }
 }

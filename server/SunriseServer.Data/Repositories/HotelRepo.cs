@@ -55,5 +55,25 @@ namespace SunriseServerData.Repositories
         // Task<TModel> UpdateAsync(TModel entity);
 
         // TModel Delete(int id);
+
+
+        // More info
+        public async Task<List<HotelRoomFacility>> GetHotelFacilityAsync(int id)
+        {
+            var result = await _dataContext.HotelRoomFacilities.FromSqlInterpolated($"exec USP_GetHotelRoomFacility @Id={id};").ToListAsync();
+            return result;
+        }
+
+        public async Task<List<HotelRoomService>> GetHotelServiceAsync(int id)
+        {
+            var result = await _dataContext.HotelRoomServices.FromSqlInterpolated($"exec USP_GetHotelRoomService @Id={id};").ToListAsync();
+            return result;
+        }
+
+        public async Task<List<RoomPicture>> GetHotelPictureAsync(int id)
+        {
+            var result = await _dataContext.RoomPicture.FromSqlInterpolated($"exec USP_GetHotelRoomPicture @Id={id};").ToListAsync();
+            return result;
+        }
     }
 }

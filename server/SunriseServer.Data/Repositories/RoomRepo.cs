@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using SunriseServerData;
 using SunriseServerCore.Models;
 using SunriseServerCore.RepoInterfaces;
+using SunriseServer.Common.Helper;
+using SunriseServerCore.Dtos.Room;
+using Microsoft.Data.SqlClient;
 
 namespace SunriseServerData.Repositories
 {
@@ -26,7 +29,7 @@ namespace SunriseServerData.Repositories
 
         public async Task<List<RoomType>> GetAllRoomTypeAsync(int hotelId)
         {
-            var result = await _dataContext.RoomType.FromSqlInterpolated($"exec USP_GetHotelRoomType @HotelId={hotelId};").ToListAsync();
+            var result = await _dataContext.Database.SqlQuery<RoomType>($"exec USP_GetHotelRoomType @HotelId={hotelId};").ToListAsync();
             return result;
         }
 
@@ -42,15 +45,113 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
-        public async Task<List<HotelRoomFacility>> GetRoomFacilityAsync(int hotelId, int id)
+        public async Task<List<RoomFacilityConstant>> GetRoomFacilityAsync(int hotelId, int id)
         {
-            var result = await _dataContext.HotelRoomFacilities.FromSqlInterpolated($"exec USP_GetRoomFacility @HotelId={hotelId}, @RoomId={id};").ToListAsync();
+            var result = await _dataContext.RoomFacilityConstants.FromSqlInterpolated($"exec USP_GetRoomFacility @HotelId={hotelId}, @RoomId={id};").ToListAsync();
             return result;
         }
 
-        public async Task<List<HotelRoomService>> GetRoomServiceAsync(int hotelId, int id)
+        public async Task<List<RoomServiceConstant>> GetRoomServiceAsync(int hotelId, int id)
         {
-            var result = await _dataContext.HotelRoomServices.FromSqlInterpolated($"exec USP_GetRoomService @HotelId={hotelId}, @RoomId={id};").ToListAsync();
+            var result = await _dataContext.RoomServiceConstants.FromSqlInterpolated($"exec USP_GetRoomService @HotelId={hotelId}, @RoomId={id};").ToListAsync();
+            return result;
+        }
+
+
+        // POST
+        public override async Task<RoomType> CreateAsync(RoomType createDto)
+        {
+            var builder = new StringBuilder("USP_AddRoomType ");
+            builder.Append(SetPropValueByReflection.GetPropProcCallString(createDto));
+
+            var err = await _dataContext.Database
+                .ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            if (err == 0) return null;
+
+            var result = await _dataContext.RoomType
+                .FromSqlInterpolated($"USP_GetRoomType @HotelId={createDto.HotelId}, @Id={createDto.Id}").ToListAsync();
+            return result.FirstOrDefault();
+        }
+
+        public async Task<RoomPicture> CreateRoomPictureAsync(RoomPictureDto createDto)
+        {
+            var err = await _dataContext.Database
+                .ExecuteSqlInterpolatedAsync($"USP_AddRoomPicture {createDto.HotelId}, {createDto.RoomId}, {createDto.PictureId}, {createDto.ImgLink};");
+            if (err == 0) return null;
+
+            var result = await _dataContext.RoomPicture
+                .FromSqlInterpolated($"EXEC USP_GetSingleRoomPicture {createDto.HotelId}, {createDto.RoomId}, {createDto.PictureId};").ToListAsync();
+            return result.FirstOrDefault();
+        }
+
+
+        // PUT
+        public async Task<int> UpdateRoomTypeAsync(RoomType roomType)
+        {
+            var builder = new StringBuilder("EXEC dbo.USP_UpdateRoomType ");
+            builder.Append(SetPropValueByReflection.GetPropProcCallString(roomType));
+
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            return result;
+        }
+
+
+        public async Task<int> UpdateRoomPictureAsync(RoomPictureDto updateDto)
+        {
+            var result = await _dataContext.Database
+                .ExecuteSqlInterpolatedAsync($"EXEC USP_UpdateRoomPicture @HotelId={updateDto.HotelId}, @RoomTypeId={updateDto.RoomId}, @Id={updateDto.PictureId}, @PictureLink={updateDto.ImgLink};");
+            return result;
+        }
+
+        // public async Task<List<HotelRoomFacility>> UpdateRoomFacilityAsync(HotelRoomFacility rowUpdate)
+        // {
+        //     string builder = @"";
+        //     var result = await _dataContext.HotelRoomFacilities.FromSqlInterpolated($" USP_UpdateRoomFacility ").ToListAsync();
+        // }
+
+        private async Task<List<int>> GetRoomAmenitiesId(string tableName, string amenities)
+        {
+            var builder = new StringBuilder("EXEC USP_GetAmenitiesId ");
+            builder.Append($"\'{tableName}\', ");
+            builder.Append($"\'{amenities}\';");
+            return await _dataContext.Database.SqlQuery<int>($"EXECUTE({builder.ToString()})").ToListAsync();
+        }
+
+        public async Task<List<int>> UpdateRoomServiceAsync(RoomAmenitiesDto updateDto)
+        {
+            var builder = new StringBuilder($"DELETE FROM ROOM_FACILITY WHERE HotelId={updateDto.HotelId} and RoomId = {updateDto.RoomTypeId};\n");
+
+            var test = await GetRoomAmenitiesId("FACILITY_CONST", string.Join( ",", updateDto.RoomAmenities));
+
+            foreach (var id in test)
+            {
+                builder.Append($"EXEC USP_AddRoomFacility {updateDto.HotelId}, {updateDto.RoomTypeId}, {id};\n");
+            }
+
+            Console.WriteLine(builder.ToString());
+
+            var result = await _dataContext.Database
+                .ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            
+            return test;
+        }
+
+        public async Task<int> DeleteRoomTypeAsync(DeleteRoomDto deleteDto)
+        {
+            var result = await _dataContext.Database
+                .ExecuteSqlInterpolatedAsync($"EXEC dbo.USP_DeleteRoomType @HotelId={deleteDto.HotelId}, @Id={deleteDto.RoomTypeId};");
+            return result;
+        }
+
+        public async Task<int> DeleteRoomPictureAsync(DeleteRoomPictureDto deleteDto)
+        {
+            var builder = new StringBuilder("dbo.USP_DeleteRoomPicture ");
+            builder.Append($"@HotelId={deleteDto.HotelId}, ");
+            builder.Append($"@RoomTypeId={deleteDto.RoomId}, ");
+            builder.Append($"@Id={deleteDto.PictureId};");
+
+            var result = await _dataContext.Database
+                .ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
             return result;
         }
     }

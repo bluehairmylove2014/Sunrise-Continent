@@ -12,8 +12,8 @@ namespace SunriseServerCore.RepoInterfaces
 
 
         // More info
-        Task<List<HotelRoomFacility>> GetHotelFacilityAsync(int id);
-        Task<List<HotelRoomService>> GetHotelServiceAsync(int id);
+        Task<List<RoomFacilityConstant>> GetHotelFacilityAsync(int id);
+        Task<List<RoomServiceConstant>> GetHotelServiceAsync(int id);
         Task<List<RoomPicture>> GetHotelPictureAsync(int id);
     }
 }

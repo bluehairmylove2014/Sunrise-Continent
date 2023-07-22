@@ -10,6 +10,7 @@ using CoreApiResponse;
 using SunriseServerCore.Dtos;
 using SunriseServerCore.Common.Enum;
 using SunriseServer.Services.RoomService;
+using SunriseServerCore.Dtos.Room;
 
 namespace SunriseServer.Controllers
 {
@@ -77,19 +78,12 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<List<HotelDto>>("Get hotel successfully", finalResult));
         }
 
-        [HttpGet("{id}/Picture")]
-        public async Task<ActionResult<ResponseMessageDetails<PictureDto>>> GetAllHotelPicture(int id)
+        [HttpGet("Picture")]
+        public async Task<ActionResult<ResponseMessageDetails<List<RoomPicture>>>> GetAllHotelPicture(int hotelId)
         {
-            PictureDto result = new PictureDto() { HotelImg = new List<string>(), };
-            // var test = await _hotelService.GetHotelPicture(id);
-            (await _hotelService.GetHotelPicture(id)).ForEach(p => {
-                result.HotelImg.Add(p.PictureLink);
-            });
-            // if (test is not null) {
-            //     test.ForEach(p => Console.WriteLine(p.PictureLink)); 
-            // }
+            var result = await _hotelService.GetHotelPicture(hotelId);
 
-            return Ok(new ResponseMessageDetails<PictureDto>("Get hotel successfully", result));
+            return Ok(new ResponseMessageDetails<List<RoomPicture>>("Get hotel successfully", result));
         }
 
         [HttpPost, Authorize(Roles = GlobalConstant.Admin)]
@@ -97,7 +91,7 @@ namespace SunriseServer.Controllers
         {
             var result = await _hotelService.AddHotel(hotel);
 
-            if (result == null)
+            if (result is null)
                 return BadRequest("Cannot add hotel.");
 
             return Ok(new ResponseMessageDetails<Hotel>("Add hotel successfully", result));

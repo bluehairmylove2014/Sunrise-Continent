@@ -916,95 +916,94 @@ BEGIN
 END
 GO
 
---TODO PROCEDURE CRUD ĐƠN BOOK PHÒNG
---!THÊM
-CREATE OR ALTER PROCEDURE USP_AddBooking
-    @AccountId INT,
-    @HotelId INT,
-    @RoomTypeId INT,
+--todo liên quan đến booking có thông tin voucher 
+--! thêm
+CREATE PROCEDURE dbo.AddBooking
+    @AccountId INTEGER,
+    @HotelId INTEGER,
+    @RoomTypeId INTEGER,
     @CheckIn DATE,
     @CheckOut DATE,
-    @NumberOfRoom INT,
-    @Result INT OUTPUT
+    @NumberOfRoom INTEGER,
+    @VoucherId INTEGER,
+    @Total INT,
+    @ReturnValue INT OUT
 AS
 BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRANSACTION;
+    SET @ReturnValue = 0; -- Mặc định trả về là 0 (thất bại)
 
     BEGIN TRY
-        -- Thêm đơn đặt chỗ mới
-        INSERT INTO BOOKING_ACCOUNT (AccountId, HotelId, RoomTypeId, CheckIn, CheckOut, NumberOfRoom)
-        VALUES (@AccountId, @HotelId, @RoomTypeId, @CheckIn, @CheckOut, @NumberOfRoom);
-
-        COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi thêm thành công
+        INSERT INTO BOOKING_ACCOUNT (AccountId, HotelId, RoomTypeId, CheckIn, CheckOut, NumberOfRoom, VoucherId, Total)
+        VALUES (@AccountId, @HotelId, @RoomTypeId, @CheckIn, @CheckOut, @NumberOfRoom, @VoucherId, @Total);
+        
+        SET @ReturnValue = 1; -- Gán giá trị trả về là 1 (thành công)
     END TRY
     BEGIN CATCH
-        ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
-    END CATCH;
-END;
-GO
+        SET @ReturnValue = 0; -- Gán giá trị trả về là 0 (thất bại)
+    END CATCH
+    RETURN @ReturnValue; -- Trả về giá trị kết quả của stored procedure
+END
 
---!XÓA
-CREATE OR ALTER PROCEDURE USP_DeleteBooking
-    @AccountId INT,
-    @HotelId INT,
-    @RoomTypeId INT,
+
+--!xóa
+CREATE PROCEDURE dbo.DeleteBooking
+    @AccountId INTEGER,
+    @HotelId INTEGER,
+    @RoomTypeId INTEGER,
     @CheckIn DATE,
-    @Result INT OUTPUT
+    @ReturnValue INT OUT
 AS
 BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRANSACTION;
+    SET @ReturnValue = 0; -- Mặc định trả về là 0 (thất bại)
 
     BEGIN TRY
-        -- Xóa đơn đặt chỗ
         DELETE FROM BOOKING_ACCOUNT
-        WHERE AccountId = @AccountId AND HotelId = @HotelId AND RoomTypeId = @RoomTypeId AND CheckIn = @CheckIn;
-
-        COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi xóa thành công
+        WHERE AccountId = @AccountId
+        AND HotelId = @HotelId
+        AND RoomTypeId = @RoomTypeId
+        AND CheckIn = @CheckIn;
+        
+        SET @ReturnValue = 1; -- Gán giá trị trả về là 1 (thành công)
     END TRY
     BEGIN CATCH
-        ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
-    END CATCH;
-END;
-GO
+        SET @ReturnValue = 0; -- Gán giá trị trả về là 0 (thất bại)
+    END CATCH
+    RETURN @ReturnValue; -- Trả về giá trị kết quả của stored procedure
+END
 
---!SỬA
-CREATE OR ALTER PROCEDURE USP_UpdateBooking
-    @AccountId INT,
-    @HotelId INT,
-    @RoomTypeId INT,
+--!sửa 
+CREATE PROCEDURE dbo.UpdateBooking
+    @AccountId INTEGER,
+    @HotelId INTEGER,
+    @RoomTypeId INTEGER,
     @CheckIn DATE,
     @CheckOut DATE,
-    @NumberOfRoom INT,
-    @Result INT OUTPUT
+    @NumberOfRoom INTEGER,
+    @VoucherId INTEGER,
+    @Total INT,
+    @ReturnValue INT OUT
 AS
 BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRANSACTION;
+    SET @ReturnValue = 0; -- Mặc định trả về là 0 (thất bại)
 
     BEGIN TRY
-        -- Cập nhật đơn đặt chỗ
         UPDATE BOOKING_ACCOUNT
-        SET CheckOut = @CheckOut, NumberOfRoom = @NumberOfRoom
-        WHERE AccountId = @AccountId AND HotelId = @HotelId AND RoomTypeId = @RoomTypeId AND CheckIn = @CheckIn;
-
-        COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi cập nhật thành công
+        SET CheckOut = @CheckOut,
+            NumberOfRoom = @NumberOfRoom,
+            VoucherId = @VoucherId,
+            Total = @Total
+        WHERE AccountId = @AccountId
+        AND HotelId = @HotelId
+        AND RoomTypeId = @RoomTypeId
+        AND CheckIn = @CheckIn;
+        
+        SET @ReturnValue = 1; -- Gán giá trị trả về là 1 (thành công)
     END TRY
     BEGIN CATCH
-        ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
-    END CATCH;
-END;
-GO
+        SET @ReturnValue = 0; -- Gán giá trị trả về là 0 (thất bại)
+    END CATCH
+    RETURN @ReturnValue; -- Trả về giá trị kết quả của stored procedure
+END
 
 --TODO PROCE XEM LỊCH SỬ CÁC ĐƠN BOOKING CỦA TÀI KHOẢN 
 CREATE OR ALTER PROCEDURE dbo.USP_ViewBookingHistory
@@ -1013,7 +1012,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT BA.AccountId, BA.HotelId, BA.RoomTypeId, BA.CheckIn, BA.CheckOut, BA.NumberOfRoom
+    SELECT *
     FROM BOOKING_ACCOUNT BA
     WHERE BA.AccountId = @AccountId;
 END;
@@ -1127,30 +1126,20 @@ BEGIN
     END
 END
 
---todo lưu hóa đơn booking và tính điểm tích được
-CREATE PROCEDURE dbo.CreateBookingAndCalculatePoints
+--todo proc tính điểm từ giao dịch và lưu thay đổi điểm 
+CREATE PROCEDURE dbo.CalculateMemberPoints
     @AccountId INTEGER,
-    @HotelId INTEGER,
-    @RoomTypeId INTEGER,
-    @CheckIn DATE,
-    @CheckOut DATE,
-    @NumberOfRoom INTEGER,
-    @VoucherId INTEGER,
-    @Total INT
+    @Total INT,
+    @ReturnValue INT OUT
 AS
 BEGIN
     DECLARE @EarnedPoints INT;
-    DECLARE @ReturnValue INT = 0; -- Mặc định trả về là 0 (thất bại)
-
+    
     -- Tính điểm tích lũy từ giao dịch (tỉ lệ 1 điểm / 100000 giá trị total)
     SET @EarnedPoints = @Total / 100000;
 
     BEGIN TRY
         BEGIN TRANSACTION; -- Bắt đầu giao dịch
-
-        -- Tạo hóa đơn booking
-        INSERT INTO BOOKING_ACCOUNT (AccountId, HotelId, RoomTypeId, CheckIn, CheckOut, NumberOfRoom, VoucherId, Total)
-        VALUES (@AccountId, @HotelId, @RoomTypeId, @CheckIn, @CheckOut, @NumberOfRoom, @VoucherId, @Total);
 
         -- Cộng điểm tích lũy từ giao dịch vào tài khoản
         UPDATE ACCOUNT SET MemberPoint = MemberPoint + @EarnedPoints WHERE Id = @AccountId;
@@ -1164,11 +1153,12 @@ BEGIN
         SET @ReturnValue = 1;
     END TRY
     BEGIN CATCH
-        -- Xảy ra lỗi, rollback giao dịch và giữ giá trị trả về là 0 (thất bại)
-        ROLLBACK TRANSACTION;
+        ROLLBACK TRANSACTION; -- Xảy ra lỗi, rollback giao dịch
+        SET @ReturnValue = 0; -- Gán giá trị trả về là 0 nếu thất bại
     END CATCH
 
     -- Trả về giá trị kết quả của stored procedure
     RETURN @ReturnValue;
 END
+
 

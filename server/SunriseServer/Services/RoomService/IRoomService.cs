@@ -19,7 +19,8 @@ namespace SunriseServer.Services.RoomService
         // PUT
         Task<int> UpdateRoomType(RoomType roomType);
         Task<int> UpdateRoomPicture(RoomPictureDto updateDto);
-        Task<List<int>> UpdateRoomService(RoomAmenitiesDto updateDto);
+        Task<int> UpdateRoomFacility(RoomAmenitiesDto updateDto);
+        Task<int> UpdateRoomService(RoomAmenitiesDto updateDto);
 
         // DELETE
         Task<int> DeleteRoomType(DeleteRoomDto deleteDto);

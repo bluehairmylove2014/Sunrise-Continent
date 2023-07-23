@@ -22,8 +22,8 @@ namespace SunriseServerCore.RepoInterfaces
         // ========= UPDATE =========
         Task<int> UpdateRoomTypeAsync(RoomType roomType);
         Task<int> UpdateRoomPictureAsync(RoomPictureDto updateDto);
-        // Task<List<HotelRoomFacility>> UpdateRoomFacilityAsync(HotelRoomFacility rowUpdate);
-        Task<List<int>> UpdateRoomServiceAsync(RoomAmenitiesDto updateDto);
+        Task<int> UpdateRoomFacilityAsync(RoomAmenitiesDto updateDto);
+        Task<int> UpdateRoomServiceAsync(RoomAmenitiesDto updateDto);
 
         // ========= DELETE =========
         Task<int> DeleteRoomTypeAsync(DeleteRoomDto deleteDto);

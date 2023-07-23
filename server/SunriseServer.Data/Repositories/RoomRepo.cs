@@ -103,12 +103,6 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
-        // public async Task<List<HotelRoomFacility>> UpdateRoomFacilityAsync(HotelRoomFacility rowUpdate)
-        // {
-        //     string builder = @"";
-        //     var result = await _dataContext.HotelRoomFacilities.FromSqlInterpolated($" USP_UpdateRoomFacility ").ToListAsync();
-        // }
-
         private async Task<List<int>> GetRoomAmenitiesId(string tableName, string amenities)
         {
             var builder = new StringBuilder("EXEC USP_GetAmenitiesId ");
@@ -117,10 +111,9 @@ namespace SunriseServerData.Repositories
             return await _dataContext.Database.SqlQuery<int>($"EXECUTE({builder.ToString()})").ToListAsync();
         }
 
-        public async Task<List<int>> UpdateRoomServiceAsync(RoomAmenitiesDto updateDto)
+        public async Task<int> UpdateRoomFacilityAsync(RoomAmenitiesDto updateDto)
         {
             var builder = new StringBuilder($"DELETE FROM ROOM_FACILITY WHERE HotelId={updateDto.HotelId} and RoomId = {updateDto.RoomTypeId};\n");
-
             var test = await GetRoomAmenitiesId("FACILITY_CONST", string.Join( ",", updateDto.RoomAmenities));
 
             foreach (var id in test)
@@ -128,12 +121,26 @@ namespace SunriseServerData.Repositories
                 builder.Append($"EXEC USP_AddRoomFacility {updateDto.HotelId}, {updateDto.RoomTypeId}, {id};\n");
             }
 
-            Console.WriteLine(builder.ToString());
+            var result = await _dataContext.Database
+                .ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            
+            return result;
+        }
+
+        public async Task<int> UpdateRoomServiceAsync(RoomAmenitiesDto updateDto)
+        {
+            var builder = new StringBuilder($"DELETE FROM ROOM_SERVICE WHERE HotelId={updateDto.HotelId} and RoomId = {updateDto.RoomTypeId};\n");
+            var idList = await GetRoomAmenitiesId("SERVICE_CONST", string.Join( ",", updateDto.RoomAmenities));
+
+            foreach (var id in idList)
+            {
+                builder.Append($"EXEC USP_AddRoomService {updateDto.HotelId}, {updateDto.RoomTypeId}, {id};\n");
+            }
 
             var result = await _dataContext.Database
                 .ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
             
-            return test;
+            return result;
         }
 
         public async Task<int> DeleteRoomTypeAsync(DeleteRoomDto deleteDto)

@@ -67,7 +67,13 @@ namespace SunriseServer.Services.RoomService
             return result;
         }
 
-        public async Task<List<int>> UpdateRoomService(RoomAmenitiesDto updateDto)
+        public async Task<int> UpdateRoomFacility(RoomAmenitiesDto updateDto)
+        {
+            var result = await _unitOfWork.RoomTypeRepo.UpdateRoomFacilityAsync(updateDto);
+            return result;
+        }
+
+        public async Task<int> UpdateRoomService(RoomAmenitiesDto updateDto)
         {
             var result = await _unitOfWork.RoomTypeRepo.UpdateRoomServiceAsync(updateDto);
             return result;

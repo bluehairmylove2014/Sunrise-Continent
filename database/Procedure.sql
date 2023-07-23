@@ -638,18 +638,14 @@ AS
 BEGIN
     --SET NOCOUNT ON;
 
-    BEGIN TRANSACTION;
-
     BEGIN TRY
         -- Thêm dịch vụ phòng mới
         INSERT INTO ROOM_SERVICE (HotelId, RoomId, ServiceId)
         VALUES (@HotelId, @RoomId, @ServiceId);
 
-        COMMIT;
         RETURN 0; -- Trả về kết quả 1 khi thêm thành công
     END TRY
     BEGIN CATCH
-        ROLLBACK;
         RETURN -1; -- Trả về kết quả 0 khi xảy ra lỗi
     END CATCH;
 END

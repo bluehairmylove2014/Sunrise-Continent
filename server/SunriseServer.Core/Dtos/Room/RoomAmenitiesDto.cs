@@ -5,7 +5,6 @@ namespace SunriseServerCore.Dtos.Room
     {
         public int HotelId { get; set; }
         public int RoomTypeId { get; set; }
-
         public List<string> RoomAmenities { get; set; }
     }
 }

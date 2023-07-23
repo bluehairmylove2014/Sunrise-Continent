@@ -1,4 +1,4 @@
-namespace SunriseServerCore.Dtos
+namespace SunriseServerCore.Dtos.Room
 {
     public class RoomDto
     {
@@ -11,7 +11,7 @@ namespace SunriseServerCore.Dtos
         public string RoomInfo { get; set; } = string.Empty;
         public string RoomView { get; set; } = string.Empty;
         public string BedType { get; set; } = string.Empty;
-        public List<string> Picture { get; set; }
+        public List<PictureDto> Picture { get; set; }
         public List<string> Facility { get; set; }
         public List<string> Service { get; set; }
     }

@@ -55,15 +55,18 @@ builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
     }));
 
 builder.Services.AddServicesData();
-builder.Services.AddUnitOfWork(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Sunrise")));
+builder.Services.AddUnitOfWork(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+//else
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sunrise API Production"));
+//}
 
 app.UseCors("NgOrigins");
 

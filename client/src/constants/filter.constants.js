@@ -70,23 +70,28 @@ export const LOCATION_TYPES = {
 export const BED_TYPES = {
     DOUBLE: {
         INPUT_NAME: "double",
-        LABEL: "Giường đôi"
+        LABEL: "Giường đôi",
+        ICON: "https://rialloer.sirv.com/Sunrise-Continent/bed_types/double-bed.png"
     },
     SINGLE_OR_TWIN: {
         INPUT_NAME: "single_or_twin",
-        LABEL: "Giường đơn / hai giường đơn"
+        LABEL: "Giường đơn / hai giường đơn",
+        ICON: "https://rialloer.sirv.com/Sunrise-Continent/bed_types/bed.png"
     },
     LARGE: {
         INPUT_NAME: "large",
-        LABEL: "Giường lớn"
+        LABEL: "Giường lớn",
+        ICON: "https://rialloer.sirv.com/Sunrise-Continent/bed_types/single-bed.png"
     },
     LARGE_DOUBLE: {
         INPUT_NAME: "large_double",
-        LABEL: "Giường đôi lớn"
+        LABEL: "Giường đôi lớn",
+        ICON: "https://rialloer.sirv.com/Sunrise-Continent/bed_types/double-bed (2).png"
     },
     BUNK: {
         INPUT_NAME: "bunk",
-        LABEL: "Giường tầng"
+        LABEL: "Giường tầng",
+        ICON: "https://rialloer.sirv.com/Sunrise-Continent/bed_types/bunk-bed.png"
     }
 }
 export const ROOM_OPTIONS = {
@@ -116,7 +121,6 @@ export const ROOM_OPTIONS = {
         ICON: "fi fi-ss-mug-hot-alt"
     },
 }
-
 export const ACCOMMODATION_FACILITIES = {
     SWIMMING_POOL: {
         INPUT_NAME: "swimming_pool",

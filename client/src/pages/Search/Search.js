@@ -48,7 +48,7 @@ const Search = () => {
         if (!Array.isArray(hotelList)) return <></>;
         return hotelList.map(hotel => {
             return (
-                <Hotel data={hotel} />
+                <Hotel data={hotel} key={hotel.id}/>
             )
         })
     }
@@ -99,13 +99,10 @@ const Search = () => {
                     setHotels(data)
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.error(err)
                 })
         }
     }, [criteria])
-    useEffect(() => {
-        console.log("LOading: ", isSearching)
-    }, [isSearching])
 
 
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import SmallPageLoader from '../../components/common/SmallPageLoader';
 import { combineAddress } from '../../utils/helpers/Address';
 import { pointToLabel } from '../../utils/helpers/Rating';
@@ -8,40 +8,14 @@ import { icon } from './Data';
 import { ACCOMMODATION_FACILITIES, ROOM_OPTIONS } from '../../constants/filter.constants';
 import map_img from '../../assets/images/graphics/image 31.png'
 import Rooms from './Rooms';
-import { useGetRooms } from '../../libs/business-logic/src/lib/hotel/process/hooks';
+import { useGetHotelDetail, useGetRooms } from '../../libs/business-logic/src/lib/hotel/process/hooks';
 
 const HotelDetail = () => {
-    const [hotelDetail, setHotelDetail] = useState(null);
+    const { data: hotelData } = useGetHotelDetail("0");
     const urlParams = new URLSearchParams(window.location.search);
     const hotelId = urlParams.get('id');
     console.log("Hotel ID: ", hotelId)
     const roomsData = useGetRooms("2")
-
-    useEffect(() => {
-        setHotelDetail({
-            id: 1,
-            name: "Khách sạn Caravelle Saigon",
-            country: "Việt Nam",
-            provinceCity: "Hồ Chí Minh",
-            address: "17 Công Trường Lam Sơn, Quận 1",
-            stars: 5,
-            rating: 9.1,
-            description: "Một khách sạn cao cấp tọa lạc tại trung tâm Thành phố Hồ Chí Minh với dịch vụ chất lượng và tầm nhìn tuyệt đẹp.",
-            image: "https://rialloer.sirv.com/Sunrise-Continent/hotels/7%20La%20Siesta%20Premium%20Sai%20Gon/462029553.jpg",
-            price: 350000,
-            amenities: [
-                "SWIMMING_POOL", 
-                "AIRPORT_SHUTTLE", 
-                "PARKING", 
-                "RECEPTION_24H",
-                "FAMILY_FRIENDLY",
-                "NON_SMOKING",
-                "SPA_SAUNA",
-                "PETS_ALLOWED"
-            ],
-            services: ["BREAKFAST_INCLUDED", "DINNER_INCLUDED"]
-        })
-    }, [])
 
     const renderAmenities = (amenities) => {
         if(!Array.isArray(amenities)) return <></>
@@ -72,24 +46,24 @@ const HotelDetail = () => {
     }
 
     return (
-        hotelDetail ? 
+        hotelData ? 
         <main className='hotel-detail'>
             <section className='hotel-detail__overall-wrapper'>
                 <div className="container">
                     <div className="hotel-detail__overall">
                         <div className="overall__infor">
                             <h4 className="overall-infor__name">
-                                {hotelDetail.name}
+                                {hotelData.name}
                             </h4>
                             <p className="overall-infor__address">
-                                {combineAddress(hotelDetail.address, hotelDetail.provinceCity, hotelDetail.country)}
+                                {combineAddress(hotelData.address, hotelData.provinceCity, hotelData.country)}
                             </p>
                             <div className="overall-infor__review">
                                 <div className="review__point">
-                                    {hotelDetail.rating}
+                                    {hotelData.rating}
                                 </div>
                                 <div className="review__label">
-                                    {pointToLabel(hotelDetail.rating)}
+                                    {pointToLabel(hotelData.rating)}
                                 </div>
                                 <div className="review__count">
                                     {`1250 Reviews`}
@@ -98,7 +72,7 @@ const HotelDetail = () => {
                         </div>
                         <div className="overall__booking-price">
                             <p className="booking-price__price-per-night">
-                                <span>{convertNumberToCurrency("vietnamdong", hotelDetail.price)}</span>
+                                <span>{convertNumberToCurrency("vietnamdong", hotelData.price)}</span>
                                 &nbsp;/ night
                             </p>
                             <div className="booking-price__interact">
@@ -106,7 +80,7 @@ const HotelDetail = () => {
                                     <i className="fi fi-rr-heart"></i>
                                     Yêu thích
                                 </button>
-                                <button>
+                                <button onClick={() => document.getElementById('rooms-section').scrollIntoView({ behavior: 'smooth' })}>
                                     Show available room
                                 </button>
                             </div>
@@ -118,7 +92,7 @@ const HotelDetail = () => {
                 <section className="hotel-detail__gallery">
                     <button>
                         <img 
-                            src={hotelDetail.image} 
+                            src={hotelData.image} 
                             alt="hotel 1" 
                         />
                     </button>
@@ -158,13 +132,13 @@ const HotelDetail = () => {
 
                     
                     <div className="description__room-options">
-                        {renderRoomOptions(hotelDetail.services)}
+                        {renderRoomOptions(hotelData.services)}
                     </div>
 
                     <div className="description__moreinfo-wrapper">
                         <div className="moreinfo-wrapper__amenities">
                             <h5>Tiện nghi</h5>
-                            {renderAmenities(hotelDetail.amenities)}
+                            {renderAmenities(hotelData.amenities)}
                         </div>
                     </div>
 
@@ -224,8 +198,8 @@ const HotelDetail = () => {
                     <h3>Đánh giá</h3>
 
                     <div className="reviews__total-result">
-                        <strong>{hotelDetail.rating}</strong>
-                        <p className='total-result__label'>{pointToLabel(hotelDetail.rating)}</p>
+                        <strong>{hotelData.rating}</strong>
+                        <p className='total-result__label'>{pointToLabel(hotelData.rating)}</p>
                         <p>Dựa trên <span>10,300</span> Đánh giá đã được kiểm định</p>
                     </div>
 
@@ -239,8 +213,8 @@ const HotelDetail = () => {
                         </div>
                         <div className="user-review__main">
                             <div className="user-review__rating">
-                                <strong>{hotelDetail.rating}</strong>
-                                <span className='total-result__label'>{pointToLabel(hotelDetail.rating)}</span>
+                                <strong>{hotelData.rating}</strong>
+                                <span className='total-result__label'>{pointToLabel(hotelData.rating)}</span>
 
                                 &nbsp;|&nbsp;
 
@@ -262,8 +236,8 @@ const HotelDetail = () => {
                         </div>
                         <div className="user-review__main">
                             <div className="user-review__rating">
-                                <strong>{hotelDetail.rating}</strong>
-                                <span className='total-result__label'>{pointToLabel(hotelDetail.rating)}</span>
+                                <strong>{hotelData.rating}</strong>
+                                <span className='total-result__label'>{pointToLabel(hotelData.rating)}</span>
 
                                 &nbsp;|&nbsp;
 
@@ -294,8 +268,8 @@ const HotelDetail = () => {
                         </div>
                         <div className="user-review__main">
                             <div className="user-review__rating">
-                                <strong>{hotelDetail.rating}</strong>
-                                <span className='total-result__label'>{pointToLabel(hotelDetail.rating)}</span>
+                                <strong>{hotelData.rating}</strong>
+                                <span className='total-result__label'>{pointToLabel(hotelData.rating)}</span>
 
                                 &nbsp;|&nbsp;
 
@@ -338,7 +312,7 @@ const HotelDetail = () => {
                 <div className="custom-line-template">
                     <img src={icon.lineIcon} alt="lineIcon" />
                 </div>
-                <section className="hotel-detail__rooms">
+                <section id="rooms-section" className="hotel-detail__rooms">
                     <h3>Chọn phòng</h3>
 
                     <Rooms rooms_data={roomsData}/>

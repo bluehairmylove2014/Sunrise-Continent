@@ -26,6 +26,7 @@ import redux_store from './redux/store';
 const HomePage = lazy(() => import('./pages/Home/Home'));
 const SearchPage = lazy(() => import('./pages/Search/Search'));
 const HotelDetail = lazy(() => import('./pages/HotelDetail/HotelDetail'));
+const PreCheckout = lazy(() => import('./pages/PreCheckout/PreCheckout'));
 const AuthenticationPage = lazy(() => import('./pages/Authentication/Authentication'));
 
 function App() {
@@ -68,6 +69,13 @@ function App() {
                   <>
                     <Header></Header>
                     <HotelDetail></HotelDetail>
+                    <Footer></Footer>
+                  </>
+                } />
+                <Route path={PAGES.PRE_CHECKOUT} element={
+                  <>
+                    <Header></Header>
+                    <PreCheckout></PreCheckout>
                     <Footer></Footer>
                   </>
                 } />

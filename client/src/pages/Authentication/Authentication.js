@@ -289,7 +289,6 @@ const Authentication = () => {
                                     <Controller
                                         name="email"
                                         control={loginForm.control}
-                                        defaultValue=""
                                         rules={{
                                             required: 'Email should not be empty',
                                             pattern: {
@@ -319,7 +318,6 @@ const Authentication = () => {
                                     <Controller
                                         name="password"
                                         control={loginForm.control}
-                                        defaultValue=""
                                         rules={{
                                             required: 'Password should not be empty',
                                             minLength: {
@@ -343,7 +341,6 @@ const Authentication = () => {
                                         <Controller
                                             name="isRememberMe"
                                             control={loginForm.control}
-                                            defaultValue={false}
                                             render={({ field }) => (
                                                 <input
                                                     {...field}
@@ -396,7 +393,6 @@ const Authentication = () => {
                                     <Controller
                                         name="email"
                                         control={registerForm.control}
-                                        defaultValue=""
                                         rules={{
                                             required: 'Email should not be empty',
                                             pattern: {
@@ -426,7 +422,6 @@ const Authentication = () => {
                                     <Controller
                                         name="password"
                                         control={registerForm.control}
-                                        defaultValue=""
                                         rules={{
                                             required: 'Password should not be empty',
                                             minLength: {

@@ -7,7 +7,6 @@ export function calculateDiscountedPrice(originalPrice, discount) {
     if (typeof discount !== 'number') {
         discount = Number(discount);
     }
-
     const discountedPrice = originalPrice * discount;
     const amountToPay = originalPrice - discountedPrice;
 

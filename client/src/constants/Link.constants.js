@@ -6,4 +6,5 @@ export const PAGES = {
     REGISTER: '/register',
     ABOUT: '/about',
     CONTACT: '/contact',
+    PRE_CHECKOUT: '/provide-information'
 };

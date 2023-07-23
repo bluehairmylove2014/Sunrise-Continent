@@ -31,7 +31,7 @@ const Hotel = ({data}) => {
     }
 
     return (
-        <Link className='hotel' to={`${PAGES.HOTEL_DETAIL}?id=${data.id}`} key={data.id}>
+        <Link className='hotel' to={`${PAGES.HOTEL_DETAIL}?id=${data.id}`}>
             <div className="hotel__images">
                 <img src={data.image} alt="hotel" />
             </div>

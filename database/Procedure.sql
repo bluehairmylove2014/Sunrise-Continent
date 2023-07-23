@@ -1019,3 +1019,156 @@ BEGIN
 END;
 GO
 
+--todo PROC CRUD VOUCHER
+--! THÊM
+CREATE PROCEDURE dbo.AddVoucher
+    @VoucherId INT,
+    @Name NVARCHAR(500),
+    @Value INT
+    @Point INT
+AS
+BEGIN
+    INSERT INTO VOUCHER (VoucherId, Name, Value)
+    VALUES (@VoucherId, @Name, @Value,@Point)
+
+    IF @@ROWCOUNT > 0
+        RETURN 1; -- Thành công
+    ELSE
+        RETURN 0; -- Thất bại
+END
+
+--! XÓA 
+CREATE PROCEDURE dbo.DeleteVoucher
+    @VoucherId INT
+AS
+BEGIN
+    DELETE FROM VOUCHER
+    WHERE VoucherId = @VoucherId
+
+    IF @@ROWCOUNT > 0
+        RETURN 1; -- Thành công
+    ELSE
+        RETURN 0; -- Thất bại
+END
+--! SỬA
+CREATE PROCEDURE dbo.UpdateVoucher
+    @VoucherId INT,
+    @Name NVARCHAR(500),
+    @Value INT
+AS
+BEGIN
+    UPDATE VOUCHER
+    SET Name = @Name,
+        Value = @Value
+        Point = @Point
+
+    WHERE VoucherId = @VoucherId
+
+    IF @@ROWCOUNT > 0
+        RETURN 1; -- Thành công
+    ELSE
+        RETURN 0; -- Thất bại
+END
+
+--TODO proc đổi điểm
+CREATE PROCEDURE dbo.RedeemVoucher
+    @AccountId INT,
+    @VoucherId INT
+AS
+BEGIN
+    DECLARE @VoucherValue INT;
+    DECLARE @CurrentPoints INT;
+    DECLARE @Quantity INT;
+
+    -- Kiểm tra xem tài khoản và voucher có tồn tại không
+    IF NOT EXISTS (SELECT 1 FROM ACCOUNT WHERE Id = @AccountId)
+        OR NOT EXISTS (SELECT 1 FROM VOUCHER WHERE VoucherId = @VoucherId)
+    BEGIN
+        -- Trả về giá trị 0 nếu tài khoản hoặc voucher không tồn tại
+        RETURN 0;
+    END
+
+    -- Lấy giá trị voucher cần đổi và số điểm hiện tại của tài khoản
+    SELECT @VoucherValue = Point FROM VOUCHER WHERE VoucherId = @VoucherId;
+    SELECT @CurrentPoints = MemberPoint FROM ACCOUNT WHERE Id = @AccountId;
+
+    -- Kiểm tra xem tài khoản có đủ điểm để đổi voucher không
+    IF @CurrentPoints >= @VoucherValue
+    BEGIN
+        BEGIN TRANSACTION; -- Bắt đầu giao dịch
+
+        -- Trừ điểm hoặc thêm điểm vào tài khoản
+        IF @VoucherValue > 0
+            SET @VoucherValue = -@VoucherValue; 
+        UPDATE ACCOUNT SET MemberPoint = @CurrentPoints + @VoucherValue WHERE Id = @AccountId;
+
+        -- Lưu lịch sử sử dụng điểm vào bảng POINT_HISTORY
+        INSERT INTO POINT_HISTORY (AccountId, Value) VALUES (@AccountId, @VoucherValue);
+
+        -- Cập nhật số lượng voucher trong túi voucher của tài khoản
+        SELECT @Quantity = ISNULL(Quantity, 0) FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
+        IF @Quantity > 0
+        BEGIN
+            UPDATE VOUCHER_BAG SET Quantity = @Quantity + 1 WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
+        END
+        ELSE
+        BEGIN
+            INSERT INTO VOUCHER_BAG (AccountId, VoucherId, Quantity) VALUES (@AccountId, @VoucherId, 1);
+        END
+
+        COMMIT TRANSACTION; -- Kết thúc giao dịch
+        -- Trả về giá trị 1 để biểu thị thành công
+        RETURN 1;
+    END
+    ELSE
+    BEGIN
+        -- Trả về giá trị 0 nếu tài khoản không đủ điểm để đổi voucher
+        RETURN 0;
+    END
+END
+
+--todo lưu hóa đơn booking và tính điểm tích được
+CREATE PROCEDURE dbo.CreateBookingAndCalculatePoints
+    @AccountId INTEGER,
+    @HotelId INTEGER,
+    @RoomTypeId INTEGER,
+    @CheckIn DATE,
+    @CheckOut DATE,
+    @NumberOfRoom INTEGER,
+    @VoucherId INTEGER,
+    @Total INT
+AS
+BEGIN
+    DECLARE @EarnedPoints INT;
+    DECLARE @ReturnValue INT = 0; -- Mặc định trả về là 0 (thất bại)
+
+    -- Tính điểm tích lũy từ giao dịch (tỉ lệ 1 điểm / 100000 giá trị total)
+    SET @EarnedPoints = @Total / 100000;
+
+    BEGIN TRY
+        BEGIN TRANSACTION; -- Bắt đầu giao dịch
+
+        -- Tạo hóa đơn booking
+        INSERT INTO BOOKING_ACCOUNT (AccountId, HotelId, RoomTypeId, CheckIn, CheckOut, NumberOfRoom, VoucherId, Total)
+        VALUES (@AccountId, @HotelId, @RoomTypeId, @CheckIn, @CheckOut, @NumberOfRoom, @VoucherId, @Total);
+
+        -- Cộng điểm tích lũy từ giao dịch vào tài khoản
+        UPDATE ACCOUNT SET MemberPoint = MemberPoint + @EarnedPoints WHERE Id = @AccountId;
+
+        -- Ghi lại lịch sử điểm vào bảng POINT_HISTORY
+        INSERT INTO POINT_HISTORY (AccountId, Value) VALUES (@AccountId, @EarnedPoints);
+
+        COMMIT TRANSACTION; -- Kết thúc giao dịch
+
+        -- Gán giá trị trả về là 1 nếu quá trình thành công
+        SET @ReturnValue = 1;
+    END TRY
+    BEGIN CATCH
+        -- Xảy ra lỗi, rollback giao dịch và giữ giá trị trả về là 0 (thất bại)
+        ROLLBACK TRANSACTION;
+    END CATCH
+
+    -- Trả về giá trị kết quả của stored procedure
+    RETURN @ReturnValue;
+END
+

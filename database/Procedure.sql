@@ -107,7 +107,7 @@ GO
 CREATE OR ALTER PROC USP_GetHotelRoomPicture
 	@Id INT
 AS
-	SELECT * FROM ROOM_PICTURE WHERE HotelId = @Id
+	SELECT * FROM ROOM_PICTURE rp WHERE rp.HotelId = @Id
 GO
 
 
@@ -137,6 +137,15 @@ AS
 	where rp.HotelId = @HotelId and rp.RoomTypeId = @RoomId
 GO
 
+CREATE OR ALTER PROC USP_GetSingleRoomPicture 
+	@HotelId INT,
+	@RoomId INT,
+	@PictureId INT
+AS
+	select * from ROOM_PICTURE rp
+	where rp.HotelId = @HotelId and rp.RoomTypeId = @RoomId and rp.Id=@PictureId;
+GO
+
 CREATE OR ALTER PROC USP_GetRoomFacility
 	@HotelId INT,
 	@RoomId INT
@@ -156,8 +165,16 @@ AS
 GO
 
 
-exec USP_GetHotelRoomType 11
-exec USP_GetRoomPicture 1, 1
+GO
+CREATE OR ALTER PROC USP_GetAmenitiesId(
+	@tablename SYSNAME,
+	@valueString VARCHAR(MAX)
+)
+AS
+	DECLARE @sql NVARCHAR(MAX) =
+		N'select tb.Id from STRING_SPLIT(''' + @valueString + ''', '','') spl 
+		join ' + @tablename + ' tb on spl.value like tb.Value;';
+	EXEC sp_executesql @sql;
 GO
 
 --! Hotel ==================
@@ -171,9 +188,8 @@ AS
 			--dbo.USF_GetAvgReview(Id) Rating,
 	FROM HOTEL
 GO
-exec USP_GetAllHotel
-delete from HOTEL where Id = 11
-go
+
+
 
 --! 
 CREATE OR ALTER PROC USP_GetHotelById
@@ -221,37 +237,6 @@ GO
 
 
 
-CREATE OR ALTER PROC USP_GetNextAccountId(
-	@tablename SYSNAME,
-	@columnname SYSNAME
-)
-AS
-	DECLARE @IntVariable INT = 0;  
-	DECLARE @SQLString NVARCHAR(MAX);  
-	DECLARE @ParmDefinition NVARCHAR(500);
-  
-	SET @SQLString = 
-		N'with cte as (select ' + @columnname + ' id, lead(' + @columnname + ') over (order by ' + @columnname + ') nextid from ' + @tablename + ')
-		select @gapstartOUT = MIN(id) from cte
-		where id < nextid - 1';
-	SET @ParmDefinition = N'@gapstartOUT INTEGER OUTPUT';  
-  
-	EXECUTE sp_executesql @SQLString, @ParmDefinition, @gapstartOUT = @IntVariable OUTPUT;  
-
-	IF (@IntVariable IS NULL)
-	BEGIN
-		DECLARE @SQL NVARCHAR(MAX);
-		SET @SQL = N'select @IdOUT = count(' + @columnname + ') from ' + @tablename + '';
-		SET @ParmDefinition = N'@IdOUT INTEGER OUTPUT';
-		EXEC sp_executesql @SQL, @ParmDefinition, @IdOUT = @IntVariable OUTPUT;
-
-		RETURN @IntVariable + 1;
-	END
-
-	RETURN @IntVariable + 1; 
-GO
-
-
 CREATE OR ALTER PROC USP_GetAllAccount
 AS
 	SELECT * FROM ACCOUNT
@@ -290,7 +275,7 @@ CREATE OR ALTER PROC USP_AddAccount
 AS
 	BEGIN TRY
 		DECLARE @Id INT
-		EXEC @Id = USP_GetNextAccountId 'ACCOUNT', 'Id'
+		EXEC @Id = dbo.USP_GetNextColumnId 'ACCOUNT', 'Id'
 
 		INSERT INTO ACCOUNT VALUES (@Id, 0, @Username, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires)
 		RETURN @Id
@@ -415,10 +400,6 @@ BEGIN
     --SET NOCOUNT ON;
 
     BEGIN TRY
-		IF EXISTS (select * FROM ROOM_TYPE WHERE HotelId=@HotelId and Id=@Id)
-		BEGIN
-			RETURN -1
-		END
 
         INSERT INTO ROOM_TYPE (HotelId, Id, Name, Vacancy, Size, Price, RoomInfo, RoomView, BedType)
         VALUES (@HotelId, @Id, @Name, @Vacancy, @Size, @Price, @RoomInfo, @RoomView, @BedType)
@@ -440,11 +421,6 @@ AS
 BEGIN
 
     BEGIN TRY
-		IF NOT EXISTS (select * FROM ROOM_TYPE WHERE HotelId=@HotelId and Id=@Id)
-		BEGIN
-			RETURN -1
-		END
-
         DELETE FROM ROOM_TYPE
         WHERE HotelId = @HotelId AND Id = @Id
 
@@ -469,13 +445,9 @@ CREATE OR ALTER PROCEDURE USP_UpdateRoomType
     @BedType VARCHAR(100)
 AS
 BEGIN
-    SET NOCOUNT ON;
+    --SET NOCOUNT ON;
 
     BEGIN TRY
-		IF NOT EXISTS (select * FROM ROOM_TYPE WHERE HotelId=@HotelId and Id=@Id)
-		BEGIN
-			RETURN -1
-		END
 
         UPDATE ROOM_TYPE
         SET Name = @Name, Vacancy = @Vacancy, Size = @Size, Price = @Price, RoomInfo = @RoomInfo, RoomView = @RoomView, BedType = @BedType
@@ -498,24 +470,21 @@ CREATE OR ALTER PROCEDURE USP_AddRoomPicture
     @Id INT,
     @PictureLink VARCHAR(1000)
 AS
-set transaction isolation level read committed
-BEGIN TRAN
-    --SET NOCOUNT ON;
+BEGIN
+	--SET NOCOUNT ON;
 
     BEGIN TRY
         -- Thêm ảnh phòng mới
         INSERT INTO ROOM_PICTURE (HotelId, RoomTypeId, Id, PictureLink)
         VALUES (@HotelId, @RoomTypeId, @Id, @PictureLink);
-		
+
+		RETURN 0; -- Trả về kết quả 1 khi thêm thành công
     END TRY
 
     BEGIN CATCH
-		ROLLBACK;
         RETURN -1; -- Trả về kết quả 0 khi xảy ra lỗi
     END CATCH;
-
-COMMIT TRANSACTION 
-RETURN 0;  -- Trả về kết quả 1 khi thêm thành công
+END
 GO
 
 --!SỬA ẢNH
@@ -548,14 +517,9 @@ GO
 CREATE OR ALTER PROCEDURE USP_DeleteRoomPicture
     @HotelId INT,
     @RoomTypeId INT,
-    @Id INT,
-    @Result INT OUTPUT
+    @Id INT
 AS
 BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRANSACTION;
-
     BEGIN TRY
         -- Xóa ảnh phòng
         DELETE FROM ROOM_PICTURE
@@ -563,12 +527,10 @@ BEGIN
         AND RoomTypeId = @RoomTypeId
         AND Id = @Id;
 
-        COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi xóa thành công
+        RETURN 0; -- Trả về kết quả 1 khi xóa thành công
     END TRY
     BEGIN CATCH
-        ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+        RETURN -1; -- Trả về kết quả 0 khi xảy ra lỗi
     END CATCH;
 END
 GO
@@ -583,18 +545,15 @@ AS
 BEGIN
     --SET NOCOUNT ON;
 
-    BEGIN TRANSACTION;
-
     BEGIN TRY
         -- Thêm cơ sở vật chất phòng mới
         INSERT INTO ROOM_FACILITY (HotelId, RoomId, FacilityId)
         VALUES (@HotelId, @RoomId, @FacilityId);
 
-        COMMIT;
         RETURN 0; -- Trả về kết quả 0 khi thêm thành công
     END TRY
+
     BEGIN CATCH
-        ROLLBACK;
         RETURN -1; -- Trả về kết quả -1 khi xảy ra lỗi
     END CATCH;
 END
@@ -679,18 +638,14 @@ AS
 BEGIN
     --SET NOCOUNT ON;
 
-    BEGIN TRANSACTION;
-
     BEGIN TRY
         -- Thêm dịch vụ phòng mới
         INSERT INTO ROOM_SERVICE (HotelId, RoomId, ServiceId)
         VALUES (@HotelId, @RoomId, @ServiceId);
 
-        COMMIT;
         RETURN 0; -- Trả về kết quả 1 khi thêm thành công
     END TRY
     BEGIN CATCH
-        ROLLBACK;
         RETURN -1; -- Trả về kết quả 0 khi xảy ra lỗi
     END CATCH;
 END

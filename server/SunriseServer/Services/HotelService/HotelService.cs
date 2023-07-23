@@ -52,13 +52,13 @@ namespace SunriseServer.Services.HotelService
         }
 
         // More Info
-        public async Task<List<HotelRoomService>> GetHotelServices(int id)
+        public async Task<List<RoomServiceConstant>> GetHotelServices(int id)
         {
             var servicesList = await _unitOfWork.HotelRepo.GetHotelServiceAsync(id);
             return servicesList;
         }
 
-        public async Task<List<HotelRoomFacility>> GetHotelFacility(int id)
+        public async Task<List<RoomFacilityConstant>> GetHotelFacility(int id)
         {
             var servicesList = await _unitOfWork.HotelRepo.GetHotelFacilityAsync(id);
             return servicesList;

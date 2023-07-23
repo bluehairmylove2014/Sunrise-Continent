@@ -9,8 +9,8 @@
         Task<Hotel> DeleteHotel(int id);
 
         //
-        Task<List<HotelRoomService>> GetHotelServices(int id);
-        Task<List<HotelRoomFacility>> GetHotelFacility(int id);
+        Task<List<RoomServiceConstant>> GetHotelServices(int id);
+        Task<List<RoomFacilityConstant>> GetHotelFacility(int id);
         Task<List<RoomPicture>> GetHotelPicture(int id);
     }
 };

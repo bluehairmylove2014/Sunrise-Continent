@@ -2,6 +2,7 @@ namespace SunriseServerCore.Dtos
 {
     public class PictureDto
     {
-        public List<string> HotelImg { get; set; }
+        public int Id { get; set; }
+        public string Link { get; set; } = string.Empty;
     }
 }

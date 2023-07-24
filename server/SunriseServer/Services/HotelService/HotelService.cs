@@ -1,6 +1,8 @@
 ﻿using SunriseServer.Services;
 using SunriseServerCore.Models;
 using SunriseServerData;
+using SunriseServerCore.Dtos;
+
 namespace SunriseServer.Services.HotelService
 {
     public class HotelService : IPaymentService
@@ -60,14 +62,26 @@ namespace SunriseServer.Services.HotelService
 
         public async Task<List<RoomFacilityConstant>> GetHotelFacility(int id)
         {
-            var servicesList = await _unitOfWork.HotelRepo.GetHotelFacilityAsync(id);
-            return servicesList;
+            var facilityList = await _unitOfWork.HotelRepo.GetHotelFacilityAsync(id);
+            return facilityList;
         }
 
         public async Task<List<RoomPicture>> GetHotelPicture(int id)
         {
-            var servicesList = await _unitOfWork.HotelRepo.GetHotelPictureAsync(id);
-            return servicesList;
+            var pictureList = await _unitOfWork.HotelRepo.GetHotelPictureAsync(id);
+            return pictureList;
+        }
+
+        public async Task<List<Review>> GetHotelReview(int id)
+        {
+            var reviews = await _unitOfWork.ReviewRepo.GetHotelReviewAsync(id);
+            return reviews;
+        }
+
+        public async Task<List<Hotel>> GetRecommendedHotel(int num)
+        {
+            var reviews = await _unitOfWork.HotelRepo.GetRecommendedHotelAsync(num);
+            return reviews;
         }
     }
 }

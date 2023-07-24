@@ -8,7 +8,7 @@ using SunriseServerCore.Dtos.Room;
 
 namespace SunriseServerCore.RepoInterfaces
 {
-    public interface IRoomType : IRepository<RoomType>
+    public interface IRoomRepo : IRepository<RoomType>
     {
         Task<List<RoomType>> GetAllRoomTypeAsync(int hotelId);
         Task<RoomType> GetSingleRoomTypeAsync(int hotelId, int id);

@@ -189,8 +189,6 @@ AS
 	FROM HOTEL
 GO
 
-
-
 --! 
 CREATE OR ALTER PROC USP_GetHotelById
 	@Id INTEGER
@@ -206,6 +204,18 @@ AS
 			--dbo.USF_GetReviewNum(Id) Reviews, 
 			--dbo.USF_GetAvgReview(Id) Rating,
 	FROM HOTEL WHERE Id = @Id
+GO
+
+CREATE OR ALTER PROC USP_GetRecommendedHotel
+	@Quantity INTEGER
+AS
+	SELECT TOP(@Quantity) Id, Name, Country, HotelType, ProvinceCity, 
+			Address, Stars,
+			dbo.USF_GetAvgReview(Id) Rating,
+			Description, Image,
+			dbo.USF_GetMinRoomPrice(Id) Price
+	FROM HOTEL
+	ORDER BY Rating DESC;
 GO
 
 
@@ -259,6 +269,13 @@ AS
 	END
 
 	SELECT * FROM ACCOUNT where Id = @Id;
+GO
+
+
+CREATE OR ALTER PROC USP_GetHotelReviews
+	@Id INT
+AS
+	SELECT * FROM REVIEW where HotelId = @Id;
 GO
 
 

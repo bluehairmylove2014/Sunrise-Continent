@@ -1,4 +1,6 @@
-﻿namespace SunriseServer.Services.HotelService
+﻿using SunriseServerCore.Dtos;
+
+namespace SunriseServer.Services.HotelService
 {
     public interface IPaymentService
     {
@@ -12,6 +14,8 @@
         Task<List<RoomServiceConstant>> GetHotelServices(int id);
         Task<List<RoomFacilityConstant>> GetHotelFacility(int id);
         Task<List<RoomPicture>> GetHotelPicture(int id);
+        Task<List<Review>> GetHotelReview(int id);
+        Task<List<Hotel>> GetRecommendedHotel(int id);
     }
 };
 

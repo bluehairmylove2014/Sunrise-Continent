@@ -11,11 +11,11 @@ namespace SunriseServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RoomController : ControllerBase
+    public class roomController : ControllerBase
     {
         readonly IRoomService _roomService;
 
-        public RoomController(IRoomService roomService)
+        public roomController(IRoomService roomService)
         {
             _roomService = roomService;
         }

@@ -15,7 +15,7 @@ namespace SunriseServerData
         {
             services.AddDbContext<DataContext>(optionsAction);
             services.AddScoped<IHotelRepo, HotelRepo>();
-            services.AddScoped<IRoomType, RoomTypeRepo>();
+            services.AddScoped<IRoomRepo, RoomRepo>();
             services.AddScoped<UnitOfWork>();
             return services;
         }

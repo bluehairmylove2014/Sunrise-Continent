@@ -151,9 +151,6 @@ CREATE TABLE REVIEW
 	Points FLOAT,
 	Content NVARCHAR(1000),
 
-	-- review chung cho khách sạn, có j sau này thêm thông tin phòng ở + các tiêu chí khác dô sau.
-	-- mỗi người đc 1 lần review, nếu review lại sẽ là chỉnh sửa. V cho nó dễ sài
-
 	PRIMARY KEY (AccountId, HotelId)
 )
 
@@ -254,12 +251,12 @@ ADD
 	REFERENCES HOTEL
 	ON DELETE CASCADE
 
-ALTER TABLE REVIEW
-ADD
-	CONSTRAINT FK_REVIEW_ACCOUNT
-	FOREIGN KEY(AccountId)
-	REFERENCES ACCOUNT
-	ON DELETE CASCADE
+--ALTER TABLE REVIEW
+--ADD
+--	CONSTRAINT FK_REVIEW_ACCOUNT
+--	FOREIGN KEY(AccountId)
+--	REFERENCES ACCOUNT
+--	ON DELETE CASCADE
 
 ALTER TABLE REVIEW_IMAGE
 ADD

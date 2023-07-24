@@ -18,5 +18,5 @@
   <ItemGroup>
     <ProjectReference Include="..\SunriseServer.Data\SunriseServerData.csproj" />
   </ItemGroup>
-
+	
 </Project>

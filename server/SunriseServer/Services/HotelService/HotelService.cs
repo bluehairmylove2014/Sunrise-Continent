@@ -3,7 +3,7 @@ using SunriseServerCore.Models;
 using SunriseServerData;
 namespace SunriseServer.Services.HotelService
 {
-    public class HotelService : IHotelService
+    public class HotelService : IPaymentService
     {
         private readonly UnitOfWork _unitOfWork;
 
@@ -49,6 +49,25 @@ namespace SunriseServer.Services.HotelService
             await _unitOfWork.SaveChangesAsync();
 
             return result;
+        }
+
+        // More Info
+        public async Task<List<RoomServiceConstant>> GetHotelServices(int id)
+        {
+            var servicesList = await _unitOfWork.HotelRepo.GetHotelServiceAsync(id);
+            return servicesList;
+        }
+
+        public async Task<List<RoomFacilityConstant>> GetHotelFacility(int id)
+        {
+            var servicesList = await _unitOfWork.HotelRepo.GetHotelFacilityAsync(id);
+            return servicesList;
+        }
+
+        public async Task<List<RoomPicture>> GetHotelPicture(int id)
+        {
+            var servicesList = await _unitOfWork.HotelRepo.GetHotelPictureAsync(id);
+            return servicesList;
         }
     }
 }

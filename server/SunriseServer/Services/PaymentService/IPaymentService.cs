@@ -1,4 +1,4 @@
-﻿namespace SunriseServer.Services.HotelService
+﻿namespace SunriseServer.Services.PaymentService
 {
     public interface IPaymentService
     {
@@ -7,11 +7,6 @@
         Task<Hotel> AddHotel(Hotel hotel);
         Task<Hotel> UpdateHotel(int id, Hotel request);
         Task<Hotel> DeleteHotel(int id);
-
-        //
-        Task<List<RoomServiceConstant>> GetHotelServices(int id);
-        Task<List<RoomFacilityConstant>> GetHotelFacility(int id);
-        Task<List<RoomPicture>> GetHotelPicture(int id);
     }
 };
 

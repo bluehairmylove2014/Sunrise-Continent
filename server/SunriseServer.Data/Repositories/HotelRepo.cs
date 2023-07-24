@@ -9,6 +9,7 @@ using SunriseServerData;
 using SunriseServerCore.Models;
 using SunriseServerCore.RepoInterfaces;
 using Microsoft.Data.SqlClient;
+using SunriseServer.Common.Helper;
 
 namespace SunriseServerData.Repositories
 {
@@ -34,10 +35,11 @@ namespace SunriseServerData.Repositories
 
         public override async Task<Hotel> CreateAsync(Hotel entity)
         {           
-            var builder = new StringBuilder(@"
-                DECLARE @result INT
-                EXEC @result = dbo.USP_AddHotel ");
+            var builder = new StringBuilder("DECLARE @result INT;\n");
+            builder.Append("EXEC @result = dbo.USP_AddHotel ");
+
             builder.Append($"@Name = \'{entity.Name}\', ");
+            builder.Append($"@Country = \'{entity.Country}\', ");
             builder.Append($"@HotelType = \'{entity.HotelType}\', ");
             builder.Append($"@ProvinceCity = \'{entity.ProvinceCity}\', ");
             builder.Append($"@Address = \'{entity.Address}\', ");
@@ -45,8 +47,9 @@ namespace SunriseServerData.Repositories
             builder.Append($"@Rating = {entity.Rating}, ");
             builder.Append($"@Description = \'{entity.Description}\', ");
             builder.Append($"@Image = \'{entity.Image}\';\n");
+            builder.Append($"EXEC USP_GetHotelById @Id = @result;");
 
-            builder.Append($"EXEC USP_GetHotelById @Id = @result");
+            Console.WriteLine(builder.ToString());
 
             var result = await _dataContext.Hotel.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
             return result.FirstOrDefault();
@@ -55,5 +58,25 @@ namespace SunriseServerData.Repositories
         // Task<TModel> UpdateAsync(TModel entity);
 
         // TModel Delete(int id);
+
+
+        // More info
+        public async Task<List<RoomFacilityConstant>> GetHotelFacilityAsync(int id)
+        {
+            var result = await _dataContext.RoomFacilityConstants.FromSqlInterpolated($"exec USP_GetHotelRoomFacility @Id={id};").ToListAsync();
+            return result;
+        }
+
+        public async Task<List<RoomServiceConstant>> GetHotelServiceAsync(int id)
+        {
+            var result = await _dataContext.RoomServiceConstants.FromSqlInterpolated($"exec USP_GetHotelRoomService @Id={id};").ToListAsync();
+            return result;
+        }
+
+        public async Task<List<RoomPicture>> GetHotelPictureAsync(int id)
+        {
+            var result = await _dataContext.RoomPicture.FromSqlInterpolated($"exec USP_GetHotelRoomPicture @Id={id};").ToListAsync();
+            return result;
+        }
     }
 }

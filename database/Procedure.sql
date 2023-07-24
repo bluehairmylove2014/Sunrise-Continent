@@ -920,8 +920,9 @@ CREATE OR ALTER PROCEDURE USP_DeleteBooking
     @RoomTypeId INT
 AS
 BEGIN
-    SET @ReturnValue = 0; -- Mặc định trả về là 0 (thất bại)
+    SET NOCOUNT ON;
 
+    BEGIN TRANSACTION;
     -- Xóa đơn đặt chỗ
     DELETE FROM BOOKING_ACCOUNT
     WHERE AccountId = @AccountId AND HotelId = @HotelId AND RoomTypeId = @RoomTypeId;

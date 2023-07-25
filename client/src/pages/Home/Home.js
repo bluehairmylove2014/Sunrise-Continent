@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import '../../styles/scss/home.scss';
+import toast from 'react-hot-toast';
 
 // subcomponent
 import Banners from './Banners';
@@ -16,6 +17,16 @@ import CityGraphic from '../../assets/images/bgs/360_F_63940372_ghZQzzZEwektiDoO
 
 // img
 import VietnamField from '../../assets/images/bgs/Mountain.png';
+import { useNavigate } from 'react-router-dom';
+import { stringifySearchParams } from '../../utils/helpers/params';
+
+const defaultSearchInputVal = {
+    location: "Bạn muốn đi đâu?",
+    roomType: "Bạn mong muốn gì từ khách sạn?",
+    start_date: "Khi nào thì bạn khởi hành?",
+    end_date: "Bạn muốn rời đi khi nào?",
+    budget: "Ngân sách của bạn thế nào?",
+}
 
 const Home = () => {
     // Define
@@ -25,10 +36,18 @@ const Home = () => {
     const [roomType, setRoomType] = useState([]);
     const [trendingHotelPage, setTrendingHotelPage] = useState(1);
     const [trendingHotel, setTrendingHotel] = useState([]);
+    const [searchInputVal, setSearchInputVal] = useState(defaultSearchInputVal)
+    const navigate = useNavigate();
 
     const trendingHotelPerPage = 6;
 
     // Methods
+    const updateSearchInputVal = (key, value) => {
+        setSearchInputVal(prevState => ({
+          ...prevState,
+          [key]: value,
+        }));
+    };
     const handleChangeTrendingHotelPage = (e) => {
         setTrendingHotelPage(Number(e.target.getAttribute('data-pagenumber')));
     }
@@ -70,7 +89,54 @@ const Home = () => {
             <>{htmlDisplayPages}</>
         )
     }
-
+    const extractMinAndMax = (rangeString) => {
+        // Check if the input is not a string or is null/undefined
+        if (typeof rangeString !== 'string') {
+          console.error('Input is not a valid string.');
+          return null;
+        }
+      
+        // Update the regex pattern to match numbers with or without a separator
+        const regexPattern = /(\d+(\.\d+)?)/g;
+        const matches = rangeString.match(regexPattern);
+      
+        if (matches && matches.length >= 2) {
+          const minStr = matches[0];
+          const maxStr = matches[2];
+      
+          const min = parseInt(minStr.replace(/\./g, '')) / 100;
+          const max = parseInt(maxStr.replace(/\./g, '')) / 100;
+      
+          return { min, max };
+        } else {
+          console.error('Invalid input format.');
+          return null;
+        }
+    };
+    const handleSearch = (e, {
+        location,
+        roomType,
+        start_date,
+        end_date,
+        budget
+    }) => {
+        e.preventDefault();
+        if(
+            defaultSearchInputVal.location === location ||
+            defaultSearchInputVal.roomType === roomType ||
+            defaultSearchInputVal.start_date === start_date ||
+            defaultSearchInputVal.end_date === end_date ||
+            defaultSearchInputVal.budget === budget
+        ) {
+            toast.error("Please fill all criteria!")
+        }
+        else {
+            navigate(`/search${stringifySearchParams({
+                ...searchInputVal,
+                budget: JSON.stringify(extractMinAndMax(searchInputVal.budget))
+            })}`);
+        }
+    }
     // use effect
     useEffect(() => {
         // Get banners here
@@ -253,51 +319,54 @@ const Home = () => {
                     <h3>ĐỊA ĐIỂM MONG MUỐN</h3>
                 </div>
                 {/* Input field */}
-                <form className='home-destination__form'>
+                <form className='home-destination__form' onSubmit={e => handleSearch(e, searchInputVal)}>
                     {/* Use component to render an input */}
                     <div className="home-des-form__row">
                         <ModernInput 
                             options={countries}
-                            defaultVal='Bạn muốn đi đâu?'
+                            defaultVal={searchInputVal.location}
                             search={true}
                             valMultipleLevel={true}
                             inputType={'text'}
+                            callback={updateSearchInputVal}
+                            input_name={"location"}
                         />
                         <ModernInput 
                             options={roomType}
-                            defaultVal='Bạn mong muốn gì từ khách sạn?'
+                            defaultVal={searchInputVal.roomType}
                             search={false}
                             valMultipleLevel={false}
                             inputType={'text'}
+                            callback={updateSearchInputVal}
+                            input_name={"roomType"}
                         />
                     </div> 
                     <div className="home-des-form__row">
-                        <ModernInput 
-                            options={countries}
-                            defaultVal='Khi nào thì bạn khởi hành?'
+                        <ModernInput
+                            defaultVal={searchInputVal.start_date}
                             search={false}
                             valMultipleLevel={false}
                             inputType={'date'}
+                            callback={updateSearchInputVal}
+                            input_name={"start_date"}
                         />
-                        <ModernInput 
-                            options={[
-                                '1 ngày',
-                                '2 ngày',
-                                '3 ngày',
-                                '4 ngày trở lên',
-                            ]}
-                            defaultVal='Bạn dự định sẽ ở lại bao lâu?'
+                        <ModernInput
+                            defaultVal={searchInputVal.end_date}
                             search={false}
                             valMultipleLevel={false}
-                            inputType={'text'}
+                            inputType={'date'}
+                            callback={updateSearchInputVal}
+                            input_name={"end_date"}
                         />
                         <ModernInput 
-                            defaultVal='Ngân sách của bạn thế nào?'
+                            defaultVal={searchInputVal.budget}
                             inputType={'price'}
+                            callback={updateSearchInputVal}
+                            input_name={"budget"}
                         />
                     </div>
                     <div className="home-destination-form__submit-field">
-                        <button type='button'>
+                        <button type='button' onClick={() => setSearchInputVal(defaultSearchInputVal)}>
                             <i className="fi fi-rs-trash"></i>
                             Xóa bộ lọc
                         </button>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import '../../styles/scss/header.scss';
 import logoVerticalImg from '../../assets/images/logos/sc-vertical.png';
@@ -11,13 +11,17 @@ import { useForm } from 'react-hook-form';
 import {
     useIsLogged
 } from '../../libs/business-logic/src/lib/auth'
+import {
+    categories,
+    languages
+} from './Data'
+import { useSplitToKeys } from '../../libs/business-logic/src/lib/gpt/process/hooks/useSplitToKeys';
 
 const Header = () => {
-    const [categories, setCategories] = useState([]);
-    const [languageChooser, setLanguageChooser] = useState([]);
     const [userSidebarStatus, setUserSidebarStatus] = useState(false);
     const [logoSrc, setLogoSrc] = useState(logoVerticalImg);
     const isLogin = useIsLogged();
+    const { onSplitToKeys } = useSplitToKeys();
 
     
     const headerRef = useRef(null);
@@ -27,188 +31,7 @@ const Header = () => {
     const {
         handleSubmit,
         register,
-        reset,
-        // formState: { errors }
     } = useForm();
-
-    
-    useEffect(() => {
-        setCategories([
-            {
-                category_name: 'Khách sạn',
-                options: [
-                    {
-                        option_name: 'Khách sạn 5 sao',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Khách sạn 4 sao',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Khách sạn 3 sao',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Resort',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Biệt thự nghỉ dưỡng',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Homestay',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Nhà nghỉ',
-                        option_url: '/'
-                    },
-                ]
-            },
-            {
-                category_name: 'Địa điểm',
-                options: [
-                    {
-                        option_name: 'Thành phố',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Khu du lịch',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Bãi biển',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Núi rừng',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Miền quê',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Trung tâm thành phố',
-                        option_url: '/'
-                    },
-                ]
-            },
-            {
-                category_name: 'Tiện nghi',
-                options: [
-                    {
-                        option_name: 'Wifi miễn phí',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Bể bơi',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Nhà hàng',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Phòng tập gym',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Spa',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Dịch vụ đưa đón sân bay',
-                        option_url: '/'
-                    },
-                ]
-            },
-            {
-                category_name: 'Loại phòng',
-                options: [
-                    {
-                        option_name: 'Phòng đơn',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Phòng đôi',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Phòng gia đình',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Suite',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Căn hộ',
-                        option_url: '/'
-                    },
-                ]
-            },
-            {
-                category_name: 'Giá',
-                options: [
-                    {
-                        option_name: 'Dưới 1 triệu đồng',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: '1 - 2 triệu đồng',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: '2 - 3 triệu đồng',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: 'Trên 3 triệu đồng',
-                        option_url: '/'
-                    },
-                ]
-            },
-            {
-                category_name: 'Đánh giá',
-                options: [
-                    {
-                        option_name: '5 sao',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: '4 sao',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: '3 sao',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: '2 sao',
-                        option_url: '/'
-                    },
-                    {
-                        option_name: '1 sao',
-                        option_url: '/'
-                    },
-                ]
-            }
-        ]);
-        setLanguageChooser([
-            {
-                option_name: 'Tiếng Việt',
-                option_url: '/vi'
-            },
-            {
-                option_name: 'Tiếng Anh',
-                option_url: '/en'
-            }
-        ])
-    }, [])
-
 
     // Methods
     const renderCategories = (catelist) => {
@@ -218,9 +41,8 @@ const Header = () => {
                     return (
                         <li key={`header-category@${i}`}>
                             <NavDropdown 
+                                name_il={c.icon}
                                 name={c.category_name} 
-                                name_ir={'fi fi-rr-caret-down'}
-                                options={c.options}
                             />
                         </li>
                     )
@@ -247,32 +69,37 @@ const Header = () => {
             }
         }
     }
-    const onSearch = (data) => {
-        reset();
+    const onSearch = (content) => {
         handleBlurSearchbox();
         // Handle split keys
-        const keys = ['phong doi'];
-        let query = '/search?key='
-
-        keys.forEach(k => {
-            query += k 
+        onSplitToKeys(content)
+        .then(res => {
+            const keys = res;
+            let query = '/search?key='
+    
+            keys.forEach(k => {
+                query += k
+            })
+    
+            navigate(query)
         })
-
-        navigate(query)
+        .catch(err => {
+            console.error(err)
+        })
     }
 
     return (
         <React.Fragment>
             <header className='header' ref={headerRef}>
                 <div className='header__overlay'></div>
-                <div className="header__logo-container">
+                <Link className="header__logo-container" to={PAGES.HOME}>
                     <img
                         src={logoSrc}
                         alt="Sunrise Continent"
                         className="header__logo-img"
                         id="header-logo"
                     />
-                </div>
+                </Link>
                 <div className="header__search">
                     <div className="search-box__wrapper">
                         <form onSubmit={handleSubmit(onSearch)}>
@@ -306,7 +133,7 @@ const Header = () => {
                                         name='Tiếng Việt'
                                         name_il={'fi fi-rs-language'}
                                         name_ir={'fi fi-ts-angle-small-down'}
-                                        options={languageChooser}
+                                        options={languages}
                                     />
                                 </div>
                             </li>

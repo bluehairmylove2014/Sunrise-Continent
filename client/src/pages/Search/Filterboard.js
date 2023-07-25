@@ -1,7 +1,5 @@
 import React from "react";
-import { Controller } from "react-hook-form";
 import {
-  FILTER_SEARCH,
   LOCATION_TYPES,
   BED_TYPES,
   ROOM_OPTIONS,
@@ -11,7 +9,7 @@ import { GUEST_RATINGS } from "../../constants/Rating.constant";
 import BudgetRange from "../../components/common/BudgetRange";
 import Checkbox from "../../components/common/Checkbox";
 
-const Filterboard = ({ form }) => {
+const Filterboard = ({ form, defaultValues }) => {
   const renderCheckbox = (parentForm, checkboxData) => {
     const keyList = Object.keys(checkboxData);
     if (Array.isArray(keyList)) {
@@ -32,23 +30,13 @@ const Filterboard = ({ form }) => {
 
   return (
     <form className="filterboard">
-      <div className="filterboard__search">
-        <i className="fi fi-rr-search"></i>
-        <Controller
-          name={FILTER_SEARCH.NAME}
-          control={form.control}
-          rules={{
-            require: true,
-          }}
-          render={({ field }) => (
-            <input {...field} placeholder="Tìm kiếm theo tên ?" />
-          )}
-        />
-      </div>
       <div className="filterboard__budget">
         <h6>Giá mỗi đêm</h6>
 
-        <BudgetRange callbackOnchange={null} />
+        <BudgetRange 
+          callbackOnchange={null} 
+          defaultValues={Array.isArray(defaultValues) && defaultValues.length === 2 ? defaultValues : null}
+        />
       </div>
       <hr />
       <div className="filterboard__location-types">

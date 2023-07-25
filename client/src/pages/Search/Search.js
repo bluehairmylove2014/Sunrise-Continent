@@ -40,8 +40,12 @@ const Search = () => {
     const searchBoardForm = useForm();
 
     const onResearch = (data) => {
-        setCriteria(data);
-        window.history.pushState(null, null, `/search${stringifySearchParams(data)}`);
+        const newCriteria = {
+            ...criteria,
+            ...data
+        }
+        setCriteria(newCriteria);
+        window.history.pushState(null, null, `/search${stringifySearchParams(newCriteria)}`);
     };
 
     const renderHotels = (hotelList) => {
@@ -93,8 +97,18 @@ const Search = () => {
     }
 
     useEffect(() => {
-        if(criteria.key && criteria.key.trim().length) {
-            onSearch(criteria.key)
+        if(criteria.budget && typeof criteria.budget === 'string') {
+            let budgetJson = JSON.parse(criteria.budget)
+            setCriteria({
+                ...criteria,
+                budget: [budgetJson.min, budgetJson.max]
+            })
+        }
+    }, [])
+    useEffect(() => {
+        if(typeof criteria.budget === 'string') return;
+        if(Object.keys(criteria).length) {
+            onSearch(criteria)
                 .then(data => {
                     setHotels(data)
                 })
@@ -140,7 +154,7 @@ const Search = () => {
                 </button>
             </form>
             <div className="container main__wrapper">
-                <Filterboard form={searchBoardForm} />
+                <Filterboard form={searchBoardForm} defaultValues={criteria.budget}/>
                 {
                     isSearching ? <SmallPageLoader /> :
                     <>

@@ -34,7 +34,7 @@ export const facebookConfig = {
   SCOPE: "public_profile,email",
   STATE: "{st=datsuperman04102014helloanhLong,ds=2789562897562}"
 }
-
+export const gptApiKey = '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';
 export const mutationConfig = {
   RETRY: 1
 }

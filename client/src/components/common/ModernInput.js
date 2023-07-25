@@ -23,13 +23,14 @@ const ModernInput = ({
     defaultVal = '',
     search=false,
     valMultipleLevel=false,
-    inputType='text'
+    inputType='text',
+    callback,
+    input_name
 }) => {
     const [selectedDate, setSelectedDate] = useState(null);
 
     const [upLevelOps, setUpLevelOps] = useState([]);
     const [normalOps, setNormalOps] = useState([]);
-    const [inputVal, setInputVal] = useState(defaultVal);
 
     const inputRef = useRef(null);
     const startDatePickerRef = useRef(null);
@@ -41,9 +42,6 @@ const ModernInput = ({
             handleChangeNormalOps(normalOpList)
         }
     }, [options, search, valMultipleLevel, inputType])
-    useEffect(() => {
-        setInputVal(defaultVal)
-    }, [defaultVal])
 
     const handleChangeUpLevelOps = (opList) => {
         setUpLevelOps(opList.map((op,i) => {
@@ -69,7 +67,7 @@ const ModernInput = ({
                     key={`mi-normalops@${i}`} 
                     className='cc-modern-input__option-container'
                     onClick={() => {
-                        setInputVal(op);
+                        callback(input_name, op)
                         toggleClass(inputRef.current, 'active');
                     }}
                 >
@@ -81,20 +79,18 @@ const ModernInput = ({
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
-        setInputVal(shortenDatetime(date))
+        callback(input_name, date)
     }
     const handlePriceChange = (price) => {
-        const debouncedSetInputVal = debounce(() => setInputVal(`
-            ${convertNumberToCurrency('vietnamdong', price[0]*CONVERSION_FACTOR.ALL_TRIP)}
-             đến 
-            ${convertNumberToCurrency('vietnamdong', price[1]*CONVERSION_FACTOR.ALL_TRIP)}
-        `), 1000);
+        const debouncedSetInputVal = debounce(() => {
+            callback(input_name, `${convertNumberToCurrency('vietnamdong', price[0]*CONVERSION_FACTOR.ALL_TRIP)} đến ${convertNumberToCurrency('vietnamdong', price[1]*CONVERSION_FACTOR.ALL_TRIP)}`)
+        }, 1000);
         debouncedSetInputVal();
     }
 
     return (
         <div 
-            className={`common-component__modern-input ${inputVal !== defaultVal && 'chosen'}`} 
+            className={`common-component__modern-input`} 
             ref={inputRef}
         >
             <button 
@@ -108,7 +104,7 @@ const ModernInput = ({
                     }
                 }}
             >
-                {inputVal}
+                {defaultVal}
                 <i className="fi fi-sr-caret-down"></i>
                 
                 {inputType === 'date' && (

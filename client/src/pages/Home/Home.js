@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import '../../styles/scss/_home.scss';
+import '../../styles/scss/home.scss';
 
 // subcomponent
 import Banners from './Banners';
@@ -309,17 +309,19 @@ const Home = () => {
             </section>
             <img src={CityGraphic} className='home-destination__city-graphic' alt='city'/>
 
-            <section className="container home__promised-land">
-                {/* Title */}
-                <div className="home-promised-land__title-container">
-                    <div className="home-promised-land__title">
-                        <img src={AirplaneIcon} className='home-promised-land__title-icon' alt='air-plane'/>
-                        <h3>MIỀN ĐẤT HỨA</h3>
+            <section className="home__promised-land">
+                <div className="container">
+                    {/* Title */}
+                    <div className="home-promised-land__title-container">
+                        <div className="home-promised-land__title">
+                            <img src={AirplaneIcon} className='home-promised-land__title-icon' alt='air-plane'/>
+                            <h3>MIỀN ĐẤT HỨA</h3>
+                        </div>
+                        <p>Cùng chúng tôi khám phá những khách sạn tuyệt vời nhất trên toàn thế giới!</p>
                     </div>
-                    <p>Cùng chúng tôi khám phá những khách sạn tuyệt vời nhất trên toàn thế giới!</p>
+                    {/* Hot countries */}
+                    <Gallery list={hot_countries}/>
                 </div>
-                {/* Hot countries */}
-                <Gallery list={hot_countries}/>
             </section>
 
             <section className="container home__trending">

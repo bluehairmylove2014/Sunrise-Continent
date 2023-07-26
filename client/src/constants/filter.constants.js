@@ -89,24 +89,6 @@ export const BED_TYPES = {
         LABEL: "Giường tầng"
     }
 }
-export const GUEST_RATINGS = {
-    EXCELLENT: {
-        INPUT_NAME: "excellent",
-        LABEL: "Trên cả tuyệt vời (9+)"
-    },
-    GREAT: {
-        INPUT_NAME: "great",
-        LABEL: "Xuất sắc (8+)"
-    },
-    VERY_GOOD: {
-        INPUT_NAME: "very_good",
-        LABEL: "Rất tốt (7+)"
-    },
-    SATISFIED: {
-        INPUT_NAME: "satisfied",
-        LABEL: "Hài lòng (6+)"
-    }
-}
 export const ROOM_OPTIONS = {
     BREAKFAST_INCLUDED: {
         INPUT_NAME: "breakfast_included",
@@ -138,66 +120,82 @@ export const ROOM_OPTIONS = {
 export const ACCOMMODATION_FACILITIES = {
     SWIMMING_POOL: {
         INPUT_NAME: "swimming_pool",
-        LABEL: "Bể bơi"
+        LABEL: "Bể bơi",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/swimming-pool.png?w=50&h=50'
     },
     INTERNET: {
         INPUT_NAME: "internet",
-        LABEL: "Internet"
+        LABEL: "Internet",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/wifi.png?w=50&h=50'
     },
     PARKING: {
         INPUT_NAME: "parking",
-        LABEL: "Bãi để xe"
+        LABEL: "Bãi để xe",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/parking-car.png?w=50&h=50'
     },
     AIRPORT_SHUTTLE: {
         INPUT_NAME: "airport_shuttle",
-        LABEL: "Đưa đón sân bay"
+        LABEL: "Đưa đón sân bay",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/shuttle.png?w=50&h=50'
     },
     GYM: {
         INPUT_NAME: "gym",
-        LABEL: "Phòng tập"
+        LABEL: "Phòng tập",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/weightlifter.png?w=50&h=50'
     },
     RECEPTION_24H: {
         INPUT_NAME: "reception_24h",
-        LABEL: "Bàn tiếp tân [24 giờ]"
+        LABEL: "Bàn tiếp tân [24 giờ]",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/reception.png?w=50&h=50'
     },
     FAMILY_FRIENDLY: {
         INPUT_NAME: "family_friendly",
-        LABEL: "Thích hợp cho gia đình/trẻ em"
+        LABEL: "Thích hợp cho gia đình/trẻ em",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/family.png?w=50&h=50'
     },
     NON_SMOKING: {
         INPUT_NAME: "non_smoking",
-        LABEL: "Không hút thuốc"
+        LABEL: "Không hút thuốc",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/non-smoking-room.png?w=50&h=50'
     },
     SPA_SAUNA: {
         INPUT_NAME: "spa_sauna",
-        LABEL: "Spa/xông khô"
+        LABEL: "Spa/xông khô",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/sauna.png?w=50&h=50'
     },
     RESTAURANT: {
         INPUT_NAME: "restaurant",
-        LABEL: "Nhà hàng"
+        LABEL: "Nhà hàng",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/restaurant.png?w=50&h=50'
     },
     SMOKING_AREA: {
         INPUT_NAME: "smoking_area",
-        LABEL: "Khu vực hút thuốc"
+        LABEL: "Khu vực hút thuốc",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/smoking-area.png?w=50&h=50'
     },
     PETS_ALLOWED: {
         INPUT_NAME: "pets_allowed",
-        LABEL: "Được phép đưa thú nuôi vào"
+        LABEL: "Được phép đưa thú nuôi vào",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/dog.png?w=50&h=50'
     },
     NIGHT_CLUB: {
         INPUT_NAME: "night_club",
-        LABEL: "Câu lạc bộ đêm"
+        LABEL: "Câu lạc bộ đêm",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/disco-ball.png?w=50&h=50'
     },
     DISABLED_FACILITIES: {
         INPUT_NAME: "disabled_facilities",
-        LABEL: "Tiện nghi cho khách khuyết tật"
+        LABEL: "Tiện nghi cho khách khuyết tật",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/disability.png?w=50&h=50'
     },
     WORK_FACILITIES: {
         INPUT_NAME: "work_facilities",
-        LABEL: "Tiện nghi làm việc"
+        LABEL: "Tiện nghi làm việc",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/hard-work.png?w=50&h=50'
     },
     GOLF_COURSE: {
         INPUT_NAME: "golf_course",
-        LABEL: "Sân gôn [tại chỗ nghỉ]"
+        LABEL: "Sân gôn [tại chỗ nghỉ]",
+        ICON: 'https://rialloer.sirv.com/Sunrise-Continent/ACCOMMODATION_FACILITIES/golf-field.png?w=50&h=50'
     },
 }

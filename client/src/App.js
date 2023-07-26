@@ -2,7 +2,7 @@ import {
   Routes, Route
 } from 'react-router-dom';
 import { Suspense, lazy, useEffect, useState } from 'react';
-import { BusinessLogicProvider } from "./libs/business-logic/provider";
+import { BusinessLogicProvider } from "./libs/business-logic/src/provider";
 
 // Notification library
 import { Toaster } from 'react-hot-toast';

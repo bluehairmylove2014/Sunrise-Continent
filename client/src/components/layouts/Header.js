@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import '../../styles/scss/_header.scss';
+import '../../styles/scss/header.scss';
 import logoVerticalImg from '../../assets/images/logos/sc-vertical.png';
 import logoHorizontalImg from '../../assets/images/logos/sc-horizontal.png';
 import worker_gif from '../../assets/images/graphics/worker.gif';
@@ -10,14 +10,14 @@ import UserSidebar from './UserSidebar';
 import { useForm } from 'react-hook-form';
 import {
     useIsLogged
-} from '../../libs/business-logic/lib/auth'
+} from '../../libs/business-logic/src/lib/auth'
 
 const Header = () => {
     const [categories, setCategories] = useState([]);
     const [languageChooser, setLanguageChooser] = useState([]);
     const [userSidebarStatus, setUserSidebarStatus] = useState(false);
     const [logoSrc, setLogoSrc] = useState(logoVerticalImg);
-    const {isLogin} = useIsLogged();
+    const isLogin = useIsLogged();
 
     
     const headerRef = useRef(null);
@@ -326,6 +326,7 @@ const Header = () => {
                         {/* user avatar when logged in */}
                         <ul className={`header-main-nav__user-interact ${isLogin && 'active'}`}>
                             <li className='header-main-nav__user-avatar'>
+                                <span>Welcome!</span>
                                 <button onClick={() => setUserSidebarStatus(!userSidebarStatus)}>
                                     <img src="https://rialloer.sirv.com/Sunrise-Continent/Users/IMG_0615-min%20(1).jpg?w=500&h=500" alt="user-avatar" />
                                 </button>

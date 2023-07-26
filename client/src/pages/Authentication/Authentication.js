@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import '../../styles/scss/_authen.scss';
+import '../../styles/scss/authen.scss';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 // Loader
@@ -19,12 +19,24 @@ import mountain_day from "../../assets/images/bgs/mountain-day.jpg";
 
 // Form
 import { Controller, useForm } from 'react-hook-form';
-import { useLogin, useRegister } from '../../libs/business-logic/lib/auth';
+import { useIsLogged, useLogin, useRegister } from '../../libs/business-logic/src/lib/auth';
 
 
 const Authentication = () => {
-    const loginForm = useForm();
-    const registerForm = useForm();
+    const loginForm = useForm({
+        defaultValues: {
+            email: "",
+            password: "",
+            isRememberMe: false
+        }
+    });
+    const registerForm = useForm({
+        defaultValues: {
+            email: "",
+            password: "",
+            confirm_password: ""
+        }
+    });
 
     const navigate = useNavigate();
 
@@ -38,6 +50,7 @@ const Authentication = () => {
 
     const { onLogin, isLoading: isLoginLoading } = useLogin();
     const { onRegister, isLoading: isRegisterLoading } = useRegister();
+    const isLoggedIn = useIsLogged();
 
     // Hook
     useEffect(() => {
@@ -63,6 +76,11 @@ const Authentication = () => {
                 }, 500)
             });
     }, [location]);
+    useEffect(() => {
+        if(isLoggedIn) {
+            navigate(PAGES.HOME)
+        }
+    }, [isLoggedIn, navigate]);
 
     // Methods
     const handleFocus = (target) => {
@@ -80,8 +98,11 @@ const Authentication = () => {
         }
     }
 
-    const handleLogin = (data) => {
-        onLogin(data.login_email, data.login_password, data.login_remember)
+    const handleLogin = ({ email, password, isRememberMe }) => {
+        onLogin({
+            isRememberMe,
+            account: { email, password }
+        })
             .then((res) => {
                 toast.success(res.message)
                 setTimeout(() => {
@@ -99,27 +120,25 @@ const Authentication = () => {
     }
     const handleLoginError = (errors) => {
         if (errors) {
-            if (errors.login_email) {
-                toast.error(errors.login_email.message)
+            if (errors.email) {
+                toast.error(errors.email.message)
 
             }
-            else if (errors.login_password) {
-                toast.error(errors.login_password.message)
+            else if (errors.password) {
+                toast.error(errors.password.message)
             }
         }
     }
 
-    const handleRegister = (data) => {
-        if (data.register_password !== data.confirm_password) {
+    const handleRegister = ({ email, password, confirm_password }) => {
+        if (password !== confirm_password) {
             toast.error('Confirm password does not match')
             return;
         }
-        onRegister(data.register_email, data.register_password)
+        onRegister({ email, password })
             .then((res) => {
                 toast.success(res.message)
-                setTimeout(() => {
-                    navigate("/");
-                }, 2000)
+                navigate("/");
             })
             .catch((err) => {
                 if (err.response && err.response.status === 409) {
@@ -132,15 +151,15 @@ const Authentication = () => {
     }
     const handleRegisterError = (errors) => {
         if (errors) {
-            if (errors.register_email) {
-                toast.error(errors.register_email.message)
+            if (errors.email) {
+                toast.error(errors.email.message)
 
             }
-            else if (errors.register_password) {
-                toast.error(errors.register_password.message)
+            else if (errors.password) {
+                toast.error(errors.password.message)
             }
-            else if (errors.confirm_password) {
-                toast.error(errors.confirm_password.message)
+            else if (errors.password) {
+                toast.error(errors.password.message)
             }
         }
     }
@@ -268,7 +287,7 @@ const Authentication = () => {
                                     </label>
                                     <i className="fi fi-ss-envelope"></i>
                                     <Controller
-                                        name="login_email"
+                                        name="email"
                                         control={loginForm.control}
                                         defaultValue=""
                                         rules={{
@@ -298,7 +317,7 @@ const Authentication = () => {
                                     </label>
                                     <i className="fi fi-ss-lock"></i>
                                     <Controller
-                                        name="login_password"
+                                        name="password"
                                         control={loginForm.control}
                                         defaultValue=""
                                         rules={{
@@ -322,7 +341,7 @@ const Authentication = () => {
                                 <div className='authen-form__interact-field'>
                                     <div>
                                         <Controller
-                                            name="login_remember"
+                                            name="isRememberMe"
                                             control={loginForm.control}
                                             defaultValue={false}
                                             render={({ field }) => (
@@ -375,7 +394,7 @@ const Authentication = () => {
                                     </label>
                                     <i className="fi fi-ss-envelope"></i>
                                     <Controller
-                                        name="register_email"
+                                        name="email"
                                         control={registerForm.control}
                                         defaultValue=""
                                         rules={{
@@ -405,7 +424,7 @@ const Authentication = () => {
                                     </label>
                                     <i className="fi fi-ss-lock"></i>
                                     <Controller
-                                        name="register_password"
+                                        name="password"
                                         control={registerForm.control}
                                         defaultValue=""
                                         rules={{

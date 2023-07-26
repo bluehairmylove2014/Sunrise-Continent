@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import '../../styles/scss/_home.scss';
+import '../../styles/scss/home.scss';
 
 // Swipeable on mobile
 import { useSwipeable } from 'react-swipeable';

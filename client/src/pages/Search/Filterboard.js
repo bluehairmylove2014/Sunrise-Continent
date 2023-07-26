@@ -3,11 +3,12 @@ import {
   LOCATION_TYPES,
   BED_TYPES,
   ROOM_OPTIONS,
-  ACCOMMODATION_FACILITIES
+  ACCOMMODATION_FACILITIES,
 } from "../../constants/filter.constants";
 import { GUEST_RATINGS } from "../../constants/Rating.constant";
 import BudgetRange from "../../components/common/BudgetRange";
 import Checkbox from "../../components/common/Checkbox";
+import { Controller } from "react-hook-form";
 
 const Filterboard = ({ form, defaultValues }) => {
   const renderCheckbox = (parentForm, checkboxData) => {
@@ -27,15 +28,27 @@ const Filterboard = ({ form, defaultValues }) => {
       return <></>;
     }
   };
+  const setBudget = (budget) => {
+    form.setValue("budget", budget);
+  };
 
   return (
     <form className="filterboard">
       <div className="filterboard__budget">
         <h6>Giá mỗi đêm</h6>
-
-        <BudgetRange 
-          callbackOnchange={null} 
-          defaultValues={Array.isArray(defaultValues) && defaultValues.length === 2 ? defaultValues : null}
+        <Controller
+          name="budget"
+          control={form.control}
+          render={({ field }) => (
+            <BudgetRange
+              callbackOnchange={setBudget}
+              defaultValues={
+                Array.isArray(defaultValues) && defaultValues.length === 2
+                  ? defaultValues
+                  : null
+              }
+            />
+          )}
         />
       </div>
       <hr />

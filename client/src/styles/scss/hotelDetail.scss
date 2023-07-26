@@ -512,7 +512,7 @@
                                 color: var(--butterfly-bush);
                             }
                         }
-                        a {
+                        button {
                             // border - border radius - background color - color - padding - font size
                             @include normal-btn(none, 5px, var(--ultramarine-blue), white, 10px 20px, 0.75rem);
                             font-weight: 600;
@@ -521,6 +521,58 @@
                             }
                         }
                     }
+                }
+            }
+            .room__date-picker {
+                position: fixed;
+                width: 100vw;
+                height: 100vh;
+                top: 0;
+                left: 0;
+                background-color: rgba($color: #000000, $alpha: 0.3);
+                visibility: hidden;
+                opacity: 0;
+                pointer-events: none;
+                .room__criteria-board {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background-color: var(--dirty-orange);
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(column, center, center, nowrap);
+                    gap: 50px;
+                    padding: 100px 50px;
+                    border-radius: 15px;
+                    .criteria-board__input-wrapper {
+                        // direction - justify content - align items - flex wrap
+                        @include dflex(column, center, center, nowrap);
+                        gap: 20px;
+                    }
+                    
+                    & > button {
+                        // border - border radius - background color - color - padding - font size
+                        @include normal-btn(none, 5px, black, white, 0.75rem 2rem, 0.8rem);
+                        &:hover {
+                            transform: scale(1.1);
+                        }
+                    }
+                    .close-btn {
+                        border-radius: 50%;
+                        padding: 6px 11px 8px 11px;
+                        font-size: 0.6rem;
+                        background-color: var(--quill-grey);
+                        color: black;
+                        &:hover {
+                            background-color: black;
+                            color: white;
+                        }
+                    }
+                }
+                &.active {
+                    visibility: visible;
+                    opacity: 1;
+                    pointer-events: all;
                 }
             }
         }

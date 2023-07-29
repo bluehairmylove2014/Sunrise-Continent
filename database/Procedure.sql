@@ -1,4 +1,4 @@
-﻿USE SunriseServer
+﻿USE SunriseDatabase
 GO
 
 
@@ -182,10 +182,10 @@ GO
 CREATE OR ALTER PROC USP_GetAllHotel
 AS
 	SELECT Id, Name, Country, HotelType, ProvinceCity, 
-			Address, Stars, Rating, Description, Image,
+			Address, Stars,
+			dbo.USF_GetAvgReview(Id) Rating,
+			Description, Image,
 			dbo.USF_GetMinRoomPrice(Id) Price
-			--dbo.USF_GetReviewNum(Id) Reviews, 
-			--dbo.USF_GetAvgReview(Id) Rating,
 	FROM HOTEL
 GO
 
@@ -199,12 +199,25 @@ AS
 	END
 
 	SELECT Id, Name, Country, HotelType, ProvinceCity, 
-			Address, Stars, Rating, Description, Image,
+			Address, Stars,
+			dbo.USF_GetAvgReview(Id) Rating,
+			Description, Image,
 			dbo.USF_GetMinRoomPrice(Id) Price
-			--dbo.USF_GetReviewNum(Id) Reviews, 
-			--dbo.USF_GetAvgReview(Id) Rating,
 	FROM HOTEL WHERE Id = @Id
 GO
+
+CREATE OR ALTER PROC USP_FindHotelByName
+	@String NVARCHAR(50)
+AS
+	SELECT Id, Name, Country, HotelType, ProvinceCity, 
+			Address, Stars,
+			dbo.USF_GetAvgReview(Id) Rating,
+			Description, Image,
+			dbo.USF_GetMinRoomPrice(Id) Price
+	FROM HOTEL
+	WHERE Name like '%' + @String + '%'
+GO
+
 
 CREATE OR ALTER PROC USP_GetRecommendedHotel
 	@Quantity INTEGER
@@ -294,7 +307,7 @@ AS
 		DECLARE @Id INT
 		EXEC @Id = dbo.USP_GetNextColumnId 'ACCOUNT', 'Id'
 
-		INSERT INTO ACCOUNT VALUES (@Id, 0, @Username, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires)
+		INSERT INTO ACCOUNT VALUES (@Id, 0, 'Bronze', @Username, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires)
 		RETURN @Id
 	END TRY
 
@@ -309,9 +322,14 @@ GO
 CREATE OR ALTER PROC USP_UpdateAccount
 	@Id INTEGER,
 	@MemberPoint INTEGER,
+	@AccountRank VARCHAR(10),
 	@Username VARCHAR(50),
 	@PasswordHash VARCHAR(500),
 	@PasswordSalt VARCHAR(500)
+	--@UserRole VARCHAR(50),
+ --   @RefreshToken VARCHAR(200),
+ --   @TokenCreated DATETIME,
+ --   @TokenExpires DATETIME
 AS
 	BEGIN TRY
 		IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @Id)
@@ -324,6 +342,7 @@ AS
 		SET
 			MemberPoint = @MemberPoint,
 			Username = @Username,
+			AccountRank = @AccountRank,
 			PasswordHash = @PasswordHash,
 			PasswordSalt = @PasswordSalt
 		WHERE Id = @Id
@@ -903,32 +922,6 @@ END
 GO
 
 --todo liên quan đến booking có thông tin voucher 
---! thêm
-CREATE PROCEDURE dbo.AddBooking
-    @AccountId INTEGER,
-    @HotelId INTEGER,
-    @RoomTypeId INTEGER,
-    @CheckIn DATE,
-    @CheckOut DATE,
-    @NumberOfRoom INTEGER,
-    @VoucherId INTEGER,
-    @Total INT,
-    @ReturnValue INT OUT
-AS
-BEGIN
-    SET @ReturnValue = 0; -- Mặc định trả về là 0 (thất bại)
-
-    BEGIN TRY
-        INSERT INTO BOOKING_ACCOUNT (AccountId, HotelId, RoomTypeId, CheckIn, CheckOut, NumberOfRoom, VoucherId, Total)
-        VALUES (@AccountId, @HotelId, @RoomTypeId, @CheckIn, @CheckOut, @NumberOfRoom, @VoucherId, @Total);
-        
-        SET @ReturnValue = 1; -- Gán giá trị trả về là 1 (thành công)
-    END TRY
-    BEGIN CATCH
-        SET @ReturnValue = 0; -- Gán giá trị trả về là 0 (thất bại)
-    END CATCH
-    RETURN @ReturnValue; -- Trả về giá trị kết quả của stored procedure
-END
 
 --!XÓA
 CREATE OR ALTER PROCEDURE USP_DeleteBooking
@@ -949,7 +942,7 @@ END;
 GO
 
 --!sửa 
-CREATE PROCEDURE dbo.UpdateBooking
+CREATE OR ALTER PROCEDURE USP_UpdateBooking
     @AccountId INTEGER,
     @HotelId INTEGER,
     @RoomTypeId INTEGER,
@@ -958,184 +951,397 @@ CREATE PROCEDURE dbo.UpdateBooking
     @NumberOfRoom INTEGER,
     @VoucherId INTEGER,
     @Total INT,
-    @ReturnValue INT OUT
+    @Paid BIT
 AS
 BEGIN
-    SET @ReturnValue = 0; -- Mặc định trả về là 0 (thất bại)
-
     BEGIN TRY
         UPDATE BOOKING_ACCOUNT
         SET CheckOut = @CheckOut,
             NumberOfRoom = @NumberOfRoom,
             VoucherId = @VoucherId,
-            Total = @Total
+            Total = @Total,
+			Paid = @Paid
         WHERE AccountId = @AccountId
         AND HotelId = @HotelId
         AND RoomTypeId = @RoomTypeId
         AND CheckIn = @CheckIn;
-        
-        SET @ReturnValue = 1; -- Gán giá trị trả về là 1 (thành công)
     END TRY
+
     BEGIN CATCH
-        SET @ReturnValue = 0; -- Gán giá trị trả về là 0 (thất bại)
+        RETURN -1; -- Gán giá trị trả về là -1 (thất bại)
     END CATCH
-    RETURN @ReturnValue; -- Trả về giá trị kết quả của stored procedure
+
+    RETURN 0;  -- Gán giá trị trả về là 0 (thành công)
 END
+GO
 
 --TODO PROCE XEM LỊCH SỬ CÁC ĐƠN BOOKING CỦA TÀI KHOẢN 
-CREATE OR ALTER PROCEDURE dbo.USP_ViewBookingHistory
+CREATE OR ALTER PROCEDURE USP_ViewBookingHistory
     @AccountId INT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT *
-    FROM BOOKING_ACCOUNT BA
-    WHERE BA.AccountId = @AccountId;
+    SELECT * FROM BOOKING_ACCOUNT BA
+    WHERE BA.AccountId = @AccountId AND (Paid = 1);
 END;
 GO
 
+
 --todo PROC CRUD VOUCHER
 --! THÊM
-CREATE PROCEDURE dbo.AddVoucher
-    @VoucherId INT,
+CREATE OR ALTER PROCEDURE USP_AddVoucher
     @Name NVARCHAR(500),
-    @Value INT
-    @Point INT
+    @Value INT,
+    @Point INT,
+	@UserRank VARCHAR(10)
 AS
 BEGIN
-    INSERT INTO VOUCHER (VoucherId, Name, Value)
-    VALUES (@VoucherId, @Name, @Value,@Point)
+	BEGIN TRY
+		IF (@Value < 1) OR (@Point < 1)
+		OR (@UserRank not in (select RankName from POINT_RANK))
+		BEGIN
+			RETURN -1;
+		END
 
-    IF @@ROWCOUNT > 0
-        RETURN 1; -- Thành công
-    ELSE
-        RETURN 0; -- Thất bại
+		DECLARE @Id INT;
+		EXEC @Id = USP_GetNextColumnId 'VOUCHER', 'VoucherId'
+
+		INSERT INTO VOUCHER (VoucherId, Name, Value, Point, UserRank)
+		VALUES (@Id, @Name, @Value, @Point, @UserRank)
+
+		RETURN 0;
+	END TRY
+
+	BEGIN CATCH
+			RETURN -1; -- Thất bại
+	END CATCH
+
 END
+GO
 
 --! XÓA 
-CREATE PROCEDURE dbo.DeleteVoucher
+CREATE OR ALTER PROCEDURE USP_DeleteVoucher
     @VoucherId INT
 AS
 BEGIN
-    DELETE FROM VOUCHER
-    WHERE VoucherId = @VoucherId
+	BEGIN TRY
+		DELETE FROM VOUCHER
+		WHERE VoucherId = @VoucherId
 
-    IF @@ROWCOUNT > 0
-        RETURN 1; -- Thành công
-    ELSE
-        RETURN 0; -- Thất bại
+		RETURN 0;
+	END TRY
+
+	BEGIN CATCH
+		RETURN -1;
+	END CATCH
 END
+GO
+
 --! SỬA
-CREATE PROCEDURE dbo.UpdateVoucher
+CREATE OR ALTER PROCEDURE USP_UpdateVoucher
     @VoucherId INT,
     @Name NVARCHAR(500),
-    @Value INT
+    @Value INT,
+	@Point INT,
+	@UserRank VARCHAR(10)
 AS
 BEGIN
-    UPDATE VOUCHER
-    SET Name = @Name,
-        Value = @Value
-        Point = @Point
+	BEGIN TRY
+		UPDATE VOUCHER
+		SET Name = @Name,
+			Value = @Value,
+			Point = @Point,
+			UserRank = @UserRank
+		WHERE VoucherId = @VoucherId
 
-    WHERE VoucherId = @VoucherId
+		RETURN 0;
+	END TRY
 
-    IF @@ROWCOUNT > 0
-        RETURN 1; -- Thành công
-    ELSE
-        RETURN 0; -- Thất bại
+	BEGIN CATCH
+		RETURN -1;
+	END CATCH
 END
+GO
+
+--!Mới 1.5
+
+CREATE OR ALTER PROCEDURE USP_GetAllVoucher
+AS
+BEGIN
+	SELECT * FROM VOUCHER;
+END
+GO
+
+CREATE OR ALTER PROCEDURE USP_GetUserVoucher
+	@AccountId INT
+AS
+BEGIN
+	SELECT * FROM VOUCHER_BAG WHERE AccountId = @AccountId;
+END
+GO
+
+CREATE OR ALTER PROCEDURE USP_GetUserPointStatistic
+	@AccountId INT
+AS
+BEGIN
+	SELECT * FROM POINT_HISTORY WHERE AccountId = @AccountId;
+END
+GO
+
+GO
+CREATE OR ALTER FUNCTION USF_GetTotalPointSpent (@AccountId INT)
+RETURNS INT
+BEGIN
+	DECLARE @TotalSpent INT;
+	SELECT @TotalSpent = -SUM(p.Value) FROM POINT_HISTORY p 
+	WHERE p.Value < 0 AND p.AccountId = @AccountId;
+	RETURN @TotalSpent;
+END
+GO
+
+GO
+CREATE OR ALTER FUNCTION USF_GetUserRank (@AccountId INT)
+RETURNS VARCHAR(10)
+BEGIN
+	DECLARE @Rank VARCHAR(10) = 'Bronze';
+
+	SELECT TOP(1) @Rank = RankName from POINT_RANK 
+	WHERE RankValue < dbo.USF_GetTotalPointSpent(@AccountId)
+	ORDER BY RankValue DESC;
+
+	RETURN @Rank;
+END
+GO
 
 --TODO proc đổi điểm
-CREATE PROCEDURE dbo.RedeemVoucher
+CREATE OR ALTER PROCEDURE USP_RedeemVoucher
     @AccountId INT,
     @VoucherId INT
 AS
 BEGIN
-    DECLARE @VoucherValue INT;
-    DECLARE @CurrentPoints INT;
-    DECLARE @Quantity INT;
+	DECLARE @VoucherValue INT;
+	DECLARE @CurrentPoints INT;
+	DECLARE @Quantity INT;
+	
+	-- Kiểm tra xem tài khoản và voucher có tồn tại không
+	IF NOT EXISTS (SELECT TOP(1) Id FROM ACCOUNT WHERE Id = @AccountId)
+		OR NOT EXISTS (SELECT TOP(1) VoucherId FROM VOUCHER WHERE VoucherId = @VoucherId)
+	BEGIN
+		-- Trả về giá trị 0 nếu tài khoản hoặc voucher không tồn tại
+		RETURN -1;
+	END
 
-    -- Kiểm tra xem tài khoản và voucher có tồn tại không
-    IF NOT EXISTS (SELECT 1 FROM ACCOUNT WHERE Id = @AccountId)
-        OR NOT EXISTS (SELECT 1 FROM VOUCHER WHERE VoucherId = @VoucherId)
-    BEGIN
-        -- Trả về giá trị 0 nếu tài khoản hoặc voucher không tồn tại
-        RETURN 0;
-    END
+	DECLARE @RankName VARCHAR(10);
+	SELECT @RankName = UserRank FROM VOUCHER WHERE VoucherId = @VoucherId;
+	IF NOT (@RankName IN (SELECT p2.RankName FROM POINT_RANK p1
+						JOIN POINT_RANK p2 ON p1.RankValue >= p2.RankValue
+						WHERE p1.RankName like (SELECT TOP(1) AccountRank FROM ACCOUNT WHERE Id = @AccountId)))
+	BEGIN
+		RAISERROR(N'Tài khoản không đủ quyền đổi voucher này', 11, 1)
+		RETURN -1;
+	END
 
-    -- Lấy giá trị voucher cần đổi và số điểm hiện tại của tài khoản
-    SELECT @VoucherValue = Point FROM VOUCHER WHERE VoucherId = @VoucherId;
-    SELECT @CurrentPoints = MemberPoint FROM ACCOUNT WHERE Id = @AccountId;
+	-- Lấy giá trị voucher cần đổi và số điểm hiện tại của tài khoản
+	SELECT @VoucherValue = Point FROM VOUCHER WHERE VoucherId = @VoucherId;
+	SELECT @CurrentPoints = MemberPoint FROM ACCOUNT WHERE Id = @AccountId;
 
-    -- Kiểm tra xem tài khoản có đủ điểm để đổi voucher không
-    IF @CurrentPoints >= @VoucherValue
-    BEGIN
-        BEGIN TRANSACTION; -- Bắt đầu giao dịch
+	-- Kiểm tra xem tài khoản có đủ điểm để đổi voucher không
+	IF (@CurrentPoints < @VoucherValue)
+	BEGIN
+		RAISERROR(N'Tài khoản không đủ điểm để đổi voucher này', 11, 1)
+		RETURN -1; -- Trả về giá trị -1 nếu tài khoản không đủ điểm để đổi voucher
+	END
+	ELSE
+	BEGIN
+		BEGIN TRAN -- Bắt đầu giao dịch
+		--SET TRAN ISOLATION LEVEL READ COMMITTED;
 
-        -- Trừ điểm hoặc thêm điểm vào tài khoản
-        IF @VoucherValue > 0
-            SET @VoucherValue = -@VoucherValue; 
-        UPDATE ACCOUNT SET MemberPoint = @CurrentPoints + @VoucherValue WHERE Id = @AccountId;
+		BEGIN TRY
+			-- Cập nhật số lượng voucher trong túi voucher của tài khoản
+			SELECT @Quantity = Quantity FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
 
-        -- Lưu lịch sử sử dụng điểm vào bảng POINT_HISTORY
-        INSERT INTO POINT_HISTORY (AccountId, Value) VALUES (@AccountId, @VoucherValue);
+			IF (@Quantity IS NULL)
+				INSERT INTO VOUCHER_BAG (AccountId, VoucherId, Quantity) VALUES (@AccountId, @VoucherId, 1);
+			ELSE
+				UPDATE VOUCHER_BAG SET Quantity = @Quantity + 1 WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
 
-        -- Cập nhật số lượng voucher trong túi voucher của tài khoản
-        SELECT @Quantity = ISNULL(Quantity, 0) FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
-        IF @Quantity > 0
-        BEGIN
-            UPDATE VOUCHER_BAG SET Quantity = @Quantity + 1 WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
-        END
-        ELSE
-        BEGIN
-            INSERT INTO VOUCHER_BAG (AccountId, VoucherId, Quantity) VALUES (@AccountId, @VoucherId, 1);
-        END
+			-- Cập nhật điểm của tài khoản
+			UPDATE ACCOUNT SET MemberPoint = @CurrentPoints - @VoucherValue WHERE Id = @AccountId;
 
-        COMMIT TRANSACTION; -- Kết thúc giao dịch
-        -- Trả về giá trị 1 để biểu thị thành công
-        RETURN 1;
-    END
-    ELSE
-    BEGIN
-        -- Trả về giá trị 0 nếu tài khoản không đủ điểm để đổi voucher
-        RETURN 0;
-    END
+			-- Lưu lịch sử sử dụng điểm vào bảng POINT_HISTORY
+			INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime) VALUES (@AccountId, -@VoucherValue, GETDATE());
+		END TRY
+
+		BEGIN CATCH
+			RAISERROR(N'Đổi voucher thất bại', 11, 1)
+			ROLLBACK;
+			RETURN -1;
+		END CATCH
+
+		COMMIT TRANSACTION; -- Kết thúc giao dịch
+		-- Trả về giá trị 0 để biểu thị thành công
+		RETURN 0;
+	END
 END
+GO
 
+GO
 --todo proc tính điểm từ giao dịch và lưu thay đổi điểm 
-CREATE PROCEDURE dbo.CalculateMemberPoints
+CREATE OR ALTER PROCEDURE USP_UpdateMemberPoints
     @AccountId INTEGER,
-    @Total INT,
-    @ReturnValue INT OUT
+    @TotalPay INT,
+    @ExchangeRate INT = 1
 AS
 BEGIN
-    DECLARE @EarnedPoints INT;
+	DECLARE @VietNamDongRate INT = 1000;
     
-    -- Tính điểm tích lũy từ giao dịch (tỉ lệ 1 điểm / 100000 giá trị total)
-    SET @EarnedPoints = @Total / 100000;
+    BEGIN TRANSACTION; -- Bắt đầu giao dịch
+	BEGIN TRY
+		-- Tính điểm tích lũy từ giao dịch (tỉ lệ [điểm] = [giá trị total] * @ExangeRate(%) )
+		DECLARE @EarnedPoints FLOAT = @TotalPay * @ExchangeRate / 100 / @VietNamDongRate;
 
-    BEGIN TRY
-        BEGIN TRANSACTION; -- Bắt đầu giao dịch
+		-- Cộng điểm tích lũy từ giao dịch vào tài khoản
+		UPDATE ACCOUNT SET MemberPoint = MemberPoint + CAST(@EarnedPoints as INT) WHERE Id = @AccountId;
 
-        -- Cộng điểm tích lũy từ giao dịch vào tài khoản
-        UPDATE ACCOUNT SET MemberPoint = MemberPoint + @EarnedPoints WHERE Id = @AccountId;
+		-- Ghi lại lịch sử điểm vào bảng POINT_HISTORY
+		INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime) VALUES (@AccountId, @EarnedPoints, GETDATE());
+	END TRY
 
-        -- Ghi lại lịch sử điểm vào bảng POINT_HISTORY
-        INSERT INTO POINT_HISTORY (AccountId, Value) VALUES (@AccountId, @EarnedPoints);
-
-        COMMIT TRANSACTION; -- Kết thúc giao dịch
-
-        -- Gán giá trị trả về là 1 nếu quá trình thành công
-        SET @ReturnValue = 1;
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION; -- Xảy ra lỗi, rollback giao dịch
-        SET @ReturnValue = 0; -- Gán giá trị trả về là 0 nếu thất bại
-    END CATCH
-
-    -- Trả về giá trị kết quả của stored procedure
-    RETURN @ReturnValue;
+	BEGIN CATCH
+		RAISERROR(N'Lỗi tính điểm.', 11, 1);
+		ROLLBACK; -- Xảy ra lỗi, rollback giao dịch
+		RETURN -1; -- Gán giá trị trả về là -1 nếu thất bại
+	END CATCH
+		
+	COMMIT TRANSACTION; -- Kết thúc giao dịch
+	RETURN 0; -- Gán giá trị trả về là 0 nếu quá trình thành công
 END
+GO
 
+CREATE OR ALTER FUNCTION USF_CheckRoomAvailability (
+    @HotelId INTEGER,
+    @RoomTypeId INTEGER,
+	@NumberOfRoom INTEGER)
+RETURNS BIT
+BEGIN
+	DECLARE @SpareRoom INT;
+	DECLARE @BookedRoom INT;
+	SELECT @BookedRoom = Count(NumberOfRoom) FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId AND RoomTypeId = @RoomTypeId
+	SELECT @SpareRoom = Vacancy - @BookedRoom FROM ROOM_TYPE WHERE HotelId = @HotelId AND Id = @RoomTypeId;
 
+	IF (@SpareRoom < @NumberOfRoom)
+		RETURN 0;
+	RETURN 1;
+END
+GO
+
+--! thêm booking
+CREATE OR ALTER PROCEDURE USP_AddBooking -- Confirm booking
+    @AccountId INTEGER,
+    @HotelId INTEGER,
+    @RoomTypeId INTEGER,
+    @CheckIn DATE,
+    @CheckOut DATE,
+    @NumberOfRoom INTEGER,
+    @VoucherId INTEGER
+AS
+BEGIN
+	DECLARE @Quantity INT;
+
+	-- Kiểm tra số lượng voucher trong túi.
+	IF (@VoucherId IS NOT NULL OR @VoucherId > 0)
+	BEGIN
+		SELECT @Quantity = Quantity FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
+		IF (@Quantity IS NULL)
+		BEGIN
+			RAISERROR(N'Số lượng voucher trong túi không hợp lệ.', 11, 1);
+			RETURN -1;
+		END
+	END
+
+	BEGIN TRAN
+	BEGIN TRY
+		DECLARE @Discount INT = 0;
+
+		IF (@VoucherId IS NOT NULL OR @VoucherId > 0)
+		BEGIN
+			-- Giảm số lượng voucher trong túi.
+			IF (@Quantity = 1)
+				DELETE FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
+			ELSE
+				UPDATE VOUCHER_BAG SET Quantity = @Quantity - 1 WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
+
+			SELECT @Discount = Value FROM VOUCHER WHERE VoucherId = @VoucherId;
+		END
+
+		DECLARE @Total INT
+		SELECT @Total = Price * @NumberOfRoom FROM ROOM_TYPE WHERE HotelId = @HotelId AND Id = @RoomTypeId;
+
+		INSERT INTO BOOKING_ACCOUNT (AccountId, HotelId, RoomTypeId, CheckIn, CheckOut, NumberOfRoom, VoucherId, Total, Paid, CreatedAt)
+		VALUES (@AccountId, @HotelId, @RoomTypeId, @CheckIn, @CheckOut, @NumberOfRoom, @VoucherId, @Total - @Discount, 0, GETDATE());
+        
+		-- Cập nhật điểm thành viên.
+		EXEC USP_UpdateMemberPoints @AccountId, @Total;
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR(N'Đặt phòng thất bại', 11, 1);
+		ROLLBACK;
+		RETURN -1; -- (thất bại)
+	END CATCH
+
+	COMMIT TRAN;
+	RETURN 0; -- (thành công)
+END
+GO
+
+GO
+CREATE OR ALTER FUNCTION USF_GetCartItem (@AccountId INT)
+RETURNS TABLE
+AS
+RETURN
+	SELECT * FROM BOOKING_ACCOUNT BA WHERE BA.AccountId = @AccountId AND (Paid = 0);
+GO
+
+GO
+CREATE OR ALTER FUNCTION USF_GetCartTotal (@AccountId INT)
+RETURNS INT
+AS
+BEGIN
+	DECLARE @Result INT = 0;
+	SELECT @Result = SUM(Total) FROM dbo.USF_GetCartItem(@AccountId);
+	RETURN @Result;
+END
+GO
+
+GO
+CREATE OR ALTER PROC USP_ConfirmBooking
+	@AccountId INT,
+	@Total INT
+AS
+	DECLARE @Check INT;
+	SELECT @Check = @Total - dbo.USF_GetCartTotal(@AccountId);
+
+	IF (@Check < 0)
+	BEGIN
+		RAISERROR(N'Không đủ tiền thanh toán', 11, 1);
+		RETURN -1;
+	END
+
+	BEGIN TRAN
+	
+	BEGIN TRY
+		UPDATE BOOKING_ACCOUNT SET Paid = 1 
+		WHERE AccountId = @AccountId AND Paid = 0;
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR(N'Thanh toán giỏ hàng thất bại', 11, 1);
+		ROLLBACK;
+		RETURN -1;
+	END CATCH
+
+	COMMIT;
+	RETURN 0;
+GO

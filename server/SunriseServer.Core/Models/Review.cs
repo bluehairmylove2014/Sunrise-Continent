@@ -1,6 +1,7 @@
 ﻿namespace SunriseServerCore.Models
 {
-    public class Review
+    // [Keyless]
+    public class Review : ModelBase
     {
         public int AccountId { get; set; }
         public int HotelId { get; set; }

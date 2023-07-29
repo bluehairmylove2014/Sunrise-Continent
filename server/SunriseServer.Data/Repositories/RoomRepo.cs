@@ -14,22 +14,17 @@ using Microsoft.Data.SqlClient;
 
 namespace SunriseServerData.Repositories
 {
-    // IHotelRoomInfomationRepo
-    
-
-    
-
-    public class RoomTypeRepo : RepositoryBase<RoomType>, IRoomType
+    public class RoomRepo : RepositoryBase<RoomType>, IRoomRepo
     {
         readonly DataContext _dataContext;
-        public RoomTypeRepo(DataContext dbContext) : base(dbContext) 
+        public RoomRepo(DataContext dbContext) : base(dbContext) 
         {
             _dataContext = dbContext;
         }
 
         public async Task<List<RoomType>> GetAllRoomTypeAsync(int hotelId)
         {
-            var result = await _dataContext.Database.SqlQuery<RoomType>($"exec USP_GetHotelRoomType @HotelId={hotelId};").ToListAsync();
+            var result = await _dataContext.RoomType.FromSqlInterpolated($"exec USP_GetHotelRoomType @HotelId={hotelId};").ToListAsync();
             return result;
         }
 

@@ -10,6 +10,7 @@ using SunriseServerCore.Models;
 using SunriseServerCore.RepoInterfaces;
 using Microsoft.Data.SqlClient;
 using SunriseServer.Common.Helper;
+using SunriseServerCore.Dtos;
 
 namespace SunriseServerData.Repositories
 {
@@ -75,7 +76,15 @@ namespace SunriseServerData.Repositories
 
         public async Task<List<RoomPicture>> GetHotelPictureAsync(int id)
         {
-            var result = await _dataContext.RoomPicture.FromSqlInterpolated($"exec USP_GetHotelRoomPicture @Id={id};").ToListAsync();
+            var result = await _dataContext.RoomPicture.FromSqlInterpolated($"EXEC USP_GetHotelRoomPicture @Id={id};").ToListAsync();
+            return result;
+        }
+
+        public async Task<List<Hotel>> GetRecommendedHotelAsync(int num)
+        {
+            var builder = new StringBuilder($"EXEC USP_GetRecommendedHotel @Quantity={num};");
+
+            var result = await _dataContext.Hotel.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
             return result;
         }
     }

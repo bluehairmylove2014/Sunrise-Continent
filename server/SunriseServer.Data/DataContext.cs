@@ -22,6 +22,9 @@ namespace SunriseServerData
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<BookingAccount>()
                 .HasKey(x => new { x.AccountId, x.HotelId, x.RoomTypeId, x.CheckIn });
+
+            modelBuilder.Entity<Review>()
+                .HasKey(x => new { x.HotelId, x.AccountId });
         }
 
         public DbSet<Hotel> Hotel { get; set; }
@@ -31,5 +34,6 @@ namespace SunriseServerData
         public DbSet<RoomServiceConstant> RoomServiceConstants { get; set; }
         public DbSet<RoomType> RoomType { get; set; }
         public DbSet<RoomPicture> RoomPicture { get; set; }
+        public DbSet<Review> Review { get; set; }
     }
 }

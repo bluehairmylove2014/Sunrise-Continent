@@ -32,15 +32,27 @@ namespace SunriseServerData
         #endregion
 
         #region Room
-
-        private RoomTypeRepo _RoomTypeRepo;
-        public RoomTypeRepo RoomTypeRepo
+        private IRoomRepo _roomRepo;
+        public IRoomRepo RoomRepo
         {
             get
             {
-                if (_RoomTypeRepo == null)
-                    _RoomTypeRepo = new RoomTypeRepo(_dataContext);
-                return _RoomTypeRepo;
+                if (_roomRepo == null)
+                    _roomRepo = new RoomRepo(_dataContext);
+                return _roomRepo;
+            }
+        }
+        #endregion
+
+        #region Review
+        private IReviewRepo _reviewRepo;
+        public IReviewRepo ReviewRepo
+        {
+            get
+            {
+                if (_reviewRepo == null)
+                    _reviewRepo = new ReviewRepo(_dataContext);
+                return _reviewRepo;
             }
         }
         #endregion

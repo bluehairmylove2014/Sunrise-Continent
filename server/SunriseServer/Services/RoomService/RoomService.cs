@@ -13,82 +13,82 @@ namespace SunriseServer.Services.RoomService
 
         public async Task<List<RoomType>> GetAllRoom(int hotelId)
         {
-            var roomList = await _unitOfWork.RoomTypeRepo.GetAllRoomTypeAsync(hotelId);
+            var roomList = await _unitOfWork.RoomRepo.GetAllRoomTypeAsync(hotelId);
             return roomList;
         }
 
         public async Task<RoomType> GetSingleRoom(int hotelId, int id)
         {
-            var room = await _unitOfWork.RoomTypeRepo.GetSingleRoomTypeAsync(hotelId, id);
+            var room = await _unitOfWork.RoomRepo.GetSingleRoomTypeAsync(hotelId, id);
             return room;
         }
 
         public async Task<List<RoomPicture>> GetRoomPicture(int hotelId, int id)
         {
-            var roomPicture = await _unitOfWork.RoomTypeRepo.GetRoomPictureAsync(hotelId, id);
+            var roomPicture = await _unitOfWork.RoomRepo.GetRoomPictureAsync(hotelId, id);
             return roomPicture;
         }
 
         public async Task<List<RoomFacilityConstant>> GetRoomFacility(int hotelId, int id)
         {
-            var roomFacility = await _unitOfWork.RoomTypeRepo.GetRoomFacilityAsync(hotelId, id);
+            var roomFacility = await _unitOfWork.RoomRepo.GetRoomFacilityAsync(hotelId, id);
             return roomFacility;
         }
 
         public async Task<List<RoomServiceConstant>> GetRoomServices(int hotelId, int id)
         {
-            var roomService = await _unitOfWork.RoomTypeRepo.GetRoomServiceAsync(hotelId, id);
+            var roomService = await _unitOfWork.RoomRepo.GetRoomServiceAsync(hotelId, id);
             return roomService;
         }
 
         // POST
         public async Task<RoomType> AddRoomType(RoomType createDto)
         {
-            var result = await _unitOfWork.RoomTypeRepo.CreateAsync(createDto);
+            var result = await _unitOfWork.RoomRepo.CreateAsync(createDto);
             return result;
         }
 
         public async Task<RoomPicture> AddRoomPicture(RoomPictureDto createDto)
         {
-            var result = await _unitOfWork.RoomTypeRepo.CreateRoomPictureAsync(createDto);
+            var result = await _unitOfWork.RoomRepo.CreateRoomPictureAsync(createDto);
             return result;
         }
 
         // PUT
         public async Task<int> UpdateRoomType(RoomType roomType)
         {
-            var result = await _unitOfWork.RoomTypeRepo.UpdateRoomTypeAsync(roomType);
+            var result = await _unitOfWork.RoomRepo.UpdateRoomTypeAsync(roomType);
             return result;
         }
 
         public async Task<int> UpdateRoomPicture(RoomPictureDto updateDto)
         {
-            var result = await _unitOfWork.RoomTypeRepo.UpdateRoomPictureAsync(updateDto);
+            var result = await _unitOfWork.RoomRepo.UpdateRoomPictureAsync(updateDto);
             return result;
         }
 
         public async Task<int> UpdateRoomFacility(RoomAmenitiesDto updateDto)
         {
-            var result = await _unitOfWork.RoomTypeRepo.UpdateRoomFacilityAsync(updateDto);
+            var result = await _unitOfWork.RoomRepo.UpdateRoomFacilityAsync(updateDto);
             return result;
         }
 
         public async Task<int> UpdateRoomService(RoomAmenitiesDto updateDto)
         {
-            var result = await _unitOfWork.RoomTypeRepo.UpdateRoomServiceAsync(updateDto);
+            var result = await _unitOfWork.RoomRepo.UpdateRoomServiceAsync(updateDto);
             return result;
         }
 
         // DELETE
         public async Task<int> DeleteRoomType(DeleteRoomDto deleteDto)
         {
-            var result = await _unitOfWork.RoomTypeRepo.DeleteRoomTypeAsync(deleteDto);
+            var result = await _unitOfWork.RoomRepo.DeleteRoomTypeAsync(deleteDto);
             return result;
         }
 
         public async Task<int> DeleteRoomPicture(DeleteRoomPictureDto deleteDto)
         {
-            var result = await _unitOfWork.RoomTypeRepo.DeleteRoomPictureAsync(deleteDto);
+            var result = await _unitOfWork.RoomRepo.DeleteRoomPictureAsync(deleteDto);
             return result;
         }
     }

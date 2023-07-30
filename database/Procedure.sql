@@ -1,5 +1,5 @@
-﻿USE SunriseDatabase
-GO
+﻿--USE SunriseDatabase
+--GO
 
 
 CREATE OR ALTER FUNCTION USF_GetReviewNum (@HotelId INT)
@@ -206,16 +206,35 @@ AS
 	FROM HOTEL WHERE Id = @Id
 GO
 
+
+GO
 CREATE OR ALTER PROC USP_FindHotelByName
-	@String NVARCHAR(50)
+	@Location NVARCHAR(50),
+	@RoomType NVARCHAR(50),
+	@StartDate DATE,
+	@EndDate DATE,
+	@MinBudget float,
+	@MaxBudget float,
+	@Rooms int,
+	@Adult int,
+	@Children int
 AS
-	SELECT Id, Name, Country, HotelType, ProvinceCity, 
+	SELECT h.Id, h.Name, Country, HotelType, ProvinceCity, 
 			Address, Stars,
-			dbo.USF_GetAvgReview(Id) Rating,
+			dbo.USF_GetAvgReview(h.Id) Rating,
 			Description, Image,
-			dbo.USF_GetMinRoomPrice(Id) Price
-	FROM HOTEL
-	WHERE Name like '%' + @String + '%'
+			STRING_AGG(rt.Name, ',') RoomType,
+			dbo.USF_GetMinRoomPrice(h.Id) SmallestPrice
+	FROM HOTEL h inner join ROOM_TYPE rt on h.Id = rt.HotelId
+	WHERE (h.ProvinceCity COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI or
+	      h.Name COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI) and
+		  dbo.USF_GetMinRoomPrice(h.Id) <= @MaxBudget and 
+		  dbo.USF_GetMinRoomPrice(h.Id) >= @MinBudget and
+	      dbo.USF_CheckRoomAvailability(rt.HotelId, rt.Id, @Rooms, @StartDate, @EndDate) = 1 and
+		  rt.Name COLLATE SQL_Latin1_General_CP1_CI_AI like '%' + @RoomType + '%' COLLATE SQL_Latin1_General_CP1_CI_AI  
+	GROUP BY h.Id, h.Name, Country, HotelType, ProvinceCity, 
+			Address, Stars,
+			Description, Image
 GO
 
 
@@ -1011,12 +1030,12 @@ CREATE OR ALTER PROCEDURE USP_AddVoucher
     @Name NVARCHAR(500),
     @Value INT,
     @Point INT,
-	@UserRank VARCHAR(10)
+	@AccountRank VARCHAR(10)
 AS
 BEGIN
 	BEGIN TRY
 		IF (@Value < 1) OR (@Point < 1)
-		OR (@UserRank not in (select RankName from POINT_RANK))
+		OR (@AccountRank not in (select RankName from POINT_RANK))
 		BEGIN
 			RETURN -1;
 		END
@@ -1024,16 +1043,15 @@ BEGIN
 		DECLARE @Id INT;
 		EXEC @Id = USP_GetNextColumnId 'VOUCHER', 'VoucherId'
 
-		INSERT INTO VOUCHER (VoucherId, Name, Value, Point, UserRank)
-		VALUES (@Id, @Name, @Value, @Point, @UserRank)
-
-		RETURN 0;
+		INSERT INTO VOUCHER (VoucherId, Name, Value, Point, AccountRank)
+		VALUES (@Id, @Name, @Value, @Point, @AccountRank)
 	END TRY
 
 	BEGIN CATCH
 			RETURN -1; -- Thất bại
 	END CATCH
 
+	RETURN @Id;
 END
 GO
 
@@ -1061,7 +1079,7 @@ CREATE OR ALTER PROCEDURE USP_UpdateVoucher
     @Name NVARCHAR(500),
     @Value INT,
 	@Point INT,
-	@UserRank VARCHAR(10)
+	@AccountRank VARCHAR(10)
 AS
 BEGIN
 	BEGIN TRY
@@ -1069,7 +1087,7 @@ BEGIN
 		SET Name = @Name,
 			Value = @Value,
 			Point = @Point,
-			UserRank = @UserRank
+			AccountRank = @AccountRank
 		WHERE VoucherId = @VoucherId
 
 		RETURN 0;
@@ -1134,16 +1152,36 @@ END
 GO
 
 GO
-CREATE OR ALTER FUNCTION USF_GetUserRank (@AccountId INT)
+CREATE OR ALTER FUNCTION USF_GetAccountRank (@AccountId INT)
 RETURNS VARCHAR(10)
 BEGIN
 	DECLARE @Rank VARCHAR(10) = 'Bronze';
 
 	SELECT TOP(1) @Rank = RankName from POINT_RANK 
-	WHERE RankValue < dbo.USF_GetTotalPointSpent(@AccountId)
+	WHERE RankValue <= dbo.USF_GetTotalPointSpent(@AccountId)
 	ORDER BY RankValue DESC;
 
 	RETURN @Rank;
+END
+GO
+
+GO
+CREATE OR ALTER PROC USP_UpdateAccountRank (
+	@AccountId INT)
+AS
+BEGIN
+	DECLARE @Rank VARCHAR(10) = dbo.USF_GetAccountRank (@AccountId);
+
+	BEGIN TRY
+		UPDATE ACCOUNT SET AccountRank = @Rank WHERE Id = @AccountId;
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR(N'Cập nhật hạng tài khoản thất bại.', 11, 1)
+		RETURN -1;
+	END CATCH
+	
+	RETURN 0;
 END
 GO
 
@@ -1166,7 +1204,7 @@ BEGIN
 	END
 
 	DECLARE @RankName VARCHAR(10);
-	SELECT @RankName = UserRank FROM VOUCHER WHERE VoucherId = @VoucherId;
+	SELECT @RankName = AccountRank FROM VOUCHER WHERE VoucherId = @VoucherId;
 	IF NOT (@RankName IN (SELECT p2.RankName FROM POINT_RANK p1
 						JOIN POINT_RANK p2 ON p1.RankValue >= p2.RankValue
 						WHERE p1.RankName like (SELECT TOP(1) AccountRank FROM ACCOUNT WHERE Id = @AccountId)))
@@ -1252,6 +1290,7 @@ BEGIN
 END
 GO
 
+GO
 CREATE OR ALTER FUNCTION USF_CheckRoomAvailability (
     @HotelId INTEGER,
     @RoomTypeId INTEGER,
@@ -1260,14 +1299,20 @@ CREATE OR ALTER FUNCTION USF_CheckRoomAvailability (
 	@CheckOut DATE)
 RETURNS BIT
 BEGIN
-	DECLARE @SpareRoom INT;
+	DECLARE @Vacancy INT;
+	SELECT @Vacancy = Vacancy FROM ROOM_TYPE WHERE HotelId = @HotelId AND Id = @RoomTypeId;
+
+	IF (@NumberOfRoom > @Vacancy OR @NumberOfRoom < 0)
+		RETURN 0;
+
 	DECLARE @BookedRoom INT;
-	SELECT @BookedRoom = SUM(NumberOfRoom) FROM BOOKING_ACCOUNT 
+	SELECT @BookedRoom = ISNULL(SUM(NumberOfRoom), 0) FROM BOOKING_ACCOUNT 
 	WHERE HotelId = @HotelId AND RoomTypeId = @RoomTypeId
 	AND NOT (DATEDIFF(DAY, CheckOut, GETDATE()) > 0)
 	AND NOT ((DATEDIFF(DAY, @CheckIn, CheckIn) >= DATEDIFF(DAY, @CheckIn, @CheckOut))
 	OR (-DATEDIFF(DAY, @CheckIn, CheckIn) >= DATEDIFF(DAY, CheckIn, CheckOut)));
-	SELECT @SpareRoom = Vacancy - @BookedRoom FROM ROOM_TYPE WHERE HotelId = @HotelId AND Id = @RoomTypeId;
+
+		DECLARE @SpareRoom INT = @Vacancy - @BookedRoom;
 
 	IF (@SpareRoom < @NumberOfRoom)
 		RETURN 0;

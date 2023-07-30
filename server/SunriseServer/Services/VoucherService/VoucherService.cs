@@ -24,9 +24,21 @@ namespace SunriseServer.Services.VoucherService
             return result;
         }
 
-        public async Task<IEnumerable<Voucher>> GetAccountVoucher(int AccountId)
+        public async Task<List<Voucher>> GetAccountVoucher(int AccountId)
         {
             var result = await _unitOfWork.VoucherRepo.GetAccountVoucherAsync(AccountId);
+            return result;
+        }
+
+        public async Task<Voucher> CreateVoucher(AddVoucherDto voucher)
+        {
+            var result = await _unitOfWork.VoucherRepo.CreateAsync(voucher);
+            return result;
+        }
+
+        public async Task<int> UpdateAccountRank(int accountId)
+        {
+            var result = await _unitOfWork.VoucherRepo.UpdateAccountRankAsync(accountId);
             return result;
         }
     }

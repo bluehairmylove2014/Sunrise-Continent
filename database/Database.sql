@@ -11,7 +11,6 @@ GO
 USE SunriseDatabase
 GO
 
-
 --!Hotel 
 CREATE TABLE HOTEL
 (
@@ -99,7 +98,7 @@ CREATE TABLE VOUCHER
 	Name NVARCHAR(500),
 	Value INT, --!So tien giam
 	Point INT,
-	UserRank VARCHAR(10),
+	AccountRank VARCHAR(10),
 	
 	PRIMARY KEY (VoucherId)
 )

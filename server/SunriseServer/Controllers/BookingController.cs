@@ -66,7 +66,7 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<List<BookingDto>>("Get bookings successfully", finalResult));
         }
 
-        [HttpPost] // , Authorize(Roles = GlobalConstant.User)
+        [HttpPost, Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<List<BookingAccount>>>> AddBooking(AddBookingDto bookingDto)
         {
             var result = await _bookingService.AddBooking(bookingDto);
@@ -77,8 +77,17 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<BookingAccount>("Add booking successfully", result));
         }
 
-        // chua hoan thien lam
-        [HttpPut] // , Authorize(Roles = GlobalConstant.User)
+        [HttpPut("confirm"), Authorize(Roles = GlobalConstant.User)] //
+        public async Task<ActionResult<ResponseMessageDetails<int>>> ConfirmBooking(int accountId, int totalPay)
+        {
+            var result = await _bookingService.ConfirmBooking(accountId, totalPay);
+            if (result == 0)
+                return BadRequest("Confirm booking failed.");
+
+            return Ok(new ResponseMessageDetails<int>("Confirm booking successfully", ResponseStatusCode.Ok));
+        }
+
+        [HttpPut, Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> UpdateBooking(BookingAccount request)
         {
             var result = await _bookingService.UpdateBooking(request);
@@ -88,7 +97,7 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<BookingAccount>("Update booking successfully", ResponseStatusCode.Ok));
         }
 
-        [HttpDelete] // , Authorize(Roles = GlobalConstant.User)
+        [HttpDelete, Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> DeleteBooking(DeleteBookingDto deleteDto)
         {
             Account currentAcc = await _accountService.GetByUsername(User.Identity.Name);

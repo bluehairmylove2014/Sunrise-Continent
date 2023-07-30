@@ -75,5 +75,18 @@ namespace SunriseServerData.Repositories
             Console.WriteLine(builder.ToString());
             return await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE sp_executesql {builder.ToString()}");
         }
+
+        public async Task<List<BookingAccount>> GetCartItem(int accountId)
+        {
+            var result = await _dataContext.Booking_Account
+                .FromSqlInterpolated($"EXEC USP_GetCartItem @AccountId={accountId};").ToListAsync();
+            return result;
+        }
+
+        public async Task<int> ConfirmBookingAsync(int accountId, int total)
+        {
+            string str = $"EXEC USP_ConfirmBooking @AccountId={accountId}, @Total={total};";
+            return await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({str})");
+        }
     }
 }

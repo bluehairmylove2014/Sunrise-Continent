@@ -8,6 +8,9 @@ namespace SunriseServer.Services.VoucherService
     {
         Task<IEnumerable<Voucher>> GetAllVoucher();
         Task<Voucher> GetVoucherById(int VoucherId);
-        Task<IEnumerable<Voucher>> GetAccountVoucher(int AccountId);
+        Task<List<Voucher>> GetAccountVoucher(int AccountId);
+        Task<Voucher> CreateVoucher(AddVoucherDto voucher);
+        Task<int> UpdateAccountRank(int accountId);
+
     }
 }

@@ -41,5 +41,17 @@ namespace SunriseServer.Services.BookingService
 
             return result;
         }
+
+        public async Task<List<BookingAccount>> GetCart(int accountId)
+        {
+            var result = await _unitOfWork.BookingRepo.GetCartItem(accountId);
+            return result;
+        }
+
+        public async Task<int> ConfirmBooking(int accountId, int totalPay)
+        {
+            var result = await _unitOfWork.BookingRepo.ConfirmBookingAsync(accountId, totalPay);
+            return result;
+        }
     }
 }

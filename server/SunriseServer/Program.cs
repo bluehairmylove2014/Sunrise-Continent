@@ -4,6 +4,7 @@ using SunriseServer.Services.HotelService;
 using SunriseServer.Services.RoomService;
 using SunriseServer.Services.AccountService;
 using SunriseServer.Services.BookingService;
+using SunriseServer.Services.VoucherService;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -23,6 +24,7 @@ builder.Services.AddScoped<IPaymentService, HotelService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -54,8 +56,8 @@ builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
         policy.WithOrigins("http://localhost:7256").AllowAnyMethod().AllowAnyHeader();
     }));
 
-builder.Services.AddServicesData();
-builder.Services.AddUnitOfWork(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
+builder.Services.AddServicesData(); // Sunrise AZURE_SQL_CONNECTIONSTRING
+builder.Services.AddUnitOfWork(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Sunrise")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

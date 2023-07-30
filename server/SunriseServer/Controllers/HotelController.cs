@@ -138,7 +138,7 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<Hotel>("Delete hotel successfully", result));
         }
 
-        [HttpGet("Review")]
+        [HttpGet("review")]
         public async Task<ActionResult<ResponseMessageDetails<List<Review>>>> GetAllHotelReview(int hotelId)
         {
             var result = await _hotelService.GetHotelReview(hotelId);

@@ -21,14 +21,13 @@ namespace SunriseServer.Controllers
         readonly IBookingService _bookingService;
         readonly IAccountService _accountService;
         readonly IHotelService _hotelService;
-        readonly IPaymentService _hotelService;
         readonly IVoucherService _voucherService;
         readonly IRoomService _roomService;
 
         public bookingController(
             IBookingService bookingService, 
             IAccountService accountService, 
-            IPaymentService hotelService,
+            IHotelService hotelService,
             IVoucherService voucherService,
             IRoomService roomService)
         {

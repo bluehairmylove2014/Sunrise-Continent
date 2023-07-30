@@ -25,7 +25,7 @@ namespace SunriseServer.Controllers
         readonly IHotelService _hotelService;
         readonly IRoomService _roomService;
 
-        public HotelController(IHotelService hotelService, IRoomService roomService)
+        public hotelController(IHotelService hotelService, IRoomService roomService)
         {
             _hotelService = hotelService;
             _roomService = roomService;

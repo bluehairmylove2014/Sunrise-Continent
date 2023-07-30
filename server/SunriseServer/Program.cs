@@ -56,8 +56,8 @@ builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
         policy.WithOrigins("http://localhost:7256").AllowAnyMethod().AllowAnyHeader();
     }));
 
-builder.Services.AddServicesData(); // Sunrise AZURE_SQL_CONNECTIONSTRING
-builder.Services.AddUnitOfWork(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Sunrise")));
+builder.Services.AddServicesData(); 
+builder.Services.AddUnitOfWork(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

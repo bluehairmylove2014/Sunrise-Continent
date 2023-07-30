@@ -57,6 +57,19 @@ namespace SunriseServerData
         }
         #endregion
 
+        #region Voucher
+        private IVoucherRepo _voucherRepo;
+        public IVoucherRepo VoucherRepo
+        {
+            get
+            {
+                if (_voucherRepo == null)
+                    _voucherRepo = new VoucherRepo(_dataContext);
+                return _voucherRepo;
+            }
+        }
+        #endregion
+
         #region Account
         private IAccountRepo _accountRepo;
         public IAccountRepo AccountRepo

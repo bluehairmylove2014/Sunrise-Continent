@@ -14,12 +14,12 @@ namespace SunriseServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class authController : ControllerBase
     {
         readonly IConfiguration _configuration;
         readonly IAccountService _accService;
 
-        public AuthController(IConfiguration configuration, IAccountService accService)
+        public authController(IConfiguration configuration, IAccountService accService)
         {
             _configuration = configuration;
             _accService = accService;

@@ -9,11 +9,11 @@ namespace SunriseServer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class accountController : ControllerBase
     {
         readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountService)
+        public accountController(IAccountService accountService)
         {
             _accountService = accountService;
         }
@@ -28,7 +28,7 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{username}"), Authorize(Roles = GlobalConstant.User)]
+        [HttpGet("username"), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<Hotel>> GetAccountByUsername(string username)
         {
             var result =  await _accountService.GetByUsername(username);
@@ -38,7 +38,7 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id}"), Authorize(Roles = GlobalConstant.User)]
+        [HttpPut(""), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<List<Hotel>>> UpdateAccount(int id, Account request)
         {
             if (id != request.Id)

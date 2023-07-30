@@ -13,9 +13,9 @@ namespace SunriseServer.Services.BookingService
             _unitOfWork = uof;
         }
 
-        public async Task<BookingAccount> AddBooking(BookingAccount booking)
+        public async Task<BookingAccount> AddBooking(AddBookingDto booking)
         {
-            var result = await _unitOfWork.BookingRepo.CreateAsync(booking);
+            var result = await _unitOfWork.BookingRepo.CreateBookingAsync(booking);
             await _unitOfWork.SaveChangesAsync();
             return result;
         }

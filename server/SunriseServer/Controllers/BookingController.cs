@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using SunriseServer.Common.Constant;
 using SunriseServer.Services.BookingService;
 using SunriseServer.Services.AccountService;
+using SunriseServer.Services.VoucherService;
+using SunriseServer.Services.RoomService;
 using SunriseServer.Common.Helper;
 using SunriseServerCore.Dtos.Booking;
 using SunriseServer.Services.HotelService;
@@ -14,21 +16,30 @@ namespace SunriseServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookingController : ControllerBase
+    public class bookingController : ControllerBase
     {
         readonly IBookingService _bookingService;
         readonly IAccountService _accountService;
         readonly IPaymentService _hotelService;
+        readonly IVoucherService _voucherService;
+        readonly IRoomService _roomService;
 
-        public BookingController(IBookingService bookingService, IAccountService accountService, IPaymentService hotelService)
+        public bookingController(
+            IBookingService bookingService, 
+            IAccountService accountService, 
+            IPaymentService hotelService,
+            IVoucherService voucherService,
+            IRoomService roomService)
         {
             _bookingService = bookingService;
             _accountService = accountService;
             _hotelService = hotelService;
+            _voucherService = voucherService;
+            _roomService = roomService;
         }
 
-        [HttpGet("GetBookingsCurrentAccount"), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<ResponseMessageDetails<List<BookingAccount>>>> GetAllBookings()
+        [HttpGet("get-bookings-current-account"), Authorize(Roles = GlobalConstant.User)]
+        public async Task<ActionResult<ResponseMessageDetails<List<BookingDto>>>> GetAllUserBookings()
         {
             Account currentAcc = await _accountService.GetByUsername(User.Identity.Name);
             var result = await _bookingService.GetAllBookings(currentAcc.Id);
@@ -37,6 +48,8 @@ namespace SunriseServer.Controllers
             {
                 var account = await _accountService.GetById(item.AccountId);
                 var hotel = await _hotelService.GetSingleHotel(item.HotelId);
+                var room = await _roomService.GetSingleRoom(item.HotelId, item.RoomTypeId);
+                var voucher = await _voucherService.GetVoucherById(item.VoucherId);
 
                 BookingDto variable = new BookingDto { };
 
@@ -44,6 +57,8 @@ namespace SunriseServer.Controllers
 
                 variable.Account = account;
                 variable.Hotel = hotel;
+                variable.RoomType = room;
+                variable.Voucher = voucher;
 
                 finalResult.Add(variable);
             }
@@ -51,10 +66,10 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<List<BookingDto>>("Get bookings successfully", finalResult));
         }
 
-        [HttpPost, Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<ResponseMessageDetails<List<BookingAccount>>>> AddBooking(BookingAccount booking)
+        [HttpPost] // , Authorize(Roles = GlobalConstant.User)
+        public async Task<ActionResult<ResponseMessageDetails<List<BookingAccount>>>> AddBooking(AddBookingDto bookingDto)
         {
-            var result = await _bookingService.AddBooking(booking);
+            var result = await _bookingService.AddBooking(bookingDto);
 
             if (result == null)
                 return BadRequest("Cannot add booking.");
@@ -63,7 +78,7 @@ namespace SunriseServer.Controllers
         }
 
         // chua hoan thien lam
-        [HttpPut, Authorize(Roles = GlobalConstant.User)]
+        [HttpPut] // , Authorize(Roles = GlobalConstant.User)
         public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> UpdateBooking(BookingAccount request)
         {
             var result = await _bookingService.UpdateBooking(request);
@@ -73,7 +88,7 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<BookingAccount>("Update booking successfully", ResponseStatusCode.Ok));
         }
 
-        [HttpDelete, Authorize(Roles = GlobalConstant.User)]
+        [HttpDelete] // , Authorize(Roles = GlobalConstant.User)
         public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> DeleteBooking(DeleteBookingDto deleteDto)
         {
             Account currentAcc = await _accountService.GetByUsername(User.Identity.Name);

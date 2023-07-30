@@ -927,17 +927,31 @@ GO
 CREATE OR ALTER PROCEDURE USP_DeleteBooking
     @AccountId INT,
     @HotelId INT,
-    @RoomTypeId INT
+    @RoomTypeId INT,
+    @CheckIn DATE,
+	@CreatedAt DATETIME
 AS
 BEGIN
-    SET NOCOUNT ON;
-
     BEGIN TRANSACTION;
-    -- Xóa đơn đặt chỗ
-    DELETE FROM BOOKING_ACCOUNT
-    WHERE AccountId = @AccountId AND HotelId = @HotelId AND RoomTypeId = @RoomTypeId;
+
+	BEGIN TRY
+		-- Xóa đơn đặt chỗ
+		DELETE FROM BOOKING_ACCOUNT
+		WHERE AccountId = @AccountId 
+		AND HotelId = @HotelId 
+		AND RoomTypeId = @RoomTypeId
+		AND DATEDIFF(DAY, CheckIn, @CheckIn) = 0
+		AND DATEDIFF(SECOND, CreatedAt, CreatedAt) = 0;
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR(N'Không thể xóa Booking.', 11, 1)
+		ROLLBACK;
+		RETURN -1;
+	END CATCH
 
     COMMIT;
+	RETURN 0;
 END;
 GO
 
@@ -951,7 +965,8 @@ CREATE OR ALTER PROCEDURE USP_UpdateBooking
     @NumberOfRoom INTEGER,
     @VoucherId INTEGER,
     @Total INT,
-    @Paid BIT
+    @Paid BIT,
+	@CreatedAt DATETIME
 AS
 BEGIN
     BEGIN TRY
@@ -964,10 +979,12 @@ BEGIN
         WHERE AccountId = @AccountId
         AND HotelId = @HotelId
         AND RoomTypeId = @RoomTypeId
-        AND CheckIn = @CheckIn;
+        AND DATEDIFF(DAY, CheckIn, @CheckIn) = 0
+		AND DATEDIFF(SECOND, CreatedAt, @CreatedAt) = 0;
     END TRY
 
     BEGIN CATCH
+		RAISERROR(N'Cập nhật khách sạn thất bại.', 11, 1);
         RETURN -1; -- Gán giá trị trả về là -1 (thất bại)
     END CATCH
 
@@ -1070,6 +1087,22 @@ CREATE OR ALTER PROCEDURE USP_GetAllVoucher
 AS
 BEGIN
 	SELECT * FROM VOUCHER;
+END
+GO
+
+CREATE OR ALTER PROCEDURE USP_GetAllUserBooking
+	@AccountId INT
+AS
+BEGIN
+	SELECT * FROM BOOKING_ACCOUNT WHERE AccountId = @AccountId;
+END
+GO
+
+CREATE OR ALTER PROCEDURE USP_GetVoucherById
+	@VoucherId INT
+AS
+BEGIN
+	SELECT * FROM VOUCHER WHERE VoucherId = @VoucherId;
 END
 GO
 
@@ -1222,12 +1255,18 @@ GO
 CREATE OR ALTER FUNCTION USF_CheckRoomAvailability (
     @HotelId INTEGER,
     @RoomTypeId INTEGER,
-	@NumberOfRoom INTEGER)
+	@NumberOfRoom INTEGER,
+	@CheckIn DATE,
+	@CheckOut DATE)
 RETURNS BIT
 BEGIN
 	DECLARE @SpareRoom INT;
 	DECLARE @BookedRoom INT;
-	SELECT @BookedRoom = Count(NumberOfRoom) FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId AND RoomTypeId = @RoomTypeId
+	SELECT @BookedRoom = SUM(NumberOfRoom) FROM BOOKING_ACCOUNT 
+	WHERE HotelId = @HotelId AND RoomTypeId = @RoomTypeId
+	AND NOT (DATEDIFF(DAY, CheckOut, GETDATE()) > 0)
+	AND NOT ((DATEDIFF(DAY, @CheckIn, CheckIn) >= DATEDIFF(DAY, @CheckIn, @CheckOut))
+	OR (-DATEDIFF(DAY, @CheckIn, CheckIn) >= DATEDIFF(DAY, CheckIn, CheckOut)));
 	SELECT @SpareRoom = Vacancy - @BookedRoom FROM ROOM_TYPE WHERE HotelId = @HotelId AND Id = @RoomTypeId;
 
 	IF (@SpareRoom < @NumberOfRoom)
@@ -1250,7 +1289,7 @@ BEGIN
 	DECLARE @Quantity INT;
 
 	-- Kiểm tra số lượng voucher trong túi.
-	IF (@VoucherId IS NOT NULL OR @VoucherId > 0)
+	IF (@VoucherId IS NOT NULL AND @VoucherId > 0)
 	BEGIN
 		SELECT @Quantity = Quantity FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
 		IF (@Quantity IS NULL)
@@ -1264,7 +1303,7 @@ BEGIN
 	BEGIN TRY
 		DECLARE @Discount INT = 0;
 
-		IF (@VoucherId IS NOT NULL OR @VoucherId > 0)
+		IF (@VoucherId IS NOT NULL AND @VoucherId > 0)
 		BEGIN
 			-- Giảm số lượng voucher trong túi.
 			IF (@Quantity = 1)
@@ -1281,8 +1320,6 @@ BEGIN
 		INSERT INTO BOOKING_ACCOUNT (AccountId, HotelId, RoomTypeId, CheckIn, CheckOut, NumberOfRoom, VoucherId, Total, Paid, CreatedAt)
 		VALUES (@AccountId, @HotelId, @RoomTypeId, @CheckIn, @CheckOut, @NumberOfRoom, @VoucherId, @Total - @Discount, 0, GETDATE());
         
-		-- Cập nhật điểm thành viên.
-		EXEC USP_UpdateMemberPoints @AccountId, @Total;
 	END TRY
 
 	BEGIN CATCH
@@ -1301,6 +1338,13 @@ CREATE OR ALTER FUNCTION USF_GetCartItem (@AccountId INT)
 RETURNS TABLE
 AS
 RETURN
+	SELECT * FROM BOOKING_ACCOUNT BA WHERE BA.AccountId = @AccountId AND (Paid = 0);
+GO
+
+GO
+CREATE OR ALTER PROC USP_GetCartItem (
+	@AccountId INT)
+AS
 	SELECT * FROM BOOKING_ACCOUNT BA WHERE BA.AccountId = @AccountId AND (Paid = 0);
 GO
 
@@ -1334,6 +1378,9 @@ AS
 	BEGIN TRY
 		UPDATE BOOKING_ACCOUNT SET Paid = 1 
 		WHERE AccountId = @AccountId AND Paid = 0;
+
+		-- Cập nhật điểm thành viên.
+		EXEC USP_UpdateMemberPoints @AccountId, @Total;
 	END TRY
 
 	BEGIN CATCH

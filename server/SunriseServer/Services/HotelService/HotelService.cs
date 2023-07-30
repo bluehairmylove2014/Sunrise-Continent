@@ -45,7 +45,7 @@ namespace SunriseServer.Services.HotelService
             return hotel;
         }
 
-        public async Task<Hotel> UpdateHotel(int id, Hotel request)
+        public async Task<Hotel> UpdateHotel(Hotel request)
         {
             var result = await _unitOfWork.HotelRepo.UpdateAsync(request);
             await _unitOfWork.SaveChangesAsync();

@@ -118,17 +118,17 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<Hotel>("Add hotel successfully", result));
         }
 
-        [HttpPut("{id}"), Authorize(Roles = GlobalConstant.Admin)]
-        public async Task<ActionResult<ResponseMessageDetails<Hotel>>> UpdateHotel(int id, Hotel request)
+        [HttpPut, Authorize(Roles = GlobalConstant.Admin)]
+        public async Task<ActionResult<ResponseMessageDetails<Hotel>>> UpdateHotel(Hotel request)
         {
-            var result = await _hotelService.UpdateHotel(id, request);
+            var result = await _hotelService.UpdateHotel(request);
             if (result is null)
                 return NotFound("Hotel not found.");
 
             return Ok(new ResponseMessageDetails<Hotel>("Update hotel successfully", result));
         }
 
-        [HttpDelete("{id}"), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpDelete, Authorize(Roles = GlobalConstant.Admin)]
         public async Task<ActionResult<ResponseMessageDetails<Hotel>>> DeleteHotel(int id)
         {
             var result = await _hotelService.DeleteHotel(id);

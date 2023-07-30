@@ -1,10 +1,10 @@
+import { API_URL } from "../../../../business-logic/src/configs";
 import { axios } from "../../config/axios";
 import { Services } from "../../service";
 
 // Removed TypeScript-specific class extension and interface implementation
 export class AuthService extends Services {
-  API_URL = "";
-  url = this.API_URL + "/auth";
+  url = API_URL + "/auth";
   abortController = null;
 
   registerUrl = this.url + "/register";
@@ -16,19 +16,15 @@ export class AuthService extends Services {
     this.abortController = new AbortController();
     try {
       // Removed TypeScript-specific type annotation
-      const response = await axios.post(
-        this.registerUrl,
-        data,
-        {
-          signal: this.abortController.signal
-        }
-      );
+      const response = await axios.post(this.registerUrl, data, {
+        signal: this.abortController.signal,
+      });
 
       if (response.status === 200) {
         return {
           statusCode: response.status,
           message: response.data.message,
-          token: response.data.token ?? ""
+          token: response.data.token ?? "",
         };
       } else {
         throw new Error("Error register service on resolve");
@@ -42,7 +38,7 @@ export class AuthService extends Services {
     }
     return {
       statusCode: 500,
-      message: "Unexpected error occurred"
+      message: "Unexpected error occurred",
     };
   };
   // Removed TypeScript-specific type annotations
@@ -50,19 +46,15 @@ export class AuthService extends Services {
     this.abortController = new AbortController();
     try {
       // Removed TypeScript-specific type annotation
-      const response = await axios.post(
-        this.loginUrl,
-        data,
-        {
-          signal: this.abortController.signal
-        },
-      );
+      const response = await axios.post(this.loginUrl, data, {
+        signal: this.abortController.signal,
+      });
 
       if (response.status === 200) {
         return {
           statusCode: response.status,
           message: response.data.message,
-          token: response.data.token ?? ""
+          token: response.data.token ?? "",
         };
       } else {
         throw new Error("Error login service on resolve");
@@ -75,7 +67,7 @@ export class AuthService extends Services {
     }
     return {
       statusCode: 500,
-      message: "Unexpected error occurred"
+      message: "Unexpected error occurred",
     };
   };
   refreshToken = async (data) => {
@@ -86,14 +78,14 @@ export class AuthService extends Services {
         {},
         {
           headers: { Authorization: `Bearer ${data}` },
-          signal: this.abortController.signal
+          signal: this.abortController.signal,
         }
       );
       if (response.status === 200) {
         return {
           statusCode: response.status,
           message: response.data.message,
-          token: response.data.token ?? ""
+          token: response.data.token ?? "",
         };
       } else {
         throw new Error("Error is-logged-in service on resolve");
@@ -106,9 +98,7 @@ export class AuthService extends Services {
     }
     return {
       statusCode: 500,
-      message: "Unexpected error occurred"
+      message: "Unexpected error occurred",
     };
   };
 }
-
-

@@ -257,7 +257,7 @@
         .home-trending__trending-list {
             margin: 4rem auto;
             // columns - row - gap
-            @include dgrid(repeat(4, 1fr), auto, 1rem);
+            @include dgrid(repeat(3, 1fr), auto, 1rem);
         }
         .home-trending__page-pagination-wrapper {
             // direction - justify content - align items - flex wrap

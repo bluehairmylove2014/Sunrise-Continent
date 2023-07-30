@@ -38,13 +38,9 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpPut(""), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<List<Hotel>>> UpdateAccount(int id, Account request)
+        [HttpPut, Authorize(Roles = GlobalConstant.User)]
+        public async Task<ActionResult<List<Hotel>>> UpdateAccount(Account request)
         {
-            if (id != request.Id)
-            {
-                return BadRequest("account id and request id don't match");
-            }
             var result = await _accountService.UpdateAccount(request);
             if (result is null)
                 return NotFound("Account not found.");

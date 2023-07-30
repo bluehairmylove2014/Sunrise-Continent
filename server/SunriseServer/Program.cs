@@ -53,7 +53,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
     policy =>
     {
-        policy.WithOrigins("http://localhost:7256").AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("http://www.sunrise-continent.online.s3-website-ap-southeast-1.amazonaws.com").AllowAnyMethod().AllowAnyHeader();
     }));
 
 builder.Services.AddServicesData(); 

@@ -1,11 +1,12 @@
 ﻿using SunriseServer.Services;
+using SunriseServerCore.Dtos.Hotel;
 using SunriseServerCore.Models;
 using SunriseServerData;
 using SunriseServerCore.Dtos;
 
 namespace SunriseServer.Services.HotelService
 {
-    public class HotelService : IPaymentService
+    public class HotelService : IHotelService
     {
         private readonly UnitOfWork _unitOfWork;
 
@@ -82,6 +83,11 @@ namespace SunriseServer.Services.HotelService
         {
             var reviews = await _unitOfWork.HotelRepo.GetRecommendedHotelAsync(num);
             return reviews;
+        }
+
+        public async Task<List<SearchHotel>> GetSearchHotels(SearchHotelDto searchHotel)
+        {
+            return await _unitOfWork.HotelRepo.GetSearchHotels(searchHotel);
         }
     }
 }

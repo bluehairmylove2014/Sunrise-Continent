@@ -20,7 +20,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IPaymentService, HotelService>();
+builder.Services.AddScoped<IHotelService, HotelService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
@@ -64,11 +64,6 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-//else
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sunrise API Production"));
-//}
 
 app.UseCors("NgOrigins");
 

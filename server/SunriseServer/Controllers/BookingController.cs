@@ -20,6 +20,7 @@ namespace SunriseServer.Controllers
     {
         readonly IBookingService _bookingService;
         readonly IAccountService _accountService;
+        readonly IHotelService _hotelService;
         readonly IPaymentService _hotelService;
         readonly IVoucherService _voucherService;
         readonly IRoomService _roomService;
@@ -77,8 +78,7 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<BookingAccount>("Add booking successfully", result));
         }
 
-        // chua hoan thien lam
-        [HttpPut] // , Authorize(Roles = GlobalConstant.User)
+        [HttpPut, Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> UpdateBooking(BookingAccount request)
         {
             var result = await _bookingService.UpdateBooking(request);

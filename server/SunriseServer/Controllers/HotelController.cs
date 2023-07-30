@@ -11,6 +11,8 @@ using SunriseServerCore.Dtos;
 using SunriseServerCore.Common.Enum;
 using SunriseServer.Services.RoomService;
 using SunriseServerCore.Dtos.Room;
+using System.Data;
+using SunriseServerCore.Dtos.Hotel;
 
 namespace SunriseServer.Controllers
 {
@@ -20,10 +22,10 @@ namespace SunriseServer.Controllers
     [ApiController]
     public class hotelController : ControllerBase
     {
-        readonly IPaymentService _hotelService;
+        readonly IHotelService _hotelService;
         readonly IRoomService _roomService;
 
-        public hotelController(IPaymentService hotelService, IRoomService roomService)
+        public HotelController(IHotelService hotelService, IRoomService roomService)
         {
             _hotelService = hotelService;
             _roomService = roomService;
@@ -136,6 +138,29 @@ namespace SunriseServer.Controllers
                 return NotFound("Hotel not found.");
 
             return Ok(new ResponseMessageDetails<Hotel>("Delete hotel successfully", result));
+        }
+        //?{location}{room_type}{start_date}{end_date}{budget}{rooms}{adults}{children}
+        [HttpGet("hotel/search")]
+        public async Task<ActionResult<ResponseMessageDetails<List<SearchHotel>>>> GetSearchHotel(
+            [FromQuery] string location,
+            [FromQuery] string room_type,
+            [FromQuery] DateTime start_date,
+            [FromQuery] DateTime end_date,
+            [FromQuery] double min_budget,
+            [FromQuery] double max_budget,
+            [FromQuery] int rooms,
+            [FromQuery] int adults,
+            [FromQuery] int children
+        )
+        {
+            var result = await _hotelService.GetSearchHotels(
+                new SearchHotelDto(location, room_type, start_date, end_date, min_budget, max_budget, rooms, adults, children)
+            );
+
+            if (result is null)
+                return NotFound("Hotel not found.");
+
+            return Ok(new ResponseMessageDetails<List<SearchHotel>>("Search hotel successfully", result));
         }
 
         [HttpGet("review")]

@@ -44,3 +44,11 @@ jobs:
         run: |
           aws s3 rm s3://${{ secrets.S3_BUCKET }} --recursive
           aws s3 cp client/build/ s3://${{ secrets.S3_BUCKET }} --recursive
+
+      - name: Log Contents of client/build/ Before Deployment
+        run: |
+          ls -R client/build/
+
+      - name: Log S3 Bucket Contents After Deployment
+        run: |
+          aws s3 ls s3://${{ secrets.S3_BUCKET }} --recursive

@@ -25,11 +25,12 @@ jobs:
           cd client
           npm install
           npm run build
-          - name: Archive Build Artifacts
-          uses: actions/upload-artifact@v2
-          with:
-            name: build-artifacts
-            path: client/build
+
+      - name: Archive Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: client/build
 
   deploy:
     needs: build
@@ -45,11 +46,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - name: Archive Build Artifacts
-        uses: actions/upload-artifact@v2
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v2
         with:
           name: build-artifacts
-          path: client/build
 
       - name: Deploy to S3
         run: |

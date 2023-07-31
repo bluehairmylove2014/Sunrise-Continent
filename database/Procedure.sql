@@ -909,72 +909,6 @@ BEGIN
 END
 GO
 
---todo liên quan đến booking có thông tin voucher 
-
---!XÓA
-CREATE OR ALTER PROCEDURE USP_DeleteBooking
-    @AccountId INT,
-    @HotelId INT,
-    @RoomTypeId INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRANSACTION;
-    -- Xóa đơn đặt chỗ
-    DELETE FROM BOOKING_ACCOUNT
-    WHERE AccountId = @AccountId AND HotelId = @HotelId AND RoomTypeId = @RoomTypeId;
-
-    COMMIT;
-END;
-GO
-
---!sửa 
-CREATE OR ALTER PROCEDURE USP_UpdateBooking
-    @AccountId INTEGER,
-    @HotelId INTEGER,
-    @RoomTypeId INTEGER,
-    @CheckIn DATE,
-    @CheckOut DATE,
-    @NumberOfRoom INTEGER,
-    @VoucherId INTEGER,
-    @Total INT,
-    @Paid BIT
-AS
-BEGIN
-    BEGIN TRY
-        UPDATE BOOKING_ACCOUNT
-        SET CheckOut = @CheckOut,
-            NumberOfRoom = @NumberOfRoom,
-            VoucherId = @VoucherId,
-            Total = @Total,
-			Paid = @Paid
-        WHERE AccountId = @AccountId
-        AND HotelId = @HotelId
-        AND RoomTypeId = @RoomTypeId
-        AND CheckIn = @CheckIn;
-    END TRY
-
-    BEGIN CATCH
-        RETURN -1; -- Gán giá trị trả về là -1 (thất bại)
-    END CATCH
-
-    RETURN 0;  -- Gán giá trị trả về là 0 (thành công)
-END
-GO
-
---TODO PROCE XEM LỊCH SỬ CÁC ĐƠN BOOKING CỦA TÀI KHOẢN 
-CREATE OR ALTER PROCEDURE USP_ViewBookingHistory
-    @AccountId INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT * FROM BOOKING_ACCOUNT BA
-    WHERE BA.AccountId = @AccountId AND (Paid = 1);
-END;
-GO
-
 
 --todo PROC CRUD VOUCHER
 --! THÊM
@@ -1134,6 +1068,15 @@ CREATE OR ALTER PROCEDURE USP_GetAllVoucher
 AS
 BEGIN
 	SELECT * FROM VOUCHER;
+END
+GO
+
+
+CREATE OR ALTER PROCEDURE USP_GetVoucherById
+	@VoucherId INT
+AS
+BEGIN
+	SELECT * FROM VOUCHER WHERE VoucherId = @VoucherId;
 END
 GO
 
@@ -1320,8 +1263,13 @@ BEGIN
 		RETURN 0;
 
 	DECLARE @BookedRoom INT;
-	SELECT @BookedRoom = Count(NumberOfRoom) FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId AND RoomTypeId = @RoomTypeId
-	SELECT @SpareRoom = Vacancy - @BookedRoom FROM ROOM_TYPE WHERE HotelId = @HotelId AND Id = @RoomTypeId;
+	SELECT @BookedRoom = ISNULL(SUM(NumberOfRoom), 0) FROM BOOKING_ACCOUNT 
+	WHERE HotelId = @HotelId AND RoomTypeId = @RoomTypeId
+	AND NOT (DATEDIFF(DAY, CheckOut, GETDATE()) > 0)
+	AND NOT ((DATEDIFF(DAY, @CheckIn, CheckIn) >= DATEDIFF(DAY, @CheckIn, @CheckOut))
+	OR (-DATEDIFF(DAY, @CheckIn, CheckIn) >= DATEDIFF(DAY, CheckIn, CheckOut)));
+
+	DECLARE @SpareRoom INT = @Vacancy - @BookedRoom;
 
 	IF (@SpareRoom < @NumberOfRoom)
 		RETURN 0;
@@ -1370,16 +1318,26 @@ CREATE OR ALTER PROCEDURE USP_AddBooking
 AS
 BEGIN
 
-	-- Kiểm tra số lượng voucher trong túi.
-	IF (@VoucherId IS NOT NULL OR @VoucherId > 0)
-	BEGIN
-		SELECT @Quantity = Quantity FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
-		IF (@Quantity IS NULL)
-		BEGIN
-			RAISERROR(N'Số lượng voucher trong túi không hợp lệ.', 11, 1);
-			RETURN -1;
-		END
-	END
+	BEGIN TRAN
+	BEGIN TRY
+	
+		DECLARE @BookingId INT;
+		EXEC @BookingId = USP_GetNextColumnId 'BOOKING_ACCOUNT', 'BookingId'
+
+		INSERT INTO BOOKING_ACCOUNT (BookingId, AccountId, HotelId, RoomTypeId, CheckIn, CheckOut, NumberOfRoom)
+		VALUES (@BookingId, @AccountId, @HotelId, @RoomTypeId, @CheckIn, @CheckOut, @NumberOfRoom);
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR(N'Thêm đơn đặt phòng thất bại', 11, 1);
+		ROLLBACK;
+		RETURN -1; -- (thất bại)
+	END CATCH
+
+	COMMIT TRAN;
+	RETURN @BookingId; -- (thành công)
+END
+GO
 
 -- Đặt khách sạn -> điền thông tin -> bấm "đặt" -> thêm vào giỏ (tạo đơn mới với null).
 -- Vào giỏ -> danh sách các booking đã map chưa thanh toán -> bấm thanh toán -> áp voucher, tiền, ...
@@ -1404,13 +1362,9 @@ BEGIN
 		DECLARE @OrderId INT;
 		EXEC @OrderId = USP_GetNextColumnId 'ACCOUNT_ORDER', 'OrderId ';
 
-		IF (@VoucherId IS NOT NULL OR @VoucherId > 0)
-		BEGIN
-			-- Giảm số lượng voucher trong túi.
-			IF (@Quantity = 1)
-				DELETE FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
-			ELSE
-				UPDATE VOUCHER_BAG SET Quantity = @Quantity - 1 WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
+		INSERT INTO ACCOUNT_ORDER (OrderId, AccountId, VoucherId, Total, Paid, CreatedAt) VALUES 
+			(@OrderId, @AccountId, 0, 0, 0, GETDATE());
+	END TRY
 
 	BEGIN CATCH
 		RAISERROR(N'Tạo đơn thất bại.', 11, 1);
@@ -1423,11 +1377,24 @@ BEGIN
 END;
 GO
 
-		INSERT INTO BOOKING_ACCOUNT (AccountId, HotelId, RoomTypeId, CheckIn, CheckOut, NumberOfRoom, VoucherId, Total, Paid, CreatedAt)
-		VALUES (@AccountId, @HotelId, @RoomTypeId, @CheckIn, @CheckOut, @NumberOfRoom, @VoucherId, @Total - @Discount, 0, GETDATE());
-        
-		-- Cập nhật điểm thành viên.
-		EXEC USP_UpdateMemberPoints @AccountId, @Total;
+-- //
+GO
+CREATE OR ALTER PROC USP_AddBookingToOrder (
+	@AccountId INT,
+	@BookingId INT)
+AS
+BEGIN
+	BEGIN TRAN
+
+	BEGIN TRY
+		
+		DECLARE @OrderId INT;
+		SELECT @OrderId = OrderId FROM ACCOUNT_ORDER AO WHERE AO.AccountId = @AccountId AND (Paid = 0)
+		IF (@OrderId IS NULL)
+			EXEC @OrderId = USP_AddEmptyOrder @AccountId;
+
+		IF NOT EXISTS (SELECT * FROM ORDER_DETAIL WHERE OrderId = @OrderId AND BookingId = @BookingId)
+			INSERT INTO ORDER_DETAIL (OrderId, BookingId) VALUES (@OrderId, @BookingId);
 	END TRY
 
 	BEGIN CATCH
@@ -1453,6 +1420,7 @@ RETURN
 	JOIN ACCOUNT_ORDER AO ON AO.OrderId = OD.OrderId
 	WHERE AO.AccountId = @AccountId AND (AO.Paid = 0);
 GO
+
 
 GO
 CREATE OR ALTER FUNCTION USF_GetCartTotal (@OrderId INT)
@@ -1593,8 +1561,13 @@ BEGIN
 	BEGIN TRAN
 
 	BEGIN TRY
-		UPDATE BOOKING_ACCOUNT SET Paid = 1 
-		WHERE AccountId = @AccountId AND Paid = 0;
+		DECLARE @BookingId INT;
+		EXEC @BookingId = USP_AddBooking @AccountId, @HotelId, @RoomTypeId, @CheckIn, @CheckOut, @NumberOfRoom;
+		
+		DECLARE @OrderId INT;
+		EXEC @OrderId = USP_AddBookingToOrder @AccountId, @BookingId;
+
+		EXEC USP_ConfirmOrder @AccountId, @VoucherId, @Total, @FullName, @Nation, @DateOfBirth, @Email, @PhoneNumber, @SpecialNeeds, @Notes;
 	END TRY
 
 	BEGIN CATCH

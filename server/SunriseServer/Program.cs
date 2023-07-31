@@ -5,7 +5,6 @@ using SunriseServer.Services.RoomService;
 using SunriseServer.Services.AccountService;
 using SunriseServer.Services.BookingService;
 using SunriseServer.Services.VoucherService;
-using SunriseServer.Services.VoucherService;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

@@ -2,7 +2,6 @@
 using Microsoft.Data.SqlClient;
 using SunriseServerCore.Models;
 using SunriseServerCore.Dtos.Booking;
-using SunriseServerCore.Dtos.Booking;
 using System;
 
 namespace SunriseServerData

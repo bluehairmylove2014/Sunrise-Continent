@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/scss/_common_component.scss";
+import "../../styles/common/wishlist.scss";
 
 const WistList = () => {
   return <sidebar className="common-component__wishlist"></sidebar>;

@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import "../../styles/scss/_common_component.scss";
+import "../../styles/common/bannerInput.scss";
 import { Controller } from "react-hook-form";
 import { BANNER_INPUT } from "../../constants/Variables.constants";
 import { formatDate } from "../../utils/helpers/ShortenDatetime";

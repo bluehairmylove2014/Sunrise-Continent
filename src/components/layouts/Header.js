@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../../styles/scss/header.scss";
+import "../../styles/component/header.scss";
 import logoVerticalImg from "../../assets/images/logos/sc-vertical.png";
 import logoHorizontalImg from "../../assets/images/logos/sc-horizontal.png";
 import worker_gif from "../../assets/images/graphics/worker.gif";

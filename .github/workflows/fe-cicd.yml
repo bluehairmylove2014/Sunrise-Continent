@@ -50,15 +50,7 @@ jobs:
         with:
           name: build-artifacts
 
-      - name: List files in downloaded artifact
-        run: |
-          ls -R $GITHUB_WORKSPACE
-
-      - name: Print current working directory
-        run: |
-          pwd
-
       - name: Deploy to S3
         run: |
           aws s3 rm s3://${{ secrets.S3_BUCKET }} --recursive
-          aws s3 cp build/ s3://${{ secrets.S3_BUCKET }} --recursive
+          aws s3 cp $GITHUB_WORKSPACE s3://${{ secrets.S3_BUCKET }} --recursive

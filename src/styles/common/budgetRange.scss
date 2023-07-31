@@ -1,0 +1,8 @@
+@import './mixin';
+
+.common-component__budget-range {
+    .cc-modern-input__price-detail {
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, space-between, center, nowrap);
+    }
+}

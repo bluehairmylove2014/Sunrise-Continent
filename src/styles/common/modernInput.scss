@@ -1,0 +1,113 @@
+@import './mixin';
+
+.common-component__modern-input {
+    width: 100%;
+    height: 1.5rem;
+    border-bottom: 1px solid black;
+    position: relative;
+    & > button {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, space-between, center, nowrap);
+        // border - border radius - background color - color - padding - font size
+        @include normal-btn(0, 0, transparent, black, auto, 1rem);
+
+        input {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+
+    .cc-modern-input__dropdown {
+        display: none;
+        background-color: rgb(255, 255, 255);
+        box-shadow: 0px 6px 10px -2px rgba(0,0,0,0.2);
+        border-radius: 0 0 5px 5px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 999;
+        width: 100%;
+        height: max-content;
+        max-height: 500px;
+        padding: 1rem 2rem;
+        overflow-y: hidden;
+
+        .cc-modern-input__searchbox {
+            width: 100%;
+            background-color: white;
+            width: calc(100% - 40px);
+            box-shadow: 0px 1px 10px -2px rgba(0,0,0,0.3);
+            border-radius: 5px;
+            padding: 10px 20px;
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, flex-start, center, nowrap);
+            i {
+                position: relative;
+                bottom: -1.5px;
+                margin-right: 0.5rem;
+            }
+            input {
+                border: none;
+                background-color: transparent;
+                outline: none;
+                font-size: 0.75rem;
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .cc-modern-input__up-level-options {
+            overflow-x: auto;
+            overflow-y: hidden;
+            margin: 1rem 0 1rem 0;
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, flex-start, center, nowrap);
+
+            button {
+                padding: 10px 35px;
+                text-transform: uppercase;
+                cursor: pointer;
+            }
+        }
+        .cc-modern-input__normalOptions {
+            width: 100%;
+            max-height: 180px;
+            overflow-y: auto;
+            // direction - justify content - align items - flex wrap
+            @include dflex(column, flex-start, flex-start, nowrap);
+
+            button {
+                width: 100%;
+                text-transform: uppercase;
+                // border - border radius - background color - color - padding - font size
+                @include normal-btn(none, 0, var(--desert-storm), black, 20px 0 20px 0, 0.75rem);
+                &:hover {
+                    background-color: var(--quill-grey);
+                }
+            }
+        }
+
+        & > p {
+            font-size: 1rem;
+            margin: 1rem 0;
+        }
+    }
+
+    &.active {
+        .cc-modern-input__dropdown {
+            display: block;
+        }
+    }
+    &.chosen {
+        border-bottom: 1px solid var(--butterfly-bush);
+
+        & > button {
+            color: var(--butterfly-bush);
+        }
+    }
+}

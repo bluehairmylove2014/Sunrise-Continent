@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import "../../styles/scss/authen.scss";
+import "../../styles/component/authen.scss";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Loader

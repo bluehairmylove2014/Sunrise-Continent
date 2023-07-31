@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import "../../styles/scss/search.scss";
+import "../../styles/component/search.scss";
 import TravelImg from "../../assets/images/graphics/travel.png";
 import Filterboard from "./Filterboard";
 import BannerInput from "../../components/common/BannerInput";

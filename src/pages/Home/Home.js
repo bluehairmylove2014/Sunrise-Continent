@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../../styles/scss/home.scss";
+import "../../styles/component/home.scss";
 import toast from "react-hot-toast";
 
 // subcomponent

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { memo, useEffect, useRef, useState } from "react";
-import "../../styles/scss/_common_component.scss";
+import "../../styles/common/modernInput.scss";
 
 import { debounce } from "lodash";
 

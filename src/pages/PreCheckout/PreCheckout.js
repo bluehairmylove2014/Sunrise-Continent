@@ -4,7 +4,7 @@ import {
   useGetSpecificRoom,
 } from "../../libs/business-logic/src/lib/hotel/process/hooks";
 import { Controller, useForm } from "react-hook-form";
-import "../../styles/scss/preCheckout.scss";
+import "../../styles/component/preCheckout.scss";
 import Checkbox from "../../components/common/Checkbox";
 import SmallPageLoader from "../../components/common/SmallPageLoader";
 import { combineAddress } from "../../utils/helpers/Address";

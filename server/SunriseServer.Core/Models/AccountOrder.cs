@@ -1,17 +1,11 @@
-using SunriseServerCore.Models;
+using SunriseServer.Common.Constant;
 
-namespace SunriseServerCore.Dtos.Booking
+namespace SunriseServerCore.Models
 {
-    public class AddBookingDto
+    public class AccountOrder : ModelBase
     {
+        public int OrderId { get; set; }
         public int AccountId { get; set; }
-        public int HotelId { get; set; }
-        public int RoomTypeId { get; set; }
-        public DateTime CheckIn { get; set; }
-        public DateTime CheckOut { get; set; }
-        public int NumberOfRoom { get; set; } = 1;
-        public int VoucherId { get; set; }
-        public int Total { get; set; }
         public string FullName { get; set; } = string.Empty;
         public string Nation { get; set; } = string.Empty;
         public DateTime DateOfBirth { get; set; }
@@ -19,5 +13,9 @@ namespace SunriseServerCore.Dtos.Booking
         public string PhoneNumber { get; set; } = string.Empty;
         public string SpecialNeeds { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
+        public int VoucherId { get; set; }
+        public int Total { get; set; }
+        public bool Paid { get; set; } //-- 1 = True, 0 = False
+        public DateTime CreatedAt { get; set; }
     }
 }

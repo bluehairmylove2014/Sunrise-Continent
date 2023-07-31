@@ -13,16 +13,16 @@ namespace SunriseServer.Services.BookingService
             _unitOfWork = uof;
         }
 
-        public async Task<BookingAccount> AddBooking(AddBookingDto booking)
+        public async Task<int> AddBooking(AddBookingDto booking)
         {
             var result = await _unitOfWork.BookingRepo.CreateBookingAsync(booking);
             await _unitOfWork.SaveChangesAsync();
             return result;
         }
 
-        public async Task<int> DeleteBooking(DeleteBookingDto deleteBooking)
+        public async Task<int> DeleteBooking(int deleteBooking)
         {
-            var result = await _unitOfWork.BookingRepo.DeleteAsync(deleteBooking);
+            var result = await _unitOfWork.BookingRepo.DeleteBookingAsync(deleteBooking);
             await _unitOfWork.SaveChangesAsync();
 
             return result;

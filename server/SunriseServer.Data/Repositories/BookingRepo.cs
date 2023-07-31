@@ -25,52 +25,32 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
-        public async Task<BookingAccount> CreateBookingAsync(AddBookingDto booking)
+        public async Task<int> CreateBookingAsync(AddBookingDto booking)
         {
-            var builder = new StringBuilder("EXEC dbo.USP_AddBooking ");
-            builder.Append($"@AccountId = {booking.AccountId}, ");
-            builder.Append($"@HotelId = {booking.HotelId}, ");
-            builder.Append($"@RoomTypeId = {booking.RoomTypeId}, ");
-            builder.Append($"@CheckIn = \'{booking.CheckIn}\', ");
-            builder.Append($"@CheckOut = \'{booking.CheckOut}\', ");
-            builder.Append($"@NumberOfRoom = {booking.NumberOfRoom}, ");
-            builder.Append($"@VoucherId = {booking.VoucherId};");
+            var builder = new StringBuilder("EXEC dbo.USP_AddBookingToOrderAndConfirmBookingCombined ");
+            var str = SetPropValueByReflection.GetPropProcCallString(booking);
+            builder.Append(str);
 
+            // Console.WriteLine(str);
+            // EXECUTE({builder.ToString()})
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
-            if (result == 0) return null;
-
-            var bookingResult = await _dataContext.Booking_Account
-                .FromSqlInterpolated($"EXEC USP_GetCartItem @AccountId={booking.AccountId};").ToListAsync();
-            return bookingResult.LastOrDefault();
+            return result;
         }
 
         public new async Task<int> UpdateAsync(BookingAccount booking)
         {
-            int paid = booking.Paid ? 1 : 0;
             var builder = new StringBuilder("EXECUTE dbo.USP_UpdateBooking ");
-            builder.Append($"@AccountId = {booking.AccountId}, ");
-            builder.Append($"@HotelId = {booking.HotelId}, ");
-            builder.Append($"@RoomTypeId = {booking.RoomTypeId}, ");
-            builder.Append($"@CheckIn = \'{booking.CheckIn}\', ");
-            builder.Append($"@CheckOut = \'{booking.CheckOut}\', ");
-            builder.Append($"@NumberOfRoom = {booking.NumberOfRoom}, ");
-            builder.Append($"@VoucherId = {booking.VoucherId}, ");
-            builder.Append($"@Total = {booking.Total}, ");
-            builder.Append($"@Paid = {paid}, ");
-            builder.Append($"@CreatedAt = \'{booking.CreatedAt}\';");
+            var str = SetPropValueByReflection.GetPropProcCallString(booking);
+            builder.Append(str);
 
             Console.WriteLine(builder.ToString());
             return await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE sp_executesql {builder.ToString()}");
         }
 
-        public async Task<int> DeleteAsync(DeleteBookingDto deleteBooking)
+        public async Task<int> DeleteBookingAsync(int deleteBooking)
         {
             var builder = new StringBuilder("EXECUTE dbo.USP_DeleteBooking ");
-            builder.Append($"@AccountId = \'{deleteBooking.AccountId}\', ");
-            builder.Append($"@HotelId = \'{deleteBooking.HotelId}\', ");
-            builder.Append($"@RoomTypeId = \'{deleteBooking.RoomTypeId}\';");
-            builder.Append($"@CheckIn = \'{deleteBooking.CheckIn}\';");
-            builder.Append($"@CreatedAt = \'{deleteBooking.CreatedAt}\';");
+            builder.Append($"@BookingId = \'{deleteBooking}\';");
 
             Console.WriteLine(builder.ToString());
             return await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE sp_executesql {builder.ToString()}");

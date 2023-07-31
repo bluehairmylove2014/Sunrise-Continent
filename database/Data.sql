@@ -12,13 +12,15 @@ VALUES
 	(5, 0, 'Bronze', 'lydatadmin', 'ab9d7e391f7b72946024c0ef8bfdcdbb22c877db424e57c1f1f39c5d685df6b9984a7538cedd6b9ad2c8dc1fc2dc43ac3258267c7424bfb4c09c859edb95291d', '8f529a952cdba91df9a5c1407205cab49ebf0bb904c21d43c36b70ffcb97f95cedda85ec64d519157c19b240c434c003a5534e70d60767ad9178cbb9a0df41c5cce3829b1bb61435ff314c8a5ea492ec5ec1c20cdbee150ad75a642b5ab14c181fa66065651524112a1a7afea2380b1a09350cd3da4f6f6d3348075e2624764e', 'Admin', 'GNRdoPqqe0rOACGdUvGiBVvO6Tn9QE+oFYl9mLU0826b9ZhBcV82PcEXBo5/Ga0WayUAMDmHhk+RouJevY/BBw==', '2023-07-29 15:08:18.000', '2023-08-05 15:08:18.000'),
 	(6, 0, 'Bronze', 'cuong', '8305fc6263d1368bc4885eec60ebbafc2de92a8bbe30c4d1e0f42fb4a5db0b28bfd8ff875c11ea00435354e8d512e9758f45337167afa9bf463e8753fa31eafb', 'c7c7d82b71a6de269485f02ab5a72c62c0ff86697b884c0907b6646f2369597e444887d7d1df9d38ad37065738b9e5404008c46e0fc72446f689d1eb26562c15a90cb56e32eda7bf9eebe270b7816a472cc4f63e3774abbf5f64fb5798d3c93630a831907cdc5561b1137ed342409b59e7039ff43918e4849ddb4833386b6850', 'Admin', 'HtUhZJROVrADoVP5Io1BnCNR4OV3DKOq+oO0Q1/0kTNu+twSx0fYBYe8BgeC4O67GJbLfsxNcn9/waHJvmU5Ug==', '2023-07-29 15:08:30.000', '2023-08-05 15:08:30.000');
 
-
 ------!add personal information
---INSERT INTO PERSONAL_DETAILS VALUES (1, N'Trần Văn A', 'abc@gmail.com', '0966188620', '1990-01-01', N'Nam');
---INSERT INTO PERSONAL_DETAILS VALUES (2, N'Nguyễn Văn B', 'bibizero@gmail.com', '0966188621', '1999-02-01', N'Nữ');
---INSERT INTO PERSONAL_DETAILS VALUES (3, N'Ngô Bá K', 'meme13@gmail.com', '0966188622', '1980-01-03', N'Nam');
---INSERT INTO PERSONAL_DETAILS VALUES (4, N'Lê C', 'titanic9@gmail.com', '0966188623', '1990-01-05', N'Nữ');
---INSERT INTO PERSONAL_DETAILS VALUES (5, N'Trần D', 'gaianime@gmail.com', '0966188624', '1990-01-06', N'Nam');
+INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank)
+VALUES
+	(1 ,N'Lý Văn Đạt', 'abc@gmail.com', '0966188620', '07-21-2002', N'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
+	(2 ,N'Phan Phúc Đạt', 'abc@gmail.com', '0966188620', '07-21-2002', N'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
+	(3 ,N'Phạm Nguyễn Cao Cường', 'abc@gmail.com', '0966188620', '07-21-2002', N'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
+	(4 ,N'hahaha', 'abc@gmail.com', '0966188620', '07-21-2002', N'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
+	(5 ,N'Lý Văn Đạt', 'abc@gmail.com', '0966188620', '07-21-2002', N'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
+	(6 ,N'cuong', 'abc@gmail.com', '0966188620', '07-21-2002', N'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze');
 
 --!add Rank
 INSERT INTO POINT_RANK (RankName, RankValue) VALUES 

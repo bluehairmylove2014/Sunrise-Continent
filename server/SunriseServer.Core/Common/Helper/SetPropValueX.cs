@@ -28,7 +28,7 @@ namespace SunriseServer.Common.Helper
 
             propName.ToList().ForEach(p => {
                 var typeVar = typeX.GetProperty(p);
-                string addMark = typeVar.PropertyType == typeof(string) ? "\'" : string.Empty;
+                string addMark = (typeVar.PropertyType == typeof(string) || typeVar.PropertyType == typeof(DateTime)) ? "\'" : string.Empty;
                 string valueCheck = $"{typeVar.GetValue(x, null)}";
                 var value = valueCheck == string.Empty ? "null" : valueCheck;
 

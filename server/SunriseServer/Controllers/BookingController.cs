@@ -49,7 +49,6 @@ namespace SunriseServer.Controllers
                 var account = await _accountService.GetById(item.AccountId);
                 var hotel = await _hotelService.GetSingleHotel(item.HotelId);
                 var room = await _roomService.GetSingleRoom(item.HotelId, item.RoomTypeId);
-                var voucher = await _voucherService.GetVoucherById(item.VoucherId);
 
                 BookingDto variable = new BookingDto { };
 
@@ -58,7 +57,6 @@ namespace SunriseServer.Controllers
                 variable.Account = account;
                 variable.Hotel = hotel;
                 variable.RoomType = room;
-                variable.Voucher = voucher;
 
                 finalResult.Add(variable);
             }
@@ -66,25 +64,15 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<List<BookingDto>>("Get bookings successfully", finalResult));
         }
 
-        [HttpPost, Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<ResponseMessageDetails<List<BookingAccount>>>> AddBooking(AddBookingDto bookingDto)
+        [HttpPost] //, Authorize(Roles = GlobalConstant.User)
+        public async Task<ActionResult<ResponseMessageDetails<int>>> AddBooking(AddBookingDto bookingDto)
         {
             var result = await _bookingService.AddBooking(bookingDto);
 
-            if (result == null)
+            if (result == 0)
                 return BadRequest("Cannot add booking.");
 
-            return Ok(new ResponseMessageDetails<BookingAccount>("Add booking successfully", result));
-        }
-
-        [HttpPut("confirm"), Authorize(Roles = GlobalConstant.User)] //
-        public async Task<ActionResult<ResponseMessageDetails<int>>> ConfirmBooking(int accountId, int totalPay)
-        {
-            var result = await _bookingService.ConfirmBooking(accountId, totalPay);
-            if (result == 0)
-                return BadRequest("Confirm booking failed.");
-
-            return Ok(new ResponseMessageDetails<int>("Confirm booking successfully", ResponseStatusCode.Ok));
+            return Ok(new ResponseMessageDetails<int>("Add booking successfully", result));
         }
 
         [HttpPut, Authorize(Roles = GlobalConstant.User)]
@@ -98,12 +86,9 @@ namespace SunriseServer.Controllers
         }
 
         [HttpDelete, Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> DeleteBooking(DeleteBookingDto deleteDto)
+        public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> DeleteBooking(int BookingId)
         {
-            Account currentAcc = await _accountService.GetByUsername(User.Identity.Name);
-            deleteDto.AccountId = currentAcc.Id;
-
-            var result = await _bookingService.DeleteBooking(deleteDto);
+            var result = await _bookingService.DeleteBooking(BookingId);
             if (result == 0)
                 return NotFound("Booking not found.");
 

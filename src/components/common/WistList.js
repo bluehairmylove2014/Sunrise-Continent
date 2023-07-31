@@ -1,8 +1,12 @@
 import React from "react";
 import "../../styles/common/wishlist.scss";
 
-const WistList = () => {
-  return <sidebar className="common-component__wishlist"></sidebar>;
+const WistList = ({ isActive, callback }) => {
+  return (
+    <sidebar
+      className={`common-component__wishlist ${isActive ? "active" : ""}`}
+    ></sidebar>
+  );
 };
 
 export default WistList;

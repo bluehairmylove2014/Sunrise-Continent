@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using SunriseServerCore.Models;
 using SunriseServerCore.Dtos.Booking;
+using SunriseServerCore.Dtos.Booking;
 using System;
 
 namespace SunriseServerData
@@ -44,5 +45,6 @@ namespace SunriseServerData
         public DbSet<Review> Review { get; set; }
         public DbSet<Voucher> Voucher { get; set; }
         public DbSet<VoucherBag> VoucherBag { get; set; }
+        public DbSet<SearchHotel> SearchHotel { get; set; }
     }
 }

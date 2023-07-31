@@ -1,4 +1,5 @@
-﻿using SunriseServerCore.Models;
+﻿using SunriseServerCore.Dtos.Hotel;
+using SunriseServerCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,11 @@ namespace SunriseServerCore.RepoInterfaces
 {
     public interface IHotelRepo : IRepository<Hotel>
     {
-
-
         // More info
         Task<List<RoomFacilityConstant>> GetHotelFacilityAsync(int id);
         Task<List<RoomServiceConstant>> GetHotelServiceAsync(int id);
         Task<List<RoomPicture>> GetHotelPictureAsync(int id);
         Task<List<Hotel>> GetRecommendedHotelAsync(int num);
+        Task<List<SearchHotel>> GetSearchHotels(SearchHotelDto searchHotel);
     }
 }

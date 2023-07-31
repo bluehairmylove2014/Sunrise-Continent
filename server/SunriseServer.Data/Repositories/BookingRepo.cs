@@ -39,6 +39,7 @@ namespace SunriseServerData.Repositories
 
         public new async Task<int> UpdateAsync(BookingAccount booking)
         {
+            int paid = booking.Paid ? 1 : 0;
             var builder = new StringBuilder("EXECUTE dbo.USP_UpdateBooking ");
             var str = SetPropValueByReflection.GetPropProcCallString(booking);
             builder.Append(str);

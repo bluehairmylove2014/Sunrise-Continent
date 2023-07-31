@@ -5,6 +5,7 @@ using SunriseServer.Services.RoomService;
 using SunriseServer.Services.AccountService;
 using SunriseServer.Services.BookingService;
 using SunriseServer.Services.VoucherService;
+using SunriseServer.Services.VoucherService;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -20,7 +21,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IPaymentService, HotelService>();
+builder.Services.AddScoped<IHotelService, HotelService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
@@ -53,22 +54,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
     policy =>
     {
-        policy.WithOrigins("http://localhost:7256").AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("http://www.sunrise-continent.online.s3-website-ap-southeast-1.amazonaws.com").AllowAnyMethod().AllowAnyHeader();
     }));
 
-builder.Services.AddServicesData(); // Sunrise AZURE_SQL_CONNECTIONSTRING
-builder.Services.AddUnitOfWork(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Sunrise")));
+builder.Services.AddServicesData(); 
+builder.Services.AddUnitOfWork(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
 app.UseSwagger();
 app.UseSwaggerUI();
-//else
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sunrise API Production"));
-//}
 
 app.UseCors("NgOrigins");
 

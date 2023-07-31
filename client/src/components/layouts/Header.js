@@ -10,13 +10,13 @@ import UserSidebar from "./UserSidebar";
 import { useForm } from "react-hook-form";
 import { useIsLogged } from "../../libs/business-logic/src/lib/auth";
 import { categories, languages } from "./Data";
-// import { useSplitToKeys } from "../../libs/business-logic/src/lib/gpt/process/hooks/useSplitToKeys";
+import WistList from "../common/WistList";
 
 const Header = () => {
-  const [userSidebarStatus, setUserSidebarStatus] = useState(false);
+  const [isUserSidebarActive, setIsUserSidebarActive] = useState(false);
+  const [isWishlistActive, setIsWishlistActive] = useState(false);
   const [logoSrc, setLogoSrc] = useState(logoVerticalImg);
   const isLogin = useIsLogged();
-  //   const { onSplitToKeys } = useSplitToKeys();
 
   const headerRef = useRef(null);
 
@@ -67,20 +67,6 @@ const Header = () => {
     let query = `/search?location=${content.search}`;
     navigate(query);
     reset();
-    // onSplitToKeys(content)
-    //   .then((res) => {
-    //     const keys = res;
-    //     let query = "/search?location=";
-
-    //     keys.forEach((k) => {
-    //       query += k;
-    //     });
-
-    //     navigate(query);
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //   });
   };
 
   return (
@@ -168,7 +154,7 @@ const Header = () => {
               <li className="header-main-nav__user-avatar">
                 <span>Welcome!</span>
                 <button
-                  onClick={() => setUserSidebarStatus(!userSidebarStatus)}
+                  onClick={() => setIsUserSidebarActive(!isUserSidebarActive)}
                 >
                   <img
                     src="https://rialloer.sirv.com/Sunrise-Continent/Users/IMG_0615-min%20(1).jpg?w=500&h=500"
@@ -181,7 +167,10 @@ const Header = () => {
         </div>
         <nav className="header__product-nav">
           {renderCategories(categories)}
-          <button className="product-nav__wish-list">
+          <button
+            className="product-nav__wish-list"
+            onClick={() => setIsWishlistActive(!isWishlistActive)}
+          >
             <span className="wishlist-btn__label">
               <i className="fi fi-rs-heart"></i>
               Wish List
@@ -208,11 +197,18 @@ const Header = () => {
           </div>
         </div>
       </header>
-      <UserSidebar
-        isActive={userSidebarStatus}
+      <WistList
+        isActive={isWishlistActive}
         callback={useCallback(
-          (status) => setUserSidebarStatus(status),
-          [setUserSidebarStatus]
+          (status) => setIsWishlistActive(status),
+          [setIsWishlistActive]
+        )}
+      />
+      <UserSidebar
+        isActive={isUserSidebarActive}
+        callback={useCallback(
+          (status) => setIsUserSidebarActive(status),
+          [setIsUserSidebarActive]
         )}
       />
     </React.Fragment>

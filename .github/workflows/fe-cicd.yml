@@ -43,4 +43,4 @@ jobs:
       - name: Deploy to S3
         run: |
           aws s3 rm s3://${{ secrets.S3_BUCKET }} --recursive
-          aws s3 cp client/build/ s3://${{ secrets.S3_BUCKET }} --recursive
+          aws s3 cp build/ s3://${{ secrets.S3_BUCKET }} --recursive

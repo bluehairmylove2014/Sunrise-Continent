@@ -14,8 +14,7 @@ import Hotel from "./Hotel";
 import { toggleClass } from "../../utils/helpers/ToggleClass";
 import { useSearch } from "../../libs/business-logic/src/lib/hotel";
 import SmallPageLoader from "../../components/common/SmallPageLoader";
-// http://localhost:3000/search?location=ho%20chi%20minh%20city&roomType=ph%C3%B2ng%20ti%C3%AAu%20chu%E1%BA%A9n&start_date=2023-07-27&end_date=2023-07-31&budget={%22min%22:82,%22max%22:505}
-// http://localhost:3000/search?location=singapore&roomType=ph%C3%B2ng%20ti%C3%AAu%20chu%E1%BA%A9n&start_date=2023-07-28t16:50&end_date=2023-08-01t16:50&budget=82,505&rooms=4&adults=2&childrens=3
+
 const Search = () => {
   const { onSearch, isLoading: isSearching } = useSearch();
   const sortDropdownRef = useRef(null);
@@ -70,6 +69,38 @@ const Search = () => {
       ...criteria,
       ...data,
     });
+    window.history.pushState(
+      null,
+      null,
+      `/search${stringifySearchParams(newCriteria)}`
+    );
+  };
+
+  const onFilter = ({ key, value, status }) => {
+    let newCriteria = {
+      ...criteria,
+    };
+    if (criteria.budget) {
+      newCriteria = {
+        ...criteria,
+        budget: JSON.stringify(budgetToObject(criteria.budget)),
+      };
+    }
+    if (!status) {
+      delete newCriteria[value];
+    } else {
+      if (key in newCriteria) {
+        newCriteria[key].push(value);
+      } else {
+        newCriteria = {
+          ...newCriteria,
+          ...{
+            [key]: [value],
+          },
+        };
+      }
+    }
+    setCriteria(newCriteria);
     window.history.pushState(
       null,
       null,
@@ -184,7 +215,11 @@ const Search = () => {
         </button>
       </form>
       <div className="container main__wrapper">
-        <Filterboard form={searchBoardForm} defaultValues={criteria.budget} />
+        <Filterboard
+          form={searchBoardForm}
+          defaultValues={criteria.budget}
+          callback={onFilter}
+        />
         {isSearching ? (
           <SmallPageLoader />
         ) : (

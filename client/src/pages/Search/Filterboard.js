@@ -10,8 +10,15 @@ import BudgetRange from "../../components/common/BudgetRange";
 import Checkbox from "../../components/common/Checkbox";
 import { Controller } from "react-hook-form";
 
-const Filterboard = ({ form, defaultValues }) => {
-  const renderCheckbox = (parentForm, checkboxData) => {
+const Filterboard = ({ form, defaultValues, callback }) => {
+  const onCheckboxChange = (checkboxName, paramKey) => {
+    callback({
+      key: paramKey,
+      value: checkboxName,
+      status: form.getValues()[checkboxName],
+    });
+  };
+  const renderCheckbox = (parentForm, checkboxData, paramKey) => {
     const keyList = Object.keys(checkboxData);
     if (Array.isArray(keyList)) {
       return keyList.map((k) => {
@@ -20,6 +27,9 @@ const Filterboard = ({ form, defaultValues }) => {
             form={parentForm}
             name={checkboxData[k].INPUT_NAME}
             label={checkboxData[k].LABEL}
+            callbackOnChange={(callbackData) => {
+              onCheckboxChange(callbackData, paramKey);
+            }}
             key={checkboxData[k].INPUT_NAME}
           />
         );
@@ -55,31 +65,31 @@ const Filterboard = ({ form, defaultValues }) => {
       <div className="filterboard__location-types">
         <h6>Loại hình nơi ở</h6>
 
-        {renderCheckbox(form, LOCATION_TYPES)}
+        {renderCheckbox(form, LOCATION_TYPES, "hotelType")}
       </div>
       <hr />
       <div className="filterboard__location-types">
         <h6>Loại giường</h6>
 
-        {renderCheckbox(form, BED_TYPES)}
+        {renderCheckbox(form, BED_TYPES, "bedType")}
       </div>
       <hr />
       <div className="filterboard__location-types">
         <h6>Đánh giá của khách</h6>
 
-        {renderCheckbox(form, GUEST_RATINGS)}
+        {renderCheckbox(form, GUEST_RATINGS, "guestRating")}
       </div>
       <hr />
       <div className="filterboard__location-types">
         <h6>Tiện nghi chỗ nghỉ</h6>
 
-        {renderCheckbox(form, ACCOMMODATION_FACILITIES)}
+        {renderCheckbox(form, ACCOMMODATION_FACILITIES, "facilities")}
       </div>
       <hr />
       <div className="filterboard__location-types">
         <h6>Chọn phòng có</h6>
 
-        {renderCheckbox(form, ROOM_OPTIONS)}
+        {renderCheckbox(form, ROOM_OPTIONS, "amenities")}
       </div>
     </form>
   );

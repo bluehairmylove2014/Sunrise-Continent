@@ -7,7 +7,7 @@ import {
 import { icon } from "./Data";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 import { PAGES } from "../../constants/Link.constants";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import BannerInput from "../../components/common/BannerInput";
 import { BANNER_INPUT } from "../../constants/Variables.constants";
@@ -17,13 +17,19 @@ const Rooms = ({ rooms_data }) => {
   let room = null;
   const pickerForm = useForm();
   const pickerRef = useRef(null);
+  const navigate = useNavigate();
 
   const togglePicker = (target) => {
     target && toggleClassNoListener(target, "active");
   };
 
-  const onPreCheckout = (data) => {
-    console.log("onPreCheckout: ", data);
+  const onPreCheckout = (data, rd) => {
+    navigate(
+      PAGES.PRE_CHECKOUT +
+        `?hotelId=${rd.hotelId}&id=${rd.id}` +
+        `&from=${data.start_date}&to=${data.end_date}` +
+        `&adult=2&children=1&rooms=2`
+    );
   };
 
   if (Array.isArray(rooms_data)) {
@@ -112,15 +118,7 @@ const Rooms = ({ rooms_data }) => {
                   / đêm
                 </p>
 
-                <button
-                  // to={
-                  //     PAGES.PRE_CHECKOUT +
-                  //     `?hotelId=${rd.hotelId}&id=${rd.id}` +
-                  //     `&from="2023-07-23"&to="2023-07-27"` +
-                  //     `&adult=2&children=1&rooms=2`
-                  // }
-                  onClick={() => togglePicker(pickerRef.current)}
-                >
+                <button onClick={() => togglePicker(pickerRef.current)}>
                   Đặt phòng ngay
                 </button>
               </div>
@@ -129,15 +127,17 @@ const Rooms = ({ rooms_data }) => {
           <div className="room__date-picker" ref={pickerRef}>
             <form
               className="room__criteria-board"
-              onSubmit={pickerForm.handleSubmit(onPreCheckout)}
+              onSubmit={pickerForm.handleSubmit((data) =>
+                onPreCheckout(data, rd)
+              )}
             >
-              <button
+              {/* <button
                 className="close-btn"
                 onClick={() => togglePicker(pickerRef.current)}
                 type="button"
               >
                 x
-              </button>
+              </button> */}
               <div className="criteria-board__input-wrapper">
                 <BannerInput
                   name={BANNER_INPUT.DATE_TIME_DOUBLE.INPUT_NAME}

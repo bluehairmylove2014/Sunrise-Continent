@@ -1,16 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
-import '../../styles/scss/authen.scss';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from "react";
+import "../../styles/scss/authen.scss";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Loader
-import PageLoader from '../../components/common/PageLoader';
+import PageLoader from "../../components/common/PageLoader";
 
 // Notification trigger
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 // Constant
-import { PAGES } from '../../constants/Link.constants';
-import { REGEX } from '../../constants/Regex';
+import { PAGES } from "../../constants/Link.constants";
+import { REGEX } from "../../constants/Regex";
 
 // Img
 import logo from "../../assets/images/logos/sc-non-white.png";
@@ -18,476 +18,512 @@ import mountain_night from "../../assets/images/bgs/mountain-night.jpg";
 import mountain_day from "../../assets/images/bgs/mountain-day.jpg";
 
 // Form
-import { Controller, useForm } from 'react-hook-form';
-import { useIsLogged, useLogin, useRegister } from '../../libs/business-logic/src/lib/auth';
-
+import { Controller, useForm } from "react-hook-form";
+import {
+  useFacebookLogin,
+  useGoogleLogin,
+  useIsLogged,
+  useLogin,
+  useRegister,
+} from "../../libs/business-logic/src/lib/auth";
+import googleIcon from "../../assets/images/icons/google.png";
+import facebookIcon from "../../assets/images/icons/facebook.png";
 
 const Authentication = () => {
-    const loginForm = useForm({
-        defaultValues: {
-            email: "",
-            password: "",
-            isRememberMe: false
+  const loginForm = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+      isRememberMe: false,
+    },
+  });
+  const registerForm = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+      confirm_password: "",
+    },
+  });
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const [page, setPage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  const registerFormRef = useRef(null);
+  const authenRef = useRef(null);
+
+  const { onLogin, isLoading: isLoginLoading } = useLogin();
+  const { onGoogleLogin, isLoading: isGoogleLoginLoading } = useGoogleLogin();
+  const { onFacebookLogin, isLoading: isFBLoginLoading } = useFacebookLogin();
+  const { onRegister, isLoading: isRegisterLoading } = useRegister();
+  const isLoggedIn = useIsLogged();
+
+  // Hook
+  useEffect(() => {
+    setPage(location.pathname);
+
+    const imageSources = [mountain_night, mountain_day];
+
+    // Preloading background image
+    Promise.all(imageSources.map((src) => preloadImage(src)))
+      .then((images) => {
+        // Update background-image of .authen
+        changeBackground(location.pathname);
+      })
+      .catch((error) => {
+        toast.error("Cannot load background image");
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 500);
+      });
+  }, [location]);
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate(PAGES.HOME);
+    }
+  }, [isLoggedIn, navigate]);
+
+  // Methods
+  const handleFocus = (target) => {
+    if (target && target.parentNode) {
+      const labelEl = target.parentNode.querySelector("label");
+      labelEl && labelEl.classList.remove("active");
+    }
+  };
+  const handleBlur = (target) => {
+    if (target && target.parentNode) {
+      const labelEl = target.parentNode.querySelector("label");
+      if (labelEl && !target.value.length) {
+        labelEl.classList.add("active");
+      }
+    }
+  };
+
+  const handleLogin = ({ email, password, isRememberMe }) => {
+    onLogin({
+      isRememberMe,
+      account: { email, password },
+    })
+      .then((res) => {
+        toast.success(res.message);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      })
+      .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          toast.error("Wrong email or password");
+        } else {
+          console.error("Log error in component:", err);
+          toast.error("Login error");
         }
+      });
+  };
+  const handleLoginError = (errors) => {
+    if (errors) {
+      if (errors.email) {
+        toast.error(errors.email.message);
+      } else if (errors.password) {
+        toast.error(errors.password.message);
+      }
+    }
+  };
+
+  const handleRegister = ({ email, password, confirm_password }) => {
+    if (password !== confirm_password) {
+      toast.error("Confirm password does not match");
+      return;
+    }
+    onRegister({ email, password })
+      .then((res) => {
+        toast.success(res.message);
+        navigate("/");
+      })
+      .catch((err) => {
+        if (err.response && err.response.status === 409) {
+          toast.error("Email is exist");
+        } else {
+          console.error("Log error in component:", err);
+          toast.error("Register error");
+        }
+      });
+  };
+  const handleRegisterError = (errors) => {
+    if (errors) {
+      if (errors.email) {
+        toast.error(errors.email.message);
+      } else if (errors.password) {
+        toast.error(errors.password.message);
+      } else if (errors.password) {
+        toast.error(errors.password.message);
+      }
+    }
+  };
+
+  const changeBackground = (cur_page) => {
+    if (authenRef && authenRef.current) {
+      if (cur_page === PAGES.LOGIN) {
+        authenRef.current.style.backgroundImage = `url(${mountain_night})`;
+      } else if (cur_page === PAGES.REGISTER) {
+        authenRef.current.style.backgroundImage = `url(${mountain_day})`;
+      } else {
+        toast.error("Cannot load background image");
+      }
+    } else {
+      toast.error("Cannot load background image");
+    }
+  };
+
+  const changePage = (pathname) => {
+    setPage(pathname);
+    changeBackground(pathname);
+    window.history.pushState(null, "", pathname);
+  };
+
+  // Methods preloading image
+  const preloadImage = (src) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => resolve(img);
+      img.onerror = (error) => reject(error);
     });
-    const registerForm = useForm({
-        defaultValues: {
-            email: "",
-            password: "",
-            confirm_password: ""
-        }
-    });
+  };
 
-    const navigate = useNavigate();
-
-    const location = useLocation();
-
-    const [page, setPage] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
-
-    const registerFormRef = useRef(null);
-    const authenRef = useRef(null);
-
-    const { onLogin, isLoading: isLoginLoading } = useLogin();
-    const { onRegister, isLoading: isRegisterLoading } = useRegister();
-    const isLoggedIn = useIsLogged();
-
-    // Hook
-    useEffect(() => {
-        setPage(location.pathname);
-
-        const imageSources = [
-            mountain_night,
-            mountain_day,
-        ];
-
-        // Preloading background image
-        Promise.all(imageSources.map((src) => preloadImage(src)))
-            .then((images) => {
-                // Update background-image of .authen
-                changeBackground(location.pathname);
-            })
-            .catch((error) => {
-                toast.error('Cannot load background image')
-            })
-            .finally(() => {
-                setTimeout(() => {
-                    setIsLoading(false);
-                }, 500)
-            });
-    }, [location]);
-    useEffect(() => {
-        if(isLoggedIn) {
-            navigate(PAGES.HOME)
-        }
-    }, [isLoggedIn, navigate]);
-
-    // Methods
-    const handleFocus = (target) => {
-        if (target && target.parentNode) {
-            const labelEl = target.parentNode.querySelector('label');
-            labelEl && labelEl.classList.remove('active');
-        }
-    }
-    const handleBlur = (target) => {
-        if (target && target.parentNode) {
-            const labelEl = target.parentNode.querySelector('label');
-            if (labelEl && !target.value.length) {
-                labelEl.classList.add('active');
-            }
-        }
-    }
-
-    const handleLogin = ({ email, password, isRememberMe }) => {
-        onLogin({
-            isRememberMe,
-            account: { email, password }
-        })
-            .then((res) => {
-                toast.success(res.message)
-                setTimeout(() => {
-                    navigate("/");
-                }, 2000)
-            })
-            .catch((err) => {
-                if (err.response && err.response.status === 401) {
-                    toast.error("Wrong email or password")
-                } else {
-                    console.error("Log error in component:", err);
-                    toast.error('Login error')
-                }
-            });
-    }
-    const handleLoginError = (errors) => {
-        if (errors) {
-            if (errors.email) {
-                toast.error(errors.email.message)
-
-            }
-            else if (errors.password) {
-                toast.error(errors.password.message)
-            }
-        }
-    }
-
-    const handleRegister = ({ email, password, confirm_password }) => {
-        if (password !== confirm_password) {
-            toast.error('Confirm password does not match')
-            return;
-        }
-        onRegister({ email, password })
-            .then((res) => {
-                toast.success(res.message)
-                navigate("/");
-            })
-            .catch((err) => {
-                if (err.response && err.response.status === 409) {
-                    toast.error("Email is exist");
-                } else {
-                    console.error("Log error in component:", err);
-                    toast.error('Register error')
-                }
-            });
-    }
-    const handleRegisterError = (errors) => {
-        if (errors) {
-            if (errors.email) {
-                toast.error(errors.email.message)
-
-            }
-            else if (errors.password) {
-                toast.error(errors.password.message)
-            }
-            else if (errors.password) {
-                toast.error(errors.password.message)
-            }
-        }
-    }
-
-    const changeBackground = (cur_page) => {
-        if (authenRef && authenRef.current) {
-            if (cur_page === PAGES.LOGIN) {
-                authenRef.current.style.backgroundImage = `url(${mountain_night})`;
-            }
-            else if (cur_page === PAGES.REGISTER) {
-                authenRef.current.style.backgroundImage = `url(${mountain_day})`;
-            }
-            else {
-                toast.error('Cannot load background image')
-            }
-        }
-        else {
-            toast.error('Cannot load background image')
-        }
-    }
-
-    const changePage = (pathname) => {
-        setPage(pathname);
-        changeBackground(pathname);
-        window.history.pushState(null, '', pathname)
-    }
-
-    // Methods preloading image
-    const preloadImage = (src) => {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.src = src;
-            img.onload = () => resolve(img);
-            img.onerror = (error) => reject(error);
-        });
-    }
-
-    return (
-        <>
-            {<div className={`authen`} ref={authenRef}>
-                <header className='authen__header'>
-                    <nav>
-                        <ul>
-                            <li>
-                                <Link
-                                    className={`${page === PAGES.HOME && 'active'}`}
-                                    to={PAGES.HOME}
-                                >
-                                    Home
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    className={`${(page === PAGES.LOGIN || page === PAGES.REGISTER) && 'active'}`}
-                                    to={PAGES.LOGIN}
-                                >
-                                    Authentication
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    className={`${page === PAGES.ABOUT && 'active'}`}
-                                    to={PAGES.ABOUT}
-                                >
-                                    About
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    className={`${page === PAGES.CONTACT && 'active'}`}
-                                    to={PAGES.CONTACT}
-                                >
-                                    Contact
-                                </Link>
-                            </li>
-                        </ul>
-                    </nav>
-                </header>
-                <main className='authen__main'>
-                    <div className="authen__wrapper">
-                        <div className="authen__container">
-                            <div className="authen__bg"></div>
-                            <div className='authen__intro'>
-                                <div className='authen-intro__logo'>
-                                    <img src={logo} alt="logo" />
-                                </div>
-                                <div className="authen-intro__information">
-                                    <h2>
-                                        Welcome!<br />
-                                        To Sunrise Continent
-                                    </h2>
-                                    <p>
-                                        With just one account from Sunrise Continent,
-                                        you can access all of our other platforms.
-                                    </p>
-                                    <div className='authen-intro__social-link'>
-                                        <Link to="https://www.facebook.com/MinMinPD2211/" target="_blank">
-                                            <i className="fi fi-brands-facebook"></i>
-                                        </Link>
-                                        <Link to="https://twitter.com/PHAN_DUONG_MINH" target="_blank">
-                                            <i className="fi fi-brands-twitter"></i>
-                                        </Link>
-                                        <Link to="https://www.youtube.com/channel/UCD2T2jAlO282XPmDfftRpvw" target="_blank">
-                                            <i className="fi fi-brands-youtube"></i>
-                                        </Link>
-                                        <Link to="https://www.linkedin.com/in/phan-phúc-đạt-b88871243/" target="_blank">
-                                            <i className="fi fi-brands-linkedin"></i>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                            <div></div>
-                            <form
-                                className={`loginForm ${page === PAGES.LOGIN && 'active'}`}
-                                noValidate
-                                onSubmit={loginForm.handleSubmit(handleLogin, handleLoginError)}
-                            >
-                                <h3>Login</h3>
-                                <div className='authen-form__input-field'>
-                                    <label
-                                        className='active'
-                                        htmlFor="login-email-input"
-                                    >
-                                        Email
-                                    </label>
-                                    <i className="fi fi-ss-envelope"></i>
-                                    <Controller
-                                        name="email"
-                                        control={loginForm.control}
-                                        rules={{
-                                            required: 'Email should not be empty',
-                                            pattern: {
-                                                value: REGEX.VALID_EMAIL,
-                                                message: "Email is not valid!"
-                                            }
-                                        }}
-                                        render={({ field }) => (
-                                            <input
-                                                {...field}
-                                                type="email"
-                                                id='login-email-input'
-                                                onFocus={e => handleFocus(e.target)}
-                                                onBlur={e => handleBlur(e.target)}
-                                            />
-                                        )}
-                                    />
-                                </div>
-                                <div className='authen-form__input-field'>
-                                    <label
-                                        className='active'
-                                        htmlFor="login-psw-input"
-                                    >
-                                        Password
-                                    </label>
-                                    <i className="fi fi-ss-lock"></i>
-                                    <Controller
-                                        name="password"
-                                        control={loginForm.control}
-                                        rules={{
-                                            required: 'Password should not be empty',
-                                            minLength: {
-                                                value: 6,
-                                                message: "Password must be at least 6 characters long"
-                                            }
-                                        }}
-                                        render={({ field }) => (
-                                            <input
-                                                {...field}
-                                                type="password"
-                                                id='login-psw-input'
-                                                onFocus={e => handleFocus(e.target)}
-                                                onBlur={e => handleBlur(e.target)}
-                                            />
-                                        )}
-                                    />
-                                </div>
-                                <div className='authen-form__interact-field'>
-                                    <div>
-                                        <Controller
-                                            name="isRememberMe"
-                                            control={loginForm.control}
-                                            render={({ field }) => (
-                                                <input
-                                                    {...field}
-                                                    type="checkbox"
-                                                    id='login-remember-input'
-                                                />
-                                            )}
-                                        />
-                                        <label
-                                            htmlFor="login-remember-input"
-                                        >
-                                            Remember me
-                                        </label>
-                                    </div>
-
-                                    <div>
-                                        <Link>Forget Password</Link>
-                                    </div>
-                                </div>
-                                <button
-                                    type='submit'
-                                    className='authen-form__submit-btn'
-                                    disabled={isLoginLoading}
-                                >
-                                    {isLoginLoading ? "Signing in..." : "Sign In"}
-                                </button>
-                                <button
-                                    type='button'
-                                    className='authen-form__register-btn'
-                                    onClick={() => changePage(PAGES.REGISTER)}
-                                >
-                                    Create A New Account? Sign Up
-                                </button>
-                            </form>
-                            <form
-                                className={`registerForm ${page === PAGES.REGISTER && 'active'}`}
-                                noValidate
-                                ref={registerFormRef}
-                                onSubmit={registerForm.handleSubmit(handleRegister, handleRegisterError)}
-                            >
-                                <h3>Just a few more steps!</h3>
-                                <div className='authen-form__input-field'>
-                                    <label
-                                        className='active'
-                                        htmlFor="register-email-input"
-                                    >
-                                        Email
-                                    </label>
-                                    <i className="fi fi-ss-envelope"></i>
-                                    <Controller
-                                        name="email"
-                                        control={registerForm.control}
-                                        rules={{
-                                            required: 'Email should not be empty',
-                                            pattern: {
-                                                value: REGEX.VALID_EMAIL,
-                                                message: "Email is not valid!"
-                                            }
-                                        }}
-                                        render={({ field }) => (
-                                            <input
-                                                {...field}
-                                                type="email"
-                                                id='register-email-input'
-                                                onFocus={e => handleFocus(e.target)}
-                                                onBlur={e => handleBlur(e.target)}
-                                            />
-                                        )}
-                                    />
-                                </div>
-                                <div className='authen-form__input-field'>
-                                    <label
-                                        className='active'
-                                        htmlFor="register-psw-input"
-                                    >
-                                        Password
-                                    </label>
-                                    <i className="fi fi-ss-lock"></i>
-                                    <Controller
-                                        name="password"
-                                        control={registerForm.control}
-                                        rules={{
-                                            required: 'Password should not be empty',
-                                            minLength: {
-                                                value: 6,
-                                                message: "Password must be at least 6 characters long"
-                                            }
-                                        }}
-                                        render={({ field }) => (
-                                            <input
-                                                {...field}
-                                                type="password"
-                                                id='register-psw-input'
-                                                onFocus={e => handleFocus(e.target)}
-                                                onBlur={e => handleBlur(e.target)}
-                                            />
-                                        )}
-                                    />
-                                </div>
-                                <div className='authen-form__input-field'>
-                                    <label
-                                        className='active'
-                                        htmlFor="register-cfpsw-input"
-                                    >
-                                        Confirm password
-                                    </label>
-                                    <i className="fi fi-ss-lock"></i>
-                                    <Controller
-                                        name="confirm_password"
-                                        control={registerForm.control}
-                                        defaultValue=""
-                                        rules={{
-                                            required: 'Confirm password should not be empty'
-                                        }}
-                                        render={({ field }) => (
-                                            <input
-                                                {...field}
-                                                type="password"
-                                                id='register-cfpsw-input'
-                                                onFocus={e => handleFocus(e.target)}
-                                                onBlur={e => handleBlur(e.target)}
-                                            />
-                                        )}
-                                    />
-                                </div>
-                                <button
-                                    type='submit'
-                                    className='authen-form__submit-btn'
-                                    disabled={isRegisterLoading}
-                                >
-                                    {isRegisterLoading ? "Wait a second..." : "Register now"}
-                                </button>
-                                <button
-                                    type='button'
-                                    className='authen-form__register-btn'
-                                    onClick={() => changePage(PAGES.LOGIN)}
-                                >
-                                    Do you already have an account?
-                                </button>
-                            </form>
-                        </div>
+  return (
+    <>
+      {
+        <div className={`authen`} ref={authenRef}>
+          <header className="authen__header">
+            <nav>
+              <ul>
+                <li>
+                  <Link
+                    className={`${page === PAGES.HOME && "active"}`}
+                    to={PAGES.HOME}
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className={`${
+                      (page === PAGES.LOGIN || page === PAGES.REGISTER) &&
+                      "active"
+                    }`}
+                    to={PAGES.LOGIN}
+                  >
+                    Authentication
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className={`${page === PAGES.ABOUT && "active"}`}
+                    to={PAGES.ABOUT}
+                  >
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className={`${page === PAGES.CONTACT && "active"}`}
+                    to={PAGES.CONTACT}
+                  >
+                    Contact
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </header>
+          <main className="authen__main">
+            <div className="authen__wrapper">
+              <div className="authen__container">
+                <div className="authen__bg"></div>
+                <div className="authen__intro">
+                  <div className="authen-intro__logo">
+                    <img src={logo} alt="logo" />
+                  </div>
+                  <div className="authen-intro__information">
+                    <h2>
+                      Welcome!
+                      <br />
+                      To Sunrise Continent
+                    </h2>
+                    <p>
+                      With just one account from Sunrise Continent, you can
+                      access all of our other platforms.
+                    </p>
+                    <div className="authen-intro__social-link">
+                      <Link
+                        to="https://www.facebook.com/MinMinPD2211/"
+                        target="_blank"
+                      >
+                        <i className="fi fi-brands-facebook"></i>
+                      </Link>
+                      <Link
+                        to="https://twitter.com/PHAN_DUONG_MINH"
+                        target="_blank"
+                      >
+                        <i className="fi fi-brands-twitter"></i>
+                      </Link>
+                      <Link
+                        to="https://www.youtube.com/channel/UCD2T2jAlO282XPmDfftRpvw"
+                        target="_blank"
+                      >
+                        <i className="fi fi-brands-youtube"></i>
+                      </Link>
+                      <Link
+                        to="https://www.linkedin.com/in/phan-phúc-đạt-b88871243/"
+                        target="_blank"
+                      >
+                        <i className="fi fi-brands-linkedin"></i>
+                      </Link>
                     </div>
-                </main>
-            </div>}
-            {isLoading && <PageLoader />}
-        </>
-    );
-}
+                  </div>
+                </div>
+                <div></div>
+                <form
+                  className={`loginForm ${page === PAGES.LOGIN && "active"}`}
+                  noValidate
+                  onSubmit={loginForm.handleSubmit(
+                    handleLogin,
+                    handleLoginError
+                  )}
+                >
+                  <h3>Login</h3>
+                  <div className="authen-form__input-field">
+                    <label className="active" htmlFor="login-email-input">
+                      Email
+                    </label>
+                    <i className="fi fi-ss-envelope"></i>
+                    <Controller
+                      name="email"
+                      control={loginForm.control}
+                      rules={{
+                        required: "Email should not be empty",
+                        pattern: {
+                          value: REGEX.VALID_EMAIL,
+                          message: "Email is not valid!",
+                        },
+                      }}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          type="email"
+                          id="login-email-input"
+                          onFocus={(e) => handleFocus(e.target)}
+                          onBlur={(e) => handleBlur(e.target)}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="authen-form__input-field">
+                    <label className="active" htmlFor="login-psw-input">
+                      Password
+                    </label>
+                    <i className="fi fi-ss-lock"></i>
+                    <Controller
+                      name="password"
+                      control={loginForm.control}
+                      rules={{
+                        required: "Password should not be empty",
+                        minLength: {
+                          value: 6,
+                          message:
+                            "Password must be at least 6 characters long",
+                        },
+                      }}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          type="password"
+                          id="login-psw-input"
+                          onFocus={(e) => handleFocus(e.target)}
+                          onBlur={(e) => handleBlur(e.target)}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="authen-form__interact-field">
+                    <div>
+                      <Controller
+                        name="isRememberMe"
+                        control={loginForm.control}
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            type="checkbox"
+                            id="login-remember-input"
+                          />
+                        )}
+                      />
+                      <label htmlFor="login-remember-input">Remember me</label>
+                    </div>
+
+                    <div>
+                      <Link>Forget Password</Link>
+                    </div>
+                  </div>
+                  <div className="button__wrapper">
+                    <button
+                      type="submit"
+                      className="authen-form__submit-btn"
+                      disabled={isLoginLoading}
+                    >
+                      {isLoginLoading ? "Signing in..." : "Sign In"}
+                    </button>
+                    <button
+                      className="authen-form__social-btn google"
+                      type="button"
+                      onClick={onGoogleLogin}
+                      disabled={isGoogleLoginLoading}
+                    >
+                      <img src={googleIcon} alt="social" />
+                      <span>
+                        {isGoogleLoginLoading
+                          ? `In process`
+                          : `Login with google`}
+                      </span>
+                    </button>
+                    <button
+                      className="authen-form__social-btn facebook"
+                      type="button"
+                      onClick={onFacebookLogin}
+                      disabled={isFBLoginLoading}
+                    >
+                      <img src={facebookIcon} alt="social" />
+                      <span>
+                        {isFBLoginLoading
+                          ? `In process`
+                          : `Login with facebook`}
+                      </span>
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="authen-form__register-btn"
+                    onClick={() => changePage(PAGES.REGISTER)}
+                  >
+                    Create A New Account? Sign Up
+                  </button>
+                </form>
+                <form
+                  className={`registerForm ${
+                    page === PAGES.REGISTER && "active"
+                  }`}
+                  noValidate
+                  ref={registerFormRef}
+                  onSubmit={registerForm.handleSubmit(
+                    handleRegister,
+                    handleRegisterError
+                  )}
+                >
+                  <h3>Just a few more steps!</h3>
+                  <div className="authen-form__input-field">
+                    <label className="active" htmlFor="register-email-input">
+                      Email
+                    </label>
+                    <i className="fi fi-ss-envelope"></i>
+                    <Controller
+                      name="email"
+                      control={registerForm.control}
+                      rules={{
+                        required: "Email should not be empty",
+                        pattern: {
+                          value: REGEX.VALID_EMAIL,
+                          message: "Email is not valid!",
+                        },
+                      }}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          type="email"
+                          id="register-email-input"
+                          onFocus={(e) => handleFocus(e.target)}
+                          onBlur={(e) => handleBlur(e.target)}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="authen-form__input-field">
+                    <label className="active" htmlFor="register-psw-input">
+                      Password
+                    </label>
+                    <i className="fi fi-ss-lock"></i>
+                    <Controller
+                      name="password"
+                      control={registerForm.control}
+                      rules={{
+                        required: "Password should not be empty",
+                        minLength: {
+                          value: 6,
+                          message:
+                            "Password must be at least 6 characters long",
+                        },
+                      }}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          type="password"
+                          id="register-psw-input"
+                          onFocus={(e) => handleFocus(e.target)}
+                          onBlur={(e) => handleBlur(e.target)}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="authen-form__input-field">
+                    <label className="active" htmlFor="register-cfpsw-input">
+                      Confirm password
+                    </label>
+                    <i className="fi fi-ss-lock"></i>
+                    <Controller
+                      name="confirm_password"
+                      control={registerForm.control}
+                      defaultValue=""
+                      rules={{
+                        required: "Confirm password should not be empty",
+                      }}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          type="password"
+                          id="register-cfpsw-input"
+                          onFocus={(e) => handleFocus(e.target)}
+                          onBlur={(e) => handleBlur(e.target)}
+                        />
+                      )}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="authen-form__submit-btn"
+                    disabled={isRegisterLoading}
+                  >
+                    {isRegisterLoading ? "Wait a second..." : "Register now"}
+                  </button>
+                  <button
+                    type="button"
+                    className="authen-form__register-btn"
+                    onClick={() => changePage(PAGES.LOGIN)}
+                  >
+                    Do you already have an account?
+                  </button>
+                </form>
+              </div>
+            </div>
+          </main>
+        </div>
+      }
+      {isLoading && <PageLoader />}
+    </>
+  );
+};
 
 export default Authentication;

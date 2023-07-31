@@ -135,7 +135,7 @@
         .cc-hotel-card-body__title {
             margin-bottom: 0.5rem;
             // direction - justify content - align items - flex wrap
-            @include dflex(row, space-between, flex-start, nowrap);
+            @include dflex(row, space-between, center, nowrap);
 
             h4 {
                 // direction - justify content - align items - flex wrap
@@ -144,16 +144,18 @@
             }
             button {
                 // border - border radius - background color - color - padding - font size
-                @include normal-btn(0, 0, transparent, black, auto, 1.5rem);
+                @include normal-btn(0, 0, transparent, black, auto, 1.25rem);
             }
         }
         .cc-hotel-card-body__rating {
             margin-bottom: 1rem;
             // direction - justify content - align items - flex wrap
-            @include dflex(row, space-between, flex-end, nowrap);
+            @include dflex(row, space-between, center, nowrap);
             .hotel-card-body-rating__star {
                 img {
                     margin-right: 0.5rem;
+                    width: 14px;
+                    height: 14px;
                 }
             }
             .hotel-card-body-rating__review {
@@ -161,6 +163,8 @@
                 @include dflex(row, flex-end, flex-end, nowrap);
                 small {
                     margin-right: 0.5rem;
+                    font-weight: 600;
+                    @include dflex(row, flex-end, flex-end, nowrap);
                 }
                 .rating-review__score {
                     width: fit-content;
@@ -219,7 +223,6 @@
                     color: var(--mountain-mist);
                     font-size: 1rem;
                     font-weight: bold;
-                    text-decoration: line-through;
                 }
             }
         }

@@ -1,94 +1,100 @@
+import { API_URL } from "../../../../business-logic/src/configs";
 import { axios } from "../../config/axios";
 import { Services } from "../../service";
 
-
 export class HotelService extends Services {
-    API_URL = "";
-    url = this.API_URL + "/hotel";
-    abortController;
+  url = API_URL;
+  abortController;
 
-    searchUrl = this.url + "/search";
-    getHotelDetailUrl = this.url + "/api/hotel";
-    getRoomsUrl = `/api/rooms`;
-    getSpecificRoomUrl = `/api/room`;
+  searchUrl = this.url + "/hotel/search";
+  getHotelDetailUrl = this.url + "/api/hotel";
+  getRoomsUrl = this.url + `/api/rooms`;
+  getSpecificRoomUrl = this.url + `/api/room`;
+  getHotHotelUrl = this.url + `/api/hotel/recommend`;
 
-    search = async (keys) => {
-        this.abortController = new AbortController();
-        try {
-            const response = await axios.post(
-                this.searchUrl,
-                keys,
-                {
-                    signal: this.abortController.signal
-                }
-            );
-            return response.data;
-            
-        } catch (error) {
-            if (!this.isCancel(error)) {
-                // Handle other errors
-                console.error("Catch error");
-                throw error;
-            }
+  search = async (keys) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await axios.post(this.searchUrl, keys, {
+        signal: this.abortController.signal,
+      });
+      return response.data;
+    } catch (error) {
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error");
+        throw error;
+      }
+    }
+  };
+  getHotelDetail = async (hotelID) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await axios.get(
+        this.getHotelDetailUrl + `?id=${hotelID}`,
+        {
+          signal: this.abortController.signal,
         }
-    };
-    getHotelDetail = async (hotelID) => {
-        this.abortController = new AbortController();
-        try {
-            const response = await axios.get(
-                this.getHotelDetailUrl + `?id=${hotelID}`,
-                {
-                    signal: this.abortController.signal
-                }
-            );
-            return response.data;
-            
-        } catch (error) {
-            if (!this.isCancel(error)) {
-                // Handle other errors
-                console.error("Catch error");
-                throw error;
-            }
+      );
+      return response.data;
+    } catch (error) {
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error");
+        throw error;
+      }
+    }
+  };
+  getRooms = async (hotelID) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await axios.get(
+        this.getRoomsUrl + `?hotelID=${hotelID}`,
+        {
+          signal: this.abortController.signal,
         }
-    };
-    getRooms = async (hotelID) => {
-        this.abortController = new AbortController();
-        try {
-            const response = await axios.get(
-                this.getRoomsUrl + `?hotelID=${hotelID}`,
-                {
-                    signal: this.abortController.signal
-                }
-            );
-            return response.data;
-            
-        } catch (error) {
-            if (!this.isCancel(error)) {
-                // Handle other errors
-                console.error("Catch error");
-                throw error;
-            }
+      );
+      return response.data;
+    } catch (error) {
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error");
+        throw error;
+      }
+    }
+  };
+  getSpecificRoom = async (hotelID, roomID) => {
+    this.abortController = new AbortController();
+    try {
+      console.log(this.getSpecificRoomUrl + `?hotelId=${hotelID}&id=${roomID}`);
+      const response = await axios.get(
+        this.getSpecificRoomUrl + `?hotelId=${hotelID}&id=${roomID}`,
+        {
+          signal: this.abortController.signal,
         }
-    };
-    getSpecificRoom = async (hotelID, roomID) => {
-        this.abortController = new AbortController();
-        try {
-            console.log(this.getSpecificRoomUrl + `?hotelId=${hotelID}&id=${roomID}`)
-            const response = await axios.get(
-                this.getSpecificRoomUrl + `?hotelId=${hotelID}&id=${roomID}`,
-                {
-                    signal: this.abortController.signal
-                }
-            );
-            return response.data;
-            
-        } catch (error) {
-            if (!this.isCancel(error)) {
-                // Handle other errors
-                console.error("Catch error");
-                throw error;
-            }
-        }
-    };
+      );
+      return response.data;
+    } catch (error) {
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error");
+        throw error;
+      }
+    }
+  };
+  getHotHotel = async () => {
+    this.abortController = new AbortController();
+    try {
+      const response = await axios.get(this.getHotHotelUrl, {
+        signal: this.abortController.signal,
+      });
+      return response.data;
+    } catch (error) {
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error");
+        throw error;
+      }
+    }
+  };
 }
-

@@ -1,74 +1,70 @@
-import { axios } from "../../config/axios";
-import { API_URL } from "../../config/url";
+import { axios, isAxiosError } from "../../config/axios";
 import { Services } from "../../service";
 
-// Removed TypeScript-specific class extension and interface implementation
+const unknownError = "Unexpected error occurred";
+
 export class AuthService extends Services {
-  url = API_URL + "/auth";
-  abortController = null;
+  API_URL = "";
+  url = this.API_URL + "/auth";
+  abortController;
 
   registerUrl = this.url + "/register";
   loginUrl = this.url + "/login";
   refreshTokenUrl = this.url + "/refreshToken";
 
-  // Removed TypeScript-specific type annotations
   register = async (data) => {
     this.abortController = new AbortController();
     try {
-      // Removed TypeScript-specific type annotation
       const response = await axios.post(this.registerUrl, data, {
         signal: this.abortController.signal,
       });
 
-      if (response.status === 200) {
-        return {
-          statusCode: response.status,
-          message: response.data.message,
-          token: response.data.token ?? "",
-        };
-      } else {
-        throw new Error("Error register service on resolve");
-      }
+      return {
+        statusCode: response.status,
+        message: response.data.message,
+        token: response.data.token,
+      };
     } catch (error) {
       if (!this.isCancel(error)) {
-        // Handle other errors
-        console.error("Catch error");
-        throw error;
+        // Check if it's email exist error?
+        if (
+          !isAxiosError(error) ||
+          !error.response ||
+          error.response.status !== 401
+        )
+          throw error;
+        return { message: error.response.data.message || unknownError };
       }
+      console.error(error);
+      return { message: unknownError };
     }
-    return {
-      statusCode: 500,
-      message: "Unexpected error occurred",
-    };
   };
-  // Removed TypeScript-specific type annotations
   login = async (data) => {
     this.abortController = new AbortController();
     try {
-      // Removed TypeScript-specific type annotation
       const response = await axios.post(this.loginUrl, data, {
         signal: this.abortController.signal,
       });
 
-      if (response.status === 200) {
-        return {
-          statusCode: response.status,
-          message: response.data.message,
-          token: response.data.token ?? "",
-        };
-      } else {
-        throw new Error("Error login service on resolve");
-      }
+      return {
+        statusCode: response.status,
+        message: response.data.message,
+        token: response.data.token,
+      };
     } catch (error) {
       if (!this.isCancel(error)) {
-        // Handle other errors
-        throw error;
+        // Check if it's wrong email password error?
+        if (
+          !isAxiosError(error) ||
+          !error.response ||
+          error.response.status !== 401
+        )
+          throw error;
+        return { message: error.response.data.message || unknownError };
       }
+      console.error(error);
+      return { message: unknownError };
     }
-    return {
-      statusCode: 500,
-      message: "Unexpected error occurred",
-    };
   };
   refreshToken = async (data) => {
     this.abortController = new AbortController();
@@ -81,24 +77,24 @@ export class AuthService extends Services {
           signal: this.abortController.signal,
         }
       );
-      if (response.status === 200) {
-        return {
-          statusCode: response.status,
-          message: response.data.message,
-          token: response.data.token ?? "",
-        };
-      } else {
-        throw new Error("Error is-logged-in service on resolve");
-      }
+      return {
+        statusCode: response.status,
+        message: response.data.message,
+        token: response.data.token,
+      };
     } catch (error) {
       if (!this.isCancel(error)) {
-        // Handle other errors
-        throw error;
+        // Check if it's cannot refresh error?
+        if (
+          !isAxiosError(error) ||
+          !error.response ||
+          error.response.status !== 401
+        )
+          throw error;
+        return { message: error.response.data.message || unknownError };
       }
+      console.error(error);
+      return { message: unknownError };
     }
-    return {
-      statusCode: 500,
-      message: "Unexpected error occurred",
-    };
   };
 }

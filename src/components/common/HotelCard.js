@@ -5,6 +5,7 @@ import star from "../../assets/images/icons/star.svg";
 
 import { combineAddress } from "../../utils/helpers/Address";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
+import "../../styles/common/hotelCard.scss";
 
 // hotelData: { id, name, imgUrl, star, rating, location, price, sale }
 const HotelCard = ({ hotelData }) => {

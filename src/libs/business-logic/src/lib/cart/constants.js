@@ -1,0 +1,10 @@
+
+export const LOCAL_STORAGE_KEY = {
+  CART_ADDRESS: "LOCAL_STORAGE_KEY_CART_ADDRESS"
+};
+export const MUTATION = {
+  RETRY_TIMES: 0
+};
+export const QUERY_KEYS = {
+  GET_CART: "QUERY_KEYS_GET_CART"
+}

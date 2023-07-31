@@ -1,4 +1,6 @@
 import { AuthProvider } from "../lib/auth/process/provider";
+import { CartProvider } from "../lib/cart/process/provider";
+import { OrderProvider } from "../lib/order/process/provider";
 
 export const authConfig = {
   isNeedRefreshToken: true,
@@ -7,10 +9,19 @@ export const authConfig = {
 
 export const providerConfig = [
   {
+    key: "order",
+    provider: OrderProvider,
+    isActive: true,
+  },
+  {
+    key: "cart",
+    provider: CartProvider,
+    isActive: true,
+  },
+  {
     key: "auth",
     provider: AuthProvider,
     isActive: true,
-    isNeedAccessToken: false,
   },
 ];
 
@@ -36,7 +47,6 @@ export const facebookConfig = {
   SCOPE: "public_profile,email",
   STATE: "{st=datsuperman04102014helloanhLong,ds=2789562897562}",
 };
-export const gptApiKey = "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";
 export const mutationConfig = {
   RETRY: 1,
 };

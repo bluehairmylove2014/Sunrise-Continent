@@ -7,16 +7,15 @@ import { deleteCookie, getCookie, setCookie } from "../helper/cookieHelper";
 // Importing local storage helper functions
 import {
   getIsRememberMeLocalStorage,
-  setIsRememberMeLocalstorage,
-  removeIsRememberMeLocalstorage
+  setIsRememberMeLocalStorage,
+  removeIsRememberMeLocalStorage,
 } from "../helper/localStorageHelper";
 // Importing session storage helper functions
 import {
   setAccessTokenSessionStorage,
   getAccessTokenSessionStorage,
-  removeAccessTokenSessionStorage
+  removeAccessTokenSessionStorage,
 } from "../helper/sessionStorageHelper";
-
 
 // Function to get the token
 export const getToken = () => {
@@ -32,7 +31,7 @@ export const getToken = () => {
 
 export const useAccessToken = () => {
   // Getting the dispatch function from the authentication context
-  const { dispatch, setProviderToken: providerSetToken } = useAuthContext();
+  const { dispatch } = useAuthContext();
 
   // Function to set the token
   const setToken = (newToken, isRememberMe) => {
@@ -44,15 +43,12 @@ export const useAccessToken = () => {
       setAccessTokenSessionStorage(newToken);
     }
     // Save the remember me option to the local storage
-    setIsRememberMeLocalstorage(isRememberMe);
+    setIsRememberMeLocalStorage(isRememberMe);
     // Dispatch the new token to the context
     dispatch({
       type: CONTEXT_ACTION.SET_ACTION,
-      payload: newToken
+      payload: newToken,
     });
-    
-    console.log("Set new token")
-    providerSetToken && providerSetToken(newToken);
   };
 
   // Function to reset the token
@@ -69,11 +65,8 @@ export const useAccessToken = () => {
     // Dispatch the new token to the context
     dispatch({
       type: CONTEXT_ACTION.SET_ACTION,
-      payload: newToken
+      payload: newToken,
     });
-
-    console.log("Set new token")
-    providerSetToken && providerSetToken(newToken);
   };
 
   // Function to delete the token
@@ -88,15 +81,12 @@ export const useAccessToken = () => {
       removeAccessTokenSessionStorage();
     }
     // Remove the remember me option from the local storage
-    removeIsRememberMeLocalstorage();
+    removeIsRememberMeLocalStorage();
     // Remove the token from the context
     dispatch({
       type: CONTEXT_ACTION.SET_ACTION,
-      payload: null
+      payload: null,
     });
-
-    console.log("Set new token")
-    providerSetToken && providerSetToken(null);
   };
 
   // Returning the hook functions
@@ -104,6 +94,6 @@ export const useAccessToken = () => {
     getToken,
     setToken,
     resetToken,
-    deleteToken
+    deleteToken,
   };
 };

@@ -1,12 +1,11 @@
 import { getAxiosNormalInstance, axios } from "../../config/axios";
 import { Services } from "../../service";
-
 import { googleApiConfig, facebookApiConfig } from "../../config/config";
-import { API_URL } from "../../config/url";
 
 export class SocialService extends Services {
-  url = API_URL + "/social";
-  abortController = null;
+  API_URL = "";
+  url = this.API_URL + "/social";
+  abortController;
   updateAccountUrl = this.url + "updateAccount";
 
   // GOOGLE LOGIN
@@ -54,6 +53,8 @@ export class SocialService extends Services {
         const userProfile = response.data;
         return {
           email: userProfile.emailAddresses[0].value,
+          firstName: userProfile.names[0].familyName,
+          lastName: userProfile.names[0].givenName,
         };
       } else {
         throw new Error("Error fetching user profile");
@@ -67,6 +68,8 @@ export class SocialService extends Services {
     }
     return {
       email: "",
+      firstName: "",
+      lastName: "",
     };
   };
   updateAccount = async (data) => {
@@ -144,6 +147,8 @@ export class SocialService extends Services {
     }
     return {
       email: "",
+      firstName: "",
+      lastName: "",
     };
   };
 }

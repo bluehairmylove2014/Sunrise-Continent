@@ -3,4 +3,4 @@ export * from "./useRegister";
 export * from "./useLogin";
 export * from "./useLogout";
 export * from "./useGoogleLogin";
-export * from "./useFacebookLogin"
+export * from "./useFacebookLogin";

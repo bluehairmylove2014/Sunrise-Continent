@@ -5,12 +5,7 @@ import hotelData from "../data/searchHotel.json";
 const hotels = hotelData;
 
 axiosMockAdapterInstance
-    .onPost(new HotelService().searchUrl)
-    .reply((config) => {
-        const keys = JSON.parse(config.data);
-        console.log("Receive keys: ", keys);
-        return [
-            200,
-            hotels
-        ];
-    });
+  .onPost(new HotelService().searchUrl)
+  .reply((config) => {
+    return [200, hotels];
+  });

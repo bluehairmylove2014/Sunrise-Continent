@@ -66,7 +66,6 @@ export class HotelService extends Services {
   getSpecificRoom = async (hotelID, roomID) => {
     this.abortController = new AbortController();
     try {
-      console.log(this.getSpecificRoomUrl + `?hotelId=${hotelID}&id=${roomID}`);
       const response = await axios.get(
         this.getSpecificRoomUrl + `?hotelId=${hotelID}&id=${roomID}`,
         {

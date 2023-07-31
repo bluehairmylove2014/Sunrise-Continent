@@ -9,11 +9,33 @@
     position: fixed;
     top: 0;
     right: 0;
+    z-index: 999;
+    background-color: white;
+    box-shadow: -23px 10px 15px -3px rgba(0,0,0,0.1);
+    transition: all 0.3s ease-in-out;
 
     &.active {
         opacity: 1;
         visibility: visible;
         pointer-events: all;
-        width: 300px;
+        width: 400px;
+    }
+
+    .wishlist__title {
+        margin-top: 20px;
+        padding: 20px;
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, space-between, center, nowrap);
+        & > div {
+            width: 20px
+        }
+        & > p {
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        .wishlist__close-btn {
+            // border - border radius - background color - color - padding - font size
+            @include normal-btn(none, 50%, var(--heavy-white-smoke), var(--hard-pink), 5px 10px, 0.8rem);
+        }
     }
 }

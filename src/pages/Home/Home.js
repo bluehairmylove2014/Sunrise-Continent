@@ -38,7 +38,6 @@ const Home = () => {
   const [searchInputVal, setSearchInputVal] = useState(defaultSearchInputVal);
   const navigate = useNavigate();
   const { data: hotHotelData } = useGetHotHotelQuery();
-  console.log(hotHotelData);
 
   const trendingHotelPerPage = 6;
 

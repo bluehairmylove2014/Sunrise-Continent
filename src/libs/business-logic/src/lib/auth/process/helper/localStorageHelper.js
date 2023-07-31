@@ -1,6 +1,6 @@
 import { LOCAL_STORAGE_KEY } from "../../constants";
 
-export const setIsRememberMeLocalstorage = (value) => {
+export const setIsRememberMeLocalStorage = (value) => {
   if (typeof window !== "undefined") {
     localStorage.setItem(LOCAL_STORAGE_KEY.IS_REMEMBER, JSON.stringify(value));
   }
@@ -14,7 +14,7 @@ export const getIsRememberMeLocalStorage = () => {
   return null;
 };
 
-export const removeIsRememberMeLocalstorage = () => {
+export const removeIsRememberMeLocalStorage = () => {
   if (typeof window !== "undefined") {
     localStorage.removeItem(LOCAL_STORAGE_KEY.IS_REMEMBER);
   }

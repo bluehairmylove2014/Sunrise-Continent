@@ -103,25 +103,44 @@ const Authentication = () => {
       }
     }
   };
-
+  const handleGoogleLogin = () => {
+    onGoogleLogin()
+    .then(message => {
+      toast.success(message);
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    })
+    .catch(err => {
+      console.error(err.message)
+    })
+  }
+  const handleFacebookLogin = () => {
+    onFacebookLogin()
+    .then(message => {
+      toast.success(message);
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    })
+    .catch(err => {
+      console.error(err.message)
+    })
+  }
   const handleLogin = ({ email, password, isRememberMe }) => {
     onLogin({
       isRememberMe,
-      account: { email, password },
+      email, 
+      password,
     })
-      .then((res) => {
-        toast.success(res.message);
+      .then((message) => {
+        toast.success(message);
         setTimeout(() => {
           navigate("/");
         }, 2000);
       })
       .catch((err) => {
-        if (err.response && err.response.status === 401) {
-          toast.error("Wrong email or password");
-        } else {
-          console.error("Log error in component:", err);
-          toast.error("Login error");
-        }
+        toast.error(err.message);
       });
   };
   const handleLoginError = (errors) => {
@@ -133,24 +152,20 @@ const Authentication = () => {
       }
     }
   };
-
   const handleRegister = ({ email, password, confirm_password }) => {
     if (password !== confirm_password) {
       toast.error("Confirm password does not match");
       return;
     }
     onRegister({ email, password })
-      .then((res) => {
-        toast.success(res.message);
-        navigate("/");
+      .then((message) => {
+        toast.success(message);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
       })
       .catch((err) => {
-        if (err.response && err.response.status === 409) {
-          toast.error("Email is exist");
-        } else {
-          console.error("Log error in component:", err);
-          toast.error("Register error");
-        }
+        toast.error(err.message);
       });
   };
   const handleRegisterError = (errors) => {
@@ -380,7 +395,7 @@ const Authentication = () => {
                     <button
                       className="authen-form__social-btn google"
                       type="button"
-                      onClick={onGoogleLogin}
+                      onClick={handleGoogleLogin}
                       disabled={isGoogleLoginLoading}
                     >
                       <img src={googleIcon} alt="social" />
@@ -393,7 +408,7 @@ const Authentication = () => {
                     <button
                       className="authen-form__social-btn facebook"
                       type="button"
-                      onClick={onFacebookLogin}
+                      onClick={handleFacebookLogin}
                       disabled={isFBLoginLoading}
                     >
                       <img src={facebookIcon} alt="social" />

@@ -10,19 +10,16 @@ export const useAuthBroadcastChannel = () => {
   const tokenController = useAccessToken();
 
   // Method to post messages
-  const postMessage = useCallback(
-    (message) => {
-      if(authConfig.isNeedBroadcast) {
-        if (!bc.current) {
-          bc.current = new BroadcastChannel(BROADCAST_CHANNEL.AUTH_CHANNEL);
-        }
-        bc.current.postMessage(message);
-      }
-    },
-    []
-  );
+  const postMessage = useCallback((message) => {
+    bc.current && bc.current.postMessage(message);
+  }, []);
 
   useEffect(() => {
+    if (authConfig.isNeedBroadcast) {
+      if (!bc.current) {
+        bc.current = new BroadcastChannel(BROADCAST_CHANNEL.AUTH_CHANNEL);
+      }
+    }
     // Method to handle incoming messages
     const handleMessage = (event) => {
       switch (event.data.message) {
@@ -42,7 +39,7 @@ export const useAuthBroadcastChannel = () => {
             postMessage({
               message: BROADCAST_MESSAGE.SEND_TOKEN,
               token: token,
-              isRemember: rememberMeOption
+              isRemember: rememberMeOption,
             });
           }
           break;
@@ -55,8 +52,18 @@ export const useAuthBroadcastChannel = () => {
       }
     };
 
-    bc.current && authConfig.isNeedBroadcast && (bc.current.onmessage = handleMessage);
-  }, [bc, postMessage, tokenController])
+    bc.current &&
+      authConfig.isNeedBroadcast &&
+      (bc.current.onmessage = handleMessage);
+
+    // Delete instance when unmount
+    return () => {
+      if (bc.current) {
+        bc.current.close();
+        bc.current = null;
+      }
+    };
+  }, [bc, postMessage, tokenController]);
 
   return { postMessage };
 };

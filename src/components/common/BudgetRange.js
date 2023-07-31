@@ -5,6 +5,7 @@ import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 import { Slider } from "@mui/material";
 import { CONVERSION_FACTOR } from "../../constants/Variables.constants";
 import { debounce } from "lodash";
+import "../../styles/common/budgetRange.scss";
 
 const BudgetRange = ({ callbackOnchange, defaultValues }) => {
   const [priceRange, setPriceRange] = useState([0, 1000]);

@@ -2,10 +2,7 @@
 import { CONTEXT_ACTION } from "../../constants";
 
 // This reducer handles actions to get and set the authentication token
-export const authReducer = (
-  state,
-  action
-) => {
+export const authReducer = (state, action) => {
   try {
     switch (action.type) {
       case CONTEXT_ACTION.GET_ACTION:
@@ -13,9 +10,9 @@ export const authReducer = (
         return state;
       case CONTEXT_ACTION.SET_ACTION:
         // Returns a new state with the new token when the action is to set the token
-        return { 
+        return {
           ...state,
-          token: action.payload 
+          token: action.payload,
         };
       default:
         // Returns the current state for any other action

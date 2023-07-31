@@ -1,5 +1,6 @@
 import React from "react";
 import { Controller } from "react-hook-form";
+import "../../styles/common/checkbox.scss";
 
 const Checkbox = ({ form, name, label, callbackOnChange }) => {
   return (

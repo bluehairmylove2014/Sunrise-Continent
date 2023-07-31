@@ -7,10 +7,10 @@ export class HotelService extends Services {
   abortController;
 
   searchUrl = this.url + "/hotel/search";
-  getHotelDetailUrl = this.url + "/api/hotel";
-  getRoomsUrl = this.url + `/api/rooms`;
-  getSpecificRoomUrl = this.url + `/api/room`;
-  getHotHotelUrl = this.url + `/api/hotel/recommend`;
+  getHotelDetailUrl = this.url + "/hotel/single";
+  getRoomsUrl = this.url + `/room`;
+  getSpecificRoomUrl = this.url + `/room/single`;
+  getHotHotelUrl = this.url + `/hotel/recommend`;
 
   search = async (keys) => {
     this.abortController = new AbortController();
@@ -49,7 +49,7 @@ export class HotelService extends Services {
     this.abortController = new AbortController();
     try {
       const response = await axios.get(
-        this.getRoomsUrl + `?hotelID=${hotelID}`,
+        this.getRoomsUrl + `?hotelId=${hotelID}`,
         {
           signal: this.abortController.signal,
         }

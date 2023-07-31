@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Importing necessary libraries and services
 import { useEffect, useMemo, useState } from "react";
 import { facebookConfig } from "../../../../configs";
@@ -23,17 +24,20 @@ const redirectUri = getRedirectUri() + "/";
 
 export const useFacebookLogin = () => {
   const facebookAuthUrl = useMemo(
-    () => facebookConfig.AUTH_URI +
-    `?client_id=${fbAppId}` +
-    `&redirect_uri=${redirectUri}` +
-    `&scope=${facebookConfig.SCOPE}` +
-    `&response_type=code` +
-    `&state={"${facebookConfig.STATE}"}`
-  , [])
+    () =>
+      facebookConfig.AUTH_URI +
+      `?client_id=${fbAppId}` +
+      `&redirect_uri=${redirectUri}` +
+      `&scope=${facebookConfig.SCOPE}` +
+      `&response_type=code` +
+      `&state={"${facebookConfig.STATE}"}`,
+    []
+  );
   const [isLoading, setIsLoading] = useState(false);
   const getFBAccessTokenMutation = useGetFBAccessTokenMutation();
   const getFBUserInforMutation = useGetFBUserInforMutation();
   const updateAccountMutation = useUpdateAccountMutation();
+  const currentUrl = window.location.href;
 
   // Get the setToken function from useAccessToken
   const { setToken } = useAccessToken();
@@ -42,6 +46,7 @@ export const useFacebookLogin = () => {
     if (typeof window !== "undefined" && window.opener) {
       // Extract and get access token and error (if any) from url
       const code = getCodeFromUrl();
+      console.log("RUn");
       if (code) {
         // get token by 'code'
         getFBAccessTokenMutation
@@ -57,15 +62,14 @@ export const useFacebookLogin = () => {
             });
           })
           .catch((error) => {
-            console.error("Get fb access token error: ", error);
             facebookPopupPostMessage(FACEBOOK_MESSAGE.LOGIN_FAILED, {});
           })
           .finally(() => {
-            window.close();
+            // window.close();
           });
       }
     }
-  });
+  }, [currentUrl]);
 
   const onFacebookLogin = () => {
     const handleExit = (eventFunc) => {
@@ -85,6 +89,7 @@ export const useFacebookLogin = () => {
         if (authWindow) {
           const handleAuthentication = (event) => {
             const { type, payload } = event.data;
+            console.log("type: ", type);
             if (type === FACEBOOK_MESSAGE.LOGIN_SUCCESS) {
               getFBUserInforMutation
                 .mutateAsync(payload.accessToken)
@@ -117,13 +122,11 @@ export const useFacebookLogin = () => {
                     });
                 })
                 .catch((error) => {
-                  console.error(error);
                   // Remove listener
                   handleExit(handleAuthentication);
                   rejects(new Error(failedMessage));
                 });
             } else if (type === FACEBOOK_MESSAGE.LOGIN_FAILED) {
-              console.error("Fail facebook login");
               // Remove listener
               handleExit(handleAuthentication);
               rejects(new Error(failedMessage));

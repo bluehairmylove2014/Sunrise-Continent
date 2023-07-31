@@ -2,7 +2,7 @@ import { axiosMockAdapterInstance } from "../../config/axios";
 import { CartService } from "../../lib";
 import cartsData from "../data/cart.json";
 
-const cartDataTest = cartsData[0];
+const cartDataTest = cartsData;
 axiosMockAdapterInstance
   .onPut(new CartService().updateCartUrl)
   .reply((config) => {

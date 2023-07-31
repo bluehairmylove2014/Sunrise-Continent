@@ -22,7 +22,6 @@ import { Controller, useForm } from "react-hook-form";
 import {
   useFacebookLogin,
   useGoogleLogin,
-  useIsLogged,
   useLogin,
   useRegister,
 } from "../../libs/business-logic/src/lib/auth";
@@ -59,7 +58,6 @@ const Authentication = () => {
   const { onGoogleLogin, isLoading: isGoogleLoginLoading } = useGoogleLogin();
   const { onFacebookLogin, isLoading: isFBLoginLoading } = useFacebookLogin();
   const { onRegister, isLoading: isRegisterLoading } = useRegister();
-  const isLoggedIn = useIsLogged();
 
   // Hook
   useEffect(() => {
@@ -82,11 +80,6 @@ const Authentication = () => {
         }, 500);
       });
   }, [location]);
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate(PAGES.HOME);
-    }
-  }, [isLoggedIn, navigate]);
 
   // Methods
   const handleFocus = (target) => {
@@ -105,39 +98,33 @@ const Authentication = () => {
   };
   const handleGoogleLogin = () => {
     onGoogleLogin()
-    .then(message => {
-      toast.success(message);
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
-    })
-    .catch(err => {
-      console.error(err.message)
-    })
-  }
+      .then((message) => {
+        toast.success(message);
+        navigate(PAGES.HOME);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
   const handleFacebookLogin = () => {
     onFacebookLogin()
-    .then(message => {
-      toast.success(message);
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
-    })
-    .catch(err => {
-      console.error(err.message)
-    })
-  }
+      .then((message) => {
+        toast.success(message);
+        navigate(PAGES.HOME);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
   const handleLogin = ({ email, password, isRememberMe }) => {
     onLogin({
       isRememberMe,
-      email, 
+      email,
       password,
     })
       .then((message) => {
         toast.success(message);
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
+        navigate(PAGES.HOME);
       })
       .catch((err) => {
         toast.error(err.message);
@@ -160,9 +147,7 @@ const Authentication = () => {
     onRegister({ email, password })
       .then((message) => {
         toast.success(message);
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
+        navigate(PAGES.HOME);
       })
       .catch((err) => {
         toast.error(err.message);

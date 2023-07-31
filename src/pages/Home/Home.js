@@ -458,9 +458,9 @@ const Home = () => {
             <h3>Xu hướng hiện nay</h3>
           </div>
           <p>
-            Discover our collection of the hottest and most trending hotels.
-            Immerse yourself in luxury, comfort, and style as you explore these
-            top-rated accommodations handpicked just for you.
+            Khám phá bộ sưu tập các khách sạn hot và đang thịnh hành nhất. Đắm
+            mình trong sự xa hoa, thoải mái và phong cách khi bạn khám phá những
+            chỗ ở hàng đầu này, được lựa chọn kỹ lưỡng đặc biệt cho bạn.
           </p>
         </div>
         {hotHotelData && Array.isArray(hotHotelData) ? (

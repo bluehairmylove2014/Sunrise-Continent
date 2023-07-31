@@ -1,11 +1,11 @@
 import { axios, isAxiosError } from "../../config/axios";
 import { Services } from "../../service";
+import { API_URL } from "../../config/url";
 
 const unknownErrorMsg = "Order service unknown error";
 
 export class OrderService extends Services {
-  API_URL = "";
-  url = this.API_URL + "/order";
+  url = API_URL + "/order";
   abortController;
 
   getOrderUrl = this.url + "/get-order";

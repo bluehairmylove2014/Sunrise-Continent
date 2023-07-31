@@ -6,9 +6,12 @@ import star from "../../assets/images/icons/star.svg";
 import { combineAddress } from "../../utils/helpers/Address";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 import "../../styles/common/hotelCard.scss";
+import { useNavigate } from "react-router-dom";
+import { PAGES } from "../../constants/Link.constants";
 
 // hotelData: { id, name, imgUrl, star, rating, location, price, sale }
 const HotelCard = ({ hotelData }) => {
+  const navigate = useNavigate();
   const renderStar = (numberOfStar) => {
     let starList = [];
     for (let i = 0; i < numberOfStar; i++) {
@@ -16,19 +19,30 @@ const HotelCard = ({ hotelData }) => {
     }
     return starList;
   };
-
+  const addToWishlist = (e, hotel) => {
+    e.stopPropagation();
+    console.log(hotel);
+  };
+  const handleReport = (e, hotelId) => {
+    e.stopPropagation();
+    console.log(hotelId);
+  };
   return (
-    <div className="common-component__hotel-card--vertical">
-      {/* v: vertical, cc: common-component */}
+    <div
+      className="common-component__hotel-card--vertical"
+      onClick={() => {
+        navigate(PAGES.HOTEL_DETAIL + `?id=${hotelData.id}`);
+      }}
+    >
       <div className="cc-hotel-card__top--v">
         <img src={hotelData.image} alt="hotel" />
       </div>
       <div className="cc-hotel-card__body--v">
         <div className="cc-hotel-card-body__title">
           <h4>{hotelData.name}</h4>
-          <button>
+          {/* <button>
             <i className="fi fi-rs-heart"></i>
-          </button>
+          </button> */}
           {/* <i class="fi fi-ss-heart"></i> */}
         </div>
         <div className="cc-hotel-card-body__rating">
@@ -65,10 +79,18 @@ const HotelCard = ({ hotelData }) => {
           </div>
         </div>
         <div className="cc-hotel-card-body__interact">
-          <button className="cc-hotel-card-body__report-btn">!</button>
-          <button className="cc-hotel-card-body__detail-btn">
-            Xem chi tiết
-            <i className="fi fi-rr-caret-right"></i>
+          <button
+            className="cc-hotel-card-body__report-btn"
+            onClick={(e) => handleReport(e, hotelData.id)}
+          >
+            !
+          </button>
+          <button
+            className="cc-hotel-card-body__detail-btn"
+            onClick={(e) => addToWishlist(e, hotelData)}
+          >
+            <i className="fi fi-rs-heart"></i>
+            Yêu thích
           </button>
         </div>
       </div>

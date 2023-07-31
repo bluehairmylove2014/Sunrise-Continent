@@ -44,7 +44,9 @@ const Rooms = ({ rooms_data }) => {
 
               <div className="main-infor__img-wrapper">
                 {rd.picture.map((rp) => {
-                  return <img src={rp} alt="room_picture" key={rp} />;
+                  return (
+                    <img src={rp} alt="room_picture" key={`picture@${rp}`} />
+                  );
                 })}
               </div>
               <button className="main-infor__view-all-img">
@@ -73,12 +75,10 @@ const Rooms = ({ rooms_data }) => {
                 <small>Tiện nghi</small>
                 {rd.facility.map((fa) => {
                   return (
-                    <>
-                      <div className="facilities__item" key={fa}>
-                        <img src={ACCOMMODATION_FACILITIES[fa].ICON} alt="fa" />
-                        <p>{ACCOMMODATION_FACILITIES[fa].LABEL}</p>
-                      </div>
-                    </>
+                    <div className="facilities__item" key={fa}>
+                      <img src={ACCOMMODATION_FACILITIES[fa].ICON} alt="fa" />
+                      <p>{ACCOMMODATION_FACILITIES[fa].LABEL}</p>
+                    </div>
                   );
                 })}
               </div>
@@ -86,12 +86,10 @@ const Rooms = ({ rooms_data }) => {
                 <small>Dịch vụ</small>
                 {rd.service.map((sv) => {
                   return (
-                    <>
-                      <div className="services__item" key={sv}>
-                        <i className={ROOM_OPTIONS[sv].ICON}></i>
-                        <span>{ROOM_OPTIONS[sv].LABEL}</span>
-                      </div>
-                    </>
+                    <div className="services__item" key={sv}>
+                      <i className={ROOM_OPTIONS[sv].ICON}></i>
+                      <span>{ROOM_OPTIONS[sv].LABEL}</span>
+                    </div>
                   );
                 })}
               </div>

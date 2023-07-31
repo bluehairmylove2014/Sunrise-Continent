@@ -5,8 +5,8 @@ import cartsData from "../data/cart.json";
 axiosMockAdapterInstance.onGet(new CartService().getCartUrl).reply((config) => {
   const token = config.headers?.Authorization.replace("Bearer ", "");
   if (token) {
-    return cartsData[0]
-      ? [200, cartsData[0]]
+    return cartsData
+      ? [200, cartsData]
       : [
           404,
           {

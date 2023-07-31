@@ -1,10 +1,10 @@
 import { getAxiosNormalInstance, axios } from "../../config/axios";
 import { Services } from "../../service";
 import { googleApiConfig, facebookApiConfig } from "../../config/config";
+import { API_URL } from "../../config/url";
 
 export class SocialService extends Services {
-  API_URL = "";
-  url = this.API_URL + "/social";
+  url = API_URL + "/social";
   abortController;
   updateAccountUrl = this.url + "updateAccount";
 
@@ -95,6 +95,13 @@ export class SocialService extends Services {
   getFBAccessToken = async (params) => {
     this.abortController = new AbortController();
     try {
+      console.log(
+        facebookApiConfig.getFBAccessTokenUrl +
+          `?client_id=${params.clientId}` +
+          `&client_secret=${params.clientSecret}` +
+          `&redirect_uri=${params.redirectUri}` +
+          `&code=${params.code}`
+      );
       const response = await getAxiosNormalInstance().get(
         facebookApiConfig.getFBAccessTokenUrl +
           `?client_id=${params.clientId}` +

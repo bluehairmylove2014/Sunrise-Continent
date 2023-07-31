@@ -17,10 +17,9 @@ import {
 } from "../../libs/business-logic/src/lib/hotel/process/hooks";
 
 const HotelDetail = () => {
-  const { data: hotelData } = useGetHotelDetail("0");
   const urlParams = new URLSearchParams(window.location.search);
   const hotelId = urlParams.get("id");
-  console.log("Hotel ID: ", hotelId);
+  const { data: hotelData } = useGetHotelDetail(hotelId);
   const roomsData = useGetRooms("2");
 
   const renderAmenities = (amenities) => {

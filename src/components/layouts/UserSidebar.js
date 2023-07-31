@@ -2,8 +2,9 @@ import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useLogout } from "../../libs/business-logic/src/lib/auth";
 import "../../styles/common/userSidebar.scss";
+import { RankList } from "../../constants/Rank";
 
-const UserSidebar = ({ isActive, callback }) => {
+const UserSidebar = ({ isActive, userData, callback }) => {
   const sidebarRef = useRef(null);
   const { onLogout } = useLogout();
 
@@ -28,7 +29,14 @@ const UserSidebar = ({ isActive, callback }) => {
       ref={sidebarRef}
     >
       <div className="cc-user-sidebar__header">
-        <div></div>
+        <div className="cc-user-sidebar-header__rank">
+          {userData && (
+            <>
+              <img src={RankList[userData.rank].image} alt="rank" />
+              <span>{RankList[userData.rank].label}</span>
+            </>
+          )}
+        </div>
         <button
           className="cc-user-sidebar-header__close-btn"
           onClick={handleClose}
@@ -41,12 +49,6 @@ const UserSidebar = ({ isActive, callback }) => {
           <Link to="/profile">
             <i className="fi fi-rr-user"></i>
             <span>Your profile</span>
-          </Link>
-        </li>
-        <li>
-          <Link to="/profile">
-            <i className="fi fi-rr-hand-holding-heart"></i>
-            <span>Your wishlist</span>
           </Link>
         </li>
         <li>

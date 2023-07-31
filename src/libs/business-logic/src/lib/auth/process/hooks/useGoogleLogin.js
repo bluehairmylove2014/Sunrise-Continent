@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { SocialService, isAxiosError } from "../../../../../../services/src";
 import { useEffect, useMemo, useState } from "react";
 import { googleConfig } from "../../../../configs";
@@ -19,17 +20,20 @@ const redirectUri = getRedirectUri();
 export const useGoogleLogin = () => {
   // Configure auth url
   const googleAuthUrl = useMemo(
-    () => `${googleConfig.AUTH_URI}` +
-    `?client_id=${googleClientId}` +
-    `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-    `&response_type=token` +
-    `&scope=${encodeURIComponent(googleConfig.SCOPE)}`
-  , [])
-    
+    () =>
+      `${googleConfig.AUTH_URI}` +
+      `?client_id=${googleClientId}` +
+      `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+      `&response_type=token` +
+      `&scope=${encodeURIComponent(googleConfig.SCOPE)}`,
+    []
+  );
+
   const [isLoading, setIsLoading] = useState(false);
   const { postMessage } = useAuthBroadcastChannel();
   const socialService = new SocialService();
   const updateAccountMutation = useUpdateAccountMutation();
+  const currentUrl = window.location.href;
 
   // Get the setToken function from useAccessToken
   const { setToken } = useAccessToken();
@@ -60,7 +64,7 @@ export const useGoogleLogin = () => {
         window.close();
       }
     }
-  });
+  }, [currentUrl]);
 
   const onGoogleLogin = () => {
     const handleExit = (eventFunc) => {

@@ -151,9 +151,14 @@
                     // direction - justify content - align items - flex wrap
                     @include dflex(row, flex-end, center, nowrap);
                     span {
-                        margin-right: 0.75rem;
-                        font-size: 0.875rem;
+                        margin: 0 0.75rem 0 0.5rem;
+                        font-size: 0.75rem;
                         font-weight: 600;
+                    }
+                    & > img {
+                        object-fit: contain;
+                        width: 35px;
+                        height: 35px
                     }
                     button {
                         display: block;

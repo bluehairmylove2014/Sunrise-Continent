@@ -10,7 +10,7 @@ const cartService = new CartService();
  */
 export const useAddToCartMutation = () => {
   return useMutation(cartService.addToCart, {
-    retry: mutationConfig.retry,
+    retry: mutationConfig.RETRY,
   });
 };
 
@@ -19,7 +19,7 @@ export const useAddToCartMutation = () => {
  */
 export const useUpdateCartMutation = () => {
   return useMutation(cartService.updateCart, {
-    retry: mutationConfig.retry,
+    retry: mutationConfig.RETRY,
   });
 };
 
@@ -28,12 +28,7 @@ export const useUpdateCartMutation = () => {
  */
 export const useDeleteFromCartMutation = () => {
   return useMutation(cartService.deleteFromCart, {
-    retry: mutationConfig.retry,
-  });
-};
-export const useDecreaseItemQuantityMutation = () => {
-  return useMutation(cartService.decreaseItemQuantity, {
-    retry: mutationConfig.retry,
+    retry: mutationConfig.RETRY,
   });
 };
 
@@ -42,7 +37,7 @@ export const useDecreaseItemQuantityMutation = () => {
  */
 export const useClearCartMutation = () => {
   return useMutation(cartService.clearCart, {
-    retry: mutationConfig.retry,
+    retry: mutationConfig.RETRY,
   });
 };
 
@@ -51,6 +46,6 @@ export const useClearCartMutation = () => {
  */
 export const useGetCartMutation = () => {
   return useMutation(cartService.getCart, {
-    retry: mutationConfig.retry,
+    retry: mutationConfig.RETRY,
   });
 };

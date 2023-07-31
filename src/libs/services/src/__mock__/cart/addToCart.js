@@ -23,17 +23,17 @@ axiosMockAdapterInstance
           },
         ];
       }
-      if (cartsData[0]) {
-        if (Array.isArray(cartsData[0].items)) {
-          if (cartsData[0].items.length === 0) {
-            cartsData[0].items = [
+      if (cartsData) {
+        if (Array.isArray(cartsData.items)) {
+          if (cartsData.items.length === 0) {
+            cartsData.items = [
               {
                 item: data.item,
                 quantity: data.quantity,
               },
             ];
           } else {
-            cartsData[0].items.forEach((cp) => {
+            cartsData.items.forEach((cp) => {
               if (cp.item.id === data.item.id) {
                 cp.quantity += data.quantity;
               }

@@ -11,14 +11,17 @@ import { useForm } from "react-hook-form";
 import { useIsLogged } from "../../libs/business-logic/src/lib/auth";
 import { categories, languages } from "./Data";
 import WistList from "../common/WistList";
+import { useGetUser } from "../../libs/business-logic/src/lib/auth/process/hooks";
+import { useCartContext } from "../../libs/business-logic/src/lib/cart/process/context";
 
 const Header = () => {
   const [isUserSidebarActive, setIsUserSidebarActive] = useState(false);
   const [isWishlistActive, setIsWishlistActive] = useState(false);
   const [logoSrc, setLogoSrc] = useState(logoVerticalImg);
   const isLogin = useIsLogged();
-
+  const userData = useGetUser();
   const headerRef = useRef(null);
+  const { state } = useCartContext();
 
   const navigate = useNavigate();
 
@@ -152,15 +155,17 @@ const Header = () => {
               }`}
             >
               <li className="header-main-nav__user-avatar">
-                <span>Welcome!</span>
-                <button
-                  onClick={() => setIsUserSidebarActive(!isUserSidebarActive)}
-                >
-                  <img
-                    src="https://rialloer.sirv.com/Sunrise-Continent/Users/IMG_0615-min%20(1).jpg?w=500&h=500"
-                    alt="user-avatar"
-                  />
-                </button>
+                {userData && (
+                  <>
+                    <button
+                      onClick={() =>
+                        setIsUserSidebarActive(!isUserSidebarActive)
+                      }
+                    >
+                      <img src={userData.image} alt="user-avatar" />
+                    </button>
+                  </>
+                )}
               </li>
             </ul>
           </nav>
@@ -175,11 +180,13 @@ const Header = () => {
               <i className="fi fi-rs-heart"></i>
               Wish List
             </span>
-            <span className="wishlist-btn__content">0&nbsp;</span>
+            <span className="wishlist-btn__content">
+              {state.cart ? state.cart.length : 0}&nbsp;
+            </span>
             <span className="wishlist-btn__content">i</span>
             <span className="wishlist-btn__content">t</span>
             <span className="wishlist-btn__content">e</span>
-            <span className="wishlist-btn__content">m</span>
+            <span className="wishlist-btn__content">ms</span>
           </button>
         </nav>
         <div className="search-box__introduction">
@@ -206,6 +213,7 @@ const Header = () => {
       />
       <UserSidebar
         isActive={isUserSidebarActive}
+        userData={userData}
         callback={useCallback(
           (status) => setIsUserSidebarActive(status),
           [setIsUserSidebarActive]

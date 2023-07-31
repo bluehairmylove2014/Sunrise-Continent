@@ -2,7 +2,7 @@ import { getAxiosNormalInstance, axios } from "../../config/axios";
 import { Services } from "../../service";
 
 import { googleApiConfig, facebookApiConfig } from "../../config/config";
-import { API_URL } from "../../../../business-logic/src/configs";
+import { API_URL } from "../../config/url";
 
 export class SocialService extends Services {
   url = API_URL + "/social";

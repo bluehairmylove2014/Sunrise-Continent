@@ -1,2 +1,1 @@
-//TODO: url ?
-export const API_URL = "";
+export const API_URL = "https://sunrise-continent.azurewebsites.net";

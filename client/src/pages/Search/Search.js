@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import "../../styles/scss/search.scss";
 import TravelImg from "../../assets/images/graphics/travel.png";
@@ -14,11 +15,15 @@ import Hotel from "./Hotel";
 import { toggleClass } from "../../utils/helpers/ToggleClass";
 import { useSearch } from "../../libs/business-logic/src/lib/hotel";
 import SmallPageLoader from "../../components/common/SmallPageLoader";
+import { calcMaxPage } from "../../utils/helpers/Pages";
+
+const itemsPerPage = 14;
 
 const Search = () => {
   const { onSearch, isLoading: isSearching } = useSearch();
   const sortDropdownRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [maxPage, setMaxPage] = useState(1);
   const [hotels, setHotels] = useState([]);
   const [criteria, setCriteria] = useState(
     parseSearchParams(useLocation().search)
@@ -145,7 +150,9 @@ const Search = () => {
         <button
           className={p.active ? "active" : ""}
           data-pagenumber={p.page}
-          // onClick={e => handleChangeTrendingHotelPage(e)}
+          onClick={(e) => {
+            setCurrentPage(p.page);
+          }}
           key={`trending-hotel-page-number@${i}`}
         >
           {p.page}
@@ -170,7 +177,9 @@ const Search = () => {
     if (Object.keys(criteria).length) {
       onSearch(criteria)
         .then((data) => {
+          const length = Array.isArray(data) ? data.length : 0;
           setHotels(data);
+          setMaxPage(calcMaxPage(length, currentPage, itemsPerPage));
         })
         .catch((err) => {
           console.error(err);
@@ -266,19 +275,39 @@ const Search = () => {
                 <div className="results__page-pagination-wrapper">
                   {
                     <div className="results__page-pagination">
-                      <button>
+                      <button
+                        onClick={() => {
+                          setCurrentPage(1);
+                        }}
+                      >
                         <i className="fi fi-rs-angle-double-small-left"></i>
                       </button>
-                      <button>
+                      <button
+                        onClick={() => {
+                          if (currentPage > 1) {
+                            setCurrentPage(currentPage - 1);
+                          }
+                        }}
+                      >
                         <i className="fi fi-rs-angle-small-left"></i>
                       </button>
 
-                      {renderPagePaginationNumberBtn(currentPage, 10)}
+                      {renderPagePaginationNumberBtn(currentPage, maxPage)}
 
-                      <button>
+                      <button
+                        onClick={() => {
+                          if (currentPage > maxPage) {
+                            setCurrentPage(currentPage + 1);
+                          }
+                        }}
+                      >
                         <i className="fi fi-rs-angle-small-right"></i>
                       </button>
-                      <button>
+                      <button
+                        onClick={() => {
+                          setCurrentPage(maxPage);
+                        }}
+                      >
                         <i className="fi fi-rs-angle-double-small-right"></i>
                       </button>
                     </div>

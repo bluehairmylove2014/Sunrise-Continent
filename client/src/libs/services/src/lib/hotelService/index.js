@@ -1,4 +1,4 @@
-import { API_URL } from "../../../../business-logic/src/configs";
+import { API_URL } from "../../config/url";
 import { axios } from "../../config/axios";
 import { Services } from "../../service";
 

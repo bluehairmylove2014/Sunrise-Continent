@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { axios } from "../../../../../../services/src";
 import React from "react";
 import { authConfig } from "../../../../configs";

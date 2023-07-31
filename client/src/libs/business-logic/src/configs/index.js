@@ -14,8 +14,6 @@ export const providerConfig = [
   },
 ];
 
-export const API_URL = "https://sunrise-continent.azurewebsites.net";
-
 export const googleConfig = {
   CLIENT_ID:
     "490941492727-9ojv2i4jejj7ni0a6nt8go90cmiebgb2.apps.googleusercontent.com",

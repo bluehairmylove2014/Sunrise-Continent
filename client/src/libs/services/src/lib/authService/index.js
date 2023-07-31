@@ -1,5 +1,5 @@
-import { API_URL } from "../../../../business-logic/src/configs";
 import { axios } from "../../config/axios";
+import { API_URL } from "../../config/url";
 import { Services } from "../../service";
 
 // Removed TypeScript-specific class extension and interface implementation

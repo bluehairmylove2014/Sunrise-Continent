@@ -25,6 +25,11 @@ jobs:
           cd client
           npm install
           npm run build
+          - name: Archive Build Artifacts
+          uses: actions/upload-artifact@v2
+          with:
+            name: build-artifacts
+            path: client/build
 
   deploy:
     needs: build
@@ -40,15 +45,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
+      - name: Archive Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: client/build
+
       - name: Deploy to S3
         run: |
           aws s3 rm s3://${{ secrets.S3_BUCKET }} --recursive
           aws s3 cp client/build/ s3://${{ secrets.S3_BUCKET }} --recursive
-
-      - name: Log Contents of client/build/ Before Deployment
-        run: |
-          ls -R client/build/
-
-      - name: Log S3 Bucket Contents After Deployment
-        run: |
-          aws s3 ls s3://${{ secrets.S3_BUCKET }} --recursive

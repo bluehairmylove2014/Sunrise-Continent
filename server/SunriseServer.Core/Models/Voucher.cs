@@ -7,6 +7,6 @@ namespace SunriseServerCore.Models
         public string Name { get; set; } = string.Empty;
         public int Value { get; set; }
         public int Point { get; set; }
-        public string UserRank { get; set; } = string.Empty;
+        public string AccountRank { get; set; } = string.Empty;
     }
 }

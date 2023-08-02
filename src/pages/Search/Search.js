@@ -1,11 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "../../styles/component/search.scss";
 import TravelImg from "../../assets/images/graphics/travel.png";
 import Filterboard from "./Filterboard";
 import BannerInput from "../../components/common/BannerInput";
 import { useForm } from "react-hook-form";
-import { BANNER_INPUT } from "../../constants/Variables.constants";
+import {
+  BANNER_INPUT,
+  FILTER_INPUT,
+} from "../../constants/Variables.constants";
 import { useLocation } from "react-router-dom";
 import {
   parseSearchParams,
@@ -16,9 +19,10 @@ import { toggleClass } from "../../utils/helpers/ToggleClass";
 import { useSearch } from "../../libs/business-logic/src/lib/hotel";
 import SmallPageLoader from "../../components/common/SmallPageLoader";
 import { calcMaxPage } from "../../utils/helpers/Pages";
+import { FILTER_CHECKBOX_KEY } from "../../constants/filter.constants";
 
 const itemsPerPage = 14;
-
+const budgetKey = "budget";
 const Search = () => {
   const { onSearch, isLoading: isSearching } = useSearch();
   const sortDropdownRef = useRef(null);
@@ -28,23 +32,62 @@ const Search = () => {
   const [criteria, setCriteria] = useState(
     parseSearchParams(useLocation().search)
   );
-  const defaultValues = Object.keys(BANNER_INPUT).reduce((values, key) => {
-    const inputName = BANNER_INPUT[key].INPUT_NAME;
-    if (Array.isArray(inputName)) {
-      inputName.forEach((n) => {
-        values[n] = criteria[n];
-      });
-      return values;
-    } else {
-      values[BANNER_INPUT[key].INPUT_NAME] =
-        criteria[BANNER_INPUT[key].INPUT_NAME];
-      return values;
-    }
-  }, {});
-  const criteriaBoardForm = useForm({
-    defaultValues,
+  const searchBoardForm = useForm({
+    defaultValues: Object.keys(BANNER_INPUT).reduce((values, key) => {
+      const inputName = BANNER_INPUT[key].INPUT_NAME;
+      if (Array.isArray(inputName)) {
+        inputName.forEach((n) => {
+          values[n] = criteria[n];
+        });
+        return values;
+      } else {
+        values[BANNER_INPUT[key].INPUT_NAME] =
+          criteria[BANNER_INPUT[key].INPUT_NAME];
+        return values;
+      }
+    }, {}),
   });
-  const searchBoardForm = useForm();
+  let filterTrueList = [];
+  FILTER_CHECKBOX_KEY.forEach((fc) => {
+    const trueList = criteria[fc.checkboxGroupKey];
+    if (trueList) {
+      filterTrueList = [...filterTrueList, ...trueList];
+    }
+  });
+  const filterBoardForm = useForm({
+    defaultValues: FILTER_INPUT.reduce((values, key) => {
+      values[key] = filterTrueList.includes(key) ? "true" : "false";
+      return values;
+    }, {}),
+  });
+
+  useEffect(() => {
+    handleSearch(criteria);
+  }, []);
+
+  useEffect(() => {
+    console.log(filterBoardForm.formState.defaultValues);
+  }, [filterBoardForm]);
+
+  const handleSearch = (criteria) => {
+    if (typeof criteria.budget === "string") return;
+    if (Object.keys(criteria).length) {
+      onSearch(criteria)
+        .then((data) => {
+          setHotels(data);
+          setMaxPage(
+            calcMaxPage(
+              Array.isArray(data) ? data.length : 0,
+              currentPage,
+              itemsPerPage
+            )
+          );
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  };
 
   const budgetToObject = (arrayBudget) => {
     if (!Array.isArray(arrayBudget) || arrayBudget.length !== 2)
@@ -60,7 +103,7 @@ const Search = () => {
       ...criteria,
       ...data,
     };
-    const formBudget = searchBoardForm.getValues().budget;
+    const formBudget = filterBoardForm.getValues().budget;
     if (criteria.budget) {
       newCriteria = {
         ...criteria,
@@ -79,39 +122,54 @@ const Search = () => {
       null,
       `/search${stringifySearchParams(newCriteria)}`
     );
+    handleSearch({
+      ...criteria,
+      ...data,
+    });
   };
 
-  const onFilter = ({ key, value, status }) => {
+  const onFilter = useCallback(({ key, value, status }) => {
     let newCriteria = {
       ...criteria,
     };
-    if (criteria.budget) {
-      newCriteria = {
-        ...criteria,
-        budget: JSON.stringify(budgetToObject(criteria.budget)),
-      };
-    }
-    if (!status) {
-      delete newCriteria[value];
-    } else {
-      if (key in newCriteria) {
-        newCriteria[key].push(value);
+    const newBudget = key === budgetKey ? value : criteria.budget;
+    if (status !== undefined) {
+      if (status) {
+        if (key in newCriteria) {
+          newCriteria[key].push(value);
+        } else {
+          newCriteria = {
+            ...newCriteria,
+            ...{
+              [key]: [value],
+            },
+          };
+        }
       } else {
-        newCriteria = {
-          ...newCriteria,
-          ...{
-            [key]: [value],
-          },
-        };
+        delete newCriteria[value];
       }
     }
+
+    let paramsCriteria = { ...newCriteria };
+    if (newBudget) {
+      newCriteria = {
+        ...newCriteria,
+        budget: newBudget,
+      };
+      paramsCriteria = {
+        ...paramsCriteria,
+        budget: JSON.stringify(budgetToObject(newBudget)),
+      };
+    }
+
     setCriteria(newCriteria);
     window.history.pushState(
       null,
       null,
-      `/search${stringifySearchParams(newCriteria)}`
+      `/search${stringifySearchParams(paramsCriteria)}`
     );
-  };
+    handleSearch(newCriteria);
+  }, []);
 
   const renderHotels = (hotelList) => {
     if (!Array.isArray(hotelList)) return <></>;
@@ -163,30 +221,6 @@ const Search = () => {
     return <>{htmlDisplayPages}</>;
   };
 
-  useEffect(() => {
-    if (criteria.budget && typeof criteria.budget === "string") {
-      let budgetJson = JSON.parse(criteria.budget);
-      setCriteria({
-        ...criteria,
-        budget: [budgetJson.min, budgetJson.max],
-      });
-    }
-  }, []);
-  useEffect(() => {
-    if (typeof criteria.budget === "string") return;
-    if (Object.keys(criteria).length) {
-      onSearch(criteria)
-        .then((data) => {
-          const length = Array.isArray(data) ? data.length : 0;
-          setHotels(data);
-          setMaxPage(calcMaxPage(length, currentPage, itemsPerPage));
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-  }, [criteria]);
-
   return (
     <main className="search">
       <div className="search__banner">
@@ -199,17 +233,17 @@ const Search = () => {
       </div>
       <form
         className="search__criteria-board"
-        onSubmit={criteriaBoardForm.handleSubmit(onResearch)}
+        onSubmit={searchBoardForm.handleSubmit(onResearch)}
       >
         <BannerInput
           name={BANNER_INPUT.LOCATION.INPUT_NAME}
           type={BANNER_INPUT.LOCATION.TYPE}
-          form={criteriaBoardForm}
+          form={searchBoardForm}
         />
         <BannerInput
           name={BANNER_INPUT.DATE_TIME_DOUBLE.INPUT_NAME}
           type={BANNER_INPUT.DATE_TIME_DOUBLE.TYPE}
-          form={criteriaBoardForm}
+          form={searchBoardForm}
         />
         <BannerInput
           name={BANNER_INPUT.PEOPLE_AND_ROOM.INPUT_NAME}
@@ -217,7 +251,7 @@ const Search = () => {
           description={BANNER_INPUT.PEOPLE_AND_ROOM.DESCRIPTION}
           type={BANNER_INPUT.PEOPLE_AND_ROOM.TYPE}
           min={BANNER_INPUT.PEOPLE_AND_ROOM.MIN_VALUE}
-          form={criteriaBoardForm}
+          form={searchBoardForm}
         />
         <button type="submit" className="search__submit-btn">
           Tìm kiếm
@@ -225,7 +259,7 @@ const Search = () => {
       </form>
       <div className="container main__wrapper">
         <Filterboard
-          form={searchBoardForm}
+          form={filterBoardForm}
           defaultValues={criteria.budget}
           callback={onFilter}
         />

@@ -11,13 +11,14 @@ $container-width: 1400px;
     --desert-storm: #F7F7F7;
     --midnight: #141130;
     --butterfly-bush: #3C2C7C;
+    --light-butterfly-bush: #503d9e;
     --mountain-mist: #9390A0;
     --dirty-orange: #D37200;
     --ebony-clay: #232641;
     --heavy-white-smoke: #e6ecf1;
     --milk-white: #FDFCFC;
     --tuna: #372C57;
-    --soft-blue:#6E88FD;
+    --soft-blue: #6E88FD;
     --ultramarine-blue: #4A6CFF;
     --toxic-green: #3CE241;
     --kelly-green: #0BC311;
@@ -33,6 +34,7 @@ $container-width: 1400px;
     font-family: Montserrat;
     src: url('../../assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf');
 }
+
 @font-face {
     font-family: RobotoBold;
     src: url('../../assets/fonts/Roboto_Mono/RobotoMono-Bold.ttf');
@@ -88,6 +90,7 @@ body {
     font-family: Montserrat, sans-serif;
     letter-spacing: 0.2px;
 }
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 body::-webkit-scrollbar {
     display: none;
@@ -192,6 +195,7 @@ i {
     position: relative;
     bottom: -2px;
 }
+
 .custom-line-template {
     width: 100%;
     position: relative;

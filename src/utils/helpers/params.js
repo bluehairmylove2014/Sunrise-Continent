@@ -6,6 +6,9 @@ export const parseSearchParams = (params) => {
     const [key, value] = param.split("=");
     if (value.includes(",") && key !== "budget") {
       paramObject[key] = value.split(",");
+    } else if (key === "budget") {
+      const budgetObj = JSON.parse(decodeURIComponent(value));
+      paramObject[key] = [budgetObj.min, budgetObj.max];
     } else {
       paramObject[key] = isNaN(value)
         ? decodeURIComponent(value)

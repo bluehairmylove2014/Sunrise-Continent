@@ -1,5 +1,5 @@
+let timer = null;
 export const debouncePromise = (func, timeout) => {
-  let timer = null;
   return (args) =>
     new Promise((resolve, reject) => {
       if (timer) {

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 // Slider library
 import { Slider } from "@mui/material";
@@ -8,20 +8,23 @@ import { debounce } from "lodash";
 import "../../styles/common/budgetRange.scss";
 
 const BudgetRange = ({ callbackOnchange, defaultValues }) => {
-  const [priceRange, setPriceRange] = useState([0, 1000]);
-  useEffect(() => {
-    if (
-      defaultValues &&
-      defaultValues[0] !== priceRange[0] &&
-      defaultValues[1] !== priceRange[1]
-    ) {
-      setPriceRange(defaultValues);
-    }
-  }, [defaultValues]);
+  const [priceRange, setPriceRange] = useState(defaultValues);
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
-  const runCallback = debounce((price) => {
-    callbackOnchange && callbackOnchange(price);
-  }, 500);
+  useEffect(() => {
+    if (isFirstRender) {
+      setIsFirstRender(false);
+      return; // Do nothing on the first render
+    }
+
+    const delayedCallback = debounce(() => {
+      callbackOnchange && callbackOnchange(priceRange);
+    }, 1000);
+
+    delayedCallback();
+
+    return delayedCallback.cancel;
+  }, [priceRange]);
 
   return (
     <div className="common-component__budget-range">
@@ -29,7 +32,6 @@ const BudgetRange = ({ callbackOnchange, defaultValues }) => {
         value={priceRange}
         onChange={(e, price) => {
           setPriceRange(price);
-          runCallback(price);
         }}
         valueLabelDisplay="off"
         min={0}
@@ -53,4 +55,4 @@ const BudgetRange = ({ callbackOnchange, defaultValues }) => {
   );
 };
 
-export default BudgetRange;
+export default memo(BudgetRange);

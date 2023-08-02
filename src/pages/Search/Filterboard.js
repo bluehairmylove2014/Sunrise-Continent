@@ -1,15 +1,11 @@
-import React from "react";
-import {
-  LOCATION_TYPES,
-  BED_TYPES,
-  ROOM_OPTIONS,
-  ACCOMMODATION_FACILITIES,
-} from "../../constants/filter.constants";
-import { GUEST_RATINGS } from "../../constants/Rating.constant";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useCallback } from "react";
+import { FILTER_CHECKBOX_KEY } from "../../constants/filter.constants";
 import BudgetRange from "../../components/common/BudgetRange";
 import Checkbox from "../../components/common/Checkbox";
 import { Controller } from "react-hook-form";
 
+const budgetName = "budget";
 const Filterboard = ({ form, defaultValues, callback }) => {
   const onCheckboxChange = (checkboxName, paramKey) => {
     callback({
@@ -38,16 +34,20 @@ const Filterboard = ({ form, defaultValues, callback }) => {
       return <></>;
     }
   };
-  const setBudget = (budget) => {
-    form.setValue("budget", budget);
-  };
+  const setBudget = useCallback((budget) => {
+    form.setValue(budgetName, budget);
+    callback({
+      key: budgetName,
+      value: budget,
+    });
+  }, []);
 
   return (
     <form className="filterboard">
       <div className="filterboard__budget">
         <h6>Giá mỗi đêm</h6>
         <Controller
-          name="budget"
+          name={budgetName}
           control={form.control}
           render={({ field }) => (
             <BudgetRange
@@ -62,35 +62,18 @@ const Filterboard = ({ form, defaultValues, callback }) => {
         />
       </div>
       <hr />
-      <div className="filterboard__location-types">
-        <h6>Loại hình nơi ở</h6>
+      {FILTER_CHECKBOX_KEY.map((fc) => {
+        return (
+          <div
+            className="filterboard__location-types"
+            key={fc.checkboxGroupKey}
+          >
+            <h6>{fc.label}</h6>
 
-        {renderCheckbox(form, LOCATION_TYPES, "hotelType")}
-      </div>
-      <hr />
-      <div className="filterboard__location-types">
-        <h6>Loại giường</h6>
-
-        {renderCheckbox(form, BED_TYPES, "bedType")}
-      </div>
-      <hr />
-      <div className="filterboard__location-types">
-        <h6>Đánh giá của khách</h6>
-
-        {renderCheckbox(form, GUEST_RATINGS, "guestRating")}
-      </div>
-      <hr />
-      <div className="filterboard__location-types">
-        <h6>Tiện nghi chỗ nghỉ</h6>
-
-        {renderCheckbox(form, ACCOMMODATION_FACILITIES, "facilities")}
-      </div>
-      <hr />
-      <div className="filterboard__location-types">
-        <h6>Chọn phòng có</h6>
-
-        {renderCheckbox(form, ROOM_OPTIONS, "amenities")}
-      </div>
+            {renderCheckbox(form, fc.checkboxData, fc.checkboxGroupKey)}
+          </div>
+        );
+      })}
     </form>
   );
 };

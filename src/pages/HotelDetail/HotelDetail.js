@@ -20,7 +20,7 @@ const HotelDetail = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const hotelId = urlParams.get("id");
   const { data: hotelData } = useGetHotelDetail(hotelId);
-  const roomsData = useGetRooms("2");
+  const roomsData = useGetRooms(hotelId);
 
   const renderAmenities = (amenities) => {
     if (!Array.isArray(amenities)) return <></>;

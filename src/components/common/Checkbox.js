@@ -13,6 +13,7 @@ const Checkbox = ({ form, name, label, callbackOnChange }) => {
             <input
               {...field}
               type="checkbox"
+              defaultChecked={form.getValues()[name] === "true" ? true : false}
               onChange={(e) => {
                 field.onChange(e);
                 callbackOnChange(name);

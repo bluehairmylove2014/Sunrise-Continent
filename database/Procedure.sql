@@ -1628,3 +1628,149 @@ BEGIN
 	RETURN 0;
 END;
 GO
+
+--! proc tính doanh thu của khách sạn theo tháng
+CREATE PROCEDURE CalculateHotelRevenueByMonth
+    @Year INT,
+    @Month INT,
+    @HotelId INT,
+    @TotalRevenue INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @StartDate DATE, @EndDate DATE;
+
+    -- Tính ngày bắt đầu của tháng
+    SET @StartDate = DATEFROMPARTS(@Year, @Month, 1);
+
+    -- Tính số ngày của tháng đó
+    SET @EndDate = DATEADD(DAY, -1, DATEADD(MONTH, 1, @StartDate));
+
+    SELECT @TotalRevenue = COALESCE(SUM(Total), -1)
+    FROM ACCOUNT_ORDER AO
+    JOIN ORDER_DETAIL OD ON AO.OrderId = OD.OrderId
+    JOIN BOOKING_ACCOUNT BA ON OD.BookingId = BA.BookingId
+    WHERE AO.Paid = 1
+        AND BA.CheckIn >= @StartDate
+        AND BA.CheckIn <= @EndDate
+        AND BA.HotelId = @HotelId;
+
+    IF @TotalRevenue IS NULL
+        SET @TotalRevenue = -1;
+    
+    RETURN @TotalRevenue;
+END;
+
+--!proc tính doanh thu khách sạn theo quý
+CREATE PROCEDURE CalculateHotelRevenueByQuarter
+    @Year INT,
+    @Quarter INT,
+    @HotelId INT,
+    @TotalRevenue INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @StartDate DATE, @EndDate DATE;
+
+    -- Tính ngày bắt đầu của quý
+    SET @StartDate = DATEFROMPARTS(@Year, (@Quarter - 1) * 3 + 1, 1);
+
+    -- Tính ngày cuối cùng của quý
+    SET @EndDate = DATEADD(DAY, -1, DATEADD(MONTH, 3, @StartDate));
+
+    SELECT @TotalRevenue = COALESCE(SUM(Total), -1)
+    FROM ACCOUNT_ORDER AO
+    JOIN ORDER_DETAIL OD ON AO.OrderId = OD.OrderId
+    JOIN BOOKING_ACCOUNT BA ON OD.BookingId = BA.BookingId
+    WHERE AO.Paid = 1
+        AND BA.CheckIn >= @StartDate
+        AND BA.CheckIn <= @EndDate
+        AND BA.HotelId = @HotelId;
+
+    IF @TotalRevenue IS NULL
+        SET @TotalRevenue = -1;
+    
+    RETURN @TotalRevenue;
+END;
+
+--!proc tính doanh thu khách sạn trong năm
+
+CREATE PROCEDURE CalculateHotelRevenueByYear
+    @Year INT,
+    @HotelId INT,
+    @TotalRevenue INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @StartDate DATE, @EndDate DATE;
+
+    -- Tính ngày bắt đầu của năm
+    SET @StartDate = DATEFROMPARTS(@Year, 1, 1);
+
+    -- Tính ngày cuối cùng của năm
+    SET @EndDate = DATEADD(DAY, -1, DATEADD(YEAR, 1, @StartDate));
+
+    -- Tính doanh thu
+    SELECT @TotalRevenue = SUM(Total)
+    FROM ACCOUNT_ORDER AO
+    JOIN ORDER_DETAIL OD ON AO.OrderId = OD.OrderId
+    JOIN BOOKING_ACCOUNT BA ON OD.BookingId = BA.BookingId
+    WHERE AO.Paid = 1
+        AND BA.CheckIn >= @StartDate
+        AND BA.CheckIn <= @EndDate
+        AND BA.HotelId = @HotelId;
+
+    IF @TotalRevenue IS NULL
+        SET @TotalRevenue = -1;
+
+    -- Trả về kết quả
+    RETURN @TotalRevenue;
+END;
+
+--!proc tính diểm thành viên dựa trên số ngày cư trú 
+CREATE PROCEDURE CalculatePointsForMember
+    @BookingId INT
+AS
+BEGIN
+    DECLARE @NumberOfDays INT;
+    DECLARE @RoomPrice FLOAT;
+    DECLARE @C FLOAT;
+    DECLARE @PointsEarned FLOAT;
+
+    -- Lấy số ngày lưu trú từ đơn booking
+    SELECT @NumberOfDays = DATEDIFF(DAY, CheckIn, CheckOut) FROM BOOKING_ACCOUNT WHERE BookingId = @BookingId;
+
+    -- Kiểm tra xem @BookingId có tồn tại hay không
+    IF @NumberOfDays IS NULL
+    BEGIN
+        -- Trả về -1 nếu @BookingId không tồn tại
+        SELECT -1 AS PointsEarned;
+        RETURN;
+    END
+
+    -- Lấy giá phòng từ ROOM_TYPE
+    SELECT @RoomPrice = Price FROM ROOM_TYPE WHERE Id = (SELECT RoomTypeId FROM BOOKING_ACCOUNT WHERE BookingId = @BookingId);
+
+    -- Tính giá trị c dựa trên giá phòng
+    IF @RoomPrice < 1000000
+        SET @C = 0.005 * (@RoomPrice / 1000); -- 0.5% của giá phòng
+    ELSE
+        SET @C = 0.01 * (@RoomPrice / 1000);  -- 1% của giá phòng
+
+    -- Tính số điểm nhận được dựa trên số ngày lưu trú và giá trị c
+    IF @NumberOfDays < 5
+        SET @PointsEarned = 0;
+    ELSE IF @NumberOfDays >= 5 AND @NumberOfDays < 10
+        SET @PointsEarned = 1 * @C;
+    ELSE IF @NumberOfDays >= 10 AND @NumberOfDays < 15
+        SET @PointsEarned = 2 * @C;
+    ELSE IF @NumberOfDays >= 15
+        SET @PointsEarned = (((@NumberOfDays - 15) / 5) + 1) * (0.01 * (@RoomPrice / 1000))* 0.012;
+
+    -- Return số điểm nhận được
+    SELECT @PointsEarned;
+END
+

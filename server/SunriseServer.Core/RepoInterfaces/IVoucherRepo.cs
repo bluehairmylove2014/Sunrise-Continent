@@ -11,7 +11,7 @@ namespace SunriseServerCore.RepoInterfaces
     public interface IVoucherRepo : IRepository<Voucher>
     {
         Task<List<VoucherBag>> GetAccountVoucherAsync(int accountId);
-        Task<Voucher> CreateAsync(AddVoucherDto voucher);
+        Task<int> CreateAsync(AddVoucherDto voucher);
         Task<int> UpdateVoucherAsync(Voucher voucher);
         Task<int> DeleteVoucherAsync(int voucherId);
         Task<int> UpdateAccountRankAsync(int accountId);

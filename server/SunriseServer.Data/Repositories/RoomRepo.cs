@@ -28,6 +28,16 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
+        public async Task<List<RoomType>> GetAllRoomWithVacancyAsync(int hotelId, DateTime? checkIn, DateTime? checkOut)
+        {
+            var str = $"EXEC USP_GetRoomWithAvailableNum @HotelId={hotelId}, @CheckIn=\'{checkIn}\', @CheckOut=\'{checkOut}\';";
+            Console.WriteLine(str);
+
+            var result = await _dataContext.RoomType
+                .FromSqlInterpolated($"EXECUTE({str})").ToListAsync();
+            return result;
+        }
+
         public async Task<RoomType> GetSingleRoomTypeAsync(int hotelId, int id)
         {
             var result = await _dataContext.RoomType.FromSqlInterpolated($"exec USP_GetRoomType @HotelId={hotelId}, @Id={id};").ToListAsync();
@@ -52,6 +62,14 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
+        public async Task<bool> CheckRoomAvailabilityAsync(CheckRoomAvailabilityDto checkDto)
+        {
+            var result = await _dataContext.Set<MyFunctionResult>()
+                .FromSqlInterpolated($"select dbo.USF_CheckRoomAvailability({checkDto.HotelId}, {checkDto.RoomTypeId}, {checkDto.NumberOfRoom}, {checkDto.CheckIn}, {checkDto.CheckOut}) as value;")
+                .ToListAsync();
+
+            return (result.FirstOrDefault()).myValue;
+        }  
 
         // POST
         public override async Task<RoomType> CreateAsync(RoomType createDto)

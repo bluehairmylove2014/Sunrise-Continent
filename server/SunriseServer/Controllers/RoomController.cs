@@ -49,37 +49,64 @@ namespace SunriseServer.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ActionResult<ResponseMessageDetails<List<RoomDto>>>> GetHotelRoomType(int hotelId)
+        public async Task<ActionResult<List<RoomDto>>> GetHotelRoomType(int hotelId, DateTime? start_date, DateTime? end_date)
         {
-            var result = await _roomService.GetAllRoom(hotelId);
+            var result = new List<RoomType>();
+            if (start_date is not null && end_date is not null)
+            {
+                result = await _roomService.GetAllRoomWithVacancy(hotelId, start_date, end_date);
+            } else {
+                result = await _roomService.GetAllRoom(hotelId);
+            }
 
             var finalResult = new List<RoomDto>();
             foreach (var item in result)
             {
                 finalResult.Add(await TransferRoomData(item));
             }
-            return Ok(new ResponseMessageDetails<List<RoomDto>>("Get hotel rooms successfully", finalResult));
+            return Ok(finalResult);
         }
 
         [HttpGet("single")]
-        public async Task<ActionResult<ResponseMessageDetails<RoomDto>>> GetSingleRoom(int hotelId, int id)
+        public async Task<ActionResult<RoomDto>> GetSingleRoom(int hotelId, int id)
         {
             var roomRawInfo = await _roomService.GetSingleRoom(hotelId, id);
             if (roomRawInfo is null)
                 return NotFound("Room not found");
 
             var result = await TransferRoomData(roomRawInfo);
-            return Ok(new ResponseMessageDetails<RoomDto>("Get HotelRoom successfully", result));
+            return Ok(result);
         }
 
         [HttpGet("picture")]
-        public async Task<ActionResult<ResponseMessageDetails<List<RoomPicture>>>> GetRoomPicture(int hotelId, int id)
+        public async Task<ActionResult<List<RoomPicture>>> GetRoomPicture(int hotelId, int id)
         {
             var result = await _roomService.GetRoomPicture(hotelId, id);
             if (result is null)
                 return NotFound("RoomPicture not found");
             
-            return Ok(new ResponseMessageDetails<List<RoomPicture>>("Get RoomPicture successfully", result));
+            return Ok(result);
+        }
+
+        [HttpGet("available")]
+        public async Task<ActionResult<ResponseMessageDetails<bool>>> GetHotelRoomAvailable(
+            int HotelId,
+            int RoomTypeId,
+            int NumberOfRoom,
+            DateTime CheckIn,
+            DateTime CheckOut
+        )
+        {
+            var checkDto = new CheckRoomAvailabilityDto() {
+                HotelId = HotelId,
+                RoomTypeId = RoomTypeId,
+                NumberOfRoom = NumberOfRoom,
+                CheckIn = CheckIn,
+                CheckOut = CheckOut,
+            };
+            var result = await _roomService.CheckRoomAvailability(checkDto);
+            
+            return Ok(result);
         }
 
         // POST

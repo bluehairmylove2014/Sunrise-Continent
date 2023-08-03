@@ -17,6 +17,12 @@ namespace SunriseServer.Services.RoomService
             return roomList;
         }
 
+        public async Task<List<RoomType>> GetAllRoomWithVacancy(int hotelId, DateTime? checkIn, DateTime? checkOut)
+        {
+            var roomList = await _unitOfWork.RoomRepo.GetAllRoomWithVacancyAsync(hotelId, checkIn, checkOut);
+            return roomList;
+        }
+
         public async Task<RoomType> GetSingleRoom(int hotelId, int id)
         {
             var room = await _unitOfWork.RoomRepo.GetSingleRoomTypeAsync(hotelId, id);
@@ -39,6 +45,12 @@ namespace SunriseServer.Services.RoomService
         {
             var roomService = await _unitOfWork.RoomRepo.GetRoomServiceAsync(hotelId, id);
             return roomService;
+        }
+
+        public async Task<bool> CheckRoomAvailability(CheckRoomAvailabilityDto checkDto)
+        {
+            var value = await _unitOfWork.RoomRepo.CheckRoomAvailabilityAsync(checkDto);
+            return value;
         }
 
         // POST

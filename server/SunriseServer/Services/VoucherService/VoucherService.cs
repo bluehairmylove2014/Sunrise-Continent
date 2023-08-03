@@ -30,7 +30,7 @@ namespace SunriseServer.Services.VoucherService
             return result;
         }
 
-        public async Task<Voucher> CreateVoucher(AddVoucherDto voucher)
+        public async Task<int> CreateVoucher(AddVoucherDto voucher)
         {
             var result = await _unitOfWork.VoucherRepo.CreateAsync(voucher);
             return result;

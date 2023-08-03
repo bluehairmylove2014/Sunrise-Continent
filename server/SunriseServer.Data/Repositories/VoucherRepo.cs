@@ -41,25 +41,27 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
-        public async Task<Voucher> CreateAsync(AddVoucherDto voucher)
+        public async Task<int> CreateAsync(AddVoucherDto voucher)
         {
-            var str = $@"DECLARE @Id INT;
-                         EXEC @Id = USP_AddVoucher @Name='{voucher.Name}', @Value='{voucher.Value}', @Point='{voucher.Point}', @AccountRank='{voucher.AccountRank}';
-                         EXEC USP_GetVoucherById @VoucherId=@Id;".Trim();
+            var str = $@"EXEC @Id = USP_AddVoucher @Name=N'{voucher.Name}', @Value={voucher.Value}, @Point={voucher.Point}, @AccountRank='{voucher.AccountRank}';";
 
-            var result = await _dataContext.Voucher.FromSqlInterpolated($"EXECUTE({str})").ToListAsync();
-            return result.FirstOrDefault();
+            Console.WriteLine(str);
+
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({str})");
+            return result;
         }
         
         public async Task<int> UpdateVoucherAsync(Voucher voucher)
         {
             var builder = new StringBuilder("EXEC USP_UpdateVoucher ");
             builder.Append($"@VoucherId = {voucher.VoucherId}, ");
-            builder.Append($"@Name = N'{voucher.Name}', ");
+            builder.Append($"@Name = N\'{voucher.Name}\', ");
             builder.Append($"@Value = {voucher.Value}, ");
             builder.Append($"@Point = {voucher.Point}, ");
             builder.Append($"@AccountRank = '{voucher.AccountRank}';");
 
+
+            Console.WriteLine(builder.ToString());
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
             return result;
         }

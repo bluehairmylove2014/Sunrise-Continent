@@ -11,10 +11,12 @@ namespace SunriseServerCore.RepoInterfaces
     public interface IRoomRepo : IRepository<RoomType>
     {
         Task<List<RoomType>> GetAllRoomTypeAsync(int hotelId);
+        Task<List<RoomType>> GetAllRoomWithVacancyAsync(int hotelId, DateTime? checkIn, DateTime? checkOut);
         Task<RoomType> GetSingleRoomTypeAsync(int hotelId, int id);
         Task<List<RoomPicture>> GetRoomPictureAsync(int hotelId, int id);
         Task<List<RoomFacilityConstant>> GetRoomFacilityAsync(int hotelId, int id);
         Task<List<RoomServiceConstant>> GetRoomServiceAsync(int hotelId, int id);
+        Task<bool> CheckRoomAvailabilityAsync(CheckRoomAvailabilityDto checkDto);
 
         // ========= CREATE =========
         Task<RoomPicture> CreateRoomPictureAsync(RoomPictureDto createDto);

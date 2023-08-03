@@ -1247,6 +1247,53 @@ BEGIN
 END
 GO
 
+-- proc lấy danh sách toàn bộ account
+CREATE OR ALTER PROC USP_GetAccountList	
+AS
+	SELECT AccountId, FullName, EmailAddress, 
+		PhoneNumber, DateOfBirth, Gender
+	FROM PERSONAL_DETAILS
+GO
+-- proc lấy thông tin chi tiết tài khoản
+CREATE OR ALTER PROC USP_GetAccountDetail
+	@AccountId INTEGER
+AS
+	SELECT AccountId, FullName, EmailAddress, 
+		PhoneNumber, DateOfBirth, Gender
+	FROM PERSONAL_DETAILS
+	WHERE AccountId = @AccountId
+GO
+
+-- Func tính điểm input tổng số tiền và số thứ tự của đơn đặt phòng
+CREATE OR ALTER FUNCTION USF_CaculateBonusPoint(@Total INT, @Times INT)
+RETURNS INT
+BEGIN
+	DECLARE @Point INT;
+	IF @Times < 15
+	SET @Point = @Total / 1000;
+	ELSE IF @Times >= 15 AND @Times < 50
+	SET @Point = @Total * 0.01 / 1000;
+	ELSE IF @Times > 50
+	SET @Point = @Total * 0.02 / 1000;
+	RETURN @Total;
+END
+
+GO
+-- Proc lấy điểm bonus
+CREATE OR ALTER PROC USP_BonusPoint (@AccountId INTEGER, @HotelId INTEGER)
+AS
+	DECLARE @Total = (SELECT Total 
+			FROM BOOKING_ACCOUNT ba 
+			WHERE ba.AccountId = @AccountId AND ba.HotelId = @HotelId)
+	DECLARE @Times = (SELECT COUNT(*)
+			FROM BOOKING_ACCOUNT ba
+			WHERE ba.AccountId = @AccountId)
+	DECLARE @Point INT
+	EXECUTE @Point = USF_CaculateBonusPoint @Total, @Time
+	RETURN @Point
+	
+GO
+
 GO
 CREATE OR ALTER FUNCTION USF_CheckRoomAvailability (
     @HotelId INTEGER,

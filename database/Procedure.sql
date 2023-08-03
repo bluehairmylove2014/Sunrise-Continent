@@ -1325,6 +1325,43 @@ END
 GO
 
 GO
+CREATE OR ALTER FUNCTION USF_GetRoomAvailability (
+    @HotelId INTEGER,
+    @RoomTypeId INTEGER,
+	@CheckIn DATE,
+	@CheckOut DATE)
+RETURNS INT
+BEGIN
+	DECLARE @Vacancy INT;
+	SELECT @Vacancy = Vacancy FROM ROOM_TYPE WHERE HotelId = @HotelId AND Id = @RoomTypeId;
+
+	DECLARE @BookedRoom INT;
+	SELECT @BookedRoom = ISNULL(SUM(NumberOfRoom), 0) FROM BOOKING_ACCOUNT 
+	WHERE HotelId = @HotelId AND RoomTypeId = @RoomTypeId
+	AND NOT (DATEDIFF(DAY, CheckOut, GETDATE()) > 0)
+	AND NOT ((DATEDIFF(DAY, @CheckIn, CheckIn) >= DATEDIFF(DAY, @CheckIn, @CheckOut))
+	OR (-DATEDIFF(DAY, @CheckIn, CheckIn) >= DATEDIFF(DAY, CheckIn, CheckOut)));
+
+	DECLARE @SpareRoom INT = @Vacancy - @BookedRoom;
+
+	RETURN @SpareRoom;
+END
+GO
+
+GO
+CREATE OR ALTER PROC USP_GetRoomWithAvailableNum
+	@HotelId INTEGER,
+	@CheckIn DATE,
+	@CheckOut DATE
+AS
+	SELECT RT.HotelId, RT.Id, RT.Name, 
+		dbo.USF_GetRoomAvailability(@HotelId, RT.Id, @CheckIn, @CheckOut) as Vacancy,
+		RT.Size, RT.Price, RT.RoomInfo, RT.RoomView, RT.BedType
+		FROM ROOM_TYPE RT
+	WHERE RT.HotelId = @HotelId
+GO
+
+GO
 CREATE OR ALTER PROC USP_FindHotelByName
 	@Location NVARCHAR(50),
 	@RoomType NVARCHAR(50),
@@ -1409,8 +1446,42 @@ BEGIN
 		DECLARE @OrderId INT;
 		EXEC @OrderId = USP_GetNextColumnId 'ACCOUNT_ORDER', 'OrderId ';
 
-		INSERT INTO ACCOUNT_ORDER (OrderId, AccountId, VoucherId, Total, Paid, CreatedAt) VALUES 
-			(@OrderId, @AccountId, 0, 0, 0, GETDATE());
+		INSERT INTO ACCOUNT_ORDER (OrderId, AccountId, FullName, Nation, DateOfBirth, Email, PhoneNumber, SpecialNeeds, Notes, VoucherId, Total, Paid, CreatedAt) VALUES 
+			(@OrderId, @AccountId, N'default', N'default', '01-01-2000', 'default', 'default', 'default', 'default', 0, 0, 0, GETDATE());
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR(N'Tạo đơn thất bại.', 11, 1);
+		ROLLBACK;
+		RETURN -1;
+	END CATCH
+
+	COMMIT;
+	RETURN @OrderId;
+END;
+GO
+
+-- //
+GO
+CREATE OR ALTER PROC USP_AddFullOrder (
+	@AccountId INT,
+	@FullName NVARCHAR(200), -- Thông tin thêm
+	@Nation NVARCHAR(50),
+	@DateOfBirth DATE,
+	@Email VARCHAR(200),
+	@PhoneNumber VARCHAR(20),
+	@SpecialNeeds NVARCHAR(500),
+	@Notes NVARCHAR(500))
+AS
+BEGIN
+	BEGIN TRAN
+
+	BEGIN TRY
+		DECLARE @OrderId INT;
+		EXEC @OrderId = USP_GetNextColumnId 'ACCOUNT_ORDER', 'OrderId ';
+
+		INSERT INTO ACCOUNT_ORDER (OrderId, AccountId, FullName, Nation, DateOfBirth, Email, PhoneNumber, SpecialNeeds, Notes, VoucherId, Total, Paid, CreatedAt) VALUES 
+			(@OrderId, @AccountId, @FullName, @Nation, @DateOfBirth, @Email, @PhoneNumber, @SpecialNeeds, @Notes, 0, 0, 0, GETDATE());
 	END TRY
 
 	BEGIN CATCH
@@ -1455,6 +1526,31 @@ BEGIN
 END;
 GO
 
+GO
+CREATE OR ALTER PROC USP_AddBookingByOrderId (
+	@OrderId INT,
+	@BookingId INT)
+AS
+BEGIN
+	BEGIN TRAN
+
+	BEGIN TRY
+
+		IF NOT EXISTS (SELECT * FROM ORDER_DETAIL WHERE OrderId = @OrderId AND BookingId = @BookingId)
+			INSERT INTO ORDER_DETAIL (OrderId, BookingId) VALUES (@OrderId, @BookingId);
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR(N'Thêm lịch đặt khách sạn vào đơn thất bại.', 11, 1);
+		ROLLBACK;
+		RETURN -1;
+	END CATCH
+
+	COMMIT;
+	RETURN 1;
+END;
+GO
+
 
 -- //
 GO
@@ -1470,7 +1566,7 @@ GO
 
 
 GO
-CREATE OR ALTER FUNCTION USF_GetCartTotal (@OrderId INT)
+CREATE OR ALTER FUNCTION USF_GetOrderTotal (@OrderId INT)
 RETURNS INT
 AS
 BEGIN
@@ -1487,34 +1583,24 @@ GO
 -- //
 GO
 CREATE OR ALTER PROC USP_ConfirmOrder
-	--@OrderId INT,
+	@OrderId INT,
 	@AccountId INT,
 	@VoucherId INTEGER,
-	@Total INT,
-	-- Thông tin thêm.
-	@FullName NVARCHAR(200),
-	@Nation NVARCHAR(50),
-	@DateOfBirth DATE,
-	@Email VARCHAR(200),
-	@PhoneNumber VARCHAR(20),
-	@SpecialNeeds NVARCHAR(500),
-	@Notes NVARCHAR(500)
+	@Total INT
 AS
 BEGIN
-	DECLARE @OrderId INT;
-	SELECT @OrderId = OrderId FROM ACCOUNT_ORDER WHERE AccountId = @AccountId AND Paid = 0;
-	IF (@OrderId IS NULL)
+	IF (@OrderId IS NULL OR @OrderId <= 0)
 	BEGIN
-		RETURN -1;
+		SELECT @OrderId = OrderId FROM ACCOUNT_ORDER WHERE AccountId = @AccountId AND Paid = 0;
+		IF (@OrderId IS NULL) RETURN -1;
 	END
 
 	-- Kiểm tra số tiền thanh toán.
 	DECLARE @Discount INT = 0;
-	DECLARE @ServiceFee INT = 25000;
 	DECLARE @Check INT = dbo.USF_GetCartTotal(@OrderId);
 	SELECT @Discount = Value FROM VOUCHER WHERE VoucherId = @VoucherId;
 
-	IF (@Total + @Discount - @Check - @ServiceFee < 0)
+	IF (@Total + @Discount - @Check < 0)
 	BEGIN
 		RAISERROR(N'Không đủ tiền thanh toán', 11, 1);
 		RETURN -1;
@@ -1545,19 +1631,11 @@ BEGIN
 				UPDATE VOUCHER_BAG SET Quantity = @Quantity - 1 WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
 		END
 
-		DECLARE @NewTotal INT = @Total + @ServiceFee;
-
-		UPDATE ACCOUNT_ORDER SET
+		UPDATE ACCOUNT_ORDER
+		SET
 			VoucherId = @VoucherId,
-			Total = @NewTotal,
-			Paid = 1,
-			FullName = @FullName,
-			Nation = @Nation,
-			DateOfBirth = @DateOfBirth,
-			Email = @Email,
-			PhoneNumber = @PhoneNumber,
-			SpecialNeeds = @SpecialNeeds,
-			Notes = @Notes
+			Total = @Total,
+			Paid = 1
 		WHERE OrderId = @OrderId;
 
 		-- Cập nhật điểm thành viên.
@@ -1573,6 +1651,19 @@ BEGIN
 	COMMIT;
 	RETURN 0;
 END;
+GO
+
+GO
+CREATE OR ALTER PROC USP_ConfirmOrderWithouTotal
+	@OrderId INT,
+	@AccountId INT,
+	@VoucherId INTEGER
+AS
+BEGIN
+	DECLARE @Total INT;
+	SELECT @Total = dbo.USF_GetOrderTotal(@OrderId);
+	EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId, @Total;
+END
 GO
 
 -- //
@@ -1614,7 +1705,7 @@ BEGIN
 		DECLARE @OrderId INT;
 		EXEC @OrderId = USP_AddBookingToOrder @AccountId, @BookingId;
 
-		EXEC USP_ConfirmOrder @AccountId, @VoucherId, @Total, @FullName, @Nation, @DateOfBirth, @Email, @PhoneNumber, @SpecialNeeds, @Notes;
+		EXEC USP_ConfirmOrder @AccountId, @VoucherId, @Total;
 	END TRY
 
 	BEGIN CATCH

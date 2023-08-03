@@ -48,16 +48,14 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPost(""), Authorize(Roles = GlobalConstant.Admin)] // , Authorize(Roles = GlobalConstant.Admin)
-        public async Task<ActionResult<ResponseMessageDetails<Voucher>>> AddVoucher(AddVoucherDto voucherDto)
+        public async Task<ActionResult<ResponseMessageDetails<int>>> AddVoucher(AddVoucherDto voucherDto)
         {
             var result = await _voucherService.CreateVoucher(voucherDto);
 
-            if (result == null)
+            if (result == 0)
                 return BadRequest("Cannot create voucher.");
 
-            return Ok(new {
-                message = "Create voucher successfully"
-            });
+            return Ok(new ResponseMessageDetails<int>("Create voucher successfully.", result));
         }
 
         [HttpPut(""), Authorize(Roles = GlobalConstant.Admin)]

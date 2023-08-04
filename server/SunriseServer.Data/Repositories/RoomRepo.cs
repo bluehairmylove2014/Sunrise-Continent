@@ -68,7 +68,7 @@ namespace SunriseServerData.Repositories
                 .FromSqlInterpolated($"select dbo.USF_CheckRoomAvailability({checkDto.HotelId}, {checkDto.RoomTypeId}, {checkDto.NumberOfRoom}, {checkDto.CheckIn}, {checkDto.CheckOut}) as value;")
                 .ToListAsync();
 
-            return (result.FirstOrDefault()).myValue;
+            return (result.FirstOrDefault()).MyValue;
         }  
 
         // POST

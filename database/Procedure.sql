@@ -1128,16 +1128,21 @@ CREATE OR ALTER PROC USP_UpdateAccountRank (
 AS
 BEGIN
 	DECLARE @Rank VARCHAR(10) = dbo.USF_GetAccountRank (@AccountId);
+	
+	BEGIN TRAN
 
 	BEGIN TRY
 		UPDATE ACCOUNT SET AccountRank = @Rank WHERE Id = @AccountId;
+		UPDATE PERSONAL_DETAILS SET Rank = @Rank WHERE AccountId = @AccountId;
 	END TRY
 
 	BEGIN CATCH
-		RAISERROR(N'Cập nhật hạng tài khoản thất bại.', 11, 1)
+		ROLLBACK;
+		RAISERROR(N'Cập nhật hạng tài khoản thất bại.', 11, 1);
 		RETURN -1;
 	END CATCH
 	
+	COMMIT;
 	RETURN 0;
 END
 GO
@@ -1247,83 +1252,7 @@ BEGIN
 END
 GO
 
--- proc lấy danh sách toàn bộ account
-CREATE OR ALTER PROC USP_GetAccountList	
-AS
-	SELECT AccountId, FullName, EmailAddress, 
-		PhoneNumber, DateOfBirth, Gender
-	FROM PERSONAL_DETAILS
-GO
--- proc lấy thông tin chi tiết tài khoản
-CREATE OR ALTER PROC USP_GetAccountDetail
-	@AccountId INTEGER
-AS
-	SELECT AccountId, FullName, EmailAddress, 
-		PhoneNumber, DateOfBirth, Gender
-	FROM PERSONAL_DETAILS
-	WHERE AccountId = @AccountId
-GO
-
--- Func tính điểm input tổng số tiền và số thứ tự của đơn đặt phòng
-CREATE OR ALTER FUNCTION USF_CaculateBonusPoint(@Total INT, @Times INT)
-RETURNS INT
-BEGIN
-	DECLARE @Point INT;
-	IF @Times < 15
-	SET @Point = @Total / 1000;
-	ELSE IF @Times >= 15 AND @Times < 50
-	SET @Point = @Total * 0.01 / 1000;
-	ELSE IF @Times > 50
-	SET @Point = @Total * 0.02 / 1000;
-	RETURN @Total;
-END
-
-GO
--- Proc lấy điểm bonus
-CREATE OR ALTER PROC USP_BonusPoint (@AccountId INTEGER, @HotelId INTEGER)
-AS
-	DECLARE @Total = (SELECT Total 
-			FROM BOOKING_ACCOUNT ba 
-			WHERE ba.AccountId = @AccountId AND ba.HotelId = @HotelId)
-	DECLARE @Times = (SELECT COUNT(*)
-			FROM BOOKING_ACCOUNT ba
-			WHERE ba.AccountId = @AccountId)
-	DECLARE @Point INT
-	EXECUTE @Point = USF_CaculateBonusPoint @Total, @Time
-	RETURN @Point
-	
-GO
-
-GO
-CREATE OR ALTER FUNCTION USF_CheckRoomAvailability (
-    @HotelId INTEGER,
-    @RoomTypeId INTEGER,
-	@NumberOfRoom INTEGER,
-	@CheckIn DATE,
-	@CheckOut DATE)
-RETURNS BIT
-BEGIN
-	DECLARE @Vacancy INT;
-	SELECT @Vacancy = Vacancy FROM ROOM_TYPE WHERE HotelId = @HotelId AND Id = @RoomTypeId;
-
-	IF (@NumberOfRoom > @Vacancy OR @NumberOfRoom < 0)
-		RETURN 0;
-
-	DECLARE @BookedRoom INT;
-	SELECT @BookedRoom = ISNULL(SUM(NumberOfRoom), 0) FROM BOOKING_ACCOUNT 
-	WHERE HotelId = @HotelId AND RoomTypeId = @RoomTypeId
-	AND NOT (DATEDIFF(DAY, CheckOut, GETDATE()) > 0)
-	AND NOT ((DATEDIFF(DAY, @CheckIn, CheckIn) >= DATEDIFF(DAY, @CheckIn, @CheckOut))
-	OR (-DATEDIFF(DAY, @CheckIn, CheckIn) >= DATEDIFF(DAY, CheckIn, CheckOut)));
-
-	DECLARE @SpareRoom INT = @Vacancy - @BookedRoom;
-
-	IF (@SpareRoom < @NumberOfRoom)
-		RETURN 0;
-	RETURN 1;
-END
-GO
-
+-- //
 GO
 CREATE OR ALTER FUNCTION USF_GetRoomAvailability (
     @HotelId INTEGER,
@@ -1348,6 +1277,33 @@ BEGIN
 END
 GO
 
+
+-- //
+GO
+CREATE OR ALTER FUNCTION USF_CheckRoomAvailability (
+    @HotelId INTEGER,
+    @RoomTypeId INTEGER,
+	@NumberOfRoom INTEGER,
+	@CheckIn DATE,
+	@CheckOut DATE)
+RETURNS BIT
+BEGIN
+	DECLARE @Vacancy INT;
+	SELECT @Vacancy = Vacancy FROM ROOM_TYPE WHERE HotelId = @HotelId AND Id = @RoomTypeId;
+
+	IF (@NumberOfRoom > @Vacancy OR @NumberOfRoom < 0)
+		RETURN 0;
+
+	DECLARE @SpareRoom INT = dbo.USF_GetRoomAvailability(@HotelId, @RoomTypeId, @CheckIn, @CheckOut);
+
+	IF (@SpareRoom < @NumberOfRoom)
+		RETURN 0;
+	RETURN 1;
+END
+GO
+
+
+-- //
 GO
 CREATE OR ALTER PROC USP_GetRoomWithAvailableNum
 	@HotelId INTEGER,
@@ -1423,10 +1379,23 @@ BEGIN
 END
 GO
 
--- Đặt khách sạn -> điền thông tin -> bấm "đặt" -> thêm vào giỏ (tạo đơn mới với null).
--- Vào giỏ -> danh sách các booking đã map chưa thanh toán -> bấm thanh toán -> áp voucher, tiền, ...
 
 -- //
+GO
+CREATE OR ALTER PROC USP_GetAllAccountOrder (
+	@AccountId INT)
+AS
+	SELECT * FROM ACCOUNT_ORDER AO WHERE AO.AccountId = @AccountId;
+GO
+
+-- //
+GO
+CREATE OR ALTER PROC USP_GetUnconfirmOrder (
+	@AccountId INT)
+AS
+	SELECT * FROM ACCOUNT_ORDER AO WHERE AO.AccountId = @AccountId AND (Paid = 0);
+GO
+
 GO
 CREATE OR ALTER PROC USP_GetOrderHistory (
 	@AccountId INT)
@@ -1526,6 +1495,7 @@ BEGIN
 END;
 GO
 
+-- //
 GO
 CREATE OR ALTER PROC USP_AddBookingByOrderId (
 	@OrderId INT,
@@ -1565,15 +1535,39 @@ RETURN
 GO
 
 
+-- //
+GO
+CREATE OR ALTER FUNCTION USF_GetServiceFee () -- CartItem
+RETURNS INT
+BEGIN
+	RETURN 50000;
+END
+GO
+
+-- //
+GO
+CREATE OR ALTER FUNCTION USF_GetBookingTotalById (@BookingId INT)
+RETURNS INT
+AS
+BEGIN
+	DECLARE @Result INT = 0;
+	SELECT @Result = (RT.Price + dbo.USF_GetServiceFee()) * BA.NumberOfRoom 
+	FROM (SELECT * FROM BOOKING_ACCOUNT WHERE BookingId = @BookingId) BA 
+	JOIN ROOM_TYPE RT ON RT.HotelId = BA.HotelId AND RT.Id = BA.RoomTypeId;
+
+	RETURN @Result;
+END
+GO
+
+
+-- //
 GO
 CREATE OR ALTER FUNCTION USF_GetOrderTotal (@OrderId INT)
 RETURNS INT
 AS
 BEGIN
 	DECLARE @Result INT = 0;
-	SELECT @Result = SUM(RT.Price * BA.NumberOfRoom) FROM BOOKING_ACCOUNT BA 
-	JOIN ROOM_TYPE RT ON RT.HotelId = BA.HotelId AND RT.Id = BA.RoomTypeId
-	JOIN ORDER_DETAIL OD ON OD.BookingId = BA.BookingId
+	SELECT @Result = SUM(dbo.USF_GetBookingTotalById(OD.BookingId)) FROM ORDER_DETAIL OD
 	WHERE OD.OrderId = @OrderId;
 
 	RETURN @Result;
@@ -1585,24 +1579,23 @@ GO
 CREATE OR ALTER PROC USP_ConfirmOrder
 	@OrderId INT,
 	@AccountId INT,
-	@VoucherId INTEGER,
-	@Total INT
+	@VoucherId INTEGER
 AS
 BEGIN
 	IF (@OrderId IS NULL OR @OrderId <= 0)
 	BEGIN
-		SELECT @OrderId = OrderId FROM ACCOUNT_ORDER WHERE AccountId = @AccountId AND Paid = 0;
-		IF (@OrderId IS NULL) RETURN -1;
+		RETURN -1;
 	END
 
-	-- Kiểm tra số tiền thanh toán.
-	DECLARE @Discount INT = 0;
-	DECLARE @Check INT = dbo.USF_GetCartTotal(@OrderId);
-	SELECT @Discount = Value FROM VOUCHER WHERE VoucherId = @VoucherId;
-
-	IF (@Total + @Discount - @Check < 0)
+	IF NOT EXISTS (SELECT OrderId FROM ACCOUNT_ORDER WHERE OrderId = @OrderId AND AccountId = @AccountId)
 	BEGIN
-		RAISERROR(N'Không đủ tiền thanh toán', 11, 1);
+		RAISERROR(N'Tài khoản không tồn tại đơn đặt hàng.', 11, 1);
+		RETURN -1;
+	END
+
+	IF ((SELECT TOP(1) Paid FROM ACCOUNT_ORDER WHERE OrderId = @OrderId) = 1)
+	BEGIN
+		RAISERROR(N'Đơn đặt hàng đã được xác nhận.', 11, 1);
 		RETURN -1;
 	END
 
@@ -1620,7 +1613,9 @@ BEGIN
 
 	BEGIN TRAN
 	BEGIN TRY
-
+		DECLARE @Discount INT = 0;
+		SELECT @Discount = Value FROM VOUCHER WHERE VoucherId = @VoucherId;
+		DECLARE @Total INT = dbo.USF_GetOrderTotal(@OrderId);
 
 		IF (@VoucherId IS NOT NULL AND @VoucherId > 0)
 		BEGIN
@@ -1634,12 +1629,12 @@ BEGIN
 		UPDATE ACCOUNT_ORDER
 		SET
 			VoucherId = @VoucherId,
-			Total = @Total,
+			Total = @Total - @Discount,
 			Paid = 1
 		WHERE OrderId = @OrderId;
 
 		-- Cập nhật điểm thành viên.
-		EXEC USP_UpdateMemberPoints @AccountId, @Check;
+		EXEC USP_UpdateMemberPoints @AccountId, @Total;
 	END TRY
 
 	BEGIN CATCH
@@ -1653,16 +1648,66 @@ BEGIN
 END;
 GO
 
+-- ++
 GO
-CREATE OR ALTER PROC USP_ConfirmOrderWithouTotal
+CREATE OR ALTER PROC USP_ConfirmOrderWithTotal
 	@OrderId INT,
+	@AccountId INT,
+	@VoucherId INT,
+	@Total INT
+AS
+BEGIN
+	-- Kiểm tra số tiền thanh toán.
+	DECLARE @Discount INT = 0;
+	DECLARE @Check INT = dbo.USF_GetOrderTotal(@OrderId);
+	SELECT @Discount = Value FROM VOUCHER WHERE VoucherId = @VoucherId;
+
+	IF (@Total + @Discount - @Check < 0)
+	BEGIN
+		RAISERROR(N'Không đủ tiền thanh toán', 11, 1);
+		RETURN -1;
+	END
+
+	EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId;
+END
+GO
+
+
+GO
+CREATE OR ALTER PROC USP_ConfirmLastCreatedOrder
 	@AccountId INT,
 	@VoucherId INTEGER
 AS
 BEGIN
-	DECLARE @Total INT;
-	SELECT @Total = dbo.USF_GetOrderTotal(@OrderId);
-	EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId, @Total;
+	DECLARE @CreatedAt DATETIME;
+	SELECT @CreatedAt = CreatedAt FROM ACCOUNT_ORDER 
+	WHERE AccountId = @AccountId AND Paid = 0
+	ORDER BY CreatedAt DESC;
+
+	DECLARE @SQL NVARCHAR(MAX) = N'EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId'
+
+
+
+	EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId;
+END
+GO
+
+GO
+CREATE OR ALTER PROC USP_GetLastCreatedOrderId
+	@AccountId INT,
+	@VoucherId INTEGER
+AS
+BEGIN
+	DECLARE @CreatedAt DATETIME;
+	SELECT @CreatedAt = CreatedAt FROM ACCOUNT_ORDER 
+	WHERE AccountId = @AccountId AND Paid = 0
+	ORDER BY CreatedAt DESC;
+
+	DECLARE @SQL NVARCHAR(MAX) = N'EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId'
+
+
+
+	EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId;
 END
 GO
 
@@ -1676,50 +1721,59 @@ GO
 
 -- //
 GO
-CREATE OR ALTER PROC USP_AddBookingToOrderAndConfirmBookingCombined (
-	@AccountId INTEGER,
-    @HotelId INTEGER,
-    @RoomTypeId INTEGER,
-    @CheckIn DATE,
-    @CheckOut DATE,
-    @NumberOfRoom INTEGER,
-	@VoucherId INTEGER,
-	@Total INT,
-	-- Thông tin thêm.
-	@FullName NVARCHAR(200),
-	@Nation NVARCHAR(50),
-	@DateOfBirth DATE,
-	@Email VARCHAR(200),
-	@PhoneNumber VARCHAR(20),
-	@SpecialNeeds NVARCHAR(500),
-	@Notes NVARCHAR(500))
+CREATE OR ALTER PROC USP_GetOrderItem (
+	@OrderId INT)
 AS
-BEGIN
-
-	BEGIN TRAN
-
-	BEGIN TRY
-		DECLARE @BookingId INT;
-		EXEC @BookingId = USP_AddBooking @AccountId, @HotelId, @RoomTypeId, @CheckIn, @CheckOut, @NumberOfRoom;
-		
-		DECLARE @OrderId INT;
-		EXEC @OrderId = USP_AddBookingToOrder @AccountId, @BookingId;
-
-		EXEC USP_ConfirmOrder @AccountId, @VoucherId, @Total;
-	END TRY
-
-	BEGIN CATCH
-		RAISERROR(N'Lỗi đặt phòng.', 11, 1)
-		ROLLBACK;
-		RETURN -1;
-	END CATCH
-
-
-	COMMIT;
-	RETURN 0;
-END;
+	SELECT AO.OrderId, BA.* FROM BOOKING_ACCOUNT BA 
+	JOIN ORDER_DETAIL OD ON BA.BookingId = OD.BookingId
+	JOIN (SELECT * FROM ACCOUNT_ORDER WHERE OrderId = @OrderId) AO ON AO.OrderId = OD.OrderId;
 GO
 
+
+--! proc lấy danh sách toàn bộ account
+CREATE OR ALTER PROC USP_GetAccountDetailList	
+AS
+	SELECT * FROM PERSONAL_DETAILS
+GO
+--! proc lấy thông tin chi tiết tài khoản
+CREATE OR ALTER PROC USP_GetAccountDetail
+	@AccountId INTEGER
+AS
+	SELECT * FROM PERSONAL_DETAILS
+	WHERE AccountId = @AccountId
+GO
+
+--! Func tính điểm input tổng số tiền và số thứ tự của đơn đặt phòng
+CREATE OR ALTER FUNCTION USF_CaculateBonusPoint(@Total INT, @Times INT)
+RETURNS INT
+BEGIN
+	DECLARE @Point INT = 0;
+	IF @Times >= 15 AND @Times < 50
+	SET @Point = @Total * 0.01 / 1000;
+	ELSE IF @Times > 50
+	SET @Point = @Total * 0.02 / 1000;
+	RETURN @Point;
+END
+
+GO
+--! Proc lấy điểm bonus
+CREATE OR ALTER PROC USP_GetBookingLengthBonusPoint (
+	@AccountId INT,
+	@BookingId INT,
+	@HotelId INT)
+AS
+	DECLARE @Total INT = dbo.USF_GetBookingTotalById(@BookingId);
+
+	DECLARE @Times INT = (SELECT COUNT(BA.BookingId) FROM BOOKING_ACCOUNT BA 
+		WHERE BA.AccountId = @AccountId AND BA.HotelId = @HotelId);
+
+	DECLARE @Point INT
+	EXECUTE @Point = dbo.USF_CaculateBonusPoint @Total, @Times;
+	RETURN @Point
+	
+GO
+
+GO
 --! proc tính doanh thu của khách sạn theo tháng
 CREATE PROCEDURE CalculateHotelRevenueByMonth
     @Year INT,
@@ -1754,6 +1808,7 @@ BEGIN
 END;
 
 --!proc tính doanh thu khách sạn theo quý
+GO
 CREATE PROCEDURE CalculateHotelRevenueByQuarter
     @Year INT,
     @Quarter INT,
@@ -1785,9 +1840,10 @@ BEGIN
     
     RETURN @TotalRevenue;
 END;
+GO
 
 --!proc tính doanh thu khách sạn trong năm
-
+GO
 CREATE PROCEDURE CalculateHotelRevenueByYear
     @Year INT,
     @HotelId INT,
@@ -1820,8 +1876,10 @@ BEGIN
     -- Trả về kết quả
     RETURN @TotalRevenue;
 END;
+GO
 
 --!proc tính diểm thành viên dựa trên số ngày cư trú 
+GO
 CREATE PROCEDURE CalculatePointsForMember
     @BookingId INT
 AS

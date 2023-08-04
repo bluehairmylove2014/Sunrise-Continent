@@ -4,8 +4,9 @@ namespace SunriseServer.Services.BookingService
 {
     public interface IOrderService
     {
-        Task<int> CreateOrderAsync(ListOrderDto order);
-        Task<int> ConfirmOrderAsync(int accountId, int total);   
+        Task<int> CreateOrder(ListOrderDto order);
+        Task<int> ConfirmOrder(int orderId, int accountId, int voucherId);
+        Task<List<Order>> GetAccountOrder(int accountId);
     }
 };
 

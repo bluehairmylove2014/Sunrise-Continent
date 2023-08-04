@@ -64,16 +64,16 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<List<BookingDto>>("Get bookings successfully", finalResult));
         }
 
-        [HttpPost] //, Authorize(Roles = GlobalConstant.User)
-        public async Task<ActionResult<ResponseMessageDetails<int>>> AddBooking(AddBookingDto bookingDto)
-        {
-            var result = await _bookingService.AddBooking(bookingDto);
+        // [HttpPost] //, Authorize(Roles = GlobalConstant.User)
+        // public async Task<ActionResult<ResponseMessageDetails<int>>> AddBooking(AddBookingDto bookingDto)
+        // {
+        //     var result = await _bookingService.AddBooking(bookingDto);
 
-            if (result == 0)
-                return BadRequest("Cannot add booking.");
+        //     if (result == 0)
+        //         return BadRequest("Cannot add booking.");
 
-            return Ok(new ResponseMessageDetails<int>("Add booking successfully", result));
-        }
+        //     return Ok(new ResponseMessageDetails<int>("Add booking successfully", result));
+        // }
 
         [HttpPut, Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> UpdateBooking(BookingAccount request)

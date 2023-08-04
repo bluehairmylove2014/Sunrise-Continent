@@ -23,13 +23,7 @@ namespace SunriseServerData.Repositories
 
         public async Task<List<Order>> GetAccountOrderAsync(int accountId)
         {
-            // var builder = new StringBuilder("EXEC dbo.USP_AddBookingToOrderAndConfirmBookingCombined ");
-            // var str = SetPropValueByReflection.GetPropProcCallString(order);
-            // builder.Append(str);
-
-            // Console.WriteLine(str);
-            // EXECUTE({builder.ToString()})
-            var result = await _dataContext.Order.FromSqlInterpolated($"Print 1").ToListAsync();
+            var result = await _dataContext.Order.FromSqlInterpolated($"EXEC USP_GetAllAccountOrder @AccountId={accountId};").ToListAsync();
             return result;
         }
 
@@ -44,7 +38,7 @@ namespace SunriseServerData.Repositories
             str = str.Replace("@Notes=", "@Notes=N");
             int start = str.LastIndexOf(", @VoucherId"), count = str.Length - start;
 
-            var hotelList = order.orders
+            var hotelList = order.Orders
                             .GroupBy(o => o.HotelId)
                             .Select(x => x.Select(v => v).ToList())
                             .ToList();
@@ -66,18 +60,13 @@ namespace SunriseServerData.Repositories
             // Console.WriteLine(builder.ToString());
             
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
-            return 0;
+            return result;
         }
 
-        public async Task<int> ConfirmOrderAsync(int accountId, int total)
+        public async Task<int> ConfirmOrderAsync(int orderId, int accountId, int voucherId)
         {
-            // builder.Append($"SELECT @Total = dbo.USF_GetOrderTotal(@OrderId);\n");
-            // builder.Append($"EXEC USP_ConfirmOrder @OrderId, {order.AccountId}, {order.VoucherId}, @Total;\n");
-                
-             
-
-            string str = $"EXEC USP_ConfirmBooking @AccountId={accountId}, @Total={total};";
-            return await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({str})");
+            return await _dataContext.Database
+                .ExecuteSqlInterpolatedAsync($"EXEC USP_ConfirmOrder @OrderId={orderId}, @AccountId={accountId}, @VoucherId={voucherId};");
         }
     }
 }

@@ -1,5 +1,5 @@
---USE SunriseDatabase
---GO
+USE SunriseDatabase
+GO
 
 --!add account
 --!PASSWORD all 123
@@ -13,12 +13,13 @@ VALUES
 	(6, 0, 'Bronze', 'cuong', '8305fc6263d1368bc4885eec60ebbafc2de92a8bbe30c4d1e0f42fb4a5db0b28bfd8ff875c11ea00435354e8d512e9758f45337167afa9bf463e8753fa31eafb', 'c7c7d82b71a6de269485f02ab5a72c62c0ff86697b884c0907b6646f2369597e444887d7d1df9d38ad37065738b9e5404008c46e0fc72446f689d1eb26562c15a90cb56e32eda7bf9eebe270b7816a472cc4f63e3774abbf5f64fb5798d3c93630a831907cdc5561b1137ed342409b59e7039ff43918e4849ddb4833386b6850', 'Admin', 'HtUhZJROVrADoVP5Io1BnCNR4OV3DKOq+oO0Q1/0kTNu+twSx0fYBYe8BgeC4O67GJbLfsxNcn9/waHJvmU5Ug==', '2023-07-29 15:08:30.000', '2023-08-05 15:08:30.000');
 
 
-------!add personal information
---INSERT INTO PERSONAL_DETAILS VALUES (1, N'Trần Văn A', 'abc@gmail.com', '0966188620', '1990-01-01', N'Nam');
---INSERT INTO PERSONAL_DETAILS VALUES (2, N'Nguyễn Văn B', 'bibizero@gmail.com', '0966188621', '1999-02-01', N'Nữ');
---INSERT INTO PERSONAL_DETAILS VALUES (3, N'Ngô Bá K', 'meme13@gmail.com', '0966188622', '1980-01-03', N'Nam');
---INSERT INTO PERSONAL_DETAILS VALUES (4, N'Lê C', 'titanic9@gmail.com', '0966188623', '1990-01-05', N'Nữ');
---INSERT INTO PERSONAL_DETAILS VALUES (5, N'Trần D', 'gaianime@gmail.com', '0966188624', '1990-01-06', N'Nam');
+----!add personal information
+INSERT INTO PERSONAL_DETAILS VALUES (1, N'Trần Văn A', 'abc@gmail.com', '0966188620', '1990-01-01', N'Nam', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze');
+INSERT INTO PERSONAL_DETAILS VALUES (2, N'Nguyễn Văn B', 'bibizero@gmail.com', '0966188621', '1999-02-01', N'Nữ', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze');
+INSERT INTO PERSONAL_DETAILS VALUES (3, N'Ngô Bá K', 'meme13@gmail.com', '0966188622', '1980-01-03', N'Nam', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze');
+INSERT INTO PERSONAL_DETAILS VALUES (4, N'Lê C', 'titanic9@gmail.com', '0966188623', '1990-01-05', N'Nữ', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze');
+INSERT INTO PERSONAL_DETAILS VALUES (5, N'Trần D', 'gaianime@gmail.com', '0966188624', '1990-01-06', N'Nam', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze');
+INSERT INTO PERSONAL_DETAILS VALUES (6, N'Hes loo', 'xinchao@gmail.com', '0966188624', '1990-01-06', N'Nam', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze');
 
 --!add Rank
 INSERT INTO POINT_RANK (RankName, RankValue) VALUES 

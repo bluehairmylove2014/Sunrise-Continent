@@ -155,6 +155,8 @@ namespace SunriseServer.Controllers
             [FromQuery] int children
         )
         {
+
+            max_budget = max_budget == 0 ? Int32.MaxValue : max_budget;
             var result = await _hotelService.GetSearchHotels(
                 new SearchHotelDto(location, room_type, start_date, end_date, min_budget, max_budget, rooms, adults, children)
             );

@@ -1334,7 +1334,7 @@ AS
 			dbo.USF_GetAvgReview(h.Id) Rating,
 			Description, Image,
 			STRING_AGG(rt.Name, ',') RoomType,
-			dbo.USF_GetMinRoomPrice(h.Id) SmallestPrice
+			dbo.USF_GetMinRoomPrice(h.Id) Price
 	FROM HOTEL h inner join ROOM_TYPE rt on h.Id = rt.HotelId
 	WHERE (h.ProvinceCity COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI or
 	      h.Name COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI) and

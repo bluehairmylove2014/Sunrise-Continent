@@ -24,7 +24,7 @@ namespace SunriseServerData.Repositories
             var builder = new StringBuilder(@"
                 DECLARE @result INT
                 EXEC @result = dbo.USP_AddAccount ");
-            builder.Append($"@Username = \'{acc.Username}\', ");
+            builder.Append($"@Email = \'{acc.Email}\', ");
             builder.Append($"@PasswordHash = \'{acc.PasswordHash}\', ");
             builder.Append($"@PasswordSalt = \'{acc.PasswordSalt}\', ");
             builder.Append($"@UserRole = \'{acc.UserRole}\', ");
@@ -41,7 +41,7 @@ namespace SunriseServerData.Repositories
 
         public async Task<Account> GetByUsername(string username)
         {
-            var builder = new StringBuilder($"dbo.USP_GetAccountByUsername @Username = \'{username}\';");
+            var builder = new StringBuilder($"dbo.USP_GetAccountByUsername @Email = \'{username}\';");
 
             Console.WriteLine(builder.ToString());
             var result = await _dataContext.Account.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();

@@ -8,7 +8,7 @@ namespace SunriseServerCore.Models
         public int Id { get; set; }
         public int MemberPoint { get; set; } = 0;
         // authen & author
-        public string Username { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; }
         public string PasswordSalt { get; set; }
         public string UserRole { get; set; } = GlobalConstant.User;

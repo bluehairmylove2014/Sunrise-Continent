@@ -35,7 +35,7 @@ namespace SunriseServer.Controllers
         [HttpPost("register-admin")]
         public async Task<ActionResult<ResponseMessageDetails<string>>> RegisterAdmin(LoginDto request)
         {
-            var acc = await _accService.GetByUsername(request.Username);
+            var acc = await _accService.GetByUsername(request.Email);
 
             if (acc != null)
             {
@@ -44,7 +44,7 @@ namespace SunriseServer.Controllers
 
             acc = new Account();
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            acc.Username = request.Username;
+            acc.Email = request.Email;
             acc.PasswordHash = Helper.ByteArrayToString(passwordHash);
             acc.PasswordSalt = Helper.ByteArrayToString(passwordSalt);
             acc.UserRole = GlobalConstant.Admin;
@@ -59,16 +59,16 @@ namespace SunriseServer.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<ResponseMessageDetails<string>>> Register(LoginDto request)
         {
-            var acc = await _accService.GetByUsername(request.Username);
+            var acc = await _accService.GetByUsername(request.Email);
 
             if (acc != null)
             {
-                return BadRequest("Username exists");
+                return BadRequest("Email exists");
             }
 
             acc = new Account();
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            acc.Username = request.Username;
+            acc.Email = request.Email;
             acc.PasswordHash = Helper.ByteArrayToString(passwordHash);
             acc.PasswordSalt = Helper.ByteArrayToString(passwordSalt);
             acc.UserRole = GlobalConstant.User;
@@ -83,14 +83,14 @@ namespace SunriseServer.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<ResponseMessageDetails<string>>> Login(LoginDto request)
         {
-            var account = await _accService.GetByUsername(request.Username);
+            var account = await _accService.GetByUsername(request.Email);
 
             if (account == null)
             {
                 return NotFound(new ResponseMessageDetails<string>("User not found", ResponseStatusCode.NotFound));
             }
 
-            if (account.Username != request.Username ||
+            if (account.Email != request.Email ||
                 !VerifyPasswordHash(request.Password, Helper.StringToByteArray(account.PasswordHash), Helper.StringToByteArray(account.PasswordSalt)))
             {
                 return BadRequest("Wrong credentials");
@@ -156,7 +156,7 @@ namespace SunriseServer.Controllers
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, acc.Username),
+                new Claim(ClaimTypes.Name, acc.Email),
                 new Claim(ClaimTypes.Role, role)
             };
 

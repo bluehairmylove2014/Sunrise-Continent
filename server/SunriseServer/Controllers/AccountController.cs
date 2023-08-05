@@ -7,13 +7,13 @@ using System.Data;
 
 namespace SunriseServer.Controllers
 {
+    [Route("api/account")]
     [ApiController]
-    [Route("api/[controller]")]
-    public class accountController : ControllerBase
+    public class AccountController : ControllerBase
     {
         readonly IAccountService _accountService;
 
-        public accountController(IAccountService accountService)
+        public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
         }

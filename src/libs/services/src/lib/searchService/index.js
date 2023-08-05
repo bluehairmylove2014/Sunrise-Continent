@@ -1,15 +1,15 @@
 import { isAxiosError } from "../../config/axios";
-import { API_URL } from "../../config/url";
+import { getApiUrl } from "../../config/url";
 import { Services } from "../../service";
 import { searchProductSchema } from "./schema";
 
 const unknownErrorMsg = "Order service unknown error";
 
 export class SearchService extends Services {
-  url = API_URL;
+  url = getApiUrl();
   abortController;
 
-  searchProductsUrl = this.url + "/search";
+  searchProductsUrl = "/search";
 
   searchProducts = async (params) => {
     this.abortController = new AbortController();

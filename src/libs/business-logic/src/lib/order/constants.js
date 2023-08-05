@@ -1,0 +1,15 @@
+export const defaultOrder = {
+  id: "1",
+  orderSummary: [],
+  firstName: "",
+  lastName: "",
+  phone: "",
+  email: "",
+  country: "",
+  address: "",
+  paymentMethod: "",
+  status: "Pending",
+  shipping: 0,
+  tax: 0,
+  coupon: 0,
+};

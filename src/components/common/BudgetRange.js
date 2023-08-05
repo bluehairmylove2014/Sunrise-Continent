@@ -32,7 +32,7 @@ const BudgetRange = ({ callbackOnchange, defaultValues }) => {
   return (
     <div className="common-component__budget-range">
       <Slider
-        value={[priceRange]}
+        value={priceRange}
         onChange={(e, price) => {
           setPriceRange(price);
         }}

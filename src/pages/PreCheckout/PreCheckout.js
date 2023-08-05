@@ -6,34 +6,32 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import "../../styles/component/preCheckout.scss";
 import Checkbox from "../../components/common/Checkbox";
-import SmallPageLoader from "../../components/common/Loader/SmallPageLoader";
+import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import { combineAddress } from "../../utils/helpers/Address";
 import { icon } from "./Data";
 import { formatDate } from "../../utils/helpers/ShortenDatetime";
 import { calcNight } from "../../utils/helpers/Datetime";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 import { calculateDiscountedPrice } from "../../utils/helpers/Discount";
+import { parseSearchParams } from "../../utils/helpers/params";
 
 const fee = 25000;
 
 const PreCheckout = () => {
   const [sunriseVoucher, setSunriseVoucher] = useState(0);
-  const urlParams = new URLSearchParams(window.location.search);
-  const hotelID = urlParams.get("hotelId");
-  const roomID = urlParams.get("id");
-  const startDateRaw = urlParams.get("from");
-  const endDateRaw = urlParams.get("to");
-  const startDate = formatDate(startDateRaw);
-  const endDate = formatDate(endDateRaw);
-  const adult = urlParams.get("adult");
-  const children = urlParams.get("children");
-  const rooms = urlParams.get("rooms");
-  const night = calcNight(startDateRaw, endDateRaw);
+  const { hotelID, roomID, start_date, end_date, adult, children, rooms } =
+    parseSearchParams(window.location.search);
+
+  const startDateFormatted = formatDate(start_date);
+  const endDateFormatted = formatDate(end_date);
+  const night = calcNight(start_date, end_date);
+
   const { data: hotelData } = useGetHotelDetail(hotelID);
   const { data: roomData } = useGetSpecificRoom(hotelID, roomID);
+
   const contactForm = useForm({
     defaultValues: {
-      fullname: "",
+      fullName: "",
       nationality: "",
       dob: "",
       email: "",
@@ -66,12 +64,8 @@ const PreCheckout = () => {
       }
     }
   };
-  const onContactFormSubmit = (data) => {
-    console.log(data);
-  };
-  const onContactFormError = (error) => {
-    console.log(error);
-  };
+  const onContactFormSubmit = (data) => {};
+  const onContactFormError = (error) => {};
   return hotelData && roomData ? (
     <main className="pre-checkout">
       <div className="container">
@@ -85,7 +79,7 @@ const PreCheckout = () => {
         >
           <section className="contact">
             <Controller
-              name="name"
+              name="fullName"
               control={contactForm.control}
               rules={{
                 required: "Required field!",
@@ -308,7 +302,11 @@ const PreCheckout = () => {
                 <span>Ngày nhận phòng:</span>
               </div>
 
-              <p>{startDate.days + ", " + startDate.dateMonthYear}</p>
+              <p>
+                {startDateFormatted.days +
+                  ", " +
+                  startDateFormatted.dateMonthYear}
+              </p>
             </div>
             <div className="detail__row">
               <div className="row__label">
@@ -316,7 +314,9 @@ const PreCheckout = () => {
                 <span>Ngày trả phòng:</span>
               </div>
 
-              <p>{endDate.days + ", " + endDate.dateMonthYear}</p>
+              <p>
+                {endDateFormatted.days + ", " + endDateFormatted.dateMonthYear}
+              </p>
             </div>
             <div className="detail__row">
               <div className="row__label">
@@ -353,7 +353,12 @@ const PreCheckout = () => {
               </div>
 
               <p className="price primary">
-                {convertNumberToCurrency("vietnamdong", roomData.price * night)}
+                {roomData
+                  ? convertNumberToCurrency(
+                      "vietnamdong",
+                      roomData.price * night
+                    )
+                  : "Đang tính toán"}
               </p>
             </div>
             <div className="detail__row">
@@ -412,7 +417,7 @@ const PreCheckout = () => {
       </div>
     </main>
   ) : (
-    <SmallPageLoader />
+    <SunriseLoader />
   );
 };
 

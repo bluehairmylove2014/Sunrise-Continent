@@ -12,5 +12,7 @@ export const useValidateQuery = (token) => {
   );
 };
 export const useGetUserQuery = (token) => {
-  return useQuery([QUERY_KEYS.GET_USER], () => authService.getUser(token));
+  return useQuery([QUERY_KEYS.GET_USER, token], () =>
+    authService.getUser(token)
+  );
 };

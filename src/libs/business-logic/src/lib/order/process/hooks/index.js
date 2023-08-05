@@ -1,4 +1,3 @@
-export * from "./useInitOrder";
 export * from "./useGetOrder";
 export * from "./useGetShipping";
 export * from "./useGetTax";

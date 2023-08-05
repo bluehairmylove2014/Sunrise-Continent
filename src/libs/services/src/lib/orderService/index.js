@@ -1,5 +1,4 @@
 import { isAxiosError } from "../../config/axios";
-import { API_URL } from "../../config/url";
 import { Services } from "../../service";
 import {
   getCouponResponseSchema,
@@ -11,14 +10,13 @@ import {
 const unknownErrorMsg = "Order service unknown error";
 
 export class OrderService extends Services {
-  url = API_URL + "/order";
   abortController;
 
-  getOrderUrl = this.url + "/get-order";
-  getShippingUrl = this.url + "/get-shipping";
-  getTaxUrl = this.url + "/get-tax";
-  getCouponUrl = this.url + "/get-coupon";
-  updateOrderUrl = this.url + "/get-update-order";
+  getOrderUrl = "/order/get-order";
+  getShippingUrl = "/order/get-shipping";
+  getTaxUrl = "/order/get-tax";
+  getCouponUrl = "/order/get-coupon";
+  updateOrderUrl = "/order/get-update-order";
 
   getShipping = async (params) => {
     this.abortController = new AbortController();

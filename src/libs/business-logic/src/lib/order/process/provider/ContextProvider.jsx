@@ -2,7 +2,7 @@
 import React, { useEffect, useReducer } from "react";
 import { OrderContext } from "../context/orderContext";
 import { orderReducer } from "../context/reducer";
-import { useInitOrder } from "../hooks";
+import { defaultOrder } from "../../constants";
 
 
 export const ContextProvider = ({
@@ -14,30 +14,21 @@ export const ContextProvider = ({
     order: null,
     accessToken: accessToken
   });
-  const { onInitOrder } = useInitOrder();
   useEffect(() => {
     dispatch({
       type: "SET_TOKEN_ACTION",
       payload: accessToken
     });
-    if (accessToken) {
-      onInitOrder(accessToken)
-        .then((data) => {
-          if (data) {
-            dispatch({
-              type: "SET_ORDER",
-              payload: {
-                ...data,
-                orderSummary: cart?.items ?? data.orderSummary
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          console.error("Error get order context provider: ", err);
-        });
-    }
   }, [accessToken]);
+
+  useEffect(() => {
+    if (!state.order) {
+      dispatch({
+        type: "SET_ORDER",
+        payload: defaultOrder
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (state.order) {
@@ -49,7 +40,7 @@ export const ContextProvider = ({
         }
       });
     }
-  }, [cart]);
+  }, [cart, cart?.items]);
 
   return (
     <OrderContext.Provider value={{ state, dispatch }}>

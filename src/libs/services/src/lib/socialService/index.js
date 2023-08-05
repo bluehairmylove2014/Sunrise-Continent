@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getAxiosNormalInstance, isAxiosError } from "../../config/axios";
 import { googleApiConfig, facebookApiConfig } from "../../config/config";
-import { API_URL } from "../../config/url";
+import { getApiUrl } from "../../config/url";
 import { Services } from "../../service";
 import { updateAccountResponseSchema } from "./schema";
 
 const unknownErrorMsg = "Social service unknown error";
 
 export class SocialService extends Services {
-  url = API_URL + "/social";
+  url = getApiUrl() + "/social";
   abortController;
-  updateAccountUrl = this.url + "updateAccount";
+  updateAccountUrl = "/social/updateAccount";
 
   // GOOGLE LOGIN
   validateToken = async (token) => {

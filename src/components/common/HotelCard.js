@@ -21,11 +21,9 @@ const HotelCard = ({ hotelData }) => {
   };
   const addToWishlist = (e, hotel) => {
     e.stopPropagation();
-    console.log(hotel);
   };
   const handleReport = (e, hotelId) => {
     e.stopPropagation();
-    console.log(hotelId);
   };
   return (
     <div

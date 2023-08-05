@@ -1,19 +1,17 @@
 import { isAxiosError } from "../../config/axios";
-import { API_URL } from "../../config/url";
 import { Services } from "../../service";
 import { cartSchema, messageResponseSchema } from "./schema";
 
 const unknownErrorMessage = "Cart service unknown error";
 export class CartService extends Services {
-  url = API_URL + "/cart";
   abortController;
 
-  addToCartUrl = this.url + "/addToCart";
-  updateCartUrl = this.url + "/updateCart";
-  deleteFromCartUrl = this.url + "/deleteFromCart";
-  decreaseItemQuantityUrl = this.url + "/decreaseItemQuantity";
-  clearCartUrl = this.url + "/clearCart";
-  getCartUrl = this.url + "/getCart";
+  addToCartUrl = "/cart/addToCart";
+  updateCartUrl = "/cart/updateCart";
+  deleteFromCartUrl = "/cart/deleteFromCart";
+  decreaseItemQuantityUrl = "/cart/decreaseItemQuantity";
+  clearCartUrl = "/cart/clearCart";
+  getCartUrl = "/cart/getCart";
 
   addToCart = async (params) => {
     this.abortController = new AbortController();

@@ -1,12 +1,15 @@
-import { axios, isCancel } from "../config/axios";
+import { axios, getAxiosNormalInstance, isCancel } from "../config/axios";
+import { getApiUrl } from "../config/url";
 
 export class Services {
   url;
   abortController;
   axios;
+  productionAxios;
 
   constructor() {
     this.axios = axios;
+    this.productionAxios = getAxiosNormalInstance();
   }
 
   isCancel(error) {
@@ -28,15 +31,21 @@ export class Services {
     headers = {},
     signal,
     transformResponse,
+    isProduction,
   }) {
-    const response = await this.axios({
+    const mockParams = {
       method,
-      url,
+      url: getApiUrl(isProduction) + url,
       data,
       params,
       headers,
       signal,
-    });
+    };
+    const response = await (!isProduction
+      ? this.axios(mockParams)
+      : this.productionAxios(mockParams));
+
+    console.log("response: ", response);
     const dataResponse = schema.parse(response.data);
     return transformResponse ? transformResponse(dataResponse) : dataResponse;
   }

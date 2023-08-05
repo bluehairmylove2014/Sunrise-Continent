@@ -8,12 +8,12 @@ import { combineAddress } from "../../utils/helpers/Address";
 import { useNavigate } from "react-router-dom";
 import { PAGES } from "../../constants/Link.constants";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
-import { useCartContext } from "../../libs/business-logic/src/lib/cart/process/context";
+// import { useCartContext } from "../../libs/business-logic/src/lib/cart/process/context";
 
 const WistList = ({ isActive, callback }) => {
   const sidebarRef = useRef(null);
   const [wishlistData, setWishlistData] = useState(null);
-  const { state } = useCartContext();
+  // const { state } = useCartContext();
   const navigate = useNavigate();
   const { onDeleteItem } = useDeleteFromCart();
 
@@ -27,9 +27,9 @@ const WistList = ({ isActive, callback }) => {
     }
   }, [isActive, sidebarRef, callback]);
 
-  useEffect(() => {
-    setWishlistData(state.cart);
-  }, [state, state.cart]);
+  // useEffect(() => {
+  //   setWishlistData(state.cart);
+  // }, [state, state.cart]);
 
   const handleDeleteFromWishlist = (e, id) => {
     e.stopPropagation();

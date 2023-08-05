@@ -6,13 +6,24 @@ import { formatDate } from "../../utils/helpers/ShortenDatetime";
 import { isDateGreaterThan } from "../../utils/helpers/Datetime";
 import { toggleClass } from "../../utils/helpers/ToggleClass";
 
-const BannerInput = ({ name, title, description, type, form, min }) => {
+const BannerInput = ({
+  name,
+  title,
+  description,
+  type,
+  form,
+  min,
+  background,
+}) => {
   const { control, watch, setValue } = form;
   const perRef = useRef(null);
 
-  const renderLocationInput = (name) => {
+  const renderLocationInput = (name, background) => {
     return (
-      <div className="common-component__banner-input">
+      <div
+        className="common-component__banner-input"
+        style={background && { background }}
+      >
         <button>
           <i className="fi fi-rs-search"></i>
         </button>
@@ -33,7 +44,7 @@ const BannerInput = ({ name, title, description, type, form, min }) => {
     const input = ev.target.querySelector("input");
     input && input.showPicker();
   };
-  const renderDatetimeDoubleInput = (name) => {
+  const renderDatetimeDoubleInput = (name, background) => {
     const startDate = watch(name[0]);
     const endDate = watch(name[1]);
     const startDateMin = new Date().toISOString().substring(0, 16);
@@ -45,6 +56,7 @@ const BannerInput = ({ name, title, description, type, form, min }) => {
           className="cc-banner-input__datetime--start"
           type="button"
           onClick={showPickerInput}
+          style={background && { background }}
         >
           <i className="fi fi-rr-calendar-minus"></i>
           <Controller
@@ -76,6 +88,7 @@ const BannerInput = ({ name, title, description, type, form, min }) => {
           className="cc-banner-input__datetime--end"
           type="button"
           onClick={showPickerInput}
+          style={background && { background }}
         >
           <i className="fi fi-rr-calendar-check"></i>
           <Controller
@@ -157,7 +170,7 @@ const BannerInput = ({ name, title, description, type, form, min }) => {
       </div>
     );
   };
-  const renderPeopleRoomInput = (name, title, description, min) => {
+  const renderPeopleRoomInput = (name, title, description, min, background) => {
     return (
       <>
         <div className="cc-banner-input__per-wrapper" ref={perRef}>
@@ -165,6 +178,7 @@ const BannerInput = ({ name, title, description, type, form, min }) => {
             className="cc-banner-input__people-e-room"
             type="button"
             onClick={() => toggleClass(perRef.current, "active")}
+            style={background && { background }}
           >
             <i className="fi fi-tr-people"></i>
             <div className="cc-banner-input__multiline-value">
@@ -187,11 +201,12 @@ const BannerInput = ({ name, title, description, type, form, min }) => {
 
   return (
     <div className="common-component__banner-input-wrapper">
-      {type === BANNER_INPUT.LOCATION.TYPE && renderLocationInput(name)}
+      {type === BANNER_INPUT.LOCATION.TYPE &&
+        renderLocationInput(name, background)}
       {type === BANNER_INPUT.DATE_TIME_DOUBLE.TYPE &&
-        renderDatetimeDoubleInput(name)}
+        renderDatetimeDoubleInput(name, background)}
       {type === BANNER_INPUT.PEOPLE_AND_ROOM.TYPE &&
-        renderPeopleRoomInput(name, title, description, min)}
+        renderPeopleRoomInput(name, title, description, min, background)}
     </div>
   );
 };

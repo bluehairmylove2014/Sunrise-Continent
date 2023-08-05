@@ -27,6 +27,10 @@ import {
 } from "../../libs/business-logic/src/lib/auth";
 import googleIcon from "../../assets/images/icons/google.png";
 import facebookIcon from "../../assets/images/icons/facebook.png";
+import {
+  deleteRedirectUrl,
+  getRedirectUrl,
+} from "../../utils/helpers/RedirectUrlSaver";
 
 const Authentication = () => {
   const loginForm = useForm({
@@ -83,6 +87,14 @@ const Authentication = () => {
   }, [location]);
 
   // Methods
+  const handleNavigate = () => {
+    const oldRedirectUrl = getRedirectUrl();
+    if (oldRedirectUrl) {
+      deleteRedirectUrl();
+      navigate(oldRedirectUrl);
+    } else navigate(PAGES.HOME);
+  };
+
   const handleFocus = (target) => {
     if (target && target.parentNode) {
       const labelEl = target.parentNode.querySelector("label");
@@ -101,7 +113,7 @@ const Authentication = () => {
     onGoogleLogin()
       .then((message) => {
         toast.success(message);
-        navigate(PAGES.HOME);
+        handleNavigate();
       })
       .catch((err) => {
         toast.error(err.message);
@@ -111,7 +123,7 @@ const Authentication = () => {
     onFacebookLogin()
       .then((message) => {
         toast.success(message);
-        navigate(PAGES.HOME);
+        handleNavigate();
       })
       .catch((err) => {
         toast.error(err.message);
@@ -125,7 +137,7 @@ const Authentication = () => {
     })
       .then((message) => {
         toast.success(message);
-        navigate(PAGES.HOME);
+        handleNavigate();
       })
       .catch((err) => {
         toast.error(err.message);
@@ -144,7 +156,7 @@ const Authentication = () => {
     onRegister({ email, firstName, lastName, password })
       .then((message) => {
         toast.success(message);
-        navigate(PAGES.HOME);
+        handleNavigate();
       })
       .catch((err) => {
         toast.error(err.message);

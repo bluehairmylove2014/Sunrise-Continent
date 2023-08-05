@@ -65,10 +65,6 @@ const Search = () => {
     handleSearch(criteria);
   }, []);
 
-  useEffect(() => {
-    console.log(filterBoardForm.formState.defaultValues);
-  }, [filterBoardForm]);
-
   const handleSearch = (criteria) => {
     if (typeof criteria.budget === "string") return;
     if (Object.keys(criteria).length) {
@@ -174,7 +170,7 @@ const Search = () => {
   const renderHotels = (hotelList) => {
     if (!Array.isArray(hotelList)) return <></>;
     return hotelList.map((hotel) => {
-      return <Hotel data={hotel} key={hotel.id} />;
+      return <Hotel data={hotel} key={hotel.id} criteria={criteria} />;
     });
   };
 

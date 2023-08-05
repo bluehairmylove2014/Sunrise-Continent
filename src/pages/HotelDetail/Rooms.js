@@ -7,32 +7,69 @@ import {
 import { icon } from "./Data";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 import { PAGES } from "../../constants/Link.constants";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import BannerInput from "../../components/common/BannerInput";
 import { BANNER_INPUT } from "../../constants/Variables.constants";
-import {
-  toggleClass,
-  toggleClassNoListener,
-} from "../../utils/helpers/ToggleClass";
+import { toggleClass } from "../../utils/helpers/ToggleClass";
+import { parseSearchParams } from "../../utils/helpers/params";
+import { useIsLogged } from "../../libs/business-logic/src/lib/auth/process/hooks";
+import { setRedirectUrl } from "../../utils/helpers/RedirectUrlSaver";
+import { useCheckRoomAvailable } from "../../libs/business-logic/src/lib/hotel/process/hooks/useCheckRoomAvailable";
+import { toast } from "react-hot-toast";
+import TypingLoader from "../../components/common/Loader/TypingLoader";
 
 const Rooms = ({ rooms_data }) => {
   let room = null;
-  const pickerForm = useForm();
+  const { id, ...dateTimeParams } = parseSearchParams(useLocation().search);
+  const pickerFormDefaultValue = {
+    start_date: dateTimeParams["start_date"] ?? "",
+    end_date: dateTimeParams["end_date"] ?? "",
+    rooms: BANNER_INPUT.PEOPLE_AND_ROOM.MIN_VALUE[0],
+    adults: BANNER_INPUT.PEOPLE_AND_ROOM.MIN_VALUE[1],
+    childrens: BANNER_INPUT.PEOPLE_AND_ROOM.MIN_VALUE[2],
+  };
+  const pickerForm = useForm({
+    defaultValues: pickerFormDefaultValue,
+  });
   const pickerRef = useRef(null);
   const navigate = useNavigate();
-
-  const togglePicker = (target) => {
-    target && toggleClassNoListener(target, "active");
-  };
+  const isLoggedIn = useIsLogged();
+  const { onCheckRoomAvailable, isLoading: isCheckingRoomAvailable } =
+    useCheckRoomAvailable();
 
   const onPreCheckout = (data, rd) => {
-    navigate(
-      PAGES.PRE_CHECKOUT +
-        `?hotelId=${rd.hotelId}&id=${rd.id}` +
-        `&from=${data.start_date}&to=${data.end_date}` +
-        `&adult=2&children=1&rooms=2`
-    );
+    if (!isLoggedIn) {
+      setRedirectUrl(window.location.pathname + window.location.search);
+      navigate("/login");
+    } else {
+      if (data.start_date.length === 0 || data.end_date.length === 0) {
+        toast.error("Hãy chọn ngày bắt đầu và ngày kết thúc");
+        return;
+      }
+      // Check room available
+      onCheckRoomAvailable({
+        HotelId: rd.hotelId,
+        RoomTypeId: rd.id,
+        NumberOfRoom: data.rooms,
+        CheckIn: data.start_date,
+        CheckOut: data.end_date,
+      })
+        .then((message) => {
+          toast.success(message);
+          navigate(
+            PAGES.PRE_CHECKOUT +
+              `?hotelID=${rd.hotelId}&roomID=${rd.id}` +
+              `&start_date=${data.start_date}&end_date=${data.end_date}` +
+              `&adult=${pickerFormDefaultValue.adults}` +
+              `&children=${pickerFormDefaultValue.childrens}` +
+              `&rooms=${pickerFormDefaultValue.rooms}`
+          );
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
+    }
   };
 
   if (Array.isArray(rooms_data)) {
@@ -105,8 +142,10 @@ const Rooms = ({ rooms_data }) => {
                 {rd.vacancy ? (
                   <>
                     <p>
-                      <i className="fi fi-sr-bed-alt"></i>
-                      Còn trống: {rd.vacancy} phòng
+                      <b>
+                        <i className="fi fi-sr-bed-alt"></i>
+                        Còn trống: {rd.vacancy} phòng
+                      </b>
                     </p>
                   </>
                 ) : (
@@ -127,7 +166,9 @@ const Rooms = ({ rooms_data }) => {
                   / đêm
                 </p>
                 <button
-                  onClick={() => toggleClass(pickerRef.current)}
+                  onClick={() => {
+                    toggleClass(pickerRef.current);
+                  }}
                   className={rd.vacancy ? "booking" : "change"}
                 >
                   {rd.vacancy ? "Đặt phòng ngay" : "Đổi ngày đặt"}
@@ -142,10 +183,27 @@ const Rooms = ({ rooms_data }) => {
               onPreCheckout(data, rd)
             )}
           >
+            {isCheckingRoomAvailable && (
+              <div className="pre-checkout-picker__loading">
+                <TypingLoader />
+              </div>
+            )}
             <div className="pre-checkout-picker__title">
               <button
                 className="close-btn"
-                onClick={() => togglePicker(pickerRef.current)}
+                onClick={() => {
+                  BANNER_INPUT.DATE_TIME_DOUBLE.INPUT_NAME.forEach((iname) =>
+                    pickerForm.setValue(iname, pickerFormDefaultValue[iname])
+                  );
+                  BANNER_INPUT.PEOPLE_AND_ROOM.INPUT_NAME.forEach(
+                    (iname, index) =>
+                      pickerForm.setValue(
+                        iname,
+                        BANNER_INPUT.PEOPLE_AND_ROOM.MIN_VALUE[index]
+                      )
+                  );
+                  toggleClass(pickerRef.current);
+                }}
                 type="button"
               >
                 <i className="fi fi-rr-left"></i>
@@ -154,12 +212,15 @@ const Rooms = ({ rooms_data }) => {
               <div></div>
             </div>
             <div className="criteria-board__input-wrapper">
+              <h6>Ngày đặt phòng</h6>
               <BannerInput
                 name={BANNER_INPUT.DATE_TIME_DOUBLE.INPUT_NAME}
                 type={BANNER_INPUT.DATE_TIME_DOUBLE.TYPE}
                 form={pickerForm}
+                background={"#fdeee6"}
               />
-
+              <br />
+              <h6>Chi tiết phòng</h6>
               <BannerInput
                 name={BANNER_INPUT.PEOPLE_AND_ROOM.INPUT_NAME}
                 title={BANNER_INPUT.PEOPLE_AND_ROOM.TITLE}
@@ -167,6 +228,7 @@ const Rooms = ({ rooms_data }) => {
                 type={BANNER_INPUT.PEOPLE_AND_ROOM.TYPE}
                 min={BANNER_INPUT.PEOPLE_AND_ROOM.MIN_VALUE}
                 form={pickerForm}
+                background={"#fdeee6"}
               />
             </div>
             <button type="submit" className="search__submit-btn">

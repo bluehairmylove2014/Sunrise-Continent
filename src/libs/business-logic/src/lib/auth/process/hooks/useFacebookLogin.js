@@ -46,7 +46,6 @@ export const useFacebookLogin = () => {
     if (typeof window !== "undefined" && window.opener) {
       // Extract and get access token and error (if any) from url
       const code = getCodeFromUrl();
-      console.log("RUn");
       if (code) {
         // get token by 'code'
         getFBAccessTokenMutation
@@ -65,7 +64,7 @@ export const useFacebookLogin = () => {
             facebookPopupPostMessage(FACEBOOK_MESSAGE.LOGIN_FAILED, {});
           })
           .finally(() => {
-            // window.close();
+            window.close();
           });
       }
     }
@@ -89,7 +88,6 @@ export const useFacebookLogin = () => {
         if (authWindow) {
           const handleAuthentication = (event) => {
             const { type, payload } = event.data;
-            console.log("type: ", type);
             if (type === FACEBOOK_MESSAGE.LOGIN_SUCCESS) {
               getFBUserInforMutation
                 .mutateAsync(payload.accessToken)

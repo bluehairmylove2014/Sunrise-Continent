@@ -5,8 +5,8 @@ const getUserResponseSchema = z.object({
   fullName: z.string(),
   emailAddress: z.string(),
   phoneNumber: z.string(),
-  dateOfBirth: z.string().optional,
-  gender: z.string().optional,
+  dateOfBirth: z.string(),
+  gender: z.string(),
   image: z.string(),
   rank: z.string(),
 });

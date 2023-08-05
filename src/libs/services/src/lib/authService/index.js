@@ -1,18 +1,18 @@
 import { isAxiosError } from "../../config/axios";
-import { API_URL } from "../../config/url";
+import { getApiUrl } from "../../config/url";
 import { Services } from "../../service";
 import { authenticationResponseSchema, getUserResponseSchema } from "./schema";
 
 const unknownError = "Unexpected error occurred";
 
 export class AuthService extends Services {
-  url = API_URL + "/auth";
+  url = getApiUrl() + "/auth";
   abortController;
 
-  registerUrl = this.url + "/register";
-  loginUrl = this.url + "/login";
-  refreshTokenUrl = this.url + "/refreshToken";
-  getUserUrl = this.url + "/get-user";
+  registerUrl = "/auth/register";
+  loginUrl = "/auth/login";
+  refreshTokenUrl = "/auth/refreshToken";
+  getUserUrl = "/auth/get-user";
 
   register = async (data) => {
     this.abortController = new AbortController();
@@ -109,7 +109,7 @@ export class AuthService extends Services {
         signal: this.abortController.signal,
         transformResponse: (res) => res,
       });
-      return response.data;
+      return response;
     } catch (error) {
       if (!this.isCancel(error)) {
         // Check if it's cannot refresh error?

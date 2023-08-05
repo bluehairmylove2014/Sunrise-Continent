@@ -11,7 +11,7 @@ const socialService = new SocialService();
  */
 export const useLoginMutation = () => {
   return useMutation(authService.login, {
-    retry: mutationConfig.retry,
+    retry: mutationConfig.RETRY,
   });
 };
 
@@ -20,7 +20,7 @@ export const useLoginMutation = () => {
  */
 export const useRegisterMutation = () => {
   return useMutation(authService.register, {
-    retry: mutationConfig.retry,
+    retry: mutationConfig.RETRY,
   });
 };
 
@@ -29,7 +29,7 @@ export const useRegisterMutation = () => {
  */
 export const useRefreshTokenMutation = () => {
   return useMutation(authService.refreshToken, {
-    retry: mutationConfig.retry,
+    retry: mutationConfig.RETRY,
   });
 };
 
@@ -38,7 +38,7 @@ export const useRefreshTokenMutation = () => {
  */
 export const useUpdateAccountMutation = () => {
   return useMutation(socialService.updateAccount, {
-    retry: mutationConfig.retry,
+    retry: mutationConfig.RETRY,
   });
 };
 
@@ -47,7 +47,7 @@ export const useUpdateAccountMutation = () => {
  */
 export const useGetFBAccessTokenMutation = () => {
   return useMutation(socialService.getFBAccessToken, {
-    retry: mutationConfig.retry,
+    retry: mutationConfig.RETRY,
   });
 };
 
@@ -56,6 +56,6 @@ export const useGetFBAccessTokenMutation = () => {
  */
 export const useGetFBUserInforMutation = () => {
   return useMutation(socialService.getFBUserInfor, {
-    retry: mutationConfig.retry,
+    retry: mutationConfig.RETRY,
   });
 };

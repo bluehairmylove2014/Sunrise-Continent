@@ -39,7 +39,7 @@ namespace SunriseServer.Controllers
         }
 
         [HttpGet("get-bookings-current-account"), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<ResponseMessageDetails<List<BookingDto>>>> GetAllUserBookings()
+        public async Task<ActionResult<List<BookingDto>>> GetAllUserBookings()
         {
             Account currentAcc = await _accountService.GetByUsername(User.Identity.Name);
             var result = await _bookingService.GetAllBookings(currentAcc.Id);
@@ -61,7 +61,7 @@ namespace SunriseServer.Controllers
                 finalResult.Add(variable);
             }
 
-            return Ok(new ResponseMessageDetails<List<BookingDto>>("Get bookings successfully", finalResult));
+            return Ok(finalResult);
         }
 
         // [HttpPost] //, Authorize(Roles = GlobalConstant.User)

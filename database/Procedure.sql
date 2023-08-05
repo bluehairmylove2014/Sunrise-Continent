@@ -255,9 +255,9 @@ GO
 
 
 CREATE OR ALTER PROC USP_GetAccountByUsername
-	@Username VARCHAR(50)
+	@Email VARCHAR(50)
 AS
-	SELECT * FROM ACCOUNT where Username like @Username
+	SELECT * FROM ACCOUNT where Email like @Email
 GO
 
 
@@ -283,7 +283,7 @@ GO
 CREATE OR ALTER PROC USP_AddAccount
 	--@Id INTEGER,
 	--@MemberPoint INTEGER,
-	@Username VARCHAR(50),
+	@Email VARCHAR(50),
 	@PasswordHash VARCHAR(500),
 	@PasswordSalt VARCHAR(500),
 	@UserRole VARCHAR(50),
@@ -295,7 +295,7 @@ AS
 		DECLARE @Id INT
 		EXEC @Id = dbo.USP_GetNextColumnId 'ACCOUNT', 'Id'
 
-		INSERT INTO ACCOUNT VALUES (@Id, 0, 'Bronze', @Username, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires)
+		INSERT INTO ACCOUNT VALUES (@Id, 0, 'Bronze', @Email, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires)
 		RETURN @Id
 	END TRY
 
@@ -311,7 +311,7 @@ CREATE OR ALTER PROC USP_UpdateAccount
 	@Id INTEGER,
 	@MemberPoint INTEGER,
 	@AccountRank VARCHAR(10),
-	@Username VARCHAR(50),
+	@Email VARCHAR(50),
 	@PasswordHash VARCHAR(500),
 	@PasswordSalt VARCHAR(500)
 	--@UserRole VARCHAR(50),
@@ -329,7 +329,7 @@ AS
 		UPDATE ACCOUNT 
 		SET
 			MemberPoint = @MemberPoint,
-			Username = @Username,
+			Email = @Email,
 			AccountRank = @AccountRank,
 			PasswordHash = @PasswordHash,
 			PasswordSalt = @PasswordSalt

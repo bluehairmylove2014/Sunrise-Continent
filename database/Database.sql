@@ -120,7 +120,7 @@ CREATE TABLE ACCOUNT
     MemberPoint INTEGER,
 	AccountRank VARCHAR(10),
         
-    Username VARCHAR(50),
+    Email VARCHAR(50),
     PasswordHash VARCHAR(500),
     PasswordSalt VARCHAR(500),
     UserRole VARCHAR(50),

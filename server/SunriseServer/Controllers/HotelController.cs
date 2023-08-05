@@ -18,14 +18,14 @@ namespace SunriseServer.Controllers
 {
     
 
-    [Route("api/[controller]")]
+    [Route("api/hotel")]
     [ApiController]
-    public class hotelController : ControllerBase
+    public class HotelController : ControllerBase
     {
         readonly IHotelService _hotelService;
         readonly IRoomService _roomService;
 
-        public hotelController(IHotelService hotelService, IRoomService roomService)
+        public HotelController(IHotelService hotelService, IRoomService roomService)
         {
             _hotelService = hotelService;
             _roomService = roomService;

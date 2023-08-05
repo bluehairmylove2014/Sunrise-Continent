@@ -14,13 +14,13 @@ using SunriseServerCore.Common.Enum;
 
 namespace SunriseServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/voucher")]
     [ApiController]
-    public class voucherController : ControllerBase
+    public class VoucherController : ControllerBase
     {
         readonly IVoucherService _voucherService;
 
-        public voucherController(IVoucherService voucherService)
+        public VoucherController(IVoucherService voucherService)
         {
             _voucherService = voucherService;
         }

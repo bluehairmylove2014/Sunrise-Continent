@@ -9,13 +9,13 @@ using SunriseServer.Common.Constant;
 
 namespace SunriseServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/room")]
     [ApiController]
-    public class roomController : ControllerBase
+    public class RoomController : ControllerBase
     {
         readonly IRoomService _roomService;
 
-        public roomController(IRoomService roomService)
+        public RoomController(IRoomService roomService)
         {
             _roomService = roomService;
         }

@@ -15,13 +15,13 @@ using SunriseServerCore.Dtos.Order;
 
 namespace SunriseServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/order")]
     [ApiController]
-    public class orderController : ControllerBase
+    public class OrderController : ControllerBase
     {
         readonly IOrderService _orderService;
 
-        public orderController(IOrderService orderService)
+        public OrderController(IOrderService orderService)
         {
             _orderService = orderService;
         }

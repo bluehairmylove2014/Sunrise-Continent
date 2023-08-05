@@ -12,14 +12,14 @@ using SunriseServerCore.Common.Enum;
 
 namespace SunriseServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
-    public class authController : ControllerBase
+    public class AuthController : ControllerBase
     {
         readonly IConfiguration _configuration;
         readonly IAccountService _accService;
 
-        public authController(IConfiguration configuration, IAccountService accService)
+        public AuthController(IConfiguration configuration, IAccountService accService)
         {
             _configuration = configuration;
             _accService = accService;

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import "../../styles/common/wishlist.scss";
@@ -13,7 +14,6 @@ import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 const WistList = ({ isActive, callback }) => {
   const sidebarRef = useRef(null);
   const [wishlistData, setWishlistData] = useState(null);
-  setWishlistData(null);
   // const { state } = useCartContext();
   const navigate = useNavigate();
   const { onDeleteItem } = useDeleteFromCart();

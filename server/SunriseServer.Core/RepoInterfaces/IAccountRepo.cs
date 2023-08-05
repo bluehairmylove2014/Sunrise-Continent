@@ -10,5 +10,6 @@ namespace SunriseServerCore.RepoInterfaces
     public interface IAccountRepo : IRepository<Account>
     {
         Task<Account> GetByUsername(string username);
+        Task<PersonalDetail> GetAccountDetailsByEmail(string email);
     }
 }

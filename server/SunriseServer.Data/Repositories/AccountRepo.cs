@@ -25,6 +25,7 @@ namespace SunriseServerData.Repositories
                 DECLARE @result INT
                 EXEC @result = dbo.USP_AddAccount ");
             builder.Append($"@Email = \'{acc.Email}\', ");
+            builder.Append($"@FullName = \'{acc.FullName}\', ");
             builder.Append($"@PasswordHash = \'{acc.PasswordHash}\', ");
             builder.Append($"@PasswordSalt = \'{acc.PasswordSalt}\', ");
             builder.Append($"@UserRole = \'{acc.UserRole}\', ");

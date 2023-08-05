@@ -57,7 +57,7 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<ResponseMessageDetails<string>>> Register(LoginDto request)
+        public async Task<ActionResult<ResponseMessageDetails<string>>> Register(RegisterDto request)
         {
             var acc = await _accService.GetByUsername(request.Email);
 
@@ -69,6 +69,7 @@ namespace SunriseServer.Controllers
             acc = new Account();
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             acc.Email = request.Email;
+            acc.FullName = request.FullName;
             acc.PasswordHash = Helper.ByteArrayToString(passwordHash);
             acc.PasswordSalt = Helper.ByteArrayToString(passwordSalt);
             acc.UserRole = GlobalConstant.User;

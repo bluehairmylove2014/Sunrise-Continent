@@ -38,8 +38,8 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpPut, Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<List<Hotel>>> UpdateAccount(Account request)
+        [HttpPut(""), Authorize(Roles = GlobalConstant.User)]
+        public async Task<ActionResult<List<Hotel>>> UpdateAccount(int id, Account request)
         {
             var result = await _accountService.UpdateAccount(request);
             if (result is null)

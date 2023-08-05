@@ -53,24 +53,7 @@ namespace SunriseServer.Controllers
             return result;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<ResponseMessageDetails<List<Hotel>>>> GetAllHotels()
-        {
-            return Ok(new ResponseMessageDetails<List<Hotel>>("Get hotels successfully.", await _hotelService.GetAllHotels()));
-        }
-
-        [HttpGet("single")]
-        public async Task<ActionResult<ResponseMessageDetails<Hotel>>> GetSingleHotel(int id)
-        {
-            var result = await _hotelService.GetSingleHotel(id);
-            if (result is null)
-                return NotFound("Hotel not found.");
-
-            return Ok(new ResponseMessageDetails<Hotel>("Get hotel successfully", result));
-        }
-
-        // Alternative GetAll API
-        [HttpGet("display-hotel-data")]
+        [HttpGet("")]
         public async Task<ActionResult<ResponseMessageDetails<List<HotelDto>>>> GetAllHotelInfo()
         {
             var result = await _hotelService.GetAllHotels();
@@ -78,10 +61,29 @@ namespace SunriseServer.Controllers
             var finalResult = new List<HotelDto>();
             foreach (var item in result)
             {
+                // var hotelInfo = await TransferHotelData(item);
                 finalResult.Add(await TransferHotelData(item));
             }
 
             return Ok(new ResponseMessageDetails<List<HotelDto>>("Get hotel successfully", finalResult));
+        }
+
+        [HttpGet("single")]
+        public async Task<ActionResult<ResponseMessageDetails<HotelDto>>> GetSingleHotel(int id)
+        {
+            var rawData = await _hotelService.GetSingleHotel(id);
+            if (rawData is null)
+                return NotFound("Hotel not found.");
+
+            var result = await TransferHotelData(rawData);
+
+            return Ok(new ResponseMessageDetails<HotelDto>("Get hotel successfully", result));
+        }
+
+        [HttpGet("no-amenities")]
+        public async Task<ActionResult<ResponseMessageDetails<List<Hotel>>>> GetAllHotels()
+        {
+            return Ok(new ResponseMessageDetails<List<Hotel>>("Get hotels successfully.", await _hotelService.GetAllHotels()));
         }
 
         [HttpGet("recommend")]
@@ -140,7 +142,7 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<Hotel>("Delete hotel successfully", result));
         }
         //?{location}{room_type}{start_date}{end_date}{budget}{rooms}{adults}{children}
-        [HttpGet("hotel/search")]
+        [HttpGet("search")]
         public async Task<ActionResult<ResponseMessageDetails<List<SearchHotel>>>> GetSearchHotel(
             [FromQuery] string location,
             [FromQuery] string room_type,

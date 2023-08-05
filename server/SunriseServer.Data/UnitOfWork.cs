@@ -70,6 +70,19 @@ namespace SunriseServerData
         }
         #endregion
 
+        #region Voucher
+        private IOrderRepo _orderRepo;
+        public IOrderRepo OrderRepo
+        {
+            get
+            {
+                if (_orderRepo == null)
+                    _orderRepo = new OrderRepo(_dataContext);
+                return _orderRepo;
+            }
+        }
+        #endregion
+
         #region Account
         private IAccountRepo _accountRepo;
         public IAccountRepo AccountRepo

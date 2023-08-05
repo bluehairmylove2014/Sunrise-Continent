@@ -3,6 +3,10 @@ using Microsoft.Data.SqlClient;
 using SunriseServerCore.Models;
 using SunriseServerCore.Dtos.Booking;
 using System;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Numerics;
+using System.Reflection;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace SunriseServerData
 {
@@ -32,6 +36,12 @@ namespace SunriseServerData
             
             modelBuilder.Entity<VoucherBag>()
                 .HasKey(x => new { x.AccountId, x.VoucherId });
+            
+            modelBuilder.Entity<Order>()
+                .HasKey(x => new { x.OrderId });
+
+            modelBuilder.Entity<MyFunctionResult>()
+                .HasNoKey().ToTable("MyFunctionResult", t => t.ExcludeFromMigrations());  
         }
 
         public DbSet<Hotel> Hotel { get; set; }
@@ -44,6 +54,7 @@ namespace SunriseServerData
         public DbSet<Review> Review { get; set; }
         public DbSet<Voucher> Voucher { get; set; }
         public DbSet<VoucherBag> VoucherBag { get; set; }
+        public DbSet<Order> Order { get; set; }
         public DbSet<SearchHotel> SearchHotel { get; set; }
     }
 }

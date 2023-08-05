@@ -2,6 +2,7 @@
 {
     public class BookingAccount : ModelBase
     {
+        public int BookingId { get; set; }
         public int AccountId { get; set; }
         public int HotelId { get; set; }
         public int RoomTypeId { get; set; }

@@ -8,6 +8,7 @@ namespace SunriseServer.Services.AccountService
         string GetMyName();
         Task<Account> AddAccount(Account acc);
         Task<Account> GetByUsername(string username);
+        Task<PersonalDetail> GetAccountDetailsByEmail(string username);
         Task<Account> GetById(int id);
         Task<Account> UpdateAccount(Account acc);
         void SaveChanges();

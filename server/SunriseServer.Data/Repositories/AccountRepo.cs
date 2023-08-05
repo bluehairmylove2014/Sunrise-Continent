@@ -56,5 +56,14 @@ namespace SunriseServerData.Repositories
             var result = await _dataContext.Account.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
             return result.FirstOrDefault();
         }
+
+        public async Task<PersonalDetail> GetAccountDetailsByEmail(string email)
+        {
+            var builder = new StringBuilder($"dbo.USP_GetAccountDetailByEmail @Email = \'{email}\';");
+
+            Console.WriteLine(builder.ToString());
+            var result = await _dataContext.PersonalDetail.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            return result.FirstOrDefault();
+        }
     }
 }

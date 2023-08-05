@@ -1743,6 +1743,14 @@ AS
 	WHERE AccountId = @AccountId
 GO
 
+--! proc lấy thông tin chi tiết tài khoản
+CREATE OR ALTER PROC USP_GetAccountDetailByEmail
+	@Email NVARCHAR(200)
+AS
+	SELECT * FROM PERSONAL_DETAILS
+	WHERE EmailAddress = @Email
+GO
+
 --! Func tính điểm input tổng số tiền và số thứ tự của đơn đặt phòng
 CREATE OR ALTER FUNCTION USF_CaculateBonusPoint(@Total INT, @Times INT)
 RETURNS INT

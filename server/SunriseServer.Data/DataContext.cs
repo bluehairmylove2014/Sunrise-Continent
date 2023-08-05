@@ -41,11 +41,15 @@ namespace SunriseServerData
                 .HasKey(x => new { x.OrderId });
 
             modelBuilder.Entity<MyFunctionResult>()
-                .HasNoKey().ToTable("MyFunctionResult", t => t.ExcludeFromMigrations());  
+                .HasNoKey().ToTable("MyFunctionResult", t => t.ExcludeFromMigrations());
+
+            modelBuilder.Entity<PersonalDetail>()
+                .HasNoKey();
         }
 
         public DbSet<Hotel> Hotel { get; set; }
         public DbSet<Account> Account { get; set; }
+        public DbSet<PersonalDetail> PersonalDetail { get; set; }
         public DbSet<BookingAccount> Booking_Account { get; set; }
         public DbSet<RoomFacilityConstant> RoomFacilityConstants { get; set; }
         public DbSet<RoomServiceConstant> RoomServiceConstants { get; set; }

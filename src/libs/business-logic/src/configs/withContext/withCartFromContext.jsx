@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext } from "react";
-import { AuthContext } from "../auth/process/context/authContext";
-import { CartContext } from "../cart/process/context/cartContext";
+import { AuthContext } from "../../lib/auth/process/context/authContext";
+import { CartContext } from "../../lib/cart/process/context/cartContext";
 
 
 export const withCartFromContext = (

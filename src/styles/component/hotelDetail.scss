@@ -565,6 +565,19 @@
                                 bottom: -3px;
                             }
                         }
+
+                        .no-vacancy {
+                            width: 100%;
+                            margin: 50px 0;
+                            overflow: hidden;
+                            // direction - justify content - align items - flex wrap
+                            @include dflex(column, center, center, nowrap);
+
+                            img {
+                                width: 60%;
+                                height: auto;
+                            }
+                        }
                     }
                 }
 
@@ -599,67 +612,83 @@
                             @include normal-btn(none, 5px, var(--ultramarine-blue), white, 10px 20px, 0.75rem);
                             font-weight: 600;
 
-                            &:hover {
-                                background-color: var(--soft-blue);
+                            &.booking {
+                                background-color: var(var(--ultramarine-blue));
+
+                                &:hover {
+                                    background-color: var(--soft-blue);
+                                }
                             }
+
+                            &.change {
+                                background-color: var(--heavy-white-smoke);
+                                color: black;
+
+                                &:hover {
+                                    background-color: var(--quill-grey);
+                                }
+                            }
+
                         }
                     }
                 }
             }
 
-            .room__date-picker {
+            .room__pre-checkout-picker {
                 position: fixed;
-                width: 100vw;
+                width: 0;
                 height: 100vh;
                 top: 0;
-                left: 0;
-                background-color: rgba($color: #000000, $alpha: 0.6);
+                right: 0;
+                background-color: white;
                 visibility: hidden;
                 opacity: 0;
                 pointer-events: none;
+                transition: all 0.2s ease-in;
+                box-shadow: -17px 10px 15px -3px rgba(0, 0, 0, 0.1);
+                padding: 20px;
 
-                .room__criteria-board {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background-color: var(--light-butterfly-bush);
+                .pre-checkout-picker__title {
                     // direction - justify content - align items - flex wrap
-                    @include dflex(column, center, center, nowrap);
-                    gap: 50px;
-                    padding: 100px 50px;
-                    border-radius: 15px;
-
-                    .criteria-board__input-wrapper {
-                        // direction - justify content - align items - flex wrap
-                        @include dflex(row, center, center, nowrap);
-                        gap: 20px;
-                    }
-
-                    &>button {
-                        // border - border radius - background color - color - padding - font size
-                        @include normal-btn(none, 5px, black, white, 0.75rem 2rem, 0.8rem);
-
-                        &:hover {
-                            transform: scale(1.1);
-                        }
-                    }
+                    @include dflex(row, space-between, center, nowrap);
 
                     .close-btn {
-                        border-radius: 50%;
-                        padding: 6px 11px 8px 11px;
-                        font-size: 0.6rem;
-                        background-color: var(--quill-grey);
-                        color: black;
+                        // border - border radius - background color - color - padding - font size
+                        @include normal-btn(none, 5px, var(--quill-grey), black, 6px 20px, 0.7rem);
 
                         &:hover {
                             background-color: black;
                             color: white;
                         }
                     }
+
+                    p {
+                        font-weight: 700;
+                        font-size: 0.8rem;
+                    }
+
+                    div {
+                        width: 40px
+                    }
+                }
+
+                .criteria-board__input-wrapper {
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(row, center, center, nowrap);
+                    gap: 20px;
+                }
+
+                &>button {
+                    // border - border radius - background color - color - padding - font size
+                    @include normal-btn(none, 5px, black, white, 0.75rem 2rem, 0.8rem);
+
+                    &:hover {
+                        transform: scale(1.1);
+                    }
                 }
 
                 &.active {
+                    width: 400px;
                     visibility: visible;
                     opacity: 1;
                     pointer-events: all;

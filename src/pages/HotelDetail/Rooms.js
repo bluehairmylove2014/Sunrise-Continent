@@ -11,7 +11,10 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import BannerInput from "../../components/common/BannerInput";
 import { BANNER_INPUT } from "../../constants/Variables.constants";
-import { toggleClassNoListener } from "../../utils/helpers/ToggleClass";
+import {
+  toggleClass,
+  toggleClassNoListener,
+} from "../../utils/helpers/ToggleClass";
 
 const Rooms = ({ rooms_data }) => {
   let room = null;
@@ -99,10 +102,18 @@ const Rooms = ({ rooms_data }) => {
 
               <div className="short__description">
                 <p>{rd.roomInfo}</p>
-                <p>
-                  <i className="fi fi-sr-bed-alt"></i>
-                  Số phòng trống: {rd.vacancy}
-                </p>
+                {rd.vacancy ? (
+                  <>
+                    <p>
+                      <i className="fi fi-sr-bed-alt"></i>
+                      Còn trống: {rd.vacancy} phòng
+                    </p>
+                  </>
+                ) : (
+                  <div className="no-vacancy">
+                    <img src={icon.noVacancyIcon} alt="no-vacancy" />
+                  </div>
+                )}
               </div>
             </div>
             <div className="room__price">
@@ -115,47 +126,53 @@ const Rooms = ({ rooms_data }) => {
                   </span>{" "}
                   / đêm
                 </p>
-
-                <button onClick={() => togglePicker(pickerRef.current)}>
-                  Đặt phòng ngay
+                <button
+                  onClick={() => toggleClass(pickerRef.current)}
+                  className={rd.vacancy ? "booking" : "change"}
+                >
+                  {rd.vacancy ? "Đặt phòng ngay" : "Đổi ngày đặt"}
                 </button>
               </div>
             </div>
           </div>
-          <div className="room__date-picker" ref={pickerRef}>
-            <form
-              className="room__criteria-board"
-              onSubmit={pickerForm.handleSubmit((data) =>
-                onPreCheckout(data, rd)
-              )}
-            >
-              {/* <button
+          <form
+            className="room__pre-checkout-picker"
+            ref={pickerRef}
+            onSubmit={pickerForm.handleSubmit((data) =>
+              onPreCheckout(data, rd)
+            )}
+          >
+            <div className="pre-checkout-picker__title">
+              <button
                 className="close-btn"
                 onClick={() => togglePicker(pickerRef.current)}
                 type="button"
               >
-                x
-              </button> */}
-              <div className="criteria-board__input-wrapper">
-                <BannerInput
-                  name={BANNER_INPUT.DATE_TIME_DOUBLE.INPUT_NAME}
-                  type={BANNER_INPUT.DATE_TIME_DOUBLE.TYPE}
-                  form={pickerForm}
-                />
-                <BannerInput
-                  name={BANNER_INPUT.PEOPLE_AND_ROOM.INPUT_NAME}
-                  title={BANNER_INPUT.PEOPLE_AND_ROOM.TITLE}
-                  description={BANNER_INPUT.PEOPLE_AND_ROOM.DESCRIPTION}
-                  type={BANNER_INPUT.PEOPLE_AND_ROOM.TYPE}
-                  min={BANNER_INPUT.PEOPLE_AND_ROOM.MIN_VALUE}
-                  form={pickerForm}
-                />
-              </div>
-              <button type="submit" className="search__submit-btn">
-                Xác nhận
+                <i className="fi fi-rr-left"></i>
               </button>
-            </form>
-          </div>
+              <p>Thông tin cần thiết</p>
+              <div></div>
+            </div>
+            <div className="criteria-board__input-wrapper">
+              <BannerInput
+                name={BANNER_INPUT.DATE_TIME_DOUBLE.INPUT_NAME}
+                type={BANNER_INPUT.DATE_TIME_DOUBLE.TYPE}
+                form={pickerForm}
+              />
+
+              <BannerInput
+                name={BANNER_INPUT.PEOPLE_AND_ROOM.INPUT_NAME}
+                title={BANNER_INPUT.PEOPLE_AND_ROOM.TITLE}
+                description={BANNER_INPUT.PEOPLE_AND_ROOM.DESCRIPTION}
+                type={BANNER_INPUT.PEOPLE_AND_ROOM.TYPE}
+                min={BANNER_INPUT.PEOPLE_AND_ROOM.MIN_VALUE}
+                form={pickerForm}
+              />
+            </div>
+            <button type="submit" className="search__submit-btn">
+              Xác nhận
+            </button>
+          </form>
         </div>
       );
     });

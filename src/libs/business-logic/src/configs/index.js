@@ -6,6 +6,9 @@ export const authConfig = {
   isNeedRefreshToken: true,
   isNeedBroadcast: true,
 };
+export const mutationConfig = {
+  RETRY: 1,
+};
 
 export const providerConfig = [
   {
@@ -46,7 +49,4 @@ export const facebookConfig = {
   REDIRECT_URI: "http://localhost:3000/",
   SCOPE: "public_profile,email",
   STATE: "{st=datsuperman04102014helloanhLong,ds=2789562897562}",
-};
-export const mutationConfig = {
-  RETRY: 1,
 };

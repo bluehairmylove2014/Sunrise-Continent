@@ -6,7 +6,7 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import "../../styles/component/preCheckout.scss";
 import Checkbox from "../../components/common/Checkbox";
-import SmallPageLoader from "../../components/common/SmallPageLoader";
+import SmallPageLoader from "../../components/common/Loader/SmallPageLoader";
 import { combineAddress } from "../../utils/helpers/Address";
 import { icon } from "./Data";
 import { formatDate } from "../../utils/helpers/ShortenDatetime";

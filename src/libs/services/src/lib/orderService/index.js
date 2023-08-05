@@ -1,6 +1,12 @@
-import { axios, isAxiosError } from "../../config/axios";
-import { Services } from "../../service";
+import { isAxiosError } from "../../config/axios";
 import { API_URL } from "../../config/url";
+import { Services } from "../../service";
+import {
+  getCouponResponseSchema,
+  getOrderTaxResponseSchema,
+  getShippingResponseSchema,
+  updateOrderResponseSchema,
+} from "./schema";
 
 const unknownErrorMsg = "Order service unknown error";
 
@@ -14,32 +20,13 @@ export class OrderService extends Services {
   getCouponUrl = this.url + "/get-coupon";
   updateOrderUrl = this.url + "/get-update-order";
 
-  getOrder = async (params) => {
-    this.abortController = new AbortController();
-    try {
-      const response = await axios.get(this.getOrderUrl, {
-        headers: {
-          Authorization: `Bearer ${params.accessToken}`,
-        },
-        signal: this.abortController.signal,
-      });
-      return response.data;
-    } catch (error) {
-      if (this.isCancel(error)) {
-        // Handle other errors
-        throw error;
-      } else if (isAxiosError(error)) {
-        throw new Error(
-          error.response ? error.response.data.message : unknownErrorMsg
-        );
-      }
-      throw new Error(unknownErrorMsg);
-    }
-  };
   getShipping = async (params) => {
     this.abortController = new AbortController();
     try {
-      const response = await axios.get(this.getShippingUrl, {
+      const response = await this.fetchApi({
+        method: "GET",
+        url: this.getShippingUrl,
+        schema: getShippingResponseSchema,
         params: {
           address: params.address,
         },
@@ -47,8 +34,9 @@ export class OrderService extends Services {
           Authorization: `Bearer ${params.accessToken}`,
         },
         signal: this.abortController.signal,
+        transformResponse: (res) => res,
       });
-      return response.data;
+      return response;
     } catch (error) {
       if (this.isCancel(error)) {
         // Handle other errors
@@ -64,7 +52,10 @@ export class OrderService extends Services {
   getTax = async (params) => {
     this.abortController = new AbortController();
     try {
-      const response = await axios.get(this.getTaxUrl, {
+      const response = await this.fetchApi({
+        method: "GET",
+        url: this.getTaxUrl,
+        schema: getOrderTaxResponseSchema,
         params: {
           country: params.country,
         },
@@ -72,8 +63,9 @@ export class OrderService extends Services {
           Authorization: `Bearer ${params.accessToken}`,
         },
         signal: this.abortController.signal,
+        transformResponse: (res) => res,
       });
-      return response.data;
+      return response;
     } catch (error) {
       if (this.isCancel(error)) {
         // Handle other errors
@@ -89,16 +81,20 @@ export class OrderService extends Services {
   getCoupon = async (params) => {
     this.abortController = new AbortController();
     try {
-      const response = await axios.get(this.getCouponUrl, {
+      const response = await this.fetchApi({
+        method: "GET",
+        url: this.getCouponUrl,
+        schema: getCouponResponseSchema,
         params: {
-          coupon: params.couponCode,
+          couponCode: params.couponCode,
         },
         headers: {
           Authorization: `Bearer ${params.accessToken}`,
         },
         signal: this.abortController.signal,
+        transformResponse: (res) => res,
       });
-      return response.data;
+      return response;
     } catch (error) {
       if (this.isCancel(error)) {
         throw error;
@@ -110,16 +106,21 @@ export class OrderService extends Services {
       throw new Error(unknownErrorMsg);
     }
   };
-  updateOrder = async (params) => {
+  createOrder = async (params) => {
     this.abortController = new AbortController();
     try {
-      const response = await axios.post(this.updateOrderUrl, params.order, {
+      const response = await this.fetchApi({
+        method: "POST",
+        url: this.updateOrderUrl,
+        schema: updateOrderResponseSchema,
+        data: params.order,
         headers: {
           Authorization: `Bearer ${params.accessToken}`,
         },
         signal: this.abortController.signal,
+        transformResponse: (res) => res,
       });
-      return response.data;
+      return response;
     } catch (error) {
       if (this.isCancel(error)) {
         // Handle other errors

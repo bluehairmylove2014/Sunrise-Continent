@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext } from "react";
-import { AuthContext } from "../auth/process/context/authContext";
+import { AuthContext } from "../../lib/auth/process/context/authContext";
 
 export const withTokenFromContext = (
   WrappedComponent

@@ -14,7 +14,7 @@ import "./App.scss";
 // Component
 import Header from "./components/layouts/Header";
 import Footer from "./components/layouts/Footer";
-import PageLoader from "./components/common/PageLoader";
+import PageLoader from "./components/common/Loader/PageLoader";
 
 // Redux
 import { Provider } from "react-redux";

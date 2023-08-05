@@ -1,14 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { memo, useEffect, useState } from "react";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
-// Slider library
 import { Slider } from "@mui/material";
 import { CONVERSION_FACTOR } from "../../constants/Variables.constants";
 import { debounce } from "lodash";
 import "../../styles/common/budgetRange.scss";
 
+const defaultRange = [0, 1000];
+
 const BudgetRange = ({ callbackOnchange, defaultValues }) => {
-  const [priceRange, setPriceRange] = useState(defaultValues);
+  const [priceRange, setPriceRange] = useState(
+    typeof defaultValues !== "undefined" ? defaultValues : defaultRange
+  );
   const [isFirstRender, setIsFirstRender] = useState(true);
 
   useEffect(() => {
@@ -19,7 +22,7 @@ const BudgetRange = ({ callbackOnchange, defaultValues }) => {
 
     const delayedCallback = debounce(() => {
       callbackOnchange && callbackOnchange(priceRange);
-    }, 1000);
+    }, 500);
 
     delayedCallback();
 
@@ -29,7 +32,7 @@ const BudgetRange = ({ callbackOnchange, defaultValues }) => {
   return (
     <div className="common-component__budget-range">
       <Slider
-        value={priceRange}
+        value={[priceRange]}
         onChange={(e, price) => {
           setPriceRange(price);
         }}
@@ -41,13 +44,15 @@ const BudgetRange = ({ callbackOnchange, defaultValues }) => {
         <span>
           {convertNumberToCurrency(
             "vietnamdong",
-            priceRange[0] * CONVERSION_FACTOR.PER_ONE
+            (priceRange ? priceRange[0] : defaultRange[0]) *
+              CONVERSION_FACTOR.PER_ONE
           )}
         </span>
         <span>
           {convertNumberToCurrency(
             "vietnamdong",
-            priceRange[1] * CONVERSION_FACTOR.PER_ONE
+            (priceRange ? priceRange[1] : defaultRange[1]) *
+              CONVERSION_FACTOR.PER_ONE
           )}
         </span>
       </div>

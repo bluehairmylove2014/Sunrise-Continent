@@ -1,5 +1,5 @@
 import React from "react";
-import SmallPageLoader from "../../components/common/SmallPageLoader";
+import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import { combineAddress } from "../../utils/helpers/Address";
 import { pointToLabel } from "../../utils/helpers/Rating";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
@@ -361,7 +361,7 @@ const HotelDetail = () => {
       </div>
     </main>
   ) : (
-    <SmallPageLoader />
+    <SunriseLoader />
   );
 };
 

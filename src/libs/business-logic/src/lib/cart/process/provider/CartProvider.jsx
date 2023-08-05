@@ -1,5 +1,5 @@
 import React from "react";
-import { withTokenFromContext } from "../../../dataCoordinator";
+import { withTokenFromContext } from "../../../../configs/withContext";
 import { ContextProvider } from "./ContextProvider";
 
 export const CartProvider = ({ children }) => {

@@ -1,6 +1,7 @@
-import { axios, isAxiosError } from "../../config/axios";
-import { Services } from "../../service";
+import { isAxiosError } from "../../config/axios";
 import { API_URL } from "../../config/url";
+import { Services } from "../../service";
+import { authenticationResponseSchema, getUserResponseSchema } from "./schema";
 
 const unknownError = "Unexpected error occurred";
 
@@ -10,101 +11,103 @@ export class AuthService extends Services {
 
   registerUrl = this.url + "/register";
   loginUrl = this.url + "/login";
-  refreshTokenUrl = this.url + "/refresh-token";
+  refreshTokenUrl = this.url + "/refreshToken";
   getUserUrl = this.url + "/get-user";
 
   register = async (data) => {
     this.abortController = new AbortController();
     try {
-      const response = await axios.post(this.registerUrl, data, {
+      const response = await this.fetchApi({
+        method: "POST",
+        url: this.registerUrl,
+        schema: authenticationResponseSchema,
+        data,
         signal: this.abortController.signal,
+        transformResponse: (res) => res,
       });
-
       return {
-        statusCode: response.status,
-        message: response.data.message,
-        token: response.data.token,
+        message: response.message,
+        token: response.token,
       };
     } catch (error) {
-      if (!this.isCancel(error)) {
-        // Check if it's email exist error?
-        if (
-          !isAxiosError(error) ||
-          !error.response ||
-          error.response.status !== 401
-        )
-          throw error;
-        return { message: error.response.data.message || unknownError };
+      if (this.isCancel(error)) {
+        // Handle other errors
+        throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data.message : unknownError
+        );
       }
-      console.error(error);
-      return { message: unknownError };
+      throw new Error(unknownError);
     }
   };
   login = async (data) => {
     this.abortController = new AbortController();
     try {
-      const response = await axios.post(this.loginUrl, data, {
+      const response = await this.fetchApi({
+        method: "POST",
+        url: this.loginUrl,
+        schema: authenticationResponseSchema,
+        data,
         signal: this.abortController.signal,
+        transformResponse: (res) => res,
       });
-
       return {
-        statusCode: response.status,
-        message: response.data.message,
-        token: response.data.token,
+        message: response.message,
+        token: response.token,
       };
     } catch (error) {
-      if (!this.isCancel(error)) {
-        // Check if it's wrong email password error?
-        if (
-          !isAxiosError(error) ||
-          !error.response ||
-          error.response.status !== 401
-        )
-          throw error;
-        return { message: error.response.data.message || unknownError };
+      if (this.isCancel(error)) {
+        // Handle other errors
+        throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data.message : unknownError
+        );
       }
-      console.error(error);
-      return { message: unknownError };
+      throw new Error(unknownError);
     }
   };
   refreshToken = async (data) => {
     this.abortController = new AbortController();
     try {
-      const response = await axios.post(
-        this.refreshTokenUrl,
-        {},
-        {
-          headers: { Authorization: `Bearer ${data}` },
-          signal: this.abortController.signal,
-        }
-      );
+      const response = await this.fetchApi({
+        method: "POST",
+        url: this.refreshTokenUrl,
+        schema: authenticationResponseSchema,
+        data: {},
+        headers: { Authorization: `Bearer ${data}` },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res,
+      });
       return {
-        statusCode: response.status,
-        message: response.data.message,
-        token: response.data.token,
+        message: response.message,
+        token: response.token,
       };
     } catch (error) {
-      if (!this.isCancel(error)) {
-        // Check if it's cannot refresh error?
-        if (
-          !isAxiosError(error) ||
-          !error.response ||
-          error.response.status !== 401
-        )
-          throw error;
-        return { message: error.response.data.message || unknownError };
+      if (this.isCancel(error)) {
+        // Handle other errors
+        throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data.message : unknownError
+        );
       }
-      console.error(error);
-      return { message: unknownError };
+      throw new Error(unknownError);
     }
   };
   getUser = async (token) => {
     this.abortController = new AbortController();
     try {
       if (!token) return null;
-      const response = await axios.get(this.getUserUrl, {
+
+      const response = await this.fetchApi({
+        method: "GET",
+        url: this.getUserUrl,
+        schema: getUserResponseSchema,
         headers: { Authorization: `Bearer ${token}` },
         signal: this.abortController.signal,
+        transformResponse: (res) => res,
       });
       return response.data;
     } catch (error) {

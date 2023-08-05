@@ -1,7 +1,11 @@
-import { getAxiosNormalInstance, axios } from "../../config/axios";
-import { Services } from "../../service";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { getAxiosNormalInstance, isAxiosError } from "../../config/axios";
 import { googleApiConfig, facebookApiConfig } from "../../config/config";
 import { API_URL } from "../../config/url";
+import { Services } from "../../service";
+import { updateAccountResponseSchema } from "./schema";
+
+const unknownErrorMsg = "Social service unknown error";
 
 export class SocialService extends Services {
   url = API_URL + "/social";
@@ -34,8 +38,8 @@ export class SocialService extends Services {
         console.error("Error validateToken:", error);
         throw error;
       }
+      throw new Error(unknownErrorMsg);
     }
-    return {};
   };
   getAccountInfor = async (token) => {
     this.abortController = new AbortController();
@@ -65,43 +69,35 @@ export class SocialService extends Services {
         console.error("Error fetching user profile:", error);
         throw error;
       }
+      throw new Error(unknownErrorMsg);
     }
-    return {
-      email: "",
-      firstName: "",
-      lastName: "",
-    };
   };
   updateAccount = async (data) => {
     this.abortController = new AbortController();
     try {
-      const response = await axios.post(this.updateAccountUrl, data, {
+      const response = await this.fetchApi({
+        method: "POST",
+        url: this.updateAccountUrl,
+        schema: updateAccountResponseSchema,
+        data,
         signal: this.abortController.signal,
+        transformResponse: (res) => res.message,
       });
-      if (response.status === 200) {
-        return true;
-      }
+      return response;
     } catch (error) {
-      if (!this.isCancel(error)) {
-        // Handle other errors
-        console.error("Error update account:", error);
-        throw error;
+      if (!this.isCancel(error) && isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data.message : unknownErrorMsg
+        );
       }
+      throw new Error(unknownErrorMsg);
     }
-    return false;
   };
 
   // FACEBOOK LOGIN
   getFBAccessToken = async (params) => {
     this.abortController = new AbortController();
     try {
-      console.log(
-        facebookApiConfig.getFBAccessTokenUrl +
-          `?client_id=${params.clientId}` +
-          `&client_secret=${params.clientSecret}` +
-          `&redirect_uri=${params.redirectUri}` +
-          `&code=${params.code}`
-      );
       const response = await getAxiosNormalInstance().get(
         facebookApiConfig.getFBAccessTokenUrl +
           `?client_id=${params.clientId}` +
@@ -123,12 +119,8 @@ export class SocialService extends Services {
         console.error("Error fetching access token:", error);
         throw error;
       }
+      throw new Error(unknownErrorMsg);
     }
-    return {
-      access_token: "",
-      token_type: "",
-      expires_in: "",
-    };
   };
   getFBUserInfor = async (token) => {
     this.abortController = new AbortController();
@@ -151,11 +143,7 @@ export class SocialService extends Services {
         console.error("Error get facebook user infor: ", error);
         throw error;
       }
+      throw new Error(unknownErrorMsg);
     }
-    return {
-      email: "",
-      firstName: "",
-      lastName: "",
-    };
   };
 }

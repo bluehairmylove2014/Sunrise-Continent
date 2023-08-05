@@ -43,7 +43,7 @@ const HotelCard = ({ hotelData }) => {
           {/* <button>
             <i className="fi fi-rs-heart"></i>
           </button> */}
-          {/* <i class="fi fi-ss-heart"></i> */}
+          {/* <i className="fi fi-ss-heart"></i> */}
         </div>
         <div className="cc-hotel-card-body__rating">
           {hotelData.stars && hotelData.stars > 0 && (

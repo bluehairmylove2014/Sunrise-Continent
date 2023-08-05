@@ -17,7 +17,7 @@ import {
 import Hotel from "./Hotel";
 import { toggleClass } from "../../utils/helpers/ToggleClass";
 import { useSearch } from "../../libs/business-logic/src/lib/hotel";
-import SmallPageLoader from "../../components/common/SmallPageLoader";
+import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import { calcMaxPage } from "../../utils/helpers/Pages";
 import { FILTER_CHECKBOX_KEY } from "../../constants/filter.constants";
 
@@ -264,7 +264,9 @@ const Search = () => {
           callback={onFilter}
         />
         {isSearching ? (
-          <SmallPageLoader />
+          <div className="search__loader">
+            <SunriseLoader />
+          </div>
         ) : (
           <>
             <div className="search__results">

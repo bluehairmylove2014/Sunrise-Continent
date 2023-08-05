@@ -1,5 +1,5 @@
 import React from "react";
-import { withCartFromContext } from "../../../dataCoordinator";
+import { withCartFromContext } from "../../../../configs/withContext";
 import { ContextProvider } from "./ContextProvider";
 
 export const OrderProvider = ({ children }) => {

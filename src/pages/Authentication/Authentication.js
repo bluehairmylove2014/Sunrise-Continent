@@ -3,7 +3,7 @@ import "../../styles/component/authen.scss";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Loader
-import PageLoader from "../../components/common/PageLoader";
+import PageLoader from "../../components/common/Loader/PageLoader";
 
 // Notification trigger
 import toast from "react-hot-toast";
@@ -39,8 +39,9 @@ const Authentication = () => {
   const registerForm = useForm({
     defaultValues: {
       email: "",
+      firstName: "",
+      lastName: "",
       password: "",
-      confirm_password: "",
     },
   });
 
@@ -139,12 +140,8 @@ const Authentication = () => {
       }
     }
   };
-  const handleRegister = ({ email, password, confirm_password }) => {
-    if (password !== confirm_password) {
-      toast.error("Confirm password does not match");
-      return;
-    }
-    onRegister({ email, password })
+  const handleRegister = ({ email, firstName, lastName, password }) => {
+    onRegister({ email, firstName, lastName, password })
       .then((message) => {
         toast.success(message);
         navigate(PAGES.HOME);
@@ -452,6 +449,53 @@ const Authentication = () => {
                     />
                   </div>
                   <div className="authen-form__input-field">
+                    <label
+                      className="active"
+                      htmlFor="register-firstname-input"
+                    >
+                      First name
+                    </label>
+                    <i className="fi fi-ss-lock"></i>
+                    <Controller
+                      name="firstName"
+                      control={registerForm.control}
+                      rules={{
+                        required: "First name should not be empty",
+                      }}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          type="text"
+                          id="register-firstname-input"
+                          onFocus={(e) => handleFocus(e.target)}
+                          onBlur={(e) => handleBlur(e.target)}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="authen-form__input-field">
+                    <label className="active" htmlFor="register-lastname-input">
+                      Last name
+                    </label>
+                    <i className="fi fi-ss-lock"></i>
+                    <Controller
+                      name="lastName"
+                      control={registerForm.control}
+                      rules={{
+                        required: "Last name should not be empty",
+                      }}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          type="text"
+                          id="register-lastname-input"
+                          onFocus={(e) => handleFocus(e.target)}
+                          onBlur={(e) => handleBlur(e.target)}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="authen-form__input-field">
                     <label className="active" htmlFor="register-psw-input">
                       Password
                     </label>
@@ -472,29 +516,6 @@ const Authentication = () => {
                           {...field}
                           type="password"
                           id="register-psw-input"
-                          onFocus={(e) => handleFocus(e.target)}
-                          onBlur={(e) => handleBlur(e.target)}
-                        />
-                      )}
-                    />
-                  </div>
-                  <div className="authen-form__input-field">
-                    <label className="active" htmlFor="register-cfpsw-input">
-                      Confirm password
-                    </label>
-                    <i className="fi fi-ss-lock"></i>
-                    <Controller
-                      name="confirm_password"
-                      control={registerForm.control}
-                      defaultValue=""
-                      rules={{
-                        required: "Confirm password should not be empty",
-                      }}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="password"
-                          id="register-cfpsw-input"
                           onFocus={(e) => handleFocus(e.target)}
                           onBlur={(e) => handleBlur(e.target)}
                         />

@@ -14,9 +14,9 @@ using SunriseServerCore.Common.Enum;
 
 namespace SunriseServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/booking")]
     [ApiController]
-    public class bookingController : ControllerBase
+    public class BookingController : ControllerBase
     {
         readonly IBookingService _bookingService;
         readonly IAccountService _accountService;
@@ -24,7 +24,7 @@ namespace SunriseServer.Controllers
         readonly IVoucherService _voucherService;
         readonly IRoomService _roomService;
 
-        public bookingController(
+        public BookingController(
             IBookingService bookingService, 
             IAccountService accountService, 
             IHotelService hotelService,

@@ -13,6 +13,7 @@ import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 const WistList = ({ isActive, callback }) => {
   const sidebarRef = useRef(null);
   const [wishlistData, setWishlistData] = useState(null);
+  setWishlistData(null);
   // const { state } = useCartContext();
   const navigate = useNavigate();
   const { onDeleteItem } = useDeleteFromCart();

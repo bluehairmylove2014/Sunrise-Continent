@@ -143,7 +143,7 @@ namespace SunriseServer.Controllers
         }
         //?{location}{room_type}{start_date}{end_date}{budget}{rooms}{adults}{children}
         [HttpGet("search")]
-        public async Task<ActionResult<List<SearchHotel>>> GetSearchHotel(
+        public async Task<ActionResult<List<HotelDto>>> GetSearchHotel(
             [FromQuery] string location,
             [FromQuery] string room_type,
             [FromQuery] DateTime start_date,
@@ -163,8 +163,15 @@ namespace SunriseServer.Controllers
 
             if (result is null)
                 return NotFound("Hotel not found.");
+            
+            var finalResult = new List<HotelDto>();
+            foreach (var item in result)
+            {
+                // var hotelInfo = await TransferHotelData(item);
+                finalResult.Add(await TransferHotelData(item));
+            }
 
-            return Ok(result);
+            return Ok(finalResult);
         }
 
         [HttpGet("review")]

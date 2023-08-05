@@ -20,7 +20,7 @@ namespace SunriseServer.Services.HotelService
         Task<List<Hotel>> GetRecommendedHotel(int id);
 
         // search and filter
-        Task<List<SearchHotel>> GetSearchHotels(SearchHotelDto searchHotel);
+        Task<List<Hotel>> GetSearchHotels(SearchHotelDto searchHotel);
     }
 };
 

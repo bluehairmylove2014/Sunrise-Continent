@@ -85,7 +85,7 @@ namespace SunriseServer.Services.HotelService
             return reviews;
         }
 
-        public async Task<List<SearchHotel>> GetSearchHotels(SearchHotelDto searchHotel)
+        public async Task<List<Hotel>> GetSearchHotels(SearchHotelDto searchHotel)
         {
             return await _unitOfWork.HotelRepo.GetSearchHotels(searchHotel);
         }

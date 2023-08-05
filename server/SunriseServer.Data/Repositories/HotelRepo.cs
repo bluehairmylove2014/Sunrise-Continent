@@ -79,7 +79,7 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
-        public async Task<List<SearchHotel>> GetSearchHotels(SearchHotelDto searchHotel)
+        public async Task<List<Hotel>> GetSearchHotels(SearchHotelDto searchHotel)
         {
             var builder = new StringBuilder();
             builder.Append("EXEC dbo.USP_FindHotelByName ");
@@ -95,7 +95,7 @@ namespace SunriseServerData.Repositories
 
             Console.WriteLine(builder.ToString());
 
-            return await _dataContext.SearchHotel.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            return await _dataContext.Hotel.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
         }
     }
 }

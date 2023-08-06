@@ -20,6 +20,11 @@ namespace SunriseServer.Services.AccountService
             return await _unitOfWork.AccountRepo.CreateAsync(acc);
         }
 
+        public async Task<Account> AddAccountSocial(Account acc)
+        {
+            return await _unitOfWork.AccountRepo.CreateAsync(acc);
+        }
+
         public string GetMyName()
         {
             var result = string.Empty;

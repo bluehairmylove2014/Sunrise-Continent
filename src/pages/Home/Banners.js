@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import "../../styles/component/home.scss";
 
 // Swipeable on mobile
@@ -67,4 +67,4 @@ const Banners = ({ data_banner }) => {
   );
 };
 
-export default Banners;
+export default memo(Banners);

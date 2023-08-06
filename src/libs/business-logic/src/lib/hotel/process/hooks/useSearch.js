@@ -6,9 +6,8 @@ export const useSearch = () => {
   const onSearch = (searchContent) => {
     return new Promise((resolve, reject) => {
       // Handle keys here
-      const keys = ["viet nam", "giuong doi"];
       searchMutation
-        .mutateAsync(keys)
+        .mutateAsync(searchContent)
         .then((res) => {
           resolve(res);
         })

@@ -43,8 +43,7 @@ const Authentication = () => {
   const registerForm = useForm({
     defaultValues: {
       email: "",
-      firstName: "",
-      lastName: "",
+      fullName: "",
       password: "",
     },
   });
@@ -152,8 +151,8 @@ const Authentication = () => {
       }
     }
   };
-  const handleRegister = ({ email, firstName, lastName, password }) => {
-    onRegister({ email, firstName, lastName, password })
+  const handleRegister = ({ email, fullName, password }) => {
+    onRegister({ email, fullName, password })
       .then((message) => {
         toast.success(message);
         handleNavigate();
@@ -461,46 +460,21 @@ const Authentication = () => {
                     />
                   </div>
                   <div className="authen-form__input-field">
-                    <label
-                      className="active"
-                      htmlFor="register-firstname-input"
-                    >
-                      First name
+                    <label className="active" htmlFor="register-fullName-input">
+                      Full name
                     </label>
-                    <i className="fi fi-ss-lock"></i>
+                    <i className="fi fi-sr-id-card-clip-alt"></i>
                     <Controller
-                      name="firstName"
+                      name="fullName"
                       control={registerForm.control}
                       rules={{
-                        required: "First name should not be empty",
+                        required: "Full name should not be empty",
                       }}
                       render={({ field }) => (
                         <input
                           {...field}
                           type="text"
-                          id="register-firstname-input"
-                          onFocus={(e) => handleFocus(e.target)}
-                          onBlur={(e) => handleBlur(e.target)}
-                        />
-                      )}
-                    />
-                  </div>
-                  <div className="authen-form__input-field">
-                    <label className="active" htmlFor="register-lastname-input">
-                      Last name
-                    </label>
-                    <i className="fi fi-ss-lock"></i>
-                    <Controller
-                      name="lastName"
-                      control={registerForm.control}
-                      rules={{
-                        required: "Last name should not be empty",
-                      }}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="text"
-                          id="register-lastname-input"
+                          id="register-fullName-input"
                           onFocus={(e) => handleFocus(e.target)}
                           onBlur={(e) => handleBlur(e.target)}
                         />

@@ -228,7 +228,7 @@ export const FILTER_CHECKBOX_KEY = [
     checkboxData: ACCOMMODATION_FACILITIES,
   },
   {
-    checkboxGroupKey: "amenities",
+    checkboxGroupKey: "service",
     label: "Chọn phòng có",
     checkboxData: ROOM_OPTIONS,
   },

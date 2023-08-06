@@ -1,9 +1,10 @@
 import { axiosMockAdapterInstance } from "../../config/axios";
 import { OrderService } from "../../lib";
 import couponData from "../data/coupon.json";
+import { getApiUrl } from "../../config/url";
 
 axiosMockAdapterInstance
-  .onGet(new OrderService().getCouponUrl)
+  .onGet(getApiUrl(false) + new OrderService().getCouponUrl)
   .reply((config) => {
     const token = config.headers?.Authorization.replace("Bearer ", "");
 

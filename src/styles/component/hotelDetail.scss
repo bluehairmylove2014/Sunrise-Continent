@@ -12,6 +12,7 @@
         .hotel-detail__overall {
             // direction - justify content - align items - flex wrap
             @include dflex(row, space-between, center, nowrap);
+            gap: 30px;
 
             .overall__infor {
                 .overall-infor__address {
@@ -61,6 +62,7 @@
 
                 .booking-price__interact {
                     margin-top: 0.75rem;
+                    white-space: nowrap;
 
                     button {
                         &:nth-child(1) {
@@ -181,7 +183,7 @@
             @include dflex(row, space-evenly, center, nowrap);
             gap: 20px;
 
-            $amenities-column: 8;
+            $facilities-column: 8;
 
             .moreinfo-wrapper__amenities,
             .moreinfo-wrapper__room-options {
@@ -191,7 +193,7 @@
                 width: 100%;
 
                 h5 {
-                    grid-column: 1 /span $amenities-column;
+                    grid-column: 1 /span $facilities-column;
                     width: 100%;
                     margin-bottom: 20px;
                     text-align: center
@@ -200,10 +202,10 @@
 
             .moreinfo-wrapper__amenities {
                 // columns - row - gap
-                @include dgrid(repeat($amenities-column, 1fr), auto, 1rem);
+                @include dgrid(repeat($facilities-column, 1fr), auto, 1rem);
                 gap: 30px;
 
-                .amenities-wrapper {
+                .facilities-wrapper {
                     img {
                         max-width: 50px;
                         max-height: 50px;

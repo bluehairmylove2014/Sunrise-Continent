@@ -13,6 +13,7 @@ import { PAGES } from "../../constants/Link.constants";
 const HotelCard = ({ hotelData }) => {
   const navigate = useNavigate();
   const renderStar = (numberOfStar) => {
+    console.log(numberOfStar);
     let starList = [];
     for (let i = 0; i < numberOfStar; i++) {
       starList.push(<img src={star} alt="star" key={`star@${i}`} />);
@@ -55,7 +56,7 @@ const HotelCard = ({ hotelData }) => {
               {2014} <br /> đánh giá
             </small>
             <div className="rating-review__score">
-              <p>{hotelData.rating}</p>
+              <p>{hotelData.rating.toFixed(1)}</p>
             </div>
           </div>
         </div>

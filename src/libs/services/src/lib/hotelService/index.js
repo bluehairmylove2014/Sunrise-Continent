@@ -13,7 +13,7 @@ export class HotelService extends Services {
 
   searchUrl = "/hotel/search";
   getHotelDetailUrl = "/hotel/single";
-  getRoomsUrl = this.url + `/room`;
+  getRoomsUrl = `/room`;
   getSpecificRoomUrl = `/room/single`;
   getHotHotelUrl = `/hotel/recommend`;
   checkRoomAvailableUrl = `/hotel/booking`;
@@ -22,18 +22,19 @@ export class HotelService extends Services {
     this.abortController = new AbortController();
     try {
       const response = await this.fetchApi({
-        method: "POST",
+        method: "GET",
         url: this.searchUrl,
         schema: searchSchema,
-        data: keys,
+        params: keys,
         signal: this.abortController.signal,
         transformResponse: (res) => res,
+        isProduction: true,
       });
       return response;
     } catch (error) {
       if (!this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 1");
+        console.error("Catch error 1 ", error);
         throw error;
       }
     }
@@ -50,12 +51,13 @@ export class HotelService extends Services {
         },
         signal: this.abortController.signal,
         transformResponse: (res) => res,
+        isProduction: true,
       });
       return response;
     } catch (error) {
       if (!this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 2");
+        console.error("Catch error 2 ", error);
         throw error;
       }
     }
@@ -72,12 +74,13 @@ export class HotelService extends Services {
         },
         signal: this.abortController.signal,
         transformResponse: (res) => res,
+        isProduction: true,
       });
       return response;
     } catch (error) {
       if (!this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 3");
+        console.error("Catch error 3 ", error);
         throw error;
       }
     }
@@ -100,7 +103,7 @@ export class HotelService extends Services {
     } catch (error) {
       if (!this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 4");
+        console.error("Catch error 4 ", error);
         throw error;
       }
     }
@@ -120,7 +123,7 @@ export class HotelService extends Services {
     } catch (error) {
       if (!this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 5");
+        console.error("Catch error 5: ", error);
         throw error;
       }
     }

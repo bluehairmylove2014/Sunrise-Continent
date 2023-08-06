@@ -12,19 +12,19 @@ export const useLogin = () => {
   // Getting the setToken function from useAccessToken
   const { setToken } = useAccessToken();
 
-  const onLogin = (params) => {
+  const onLogin = ({ email, password, isRememberMe }) => {
     return new Promise((resolve, reject) => {
       loginMutation
-        .mutateAsync(params)
+        .mutateAsync({ email, password })
         .then((response) => {
           // If the response is successful and a token is received, set the token and broadcast it
           if (response.token) {
-            setToken(response.token, params.isRememberMe);
+            setToken(response.token, isRememberMe);
             // Broadcasting the login message
             postMessage({
               message: BROADCAST_MESSAGE.SEND_TOKEN,
               token: response.token,
-              isRemember: params.isRememberMe,
+              isRemember: isRememberMe,
             });
             // Resolving the promise with the response
             resolve(response.message);

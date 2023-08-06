@@ -18,6 +18,7 @@ import { setRedirectUrl } from "../../utils/helpers/RedirectUrlSaver";
 import { useCheckRoomAvailable } from "../../libs/business-logic/src/lib/hotel/process/hooks/useCheckRoomAvailable";
 import { toast } from "react-hot-toast";
 import TypingLoader from "../../components/common/Loader/TypingLoader";
+// import { formatDate } from "../../utils/helpers/ShortenDatetime";
 
 const Rooms = ({ rooms_data }) => {
   let room = null;
@@ -85,7 +86,11 @@ const Rooms = ({ rooms_data }) => {
               <div className="main-infor__img-wrapper">
                 {rd.picture.map((rp) => {
                   return (
-                    <img src={rp} alt="room_picture" key={`picture@${rp}`} />
+                    <img
+                      src={rp.link}
+                      alt="room_picture"
+                      key={`picture@${rp.id}`}
+                    />
                   );
                 })}
               </div>
@@ -147,6 +152,23 @@ const Rooms = ({ rooms_data }) => {
                         Còn trống: {rd.vacancy} phòng
                       </b>
                     </p>
+                    {/* {pickerForm.getValues().start_date.length &&
+                    pickerForm.getValues().end_date.length ? (
+                      <p>
+                        Kể từ
+                        {
+                          formatDate(pickerForm.getValues().start_date)
+                            .dateMonthYear
+                        }
+                        đến
+                        {
+                          formatDate(pickerForm.getValues().end_date)
+                            .dateMonthYear
+                        }
+                      </p>
+                    ) : (
+                      <></>
+                    )} */}
                   </>
                 ) : (
                   <div className="no-vacancy">

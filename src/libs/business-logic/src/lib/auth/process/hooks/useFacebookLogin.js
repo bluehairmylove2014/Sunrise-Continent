@@ -106,8 +106,7 @@ export const useFacebookLogin = () => {
                   updateAccountMutation
                     .mutateAsync({
                       email: res.email,
-                      firstName: res.firstName,
-                      lastName: res.lastName,
+                      fullName: res.firstName + " " + res.lastName,
                     })
                     .then((res) => {
                       handleExit(handleAuthentication);

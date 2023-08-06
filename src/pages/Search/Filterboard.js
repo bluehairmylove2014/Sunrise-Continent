@@ -5,6 +5,7 @@ import BudgetRange from "../../components/common/BudgetRange";
 import Checkbox from "../../components/common/Checkbox";
 import { Controller } from "react-hook-form";
 
+const defaultRange = [0, 1000];
 const budgetName = "budget";
 const Filterboard = ({ form, defaultValues, callback }) => {
   const onCheckboxChange = (checkboxName, paramKey) => {
@@ -55,7 +56,7 @@ const Filterboard = ({ form, defaultValues, callback }) => {
               defaultValues={
                 Array.isArray(defaultValues) && defaultValues.length === 2
                   ? defaultValues
-                  : null
+                  : defaultRange
               }
             />
           )}

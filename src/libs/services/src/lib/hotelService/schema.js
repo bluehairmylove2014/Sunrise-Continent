@@ -12,7 +12,7 @@ const searchSchema = z.array(
     description: z.string(),
     image: z.string(),
     price: z.number(),
-    amenities: z.array(z.string()),
+    facilities: z.array(z.string()),
     services: z.array(z.string()),
   })
 );
@@ -27,9 +27,9 @@ const hotelDetailSchema = z.object({
   stars: z.number(),
   rating: z.number(),
   description: z.string(),
-  image: z.string().url(),
+  image: z.string(),
   price: z.number(),
-  amenities: z.array(z.string()),
+  facilities: z.array(z.string()),
   services: z.array(z.string()),
 });
 
@@ -47,11 +47,16 @@ const getSpecificRoomSchema = z.object({
   roomInfo: z.string(),
   roomView: z.string(),
   bedType: z.string(),
-  picture: z.array(z.string()),
+  picture: z.array(
+    z.object({
+      id: z.number(),
+      link: z.string(),
+    })
+  ),
   facility: z.array(z.string()),
   service: z.array(z.string()),
 });
-const getRoomsSchema = z.object(getSpecificRoomSchema);
+const getRoomsSchema = z.array(getSpecificRoomSchema);
 
 const getHotHotelSchema = z.array(hotelDetailSchema);
 

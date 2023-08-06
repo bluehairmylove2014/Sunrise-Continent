@@ -1,8 +1,9 @@
 import { axiosMockAdapterInstance } from "../../config/axios";
 import { OrderService } from "../../lib";
+import { getApiUrl } from "../../config/url";
 
 axiosMockAdapterInstance
-  .onGet(new OrderService().getShippingUrl)
+  .onGet(getApiUrl(false) + new OrderService().getShippingUrl)
   .reply((config) => {
     const token = config.headers?.Authorization.replace("Bearer ", "");
 

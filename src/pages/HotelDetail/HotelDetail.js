@@ -22,14 +22,14 @@ const HotelDetail = () => {
   const { data: hotelData } = useGetHotelDetail(hotelId);
   const roomsData = useGetRooms(hotelId);
 
-  const renderAmenities = (amenities) => {
-    if (!Array.isArray(amenities)) return <></>;
-    return amenities.map((am) => {
+  const renderAmenities = (facilities) => {
+    if (!Array.isArray(facilities)) return <></>;
+    return facilities.map((am) => {
       const icon = ACCOMMODATION_FACILITIES[am].ICON;
       const label = ACCOMMODATION_FACILITIES[am].LABEL;
       return (
         <div
-          className="amenities-wrapper"
+          className="facilities-wrapper"
           key={ACCOMMODATION_FACILITIES[am].LABEL}
         >
           <img src={icon} alt="amentities" />
@@ -68,7 +68,9 @@ const HotelDetail = () => {
                 )}
               </p>
               <div className="overall-infor__review">
-                <div className="review__point">{hotelData.rating}</div>
+                <div className="review__point">
+                  {hotelData.rating.toFixed(1)}
+                </div>
                 <div className="review__label">
                   {pointToLabel(hotelData.rating)}
                 </div>
@@ -152,7 +154,7 @@ const HotelDetail = () => {
           <div className="description__moreinfo-wrapper">
             <div className="moreinfo-wrapper__amenities">
               <h5>Tiện nghi</h5>
-              {renderAmenities(hotelData.amenities)}
+              {renderAmenities(hotelData.facilities)}
             </div>
           </div>
         </section>
@@ -211,7 +213,7 @@ const HotelDetail = () => {
           <h3>Đánh giá</h3>
 
           <div className="reviews__total-result">
-            <strong>{hotelData.rating}</strong>
+            <strong>{hotelData.rating.toFixed(1)}</strong>
             <p className="total-result__label">
               {pointToLabel(hotelData.rating)}
             </p>
@@ -230,7 +232,7 @@ const HotelDetail = () => {
             </div>
             <div className="user-review__main">
               <div className="user-review__rating">
-                <strong>{hotelData.rating}</strong>
+                <strong>{hotelData.rating.toFixed(1)}</strong>
                 <span className="total-result__label">
                   {pointToLabel(hotelData.rating)}
                 </span>
@@ -259,7 +261,7 @@ const HotelDetail = () => {
             </div>
             <div className="user-review__main">
               <div className="user-review__rating">
-                <strong>{hotelData.rating}</strong>
+                <strong>{hotelData.rating.toFixed(1)}</strong>
                 <span className="total-result__label">
                   {pointToLabel(hotelData.rating)}
                 </span>
@@ -297,7 +299,7 @@ const HotelDetail = () => {
             </div>
             <div className="user-review__main">
               <div className="user-review__rating">
-                <strong>{hotelData.rating}</strong>
+                <strong>{hotelData.rating.toFixed(1)}</strong>
                 <span className="total-result__label">
                   {pointToLabel(hotelData.rating)}
                 </span>

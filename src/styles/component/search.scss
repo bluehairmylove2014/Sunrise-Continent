@@ -284,6 +284,13 @@
                                 border-radius: 2px;
                                 border: 1px solid black;
                                 padding: 4px 10px;
+
+                            }
+
+                            &>p {
+                                font-size: 0.6rem;
+                                font-weight: 600;
+                                opacity: 0.6;
                             }
                         }
 
@@ -299,6 +306,13 @@
                                     bottom: -1px;
                                     margin-right: 5px;
                                 }
+                            }
+
+                            &>p {
+                                margin-top: 10px;
+                                font-size: 0.6rem;
+                                font-weight: 600;
+                                opacity: 0.6;
                             }
                         }
                     }

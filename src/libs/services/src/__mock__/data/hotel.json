@@ -1,24 +1,24 @@
 {
-    "id": 0,
-    "name": "Khách sạn Caravelle Saigon",
-    "country": "Việt Nam",
-    "hotelType": "hotel",
-    "provinceCity": "Hồ Chí Minh",
-    "address": "17 Công Trường Lam Sơn, Quận 1",
-    "stars": 5,
-    "rating": 9.1,
-    "description": "Một khách sạn cao cấp tọa lạc tại trung tâm Thành phố Hồ Chí Minh với dịch vụ chất lượng và tầm nhìn tuyệt đẹp.",
-    "image": "https://rialloer.sirv.com/Sunrise-Continent/hotels/7%20La%20Siesta%20Premium%20Sai%20Gon/462029553.jpg",
-    "price": 350000,
-    "amenities": [
-        "SWIMMING_POOL", 
-        "AIRPORT_SHUTTLE", 
-        "PARKING", 
-        "RECEPTION_24H",
-        "FAMILY_FRIENDLY",
-        "NON_SMOKING",
-        "SPA_SAUNA",
-        "PETS_ALLOWED"
-    ],
-    "services": ["BREAKFAST_INCLUDED", "DINNER_INCLUDED"]
+  "id": 0,
+  "name": "Khách sạn Caravelle Saigon",
+  "country": "Việt Nam",
+  "hotelType": "hotel",
+  "provinceCity": "Hồ Chí Minh",
+  "address": "17 Công Trường Lam Sơn, Quận 1",
+  "stars": 5,
+  "rating": 9.1,
+  "description": "Một khách sạn cao cấp tọa lạc tại trung tâm Thành phố Hồ Chí Minh với dịch vụ chất lượng và tầm nhìn tuyệt đẹp.",
+  "image": "https://rialloer.sirv.com/Sunrise-Continent/hotels/7%20La%20Siesta%20Premium%20Sai%20Gon/462029553.jpg",
+  "price": 350000,
+  "facilities": [
+    "SWIMMING_POOL",
+    "AIRPORT_SHUTTLE",
+    "PARKING",
+    "RECEPTION_24H",
+    "FAMILY_FRIENDLY",
+    "NON_SMOKING",
+    "SPA_SAUNA",
+    "PETS_ALLOWED"
+  ],
+  "services": ["BREAKFAST_INCLUDED", "DINNER_INCLUDED"]
 }

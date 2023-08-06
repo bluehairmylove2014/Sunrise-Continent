@@ -44,8 +44,6 @@ export class Services {
     const response = await (!isProduction
       ? this.axios(mockParams)
       : this.productionAxios(mockParams));
-
-    console.log("response: ", response);
     const dataResponse = schema.parse(response.data);
     return transformResponse ? transformResponse(dataResponse) : dataResponse;
   }

@@ -101,8 +101,7 @@ export const useGoogleLogin = () => {
                   updateAccountMutation
                     .mutateAsync({
                       email: data.email,
-                      firstName: data.firstName,
-                      lastName: data.lastName,
+                      fullName: data.firstName + " " + data.lastName,
                     })
                     .then((res) => {
                       // Remove listener

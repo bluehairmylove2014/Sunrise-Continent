@@ -7,20 +7,30 @@ import { BANNER_INPUT } from "../../constants/Variables.constants";
 
 const keys = [...BANNER_INPUT.DATE_TIME_DOUBLE.INPUT_NAME];
 
+const maxAmenities = 6;
+const maxService = 6;
 const Hotel = ({ data, criteria }) => {
-  const renderAmenities = (amenities) => {
-    if (!Array.isArray(amenities)) return <></>;
-    return amenities.map((am) => {
+  const renderAmenities = (facilities) => {
+    if (!Array.isArray(facilities)) return <></>;
+    const moreOptions = facilities.length - maxAmenities;
+    const result = facilities.slice(0, maxAmenities).map((am) => {
       return (
         <div className="infor__amenity" key={`amenity@${am}`}>
           {am}
         </div>
       );
     });
+    return (
+      <>
+        {result}
+        {moreOptions > 0 ? <p>Và +{moreOptions} dịch vụ khác</p> : <></>}
+      </>
+    );
   };
   const renderServices = (services) => {
     if (!Array.isArray(services)) return <></>;
-    return services.map((sv) => {
+    const moreOptions = services.length - maxService;
+    const result = services.slice(0, maxService).map((sv) => {
       return (
         <div
           className="infor__service-item"
@@ -31,6 +41,13 @@ const Hotel = ({ data, criteria }) => {
         </div>
       );
     });
+
+    return (
+      <>
+        {result}
+        {moreOptions > 0 ? <p>Và +{moreOptions} dịch vụ khác</p> : <></>}
+      </>
+    );
   };
 
   return (
@@ -50,7 +67,7 @@ const Hotel = ({ data, criteria }) => {
           <p>{data.address + " " + data.country + " " + data.provinceCity}</p>
         </div>
         <div className="infor__amenities">
-          {renderAmenities(data.amenities)}
+          {renderAmenities(data.facilities)}
         </div>
         <div className="infor__services">{renderServices(data.services)}</div>
       </div>
@@ -60,7 +77,7 @@ const Hotel = ({ data, criteria }) => {
             <p>Tuyệt vời</p>
             <small>5.460 Nhận xét</small>
           </div>
-          <div className="rating__point">{data.rating}</div>
+          <div className="rating__point">{data.rating.toFixed(1)}</div>
         </div>
         <div className="hotel__price">
           <small>Giá mỗi đêm chỉ từ</small>

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useRef, useState } from "react";
 import "../../styles/component/home.scss";
 import toast from "react-hot-toast";
 
 // subcomponent
 import Banners from "./Banners";
 import ModernInput from "../../components/common/ModernInput";
-import Gallery from "./Gallery";
 import TrendingHotel from "./TrendingHotels";
 
 // svg graphics
@@ -19,7 +19,21 @@ import VietnamField from "../../assets/images/bgs/Mountain.png";
 import { useNavigate } from "react-router-dom";
 import { stringifySearchParams } from "../../utils/helpers/params";
 import { useGetHotHotelQuery } from "../../libs/business-logic/src/lib/hotel/fetching/query";
+import SunriseLoader from "../../components/common/Loader/SunriseLoader";
+import { bannerData, countriesData, roomTypesData } from "./Data";
+import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 
+const geoUrl =
+  "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
+const selectedAreas = [
+  "geo-173",
+  "geo-84",
+  "geo-92",
+  "geo-31",
+  "geo-88",
+  "geo-158",
+  "geo-128",
+];
 const defaultSearchInputVal = {
   location: "Bạn muốn đi đâu?",
   roomType: "Bạn mong muốn gì từ khách sạn?",
@@ -32,12 +46,12 @@ const Home = () => {
   // Define
   const [banners, setBanner] = useState([]);
   const [countries, setCountries] = useState([]);
-  const [hot_countries, setHotCountries] = useState([]);
   const [roomType, setRoomType] = useState([]);
   const [trendingHotelPage, setTrendingHotelPage] = useState(1);
   const [searchInputVal, setSearchInputVal] = useState(defaultSearchInputVal);
   const navigate = useNavigate();
   const { data: hotHotelData } = useGetHotHotelQuery();
+  const mapRef = useRef(null);
 
   const trendingHotelPerPage = 6;
 
@@ -137,205 +151,26 @@ const Home = () => {
       );
     }
   };
+  const [tooltipContent, setTooltipContent] = useState(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseEnterMap = () => {
+    mapRef.current.addEventListener("mousemove", handleMouseMove);
+  };
+  const handleMouseLeaveMap = () => {
+    mapRef.current.removeEventListener("mousemove", handleMouseMove);
+  };
+
+  const handleMouseMove = (event) => {
+    const { clientX, clientY } = event;
+    setTooltipPosition({ x: clientX + 10, y: clientY - 20 });
+  };
   // use effect
   useEffect(() => {
     // Get banners here
-    setBanner([
-      {
-        id: "home-banner@1",
-        src: "https://aldortio.sirv.com/sc/banners/book%20now.png",
-      },
-      {
-        id: "home-banner@2",
-        src: "https://aldortio.sirv.com/sc/banners/book%20now%20(1).png",
-      },
-      {
-        id: "home-banner@3",
-        src: "https://aldortio.sirv.com/sc/banners/book%20now%20(2).png",
-      },
-    ]);
-    setCountries([
-      {
-        Country: "Korea",
-        Province: [
-          "Seoul",
-          "Busan",
-          "Incheon",
-          "Daegu",
-          "Daejeon",
-          "Gwangju",
-          "Ulsan",
-          "Sejong",
-          "Gyeonggi",
-          "Gangwon",
-          "Chungbuk",
-          "Chungnam",
-          "Jeonbuk",
-          "Jeonnam",
-          "Gyeongbuk",
-          "Gyeongnam",
-          "Jeju",
-        ],
-      },
-      {
-        Country: "Japan",
-        Province: [
-          "Tokyo",
-          "Osaka",
-          "Kyoto",
-          "Hokkaido",
-          "Aichi",
-          "Fukuoka",
-          "Kanagawa",
-          "Hyogo",
-          "Hiroshima",
-          "Shizuoka",
-          "Chiba",
-          "Saitama",
-          "Ibaraki",
-          "Kumamoto",
-          "Miyagi",
-          "Niigata",
-          "Okayama",
-          "Okinawa",
-          "Gifu",
-          "Mie",
-        ],
-      },
-      {
-        Country: "Singapore",
-        Province: [
-          "Central Region",
-          "East Region",
-          "North Region",
-          "Northeast Region",
-          "West Region",
-        ],
-      },
-      {
-        Country: "Australia",
-        Province: [
-          "New South Wales",
-          "Victoria",
-          "Queensland",
-          "Western Australia",
-          "South Australia",
-          "Tasmania",
-          "Australian Capital Territory",
-          "Northern Territory",
-        ],
-      },
-      {
-        Country: "Viet Nam",
-        Province: [
-          "Ho Chi Minh City",
-          "Hanoi",
-          "Da Nang",
-          "Hai Phong",
-          "Can Tho",
-          "Hai Duong",
-          "Hue",
-          "Nha Trang",
-          "Vung Tau",
-          "Quang Ninh",
-          "Lam Dong",
-          "Binh Thuan",
-        ],
-      },
-      {
-        Country: "China",
-        Province: [
-          "Beijing",
-          "Shanghai",
-          "Guangzhou",
-          "Shenzhen",
-          "Chengdu",
-          "Chongqing",
-          "Hangzhou",
-          "Xi'an",
-          "Nanjing",
-          "Tianjin",
-          "Suzhou",
-          "Wuhan",
-        ],
-      },
-    ]);
-    setRoomType([
-      "Phòng tiêu chuẩn", // Standard Room
-      "Phòng sang trọng", // Deluxe Room
-      "Phòng suite", // Suite
-      "Phòng suite cao cấp", // Junior Suite
-      "Phòng suite điều hành", // Executive Suite
-      "Căn hộ", // Apartment
-      "Biệt thự", // Villa
-      "Nhà gỗ", // Bungalow
-      "Căn hộ cao cấp", // Penthouse
-      "Phòng liền kề", // Connecting Room
-      "Phòng kết nối", // Adjoining Room
-      "Phòng gia đình", // Family Room
-      "Phòng duplex", // Duplex Room
-      "Phòng studio", // Studio
-      "Phòng loft", // Loft
-      "Phòng suite tổng thống", // Presidential Suite
-    ]);
-    setHotCountries([
-      {
-        Name: "Hàn Quốc",
-        Description:
-          "Chiêm ngưỡng cảnh đẹp ngoạn mục của những tán lá mùa thu rực rỡ trong các sắc đỏ, vàng và cam!",
-        ImgUrl:
-          "https://aldortio.sirv.com/sc/hot-countries-png/korea-hotel.png?w=1920",
-      },
-      {
-        Name: "Nhật Bản",
-        Description:
-          "Khám phá lịch sử phong phú, văn hóa sống động và hoa anh đào tuyệt đẹp của Nhật Bản!",
-        ImgUrl:
-          "https://aldortio.sirv.com/sc/hot-countries-png/japan-hotel.png?w=1920",
-      },
-      {
-        Name: "Trung Quốc",
-        Description:
-          "Khám phá những kỳ quan cổ xưa, địa hình đa dạng và thành phố nhộn nhịp của Trung Quốc!",
-        ImgUrl:
-          "https://aldortio.sirv.com/sc/hot-countries-png/china-hotel.png?w=1920",
-      },
-      {
-        Name: "Úc",
-        Description:
-          "Trải nghiệm những bãi biển tuyệt đẹp, động vật hoang dã độc đáo và thành phố sôi động của Úc!",
-        ImgUrl:
-          "https://aldortio.sirv.com/sc/hot-countries-png/australia-hotel.png?w=1920",
-      },
-      {
-        Name: "Singapore",
-        Description:
-          "Thưởng thức ẩm thực đường phố sôi động, kiến trúc hiện đại và nền văn hóa hòa quyện của Singapore!",
-        ImgUrl:
-          "https://aldortio.sirv.com/sc/hot-countries-png/sing-hotel.png?w=1920",
-      },
-      {
-        Name: "Việt Nam",
-        Description:
-          "Đắm mình vào lịch sử phong phú, vẻ đẹp thiên nhiên và ẩm thực ngon miệng của Việt Nam!",
-        ImgUrl:
-          "https://aldortio.sirv.com/sc/hot-countries-png/vietnam-hotel.png?w=1920",
-      },
-      {
-        Name: "Vương quốc Anh",
-        Description:
-          "Khám phá những địa danh biểu tượng, nông thôn quyến rũ và văn hóa đa dạng của Vương quốc Anh!",
-        ImgUrl:
-          "https://aldortio.sirv.com/sc/hot-countries-png/united-kingdom.png?w=1920",
-      },
-      {
-        Name: "Thụy Sĩ",
-        Description:
-          "Trải nghiệm cảnh quan núi non hùng vĩ, hồ nước trong xanh và trượt tuyết hàng đầu thế giới tại Thụy Sĩ!",
-        ImgUrl:
-          "https://aldortio.sirv.com/sc/hot-countries-png/switzerland.png?w=1920",
-      },
-    ]);
+    setBanner(bannerData);
+    setCountries(countriesData);
+    setRoomType(roomTypesData);
   }, []);
 
   return (
@@ -442,7 +277,64 @@ const Home = () => {
             </p>
           </div>
           {/* Hot countries */}
-          <Gallery list={hot_countries} />
+          <ComposableMap
+            projection="geoEqualEarth"
+            projectionConfig={{
+              scale: 220,
+              center: [0, 10],
+            }}
+            style={{
+              position: "relative",
+              width: "100%",
+              height: "auto",
+            }}
+            ref={mapRef}
+            onMouseEnter={handleMouseEnterMap}
+            onMouseLeave={handleMouseLeaveMap}
+          >
+            <Geographies geography={geoUrl}>
+              {({ geographies }) => {
+                return geographies.map((geo) => {
+                  const rsmKey = geo.rsmKey;
+                  const isHighlighted = selectedAreas.includes(rsmKey);
+                  return (
+                    <React.Fragment key={rsmKey}>
+                      <Geography
+                        key={rsmKey}
+                        geography={geo}
+                        fill={
+                          isHighlighted
+                            ? rsmKey === "geo-173"
+                              ? "#DC143C"
+                              : "#3C2C7C"
+                            : tooltipContent === geo.properties.name
+                            ? "#5b94ff"
+                            : "#C0C0C0"
+                        }
+                        onMouseEnter={() =>
+                          setTooltipContent(geo.properties.name)
+                        }
+                        onMouseLeave={() => setTooltipContent(null)}
+                        onClick={() => console.log(geo.properties.name)}
+                      />
+                    </React.Fragment>
+                  );
+                });
+              }}
+            </Geographies>
+          </ComposableMap>
+          {tooltipContent && (
+            <div
+              className="country__name"
+              style={{
+                position: "fixed",
+                top: tooltipPosition.y,
+                left: tooltipPosition.x,
+              }}
+            >
+              {tooltipContent}
+            </div>
+          )}
         </div>
       </section>
 
@@ -500,7 +392,7 @@ const Home = () => {
             </div>
           </>
         ) : (
-          <>Loading</>
+          <SunriseLoader />
         )}
       </section>
 

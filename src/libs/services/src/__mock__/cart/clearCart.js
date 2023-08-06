@@ -1,10 +1,11 @@
 import { axiosMockAdapterInstance } from "../../config/axios";
 import { CartService } from "../../lib";
 import cartsData from "../data/cart.json";
+import { getApiUrl } from "../../config/url";
 
 const cartDataTest = cartsData[0];
 axiosMockAdapterInstance
-  .onDelete(new CartService().clearCartUrl)
+  .onDelete(getApiUrl(false) + new CartService().clearCartUrl)
   .reply((config) => {
     const token = config.headers?.Authorization.replace("Bearer ", "");
     if (token) {

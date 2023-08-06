@@ -48,15 +48,15 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<int>("Add booking successfully", result));
         }
 
-        [HttpPut("confirm")] //, Authorize(Roles = GlobalConstant.User)
-        public async Task<ActionResult<ResponseMessageDetails<int>>> ConfirmOrder(int orderId, int accountId, int voucherId)
-        {
-            var result = await _orderService.ConfirmOrder(orderId, accountId, voucherId);
+        // [HttpPut("confirm")] //, Authorize(Roles = GlobalConstant.User)
+        // public async Task<ActionResult<ResponseMessageDetails<int>>> ConfirmOrder(int orderId, int accountId, int voucherId)
+        // {
+        //     var result = await _orderService.ConfirmOrder(orderId, accountId, voucherId);
 
-            if (result == 0)
-                return BadRequest("Cannot order booking.");
+        //     if (result == 0)
+        //         return BadRequest("Cannot order booking.");
 
-            return Ok(new ResponseMessageDetails<int>("Confirm order successfully", result));
-        }
+        //     return Ok(new ResponseMessageDetails<int>("Confirm order successfully", result));
+        // }
     }
 }

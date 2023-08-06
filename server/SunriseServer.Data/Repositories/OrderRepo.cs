@@ -54,10 +54,16 @@ namespace SunriseServerData.Repositories
                     builder.Append($"EXEC USP_AddBookingByOrderId @OrderId, @BookingId;\n");
                 }
 
+                builder.Append($"EXEC USP_ConfirmOrder @OrderId=null, @AccountId={order.AccountId}, @VoucherId=0;\n");
             }
 
+            var sqlString = builder.ToString();
+            var lastindex = sqlString.LastIndexOf("@VoucherId");
+            builder.Remove(lastindex, "@VoucherId=0;\n".Length);
+            builder.Append($"@VoucherId={order.VoucherId};\n");
+
             // await Task.Delay(100);
-            // Console.WriteLine(builder.ToString());
+            Console.WriteLine(builder.ToString());
             
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
             return result;

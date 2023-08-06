@@ -66,6 +66,15 @@ GO
 
 
 
+-- //
+GO
+CREATE OR ALTER FUNCTION USF_GetServiceFee () -- CartItem
+RETURNS INT
+BEGIN
+	RETURN 50000;
+END
+GO
+
 
 CREATE OR ALTER PROC USP_SearchByName 
 	@search_query NVARCHAR(100)
@@ -454,7 +463,7 @@ BEGIN
     BEGIN TRY
 
         INSERT INTO ROOM_TYPE (HotelId, Id, Name, Vacancy, Size, Price, RoomInfo, RoomView, BedType)
-        VALUES (@HotelId, @Id, @Name, @Vacancy, @Size, @Price, @RoomInfo, @RoomView, @BedType)
+        VALUES (@HotelId, @Id, @Name, @Vacancy, @Size, dbo.USF_GetServiceFee() + @Price, @RoomInfo, @RoomView, @BedType)
 
 		RETURN 0
     END TRY
@@ -1565,15 +1574,6 @@ GO
 
 -- //
 GO
-CREATE OR ALTER FUNCTION USF_GetServiceFee () -- CartItem
-RETURNS INT
-BEGIN
-	RETURN 50000;
-END
-GO
-
--- //
-GO
 CREATE OR ALTER FUNCTION USF_GetBookingTotalById (@BookingId INT)
 RETURNS INT
 AS
@@ -1612,7 +1612,8 @@ AS
 BEGIN
 	IF (@OrderId IS NULL OR @OrderId <= 0)
 	BEGIN
-		RETURN -1;
+		SELECT @OrderId = OrderId FROM ACCOUNT_ORDER WHERE AccountId = @AccountId AND Paid = 0;
+		IF (@OrderId IS NULL) RETURN -1;
 	END
 
 	IF NOT EXISTS (SELECT OrderId FROM ACCOUNT_ORDER WHERE OrderId = @OrderId AND AccountId = @AccountId)
@@ -1811,7 +1812,7 @@ GO
 
 GO
 --! proc tính doanh thu của khách sạn theo tháng
-CREATE PROCEDURE CalculateHotelRevenueByMonth
+CREATE OR ALTER  PROCEDURE CalculateHotelRevenueByMonth
     @Year INT,
     @Month INT,
     @HotelId INT,
@@ -1845,7 +1846,7 @@ END;
 
 --!proc tính doanh thu khách sạn theo quý
 GO
-CREATE PROCEDURE CalculateHotelRevenueByQuarter
+CREATE OR ALTER PROCEDURE CalculateHotelRevenueByQuarter
     @Year INT,
     @Quarter INT,
     @HotelId INT,
@@ -1880,7 +1881,7 @@ GO
 
 --!proc tính doanh thu khách sạn trong năm
 GO
-CREATE PROCEDURE CalculateHotelRevenueByYear
+CREATE OR ALTER PROCEDURE CalculateHotelRevenueByYear
     @Year INT,
     @HotelId INT,
     @TotalRevenue INT OUTPUT
@@ -1916,7 +1917,7 @@ GO
 
 --!proc tính diểm thành viên dựa trên số ngày cư trú 
 GO
-CREATE PROCEDURE CalculatePointsForMember
+CREATE OR ALTER PROCEDURE CalculatePointsForMember
     @BookingId INT
 AS
 BEGIN

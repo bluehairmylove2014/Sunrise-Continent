@@ -257,19 +257,36 @@ GO
 CREATE OR ALTER PROC USP_GetAccountByUsername
 	@Email VARCHAR(50)
 AS
-	SELECT * FROM ACCOUNT where Email like @Email
+	SELECT ACC.Id,
+		ACC.MemberPoint,
+		ACC.Email,
+		PD.FullName,
+		ACC.PasswordHash,
+		ACC.PasswordSalt,
+		ACC.UserRole,
+		ACC.RefreshToken,
+		ACC.TokenCreated,
+		ACC.TokenExpires
+	FROM (SELECT * FROM ACCOUNT where Email = @Email) ACC
+	JOIN PERSONAL_DETAILS PD ON ACC.Id = PD.AccountId;
 GO
 
 
 CREATE OR ALTER PROC USP_GetAccountById
 	@Id INT
 AS
-	IF (@Id = -1)
-	BEGIN
-		SELECT null;
-	END
-
-	SELECT * FROM ACCOUNT where Id = @Id;
+	SELECT ACC.Id,
+		ACC.MemberPoint,
+		ACC.Email,
+		PD.FullName,
+		ACC.PasswordHash,
+		ACC.PasswordSalt,
+		ACC.UserRole,
+		ACC.RefreshToken,
+		ACC.TokenCreated,
+		ACC.TokenExpires
+	FROM (SELECT * FROM ACCOUNT where Id = @Id) ACC
+	JOIN PERSONAL_DETAILS PD ON ACC.Id = PD.AccountId;
 GO
 
 
@@ -284,6 +301,7 @@ CREATE OR ALTER PROC USP_AddAccount
 	--@Id INTEGER,
 	--@MemberPoint INTEGER,
 	@Email VARCHAR(50),
+	@FullName VARCHAR(50),
 	@PasswordHash VARCHAR(500),
 	@PasswordSalt VARCHAR(500),
 	@UserRole VARCHAR(50),
@@ -291,18 +309,28 @@ CREATE OR ALTER PROC USP_AddAccount
 	@TokenCreated DATETIME,
 	@TokenExpires DATETIME
 AS
+BEGIN
+	BEGIN TRAN
+
 	BEGIN TRY
 		DECLARE @Id INT
 		EXEC @Id = dbo.USP_GetNextColumnId 'ACCOUNT', 'Id'
 
 		INSERT INTO ACCOUNT VALUES (@Id, 0, 'Bronze', @Email, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires)
-		RETURN @Id
+
+		INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank) 
+			VALUES (@Id, @FullName, @Email, 'default', '01-01-2002', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze')
 	END TRY
 
 	BEGIN CATCH
-		PRINT N'Account insertion error'
+		ROLLBACK;
+		RAISERROR('Account insertion error', 11, 1)
 		RETURN -1
 	END CATCH
+
+	COMMIT;
+	RETURN @Id;
+END;
 GO
 
 
@@ -1336,6 +1364,7 @@ AS
 			dbo.USF_GetMinRoomPrice(h.Id) Price
 	FROM HOTEL h inner join ROOM_TYPE rt on h.Id = rt.HotelId
 	WHERE (h.ProvinceCity COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI or
+		  h.Country COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI or
 	      h.Name COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI) and
 		  dbo.USF_GetMinRoomPrice(h.Id) <= @MaxBudget and 
 		  dbo.USF_GetMinRoomPrice(h.Id) >= @MinBudget and

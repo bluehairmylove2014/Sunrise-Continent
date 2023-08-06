@@ -7,6 +7,7 @@ namespace SunriseServer.Services.AccountService
     {
         string GetMyName();
         Task<Account> AddAccount(Account acc);
+        Task<Account> AddAccountSocial(Account acc);
         Task<Account> GetByUsername(string username);
         Task<PersonalDetail> GetAccountDetailsByEmail(string username);
         Task<Account> GetById(int id);

@@ -84,6 +84,37 @@ namespace SunriseServer.Controllers
             });
         }
 
+        [HttpPost("register-social")]
+        public async Task<ActionResult<ResponseMessageDetails<string>>> RegisterSocial(RegisterSocialDto request)
+        {
+            var acc = await _accService.GetByUsername(request.Email);
+
+            if (acc != null)
+            {
+                return BadRequest("Email exists");
+            }
+
+            // CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            acc = new Account ()
+            {
+                Email = request.Email,
+                FullName = request.FullName,
+                PasswordHash = "Default",
+                PasswordSalt = "Default",
+                UserRole = GlobalConstant.User
+            };
+
+            var token = CreateToken(acc, GlobalConstant.User);
+            var refreshToken = GenerateRefreshToken();
+            SetRefreshToken(refreshToken, acc);
+
+            await _accService.AddAccount(acc);
+            return Ok(new {
+                Message = "Register with social successfully",
+                Token = token
+            });
+        }
+
         [HttpPost("login")]
         public async Task<ActionResult<ResponseMessageDetails<string>>> Login(LoginDto request)
         {

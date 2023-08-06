@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'sunrise-continent'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F9DC12700FCB4043B4BCB70A73E2962F }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BE64A5A6CD3D4A36901AF58557873FFC }}
           package: .

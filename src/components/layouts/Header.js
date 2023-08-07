@@ -4,6 +4,7 @@ import "../../styles/component/header.scss";
 import logoVerticalImg from "../../assets/images/logos/sc-vertical.png";
 import logoHorizontalImg from "../../assets/images/logos/sc-horizontal.png";
 import worker_gif from "../../assets/images/graphics/worker.gif";
+import cartIcon from "../../assets/images/icons/shopping-bag (1).png";
 import { PAGES } from "../../constants/Link.constants";
 import NavDropdown from "../common/NavDropdown";
 import UserSidebar from "./UserSidebar";
@@ -11,17 +12,21 @@ import { useForm } from "react-hook-form";
 import { useIsLogged } from "../../libs/business-logic/src/lib/auth";
 import { categories, languages } from "./Data";
 import WistList from "../common/WistList";
+import CartSidebar from "../common/CartSidebar";
 import { useGetUser } from "../../libs/business-logic/src/lib/auth/process/hooks";
-import { useCartContext } from "../../libs/business-logic/src/lib/cart/process/context";
+import { useWishlist } from "../../libs/business-logic/src/lib/wishlist";
 
 const Header = () => {
   const [isUserSidebarActive, setIsUserSidebarActive] = useState(false);
   const [isWishlistActive, setIsWishlistActive] = useState(false);
+  const [isCartActive, setIsCartActive] = useState(false);
   const [logoSrc, setLogoSrc] = useState(logoVerticalImg);
   const isLogin = useIsLogged();
   const userData = useGetUser();
   const headerRef = useRef(null);
-  const { state } = useCartContext();
+  const { getWishlist } = useWishlist();
+  const wishlist = getWishlist();
+  const cart = null;
 
   const navigate = useNavigate();
 
@@ -110,10 +115,10 @@ const Header = () => {
           <nav className="header__main-nav">
             <ul className="header-main-nav__infor">
               <li>
-                <Link to={PAGES.ABOUT}>Về chúng tôi</Link>
-              </li>
-              <li>
-                <Link to={PAGES.CONTACT}>Liên hệ</Link>
+                <Link to={PAGES.CONTACT} target="_blank">
+                  <i className="fi fi-sr-chart-user"></i>
+                  Kênh đối tác
+                </Link>
               </li>
               <li>
                 <div className="header-main-nav__language">
@@ -176,17 +181,31 @@ const Header = () => {
             className="product-nav__wish-list"
             onClick={() => setIsWishlistActive(!isWishlistActive)}
           >
+            <div className="wishlist__length">
+              {Array.isArray(wishlist) ? wishlist.length : 0}
+            </div>
             <span className="wishlist-btn__label">
               <i className="fi fi-rs-heart"></i>
               Wish List
             </span>
             <span className="wishlist-btn__content">
-              {state.cart ? state.cart.length : 0}&nbsp;
+              {Array.isArray(wishlist) ? wishlist.length : 0}&nbsp;
             </span>
             <span className="wishlist-btn__content">i</span>
             <span className="wishlist-btn__content">t</span>
             <span className="wishlist-btn__content">e</span>
             <span className="wishlist-btn__content">ms</span>
+          </button>
+          <button
+            className="product-nav__cart"
+            onClick={() => setIsCartActive(!isCartActive)}
+          >
+            <div className="cart__length">
+              {Array.isArray(cart) ? cart.length : 0}
+            </div>
+            <span className="cart-btn__label">
+              <img src={cartIcon} alt="cart" />
+            </span>
           </button>
         </nav>
         <div className="search-box__introduction">
@@ -209,6 +228,13 @@ const Header = () => {
         callback={useCallback(
           (status) => setIsWishlistActive(status),
           [setIsWishlistActive]
+        )}
+      />
+      <CartSidebar
+        isActive={isCartActive}
+        callback={useCallback(
+          (status) => setIsCartActive(status),
+          [setIsCartActive]
         )}
       />
       <UserSidebar

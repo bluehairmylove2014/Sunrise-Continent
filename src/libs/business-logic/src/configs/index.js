@@ -1,6 +1,7 @@
 import { AuthProvider } from "../lib/auth/process/provider";
 import { CartProvider } from "../lib/cart/process/provider";
 import { OrderProvider } from "../lib/order/process/provider";
+import { WishlistProvider } from "../lib/wishlist/process/provider";
 
 export const authConfig = {
   isNeedRefreshToken: true,
@@ -11,6 +12,11 @@ export const mutationConfig = {
 };
 
 export const providerConfig = [
+  {
+    key: "wishlist",
+    provider: WishlistProvider,
+    isActive: true,
+  },
   {
     key: "order",
     provider: OrderProvider,

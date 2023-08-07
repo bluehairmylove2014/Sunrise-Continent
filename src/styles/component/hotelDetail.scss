@@ -647,6 +647,7 @@
                 transition: all 0.2s ease-in;
                 box-shadow: -17px 10px 15px -3px rgba(0, 0, 0, 0.1);
                 padding: 20px;
+                z-index: 999;
                 // direction - justify content - align items - flex wrap
                 @include dflex(column, space-between, center, nowrap);
 

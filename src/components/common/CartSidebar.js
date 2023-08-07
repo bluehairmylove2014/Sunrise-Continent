@@ -1,29 +1,22 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import "../../styles/common/wishlist.scss";
+import "../../styles/common/cartSidebar.scss";
 import Empty from "./Empty";
 import { toast } from "react-hot-toast";
 import { combineAddress } from "../../utils/helpers/Address";
 import { useNavigate } from "react-router-dom";
 import { PAGES } from "../../constants/Link.constants";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
-import { useWishlist } from "../../libs/business-logic/src/lib/wishlist";
 import YesNoConfirm from "./Popup/YesNoConfirm";
 import { toggleClassNoListener } from "../../utils/helpers/ToggleClass";
 
-const WistList = ({ isActive, callback }) => {
+const CartSidebar = ({ isActive, callback }) => {
   const sidebarRef = useRef(null);
-  const { getWishlist, removeFromWishlist } = useWishlist();
-  const wishlist = getWishlist();
-  const [wishlistData, setWishlistData] = useState(null);
+  const cart = null;
   const navigate = useNavigate();
   const popUpRef = useRef(null);
   const deleteTarget = useRef(null);
-
-  useEffect(() => {
-    setWishlistData(wishlist);
-  }, [wishlist]);
 
   useEffect(() => {
     if (sidebarRef.current.classList.contains("active") && !isActive) {
@@ -43,19 +36,13 @@ const WistList = ({ isActive, callback }) => {
 
   const handleDeleteFromWishlist = (isNeedDelete) => {
     if (isNeedDelete) {
-      removeFromWishlist(deleteTarget.current)
-        .then((message) => {
-          toast.success(message);
-        })
-        .catch((error) => {
-          toast.error(error.message);
-        });
+      // todo
     }
     deleteTarget.current = null;
     toggleClassNoListener(popUpRef.current, "active");
   };
 
-  const renderWishlistHotel = (data) => {
+  const renderCartItem = (data) => {
     if (!Array.isArray(data)) return <></>;
     return data.map((d) => {
       return (
@@ -102,7 +89,7 @@ const WistList = ({ isActive, callback }) => {
       >
         <div className="wishlist__title">
           <div></div>
-          <p>Danh sách yêu thích</p>
+          <p>Giỏ hàng</p>
           <button
             className="wishlist__close-btn"
             onClick={() => callback(false)}
@@ -111,15 +98,15 @@ const WistList = ({ isActive, callback }) => {
           </button>
         </div>
         <div className="wishlist__content">
-          {wishlistData && wishlistData.length ? (
-            <>{renderWishlistHotel(wishlistData)}</>
+          {cart && cart.length ? (
+            <>{renderCartItem(cart)}</>
           ) : (
-            <Empty label="Không có khách sạn nào" />
+            <Empty label="Không có gì ở đây cả!" />
           )}
         </div>
       </div>
       <YesNoConfirm
-        label={"Bạn muốn xoá tôi khỏi wishlist ư?"}
+        label={"Do you want to delete from wishlist?"}
         callback={handleDeleteFromWishlist}
         ref={popUpRef}
       />
@@ -127,4 +114,4 @@ const WistList = ({ isActive, callback }) => {
   );
 };
 
-export default WistList;
+export default CartSidebar;

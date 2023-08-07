@@ -1,38 +1,38 @@
 import React, { memo } from "react";
 
-// svg image
 import star from "../../assets/images/icons/star.svg";
+import love from "../../assets/images/icons/add (1).png";
 
 import { combineAddress } from "../../utils/helpers/Address";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 import "../../styles/common/hotelCard.scss";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { PAGES } from "../../constants/Link.constants";
+import { useWishlist } from "../../libs/business-logic/src/lib/wishlist";
+import { toast } from "react-hot-toast";
 
 // hotelData: { id, name, imgUrl, star, rating, location, price, sale }
 const HotelCard = ({ hotelData }) => {
-  const navigate = useNavigate();
+  const { addToWishlist } = useWishlist();
   const renderStar = (numberOfStar) => {
-    console.log(numberOfStar);
     let starList = [];
     for (let i = 0; i < numberOfStar; i++) {
       starList.push(<img src={star} alt="star" key={`star@${i}`} />);
     }
     return starList;
   };
-  const addToWishlist = (e, hotel) => {
+  const handleAddToWishlist = (e, hotel) => {
     e.stopPropagation();
-  };
-  const handleReport = (e, hotelId) => {
-    e.stopPropagation();
+    addToWishlist(hotel)
+      .then((message) => {
+        toast.success(message);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
   return (
-    <div
-      className="common-component__hotel-card--vertical"
-      onClick={() => {
-        navigate(PAGES.HOTEL_DETAIL + `?id=${hotelData.id}`);
-      }}
-    >
+    <div className="common-component__hotel-card--vertical">
       <div className="cc-hotel-card__top--v">
         <img src={hotelData.image} alt="hotel" />
       </div>
@@ -79,18 +79,17 @@ const HotelCard = ({ hotelData }) => {
         </div>
         <div className="cc-hotel-card-body__interact">
           <button
-            className="cc-hotel-card-body__report-btn"
-            onClick={(e) => handleReport(e, hotelData.id)}
-          >
-            !
-          </button>
-          <button
             className="cc-hotel-card-body__detail-btn"
-            onClick={(e) => addToWishlist(e, hotelData)}
+            onClick={(e) => {
+              handleAddToWishlist(e, hotelData);
+            }}
           >
-            <i className="fi fi-rs-heart"></i>
-            Yêu thích
+            <img src={love} alt="love" />
           </button>
+          <Link to={PAGES.HOTEL_DETAIL + `?id=${hotelData.id}`}>
+            Xem chi tiết
+            <i className="fi fi-rr-caret-right"></i>
+          </Link>
         </div>
       </div>
     </div>

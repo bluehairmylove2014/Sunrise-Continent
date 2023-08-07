@@ -1,5 +1,6 @@
 // Importing necessary constants
-import { CONTEXT_ACTION, COOKIE_KEY, TOKEN_EXPIRY_DAYS } from "../../constants";
+import { COOKIE_KEY } from "../../../../configs/constants";
+import { CONTEXT_ACTION, TOKEN_EXPIRY_DAYS } from "../../constants";
 // Importing authentication context
 import { useAuthContext } from "../context";
 // Importing cookie helper functions

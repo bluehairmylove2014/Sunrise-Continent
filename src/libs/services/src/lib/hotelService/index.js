@@ -117,7 +117,7 @@ export class HotelService extends Services {
         schema: getHotHotelSchema,
         signal: this.abortController.signal,
         transformResponse: (res) => res,
-        isProduction: true,
+        // isProduction: true,
       });
       return response;
     } catch (error) {

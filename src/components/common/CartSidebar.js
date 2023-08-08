@@ -10,10 +10,11 @@ import { PAGES } from "../../constants/Link.constants";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 import YesNoConfirm from "./Popup/YesNoConfirm";
 import { toggleClassNoListener } from "../../utils/helpers/ToggleClass";
+import { useGetCart } from "../../libs/business-logic/src/lib/cart";
 
 const CartSidebar = ({ isActive, callback }) => {
   const sidebarRef = useRef(null);
-  const cart = null;
+  const cart = useGetCart();
   const navigate = useNavigate();
   const popUpRef = useRef(null);
   const deleteTarget = useRef(null);

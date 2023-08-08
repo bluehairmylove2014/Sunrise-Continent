@@ -1,8 +1,6 @@
 export const cartReducer = (state, action) => {
   try {
     switch (action.type) {
-      case "GET_ACTION":
-        return state;
       case "SET_CART_ACTION":
         return {
           ...state,

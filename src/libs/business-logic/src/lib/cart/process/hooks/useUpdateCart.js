@@ -34,9 +34,7 @@ export const useUpdateCart = () => {
               .catch((err) => {
                 console.error("Get refresh cart error: ", err);
                 // If there is an error, clear the entire cart
-                setCart({
-                  items: [],
-                });
+                setCart([]);
               });
             reject(error);
           });

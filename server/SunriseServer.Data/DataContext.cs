@@ -43,6 +43,9 @@ namespace SunriseServerData
             modelBuilder.Entity<MyFunctionResult>()
                 .HasNoKey().ToTable("MyFunctionResult", t => t.ExcludeFromMigrations());
 
+            modelBuilder.Entity<MyFuctionReturn>()
+                .HasNoKey().ToTable("MyFuctionReturn", t => t.ExcludeFromMigrations());
+
             modelBuilder.Entity<PersonalDetail>()
                 .HasNoKey();
         }

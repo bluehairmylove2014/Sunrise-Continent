@@ -1,8 +1,8 @@
 import React from "react";
-import { withCartFromContext } from "../../../../configs/withContext";
+import { withTokenFromContext } from "../../../../configs/withContext";
 import { ContextProvider } from "./ContextProvider";
 
 export const OrderProvider = ({ children }) => {
-  const EnhancedProvider = withCartFromContext(ContextProvider);
+  const EnhancedProvider = withTokenFromContext(ContextProvider);
   return <EnhancedProvider>{children}</EnhancedProvider>;
 };

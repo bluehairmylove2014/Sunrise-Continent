@@ -1,8 +1,6 @@
 export const orderReducer = (state, action) => {
   try {
     switch (action.type) {
-      case "GET_ORDER":
-        return state;
       case "SET_ORDER":
         return {
           ...state,

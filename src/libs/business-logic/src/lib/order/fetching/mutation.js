@@ -25,7 +25,7 @@ export const useGetCouponMutation = () => {
   });
 };
 export const useUpdateOrderMutation = () => {
-  return useMutation(orderService.updateOrder, {
+  return useMutation(orderService.createOrder, {
     retry: mutationConfig.RETRY,
   });
 };

@@ -13,10 +13,10 @@ const Checkbox = ({ form, name, label, callbackOnChange }) => {
             <input
               {...field}
               type="checkbox"
-              defaultChecked={form.getValues()[name] === "true" ? true : false}
+              defaultChecked={form.getValues()[name]}
               onChange={(e) => {
                 field.onChange(e);
-                callbackOnChange(name);
+                callbackOnChange && callbackOnChange(name);
               }}
             />
             <span className="checkmark">

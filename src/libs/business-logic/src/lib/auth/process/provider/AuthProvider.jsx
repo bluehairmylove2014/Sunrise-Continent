@@ -7,7 +7,9 @@ import { useRefreshToken } from "../hooks/useRefreshToken";
 import { BroadcastProvider } from "./BroadcastProvider";
 import { AuthContextProvider } from "./ContextProvider";
 import { useFacebookLogin, useGoogleLogin } from "../hooks";
+import { withAuthenticateUrl } from "./withAuthenticateUrl";
 
+const EnhancedContextProvider = withAuthenticateUrl(AuthContextProvider);
 // This is the AuthProvider for the entire app
 export const AuthProvider = ({ children }) => {
   // Get the resetToken and getToken functions from useAccessToken
@@ -57,8 +59,8 @@ export const AuthProvider = ({ children }) => {
 
   // Return the AuthContextProvider and BroadcastProvider with children
   return (
-    <AuthContextProvider>
+    <EnhancedContextProvider>
       <BroadcastProvider>{children}</BroadcastProvider>
-    </AuthContextProvider>
+    </EnhancedContextProvider>
   );
 };

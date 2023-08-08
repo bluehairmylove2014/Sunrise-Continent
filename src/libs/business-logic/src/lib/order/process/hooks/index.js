@@ -1,6 +1,6 @@
 export * from "./useGetOrder";
 export * from "./useGetShipping";
 export * from "./useGetTax";
-export * from "./useUpdateOrder";
+export * from "./useCreateOrder";
 export * from "./useGetCoupon";
 export * from "./useGetTotal";

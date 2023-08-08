@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Suspense, lazy, useEffect, useState } from "react";
 import { BusinessLogicProvider } from "./libs/business-logic/src/provider";
 
@@ -12,17 +12,15 @@ import { PAGES } from "./constants/Link.constants";
 import "./App.scss";
 
 // Component
-import Header from "./components/layouts/Header";
-import Footer from "./components/layouts/Footer";
 import PageLoader from "./components/common/Loader/PageLoader";
 
 // Redux
 import { Provider } from "react-redux";
 import redux_store from "./redux/store";
-import { useIsLogged } from "./libs/business-logic/src/lib/auth";
 
-// Code spliting, lazy loading component
-const HomePage = lazy(() => import("./pages/Home/Home"));
+import { UserPageLayout } from "./components/layouts/UserPageLayout";
+import HomePage from "./pages/Home/Home";
+// Code spliting, lazy loading component=
 const SearchPage = lazy(() => import("./pages/Search/Search"));
 const HotelDetail = lazy(() => import("./pages/HotelDetail/HotelDetail"));
 const PreCheckout = lazy(() => import("./pages/PreCheckout/PreCheckout"));
@@ -32,7 +30,6 @@ const AuthenticationPage = lazy(() =>
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const isLoggedIn = useIsLogged();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -61,68 +58,44 @@ function App() {
                   exact
                   path={PAGES.HOME}
                   element={
-                    <>
-                      <Header />
+                    <UserPageLayout>
                       <HomePage />
-                      <Footer />
-                    </>
+                    </UserPageLayout>
                   }
                 />
                 <Route
                   path={PAGES.SEARCH}
                   element={
-                    <>
-                      <Header></Header>
-                      <SearchPage></SearchPage>
-                      <Footer></Footer>
-                    </>
+                    <UserPageLayout>
+                      <SearchPage />
+                    </UserPageLayout>
                   }
                 />
                 <Route
                   path={PAGES.HOTEL_DETAIL}
                   element={
-                    <>
-                      <Header></Header>
-                      <HotelDetail></HotelDetail>
-                      <Footer></Footer>
-                    </>
+                    <UserPageLayout>
+                      <HotelDetail />
+                    </UserPageLayout>
                   }
                 />
                 <Route
                   path={PAGES.PRE_CHECKOUT}
                   element={
-                    isLoggedIn ? (
-                      <>
-                        <Header></Header>
-                        <PreCheckout></PreCheckout>
-                        <Footer></Footer>
-                      </>
-                    ) : (
-                      <Navigate to={PAGES.LOGIN} replace={true} />
-                    )
+                    <UserPageLayout>
+                      <PreCheckout />
+                    </UserPageLayout>
                   }
                 />
                 <Route
                   exact
                   path={PAGES.LOGIN}
-                  element={
-                    !isLoggedIn ? (
-                      <AuthenticationPage />
-                    ) : (
-                      <Navigate to={PAGES.HOME} replace={true} />
-                    )
-                  }
+                  element={<AuthenticationPage />}
                 />
                 <Route
                   exact
                   path={PAGES.REGISTER}
-                  element={
-                    !isLoggedIn ? (
-                      <AuthenticationPage />
-                    ) : (
-                      <Navigate to={PAGES.HOME} replace={true} />
-                    )
-                  }
+                  element={<AuthenticationPage />}
                 />
               </Routes>
             )}

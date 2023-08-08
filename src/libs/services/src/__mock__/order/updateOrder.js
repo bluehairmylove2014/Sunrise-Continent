@@ -1,9 +1,9 @@
 import { axiosMockAdapterInstance } from "../../config/axios";
 import { OrderService } from "../../lib";
-import cartRawData from "../data/cart.json";
 import ordersRawData from "../data/order.json";
 import { getApiUrl } from "../../config/url";
 
+const orderData = ordersRawData;
 axiosMockAdapterInstance
   .onPost(getApiUrl(false) + new OrderService().updateOrderUrl)
   .reply((config) => {
@@ -11,10 +11,8 @@ axiosMockAdapterInstance
     const data = JSON.parse(config.data);
 
     if (token) {
-      const cart = cartRawData[0];
-      const orders = ordersRawData;
-      Object.assign(orders, data);
-      cart.items = data.orderSummary;
+      orderData.push(data);
+      console.log("UPDATE SUCCESS: ", orderData);
       return [
         200,
         {

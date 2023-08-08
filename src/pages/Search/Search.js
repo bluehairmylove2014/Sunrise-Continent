@@ -56,7 +56,7 @@ const Search = () => {
   });
   const filterBoardForm = useForm({
     defaultValues: FILTER_INPUT.reduce((values, key) => {
-      values[key] = filterTrueList.includes(key) ? "true" : "false";
+      values[key] = filterTrueList.includes(key);
       return values;
     }, {}),
   });

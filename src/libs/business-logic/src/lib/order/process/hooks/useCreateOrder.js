@@ -1,14 +1,12 @@
 // Import necessary modules and functions
 import { useUpdateOrderMutation } from "../../fetching/mutation";
 import { useOrderContext } from "../context";
-import { useInitOrder } from "./useInitOrder";
 
-export const useUpdateOrder = () => {
+export const useCreateOrder = () => {
   const { state, dispatch } = useOrderContext();
   const updateOrderMutation = useUpdateOrderMutation();
-  const { onInitOrder } = useInitOrder();
 
-  const onUpdateOrder = (order) => {
+  const onCreateOrder = (order) => {
     return new Promise((resolve, reject) => {
       const accessToken = state.accessToken;
       const needUpdateOrder = order ? order : state.order;
@@ -21,19 +19,13 @@ export const useUpdateOrder = () => {
             order: needUpdateOrder,
           })
           .then((res) => {
+            dispatch({
+              type: "SET_ORDER",
+              payload: needUpdateOrder,
+            });
             resolve(res.message);
           })
           .catch((err) => {
-            onInitOrder()
-              .then((refreshOrder) => {
-                dispatch({
-                  type: "SET_ORDER",
-                  payload: refreshOrder,
-                });
-              })
-              .catch((err) => {
-                console.error("Cannot refresh order: ", err);
-              });
             reject(err);
           });
       }
@@ -41,7 +33,7 @@ export const useUpdateOrder = () => {
   };
 
   return {
-    onUpdateOrder,
+    onCreateOrder,
     isLoading: updateOrderMutation.isLoading,
   };
 };

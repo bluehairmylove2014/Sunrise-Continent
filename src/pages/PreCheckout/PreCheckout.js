@@ -8,14 +8,14 @@ import "../../styles/component/preCheckout.scss";
 import Checkbox from "../../components/common/Checkbox";
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import { combineAddress } from "../../utils/helpers/Address";
-import { icon } from "./Data";
+import { icon, nationality } from "./Data";
 import { formatDate } from "../../utils/helpers/ShortenDatetime";
 import { calcNight } from "../../utils/helpers/Datetime";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 import { calculateDiscountedPrice } from "../../utils/helpers/Discount";
 import { parseSearchParams } from "../../utils/helpers/params";
-
-const fee = 25000;
+import { toast } from "react-hot-toast";
+import { useCreateOrder } from "../../libs/business-logic/src/lib/order";
 
 const PreCheckout = () => {
   const [sunriseVoucher, setSunriseVoucher] = useState(0);
@@ -28,6 +28,7 @@ const PreCheckout = () => {
 
   const { data: hotelData } = useGetHotelDetail(hotelID);
   const { data: roomData } = useGetSpecificRoom(hotelID, roomID);
+  const { onCreateOrder } = useCreateOrder();
 
   const contactForm = useForm({
     defaultValues: {
@@ -36,13 +37,13 @@ const PreCheckout = () => {
       dob: "",
       email: "",
       phone: "",
-      isPersonalBooking: "true",
-      isNeedHighFloor: "false",
-      isNeedCrib: "false",
-      isNeedBreezeRoom: "false",
-      isNeedGoodView: "false",
+      isPersonalBooking: true,
+      isNeedHighFloor: false,
+      isNeedCrib: false,
+      isNeedBreezeRoom: false,
+      isNeedGoodView: false,
       otherRequirements: "",
-      isAcceptPolicy: "false",
+      isAcceptPolicy: false,
     },
   });
 
@@ -64,8 +65,41 @@ const PreCheckout = () => {
       }
     }
   };
-  const onContactFormSubmit = (data) => {};
-  const onContactFormError = (error) => {};
+  const onContactFormSubmit = (data) => {
+    if (!data.isAcceptPolicy) {
+      toast.error("Hãy đồng ý với điều khoản và chính sách nhé!");
+      return;
+    }
+    onCreateOrder({
+      fullName: data.fullName,
+      nation: data.nationality,
+      dateOfBirth: data.dob,
+      email: data.email,
+      phoneNumber: data.phone,
+      specialNeeds: "",
+      notes: data.otherRequirements,
+      voucherId: 0,
+      orders: [
+        {
+          hotelId: hotelID,
+          roomTypeId: roomID,
+          checkIn: start_date,
+          checkOut: end_date,
+          numberOfRoom: rooms,
+        },
+      ],
+    })
+      .then((message) => {
+        toast.success(message);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(error.message);
+      });
+  };
+  const onContactFormError = (error) => {
+    toast.error(error[Object.keys(error)[0]].message);
+  };
   return hotelData && roomData ? (
     <main className="pre-checkout">
       <div className="container">
@@ -82,7 +116,7 @@ const PreCheckout = () => {
               name="fullName"
               control={contactForm.control}
               rules={{
-                required: "Required field!",
+                required: "Hãy nhập họ và tên",
               }}
               render={({ field }) => (
                 <div className="contact__input-data">
@@ -101,7 +135,7 @@ const PreCheckout = () => {
               name="nationality"
               control={contactForm.control}
               rules={{
-                required: "Required field!",
+                required: "Hãy chọn quốc tịch",
               }}
               render={({ field }) => (
                 <div className="contact__input-data">
@@ -113,8 +147,11 @@ const PreCheckout = () => {
                     onBlur={(e) => handleBlur(e.target)}
                   >
                     <option value="">-- Chọn quốc tịch --</option>
-                    <option value="vietnamese">Vietnamese</option>
-                    <option value="english">English</option>
+                    {nationality.map((nat) => (
+                      <option value={nat.value} key={nat.id}>
+                        {nat.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
               )}
@@ -123,7 +160,7 @@ const PreCheckout = () => {
               name="dob"
               control={contactForm.control}
               rules={{
-                required: "Required field!",
+                required: "Hãy cho tôi biết ngày sinh của bạn",
               }}
               render={({ field }) => (
                 <div className="contact__input-data">
@@ -142,7 +179,7 @@ const PreCheckout = () => {
               name="email"
               control={contactForm.control}
               rules={{
-                required: "Required field!",
+                required: "Bạn chưa nhập Email kìa",
               }}
               render={({ field }) => (
                 <div className="contact__input-data">
@@ -161,7 +198,7 @@ const PreCheckout = () => {
               name="phone"
               control={contactForm.control}
               rules={{
-                required: "Required field!",
+                required: "Cho chúng tôi số điện thoại để liên hệ nhé",
               }}
               render={({ field }) => (
                 <div className="contact__input-data">
@@ -187,6 +224,7 @@ const PreCheckout = () => {
                     id="isPersonalBooking"
                     onFocus={(e) => handleFocus(e.target)}
                     onBlur={(e) => handleBlur(e.target)}
+                    defaultChecked={true}
                   />
                   <label htmlFor="isPersonalBooking">
                     Tôi là khách lưu trú
@@ -277,7 +315,13 @@ const PreCheckout = () => {
                 "Tôi đồng ý với điều khoản và chính sách bảo mật của Sunrise Continent"
               }
             />
-            <button>THANH TOÁN NGAY</button>
+            <button id="checkout" type="submit">
+              THANH TOÁN NGAY
+            </button>
+            <p>Hoặc</p>
+            <button id="add-to-cart" type="button">
+              LƯU ĐƠN VÀO GIỎ HÀNG
+            </button>
           </section>
         </form>
         <section className="checkout-infor">
@@ -370,15 +414,6 @@ const PreCheckout = () => {
             </div>
             <div className="detail__row">
               <div className="row__label">
-                <span>Phí dịch vụ: </span>
-              </div>
-
-              <p className="price fee">
-                {convertNumberToCurrency("vietnamdong", fee)}
-              </p>
-            </div>
-            <div className="detail__row">
-              <div className="row__label">
                 <span>Thêm voucher: </span>
               </div>
               {sunriseVoucher ? (
@@ -386,7 +421,10 @@ const PreCheckout = () => {
                   -{" "}
                   {convertNumberToCurrency(
                     "vietnamdong",
-                    sunriseVoucher * 100000
+                    calculateDiscountedPrice(
+                      roomData.price * night,
+                      sunriseVoucher
+                    ).discountedPrice
                   )}
                 </p>
               ) : (
@@ -406,7 +444,7 @@ const PreCheckout = () => {
                 {convertNumberToCurrency(
                   "vietnamdong",
                   calculateDiscountedPrice(
-                    roomData.price * night + fee,
+                    roomData.price * night,
                     sunriseVoucher
                   ).amountToPay
                 )}

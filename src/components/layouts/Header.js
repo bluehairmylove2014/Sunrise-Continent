@@ -22,6 +22,7 @@ const Header = () => {
   const [isCartActive, setIsCartActive] = useState(false);
   const [logoSrc, setLogoSrc] = useState(logoVerticalImg);
   const isLogin = useIsLogged();
+
   const userData = useGetUser();
   const headerRef = useRef(null);
   const { getWishlist } = useWishlist();

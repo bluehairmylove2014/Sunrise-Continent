@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Importing necessary libraries and services
+import { useMemo } from "react";
 import { useAuthContext } from "../context";
-import React from "react";
 import { useAccessToken } from "./useAccessToken";
 
 // True: User is logged in and has a valid token
@@ -10,5 +10,6 @@ import { useAccessToken } from "./useAccessToken";
 export const useIsLogged = () => {
   const { state } = useAuthContext();
   const { getToken } = useAccessToken();
-  return React.useMemo(() => Boolean(state.token || getToken()), [state.token]);
+  const isLogged = Boolean(state.token || getToken());
+  return useMemo(() => isLogged, [isLogged]);
 };

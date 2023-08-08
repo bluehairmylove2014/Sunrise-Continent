@@ -1,15 +1,21 @@
-{
-        "id": "1",
-        "orderSummary": [],
-        "firstName": "",
-        "lastName": "",
-        "phone": "",
-        "email": "",
-        "country": "",
-        "address": "",
-        "paymentMethod": "",
-        "status": "Pending",
-        "shipping": 0,
-        "tax": 0,
-        "coupon": 0
-}
+[
+  {
+    "fullName": "string",
+    "nation": "string",
+    "dateOfBirth": "2023-08-08T16:16:53.965Z",
+    "email": "string",
+    "phoneNumber": "string",
+    "specialNeeds": "string",
+    "notes": "string",
+    "voucherId": 0,
+    "orders": [
+      {
+        "hotelId": 0,
+        "roomTypeId": 0,
+        "checkIn": "2023-08-08T16:16:53.965Z",
+        "checkOut": "2023-08-08T16:16:53.965Z",
+        "numberOfRoom": 0
+      }
+    ]
+  }
+]

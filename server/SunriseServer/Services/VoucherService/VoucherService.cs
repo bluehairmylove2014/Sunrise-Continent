@@ -24,9 +24,9 @@ namespace SunriseServer.Services.VoucherService
             return result;
         }
 
-        public async Task<List<VoucherBag>> GetAccountVoucher(int AccountId)
+        public async Task<List<VoucherBag>> GetAccountVoucher(string email)
         {
-            var result = await _unitOfWork.VoucherRepo.GetAccountVoucherAsync(AccountId);
+            var result = await _unitOfWork.VoucherRepo.GetAccountVoucherAsync(email);
             return result;
         }
 
@@ -48,15 +48,15 @@ namespace SunriseServer.Services.VoucherService
             return result;
         }
 
-        public async Task<int> UpdateAccountRank(int accountId)
+        public async Task<int> UpdateAccountRank(string email)
         {
-            var result = await _unitOfWork.VoucherRepo.UpdateAccountRankAsync(accountId);
+            var result = await _unitOfWork.VoucherRepo.UpdateAccountRankAsync(email);
             return result;
         }
 
-        public async Task<int> RedeemVoucher(int accountId, int voucherId)
+        public async Task<int> RedeemVoucher(string email, int voucherId)
         {
-            var result = await _unitOfWork.VoucherRepo.RedeemVoucherAsync(accountId, voucherId);
+            var result = await _unitOfWork.VoucherRepo.RedeemVoucherAsync(email, voucherId);
             return result;
         }
     }

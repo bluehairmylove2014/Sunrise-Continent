@@ -36,10 +36,10 @@ namespace SunriseServer.Controllers
             return Ok(result.ToList());
         }
 
-        [HttpGet("bag")]
-        public async Task<ActionResult<List<Voucher>>> GetVoucherBag(int accountId)
+        [HttpGet("bag"), Authorize(Roles = GlobalConstant.User)]
+        public async Task<ActionResult<List<Voucher>>> GetVoucherBag()
         {
-            var result = await _voucherService.GetAccountVoucher(accountId);
+            var result = await _voucherService.GetAccountVoucher(User.Identity.Name);
 
             if (result == null)
                 return BadRequest("Cannot get account voucher.");
@@ -80,10 +80,10 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<int>("Delete voucher successfully", result));
         }
 
-        [HttpPut("account-rank")] // , Authorize(Roles = GlobalConstant.User)
-        public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateAccountRank(int accountId)
+        [HttpPut("account-rank"), Authorize(Roles = GlobalConstant.User)]
+        public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateAccountRank()
         {
-            var result = await _voucherService.UpdateAccountRank(accountId);
+            var result = await _voucherService.UpdateAccountRank(User.Identity.Name);
 
             if (result == 0)
                 return NotFound("Account not found.");
@@ -92,9 +92,9 @@ namespace SunriseServer.Controllers
         }
         
         [HttpPost("redeem"), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<ResponseMessageDetails<int>>> RedeemVoucher(int accountId, int voucherId)
+        public async Task<ActionResult<ResponseMessageDetails<int>>> RedeemVoucher(int voucherId)
         {
-            var result = await _voucherService.RedeemVoucher(accountId, voucherId);
+            var result = await _voucherService.RedeemVoucher(User.Identity.Name, voucherId);
 
             if (result == 0)
                 return NotFound("Account not found.");

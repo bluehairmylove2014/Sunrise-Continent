@@ -9,6 +9,19 @@ namespace SunriseServerCore.Dtos.Order
         public int NumberOfRoom { get; set; }
     }
 
+    public class InputOrderDto
+    {
+        public string FullName { get; set; } = string.Empty;
+        public string Nation { get; set; } = string.Empty;
+        public DateTime DateOfBirth { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string SpecialNeeds { get; set; } = string.Empty;
+        public string Notes { get; set; } = string.Empty;
+        public int VoucherId { get; set; }
+        public List<OrderDto> Orders { get; set; }
+    }
+
     public class ListOrderDto
     {
         public int AccountId { get; set; }

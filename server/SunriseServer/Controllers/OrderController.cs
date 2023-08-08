@@ -26,10 +26,10 @@ namespace SunriseServer.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet] //, Authorize(Roles = GlobalConstant.User)
-        public async Task<ActionResult<List<Order>>> GetAccountOrder(int accountId)
+        [HttpGet, Authorize(Roles = GlobalConstant.User)] //, Authorize(Roles = GlobalConstant.User)
+        public async Task<ActionResult<List<Order>>> GetAccountOrder()
         {
-            var result = await _orderService.GetAccountOrder(accountId);
+            var result = await _orderService.GetAccountOrder(User.Identity.Name);
 
             if (result is null)
                 return NotFound("Cannot add booking.");
@@ -37,10 +37,12 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpPost] //, Authorize(Roles = GlobalConstant.User)
-        public async Task<ActionResult<ResponseMessageDetails<int>>> AddOrder(ListOrderDto orderDto)
+        [HttpPost, Authorize(Roles = GlobalConstant.User)] //, Authorize(Roles = GlobalConstant.User)
+        public async Task<ActionResult<ResponseMessageDetails<int>>> AddOrder(InputOrderDto orderDto)
         {
-            var result = await _orderService.CreateOrder(orderDto);
+            var orderInfo = new ListOrderDto();
+            SetPropValueByReflection.AddYToX(orderInfo, orderDto);
+            var result = await _orderService.CreateOrder(orderInfo, User.Identity.Name);
 
             if (result == 0)
                 return BadRequest("Cannot add booking.");
@@ -48,7 +50,7 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<int>("Add booking successfully", result));
         }
 
-        // [HttpPut("confirm")] //, Authorize(Roles = GlobalConstant.User)
+        // [HttpPut("confirm"), Authorize(Roles = GlobalConstant.User)] //, Authorize(Roles = GlobalConstant.User)
         // public async Task<ActionResult<ResponseMessageDetails<int>>> ConfirmOrder(int orderId, int accountId, int voucherId)
         // {
         //     var result = await _orderService.ConfirmOrder(orderId, accountId, voucherId);

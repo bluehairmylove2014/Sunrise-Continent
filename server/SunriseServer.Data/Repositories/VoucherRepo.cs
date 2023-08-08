@@ -35,9 +35,12 @@ namespace SunriseServerData.Repositories
             return result.FirstOrDefault();
         }
 
-        public async Task<List<VoucherBag>> GetAccountVoucherAsync(int accountId)
+        public async Task<List<VoucherBag>> GetAccountVoucherAsync(string email)
         {
-            var result = await _dataContext.VoucherBag.FromSqlInterpolated($"EXEC USP_GetUserVoucher @AccountId={accountId};").ToListAsync();
+            var builder = new StringBuilder($"DECLARE @Id INT = dbo.USF_GetAccountId('{email}');\n");
+            builder.Append($"EXEC USP_GetUserVoucher @AccountId=@Id;");
+
+            var result = await _dataContext.VoucherBag.FromSqlInterpolated($"EXECUTE({builder.ToString()});").ToListAsync();
             return result;
         }
 
@@ -72,16 +75,22 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
-        public async Task<int> UpdateAccountRankAsync(int accountId)
+        public async Task<int> UpdateAccountRankAsync(string email)
         {
-            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXEC USP_UpdateAccountRank @AccountId={accountId};");
+            var builder = new StringBuilder($"DECLARE @Id INT = dbo.USF_GetAccountId('{email}');\n");
+            builder.Append($"EXEC USP_UpdateAccountRank @AccountId=@Id;");
+
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()});");
             return result;
         }
 
-        public async Task<int> RedeemVoucherAsync(int accountId, int voucherId)
+        public async Task<int> RedeemVoucherAsync(string email, int voucherId)
         {
+            var builder = new StringBuilder($"DECLARE @Id INT = dbo.USF_GetAccountId('{email}');\n");
+            builder.Append($"EXEC USP_RedeemVoucher @AccountId=@Id, @VoucherId={voucherId};");
+
             var result = await _dataContext.Database
-                .ExecuteSqlInterpolatedAsync($"EXEC USP_RedeemVoucher @AccountId={accountId}, @VoucherId={voucherId}");
+                .ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
             return result;
         }
     }

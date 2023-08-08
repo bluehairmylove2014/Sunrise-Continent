@@ -22,6 +22,7 @@ import { useGetHotHotelQuery } from "../../libs/business-logic/src/lib/hotel/fet
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import { bannerData, countriesData, roomTypesData } from "./Data";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
+import { PAGES } from "../../constants/Link.constants";
 
 const geoUrl =
   "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
@@ -277,64 +278,70 @@ const Home = () => {
             </p>
           </div>
           {/* Hot countries */}
-          <ComposableMap
-            projection="geoEqualEarth"
-            projectionConfig={{
-              scale: 220,
-              center: [0, 10],
-            }}
-            style={{
-              position: "relative",
-              width: "100%",
-              height: "auto",
-            }}
-            ref={mapRef}
-            onMouseEnter={handleMouseEnterMap}
-            onMouseLeave={handleMouseLeaveMap}
-          >
-            <Geographies geography={geoUrl}>
-              {({ geographies }) => {
-                return geographies.map((geo) => {
-                  const rsmKey = geo.rsmKey;
-                  const isHighlighted = selectedAreas.includes(rsmKey);
-                  return (
-                    <React.Fragment key={rsmKey}>
-                      <Geography
-                        key={rsmKey}
-                        geography={geo}
-                        fill={
-                          isHighlighted
-                            ? rsmKey === "geo-173"
-                              ? "#DC143C"
-                              : "#3C2C7C"
-                            : tooltipContent === geo.properties.name
-                            ? "#5b94ff"
-                            : "#C0C0C0"
-                        }
-                        onMouseEnter={() =>
-                          setTooltipContent(geo.properties.name)
-                        }
-                        onMouseLeave={() => setTooltipContent(null)}
-                        onClick={() => console.log(geo.properties.name)}
-                      />
-                    </React.Fragment>
-                  );
-                });
+          <div className="promised-land__map">
+            <ComposableMap
+              projection="geoEqualEarth"
+              projectionConfig={{
+                scale: 200,
+                center: [0, 10],
               }}
-            </Geographies>
-          </ComposableMap>
-          {tooltipContent && (
-            <div
-              className="country__name"
               style={{
-                position: "fixed",
-                top: tooltipPosition.y,
-                left: tooltipPosition.x,
+                position: "relative",
+                width: "100%",
+                height: "auto",
               }}
+              ref={mapRef}
+              onMouseEnter={handleMouseEnterMap}
+              onMouseLeave={handleMouseLeaveMap}
             >
-              {tooltipContent}
-            </div>
-          )}
+              <Geographies geography={geoUrl}>
+                {({ geographies }) => {
+                  return geographies.map((geo) => {
+                    const rsmKey = geo.rsmKey;
+                    const isHighlighted = selectedAreas.includes(rsmKey);
+                    return (
+                      <React.Fragment key={rsmKey}>
+                        <Geography
+                          key={rsmKey}
+                          geography={geo}
+                          fill={
+                            tooltipContent === geo.properties.name
+                              ? "#5b94ff"
+                              : isHighlighted
+                              ? rsmKey === "geo-173"
+                                ? "#DC143C"
+                                : "#3C2C7C"
+                              : "#C0C0C0"
+                          }
+                          onMouseEnter={() =>
+                            setTooltipContent(geo.properties.name)
+                          }
+                          onMouseLeave={() => setTooltipContent(null)}
+                          onClick={() =>
+                            navigate(
+                              PAGES.COUNTRY + `?name=${geo.properties.name}`
+                            )
+                          }
+                        />
+                      </React.Fragment>
+                    );
+                  });
+                }}
+              </Geographies>
+            </ComposableMap>
+            {tooltipContent && (
+              <div
+                className="country__name"
+                style={{
+                  position: "fixed",
+                  top: tooltipPosition.y,
+                  left: tooltipPosition.x,
+                }}
+              >
+                {tooltipContent}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 

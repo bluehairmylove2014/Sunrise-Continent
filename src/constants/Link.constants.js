@@ -7,4 +7,5 @@ export const PAGES = {
   ABOUT: "/about",
   CONTACT: "/contact",
   PRE_CHECKOUT: "/provide-information",
+  COUNTRY: "/country",
 };

@@ -182,6 +182,11 @@
             }
         }
 
+        .promised-land__map {
+            max-height: 800px;
+            overflow: hidden;
+        }
+
         svg g path {
             outline: none;
         }

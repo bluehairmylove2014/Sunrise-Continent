@@ -13,15 +13,15 @@ namespace SunriseServer.Services.BookingService
             _unitOfWork = uof;
         }
 
-        public async Task<List<Order>> GetAccountOrder(int accountId)
+        public async Task<List<Order>> GetAccountOrder(string email)
         {
-            var result = await _unitOfWork.OrderRepo.GetAccountOrderAsync(accountId);
+            var result = await _unitOfWork.OrderRepo.GetAccountOrderAsync(email);
             return result;
         }
 
-        public async Task<int> CreateOrder(ListOrderDto order)
+        public async Task<int> CreateOrder(ListOrderDto order, string email)
         {
-            var result = await _unitOfWork.OrderRepo.CreateOrderAsync(order);
+            var result = await _unitOfWork.OrderRepo.CreateOrderAsync(order, email);
             await _unitOfWork.SaveChangesAsync();
             return result;
         }

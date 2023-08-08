@@ -1702,43 +1702,13 @@ END
 GO
 
 
-GO
-CREATE OR ALTER PROC USP_ConfirmLastCreatedOrder
-	@AccountId INT,
-	@VoucherId INTEGER
-AS
+CREATE OR ALTER FUNCTION USF_GetAccountId (@Email VARCHAR(50))
+RETURNS INT
 BEGIN
-	DECLARE @CreatedAt DATETIME;
-	SELECT @CreatedAt = CreatedAt FROM ACCOUNT_ORDER 
-	WHERE AccountId = @AccountId AND Paid = 0
-	ORDER BY CreatedAt DESC;
-
-	DECLARE @SQL NVARCHAR(MAX) = N'EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId'
-
-
-
-	EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId;
+	DECLARE @Id INT;
+	SELECT @Id = Id FROM ACCOUNT WHERE Email = @Email;
+	RETURN @Id;
 END
-GO
-
-GO
-CREATE OR ALTER PROC USP_GetLastCreatedOrderId
-	@AccountId INT,
-	@VoucherId INTEGER
-AS
-BEGIN
-	DECLARE @CreatedAt DATETIME;
-	SELECT @CreatedAt = CreatedAt FROM ACCOUNT_ORDER 
-	WHERE AccountId = @AccountId AND Paid = 0
-	ORDER BY CreatedAt DESC;
-
-	DECLARE @SQL NVARCHAR(MAX) = N'EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId'
-
-
-
-	EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId;
-END
-GO
 
 -- //
 GO

@@ -9,8 +9,8 @@ namespace SunriseServerCore.Models
     }
 
     [NotMapped]
-    public class MyOrderId : ModelBase
+    public class MyFuctionReturn : ModelBase
     {  
-        public int Id { get; set; }
+        public int MyValue { get; set; }
     }
 }

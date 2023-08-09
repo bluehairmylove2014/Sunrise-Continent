@@ -307,10 +307,10 @@ GO
 
 
 CREATE OR ALTER PROC USP_AddAccount
-	--@Id INTEGER,
+	@Id INTEGER,
 	--@MemberPoint INTEGER,
 	@Email VARCHAR(50),
-	@FullName VARCHAR(50),
+	@FullName NVARCHAR(100),
 	@PasswordHash VARCHAR(500),
 	@PasswordSalt VARCHAR(500),
 	@UserRole VARCHAR(50),
@@ -322,9 +322,6 @@ BEGIN
 	BEGIN TRAN
 
 	BEGIN TRY
-		DECLARE @Id INT
-		EXEC @Id = dbo.USP_GetNextColumnId 'ACCOUNT', 'Id'
-
 		INSERT INTO ACCOUNT VALUES (@Id, 0, 'Bronze', @Email, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires)
 
 		INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank) 
@@ -1612,7 +1609,8 @@ AS
 BEGIN
 	IF (@OrderId IS NULL OR @OrderId <= 0)
 	BEGIN
-		SELECT @OrderId = OrderId FROM ACCOUNT_ORDER WHERE AccountId = @AccountId AND Paid = 0;
+		SELECT @OrderId = OrderId FROM ACCOUNT_ORDER WHERE AccountId = @AccountId AND Paid = 0
+		ORDER BY CreatedAt DESC
 		IF (@OrderId IS NULL) RETURN -1;
 	END
 

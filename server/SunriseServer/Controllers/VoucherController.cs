@@ -39,7 +39,8 @@ namespace SunriseServer.Controllers
         [HttpGet("bag"), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<List<Voucher>>> GetVoucherBag()
         {
-            var result = await _voucherService.GetAccountVoucher(User.Identity.Name);
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            var result = await _voucherService.GetAccountVoucher(accountId);
 
             if (result == null)
                 return BadRequest("Cannot get account voucher.");
@@ -47,7 +48,7 @@ namespace SunriseServer.Controllers
             return Ok(result.ToList());
         }
 
-        [HttpPost(""), Authorize(Roles = GlobalConstant.Admin)] // , Authorize(Roles = GlobalConstant.Admin)
+        [HttpPost(""), Authorize(Roles = GlobalConstant.Admin)]
         public async Task<ActionResult<ResponseMessageDetails<int>>> AddVoucher(AddVoucherDto voucherDto)
         {
             var result = await _voucherService.CreateVoucher(voucherDto);
@@ -83,7 +84,8 @@ namespace SunriseServer.Controllers
         [HttpPut("account-rank"), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateAccountRank()
         {
-            var result = await _voucherService.UpdateAccountRank(User.Identity.Name);
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            var result = await _voucherService.UpdateAccountRank(accountId);
 
             if (result == 0)
                 return NotFound("Account not found.");
@@ -94,7 +96,8 @@ namespace SunriseServer.Controllers
         [HttpPost("redeem"), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<int>>> RedeemVoucher(int voucherId)
         {
-            var result = await _voucherService.RedeemVoucher(User.Identity.Name, voucherId);
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            var result = await _voucherService.RedeemVoucher(accountId, voucherId);
 
             if (result == 0)
                 return NotFound("Account not found.");

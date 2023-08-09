@@ -21,22 +21,18 @@ namespace SunriseServerData.Repositories
             _dataContext = dataContext;
         }
 
-        public async Task<List<Order>> GetAccountOrderAsync(string email)
+        public async Task<List<Order>> GetAccountOrderAsync(int accountId)
         {
-            var builder = new StringBuilder($"DECLARE @Id INT = dbo.USF_GetAccountId('{email}');\n");
-            builder.Append($"EXEC USP_GetAllAccountOrder @AccountId=@Id;");
-
-            var result = await _dataContext.Order.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            var result = await _dataContext.Order.FromSqlInterpolated($"EXEC USP_GetAllAccountOrder @AccountId={accountId};").ToListAsync();
             return result;
         }
 
-        public async Task<int> CreateOrderAsync(ListOrderDto order, string email)
+        public async Task<int> CreateOrderAsync(ListOrderDto order, int accountId)
         {
             var builder = new StringBuilder("DECLARE @BookingId INT, @OrderId INT, @Total INT;\n");
-            builder.Append($"DECLARE @Id INT = dbo.USF_GetAccountId('{email}');\n");
 
             var str = SetPropValueByReflection.GetPropProcCallString(order);
-            str = str.Replace("@AccountId=0", "@AccountId=@Id");
+            str = str.Replace("@AccountId=0", $"@AccountId={accountId}");
             str = str.Replace("@FullName=", "@FullName=N");
             str = str.Replace("@Nation=", "@Nation=N");
             str = str.Replace("@SpecialNeeds=", "@SpecialNeeds=N");
@@ -55,11 +51,11 @@ namespace SunriseServerData.Repositories
                 foreach (var hotel in item)
                 {
                     var booking = SetPropValueByReflection.GetPropProcCallString(hotel);
-                    builder.Append($"EXEC @BookingId = USP_AddBooking @AccountId=@Id, {booking}");
+                    builder.Append($"EXEC @BookingId = USP_AddBooking @AccountId={accountId}, {booking}");
                     builder.Append($"EXEC USP_AddBookingByOrderId @OrderId, @BookingId;\n");
                 }
 
-                builder.Append($"EXEC USP_ConfirmOrder @OrderId=null, @AccountId={order.AccountId}, @VoucherId=0;\n");
+                builder.Append($"EXEC USP_ConfirmOrder @OrderId=null, @AccountId={accountId}, @VoucherId=0;\n");
             }
 
             var sqlString = builder.ToString();

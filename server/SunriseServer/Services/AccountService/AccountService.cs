@@ -35,12 +35,28 @@ namespace SunriseServer.Services.AccountService
             return result!;
         }
 
+        public int GetMyId()
+        {
+            var result = 0;
+            if (_httpContextAccessor.HttpContext != null)
+            {
+                var str = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Sid);
+                Int32.TryParse(str, out result);
+            }
+            return result!;
+        }
+
+        public async Task<int> GetNextAccountId()
+        {
+            return await _unitOfWork.AccountRepo.GetNextAccountIdAsync();
+        }
+
         public async Task<Account> GetByUsername(string username)
         {
             return await _unitOfWork.AccountRepo.GetByUsername(username);
         }
 
-        public async Task<Account> GetByUsername(int id)
+        public async Task<Account> GetById(int id)
         {
             return await _unitOfWork.AccountRepo.GetByIdAsync(id);
         }
@@ -53,11 +69,6 @@ namespace SunriseServer.Services.AccountService
         public void SaveChanges()
         {
             _unitOfWork.SaveChanges();
-        }
-
-        public async Task<Account> GetById(int id)
-        {
-            return await _unitOfWork.AccountRepo.GetByIdAsync(id);
         }
 
         public async Task<PersonalDetail> GetAccountDetailsByEmail(string email)

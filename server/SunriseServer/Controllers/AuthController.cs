@@ -44,6 +44,7 @@ namespace SunriseServer.Controllers
 
             acc = new Account();
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            acc.Id = await _accService.GetNextAccountId();
             acc.Email = request.Email;
             acc.PasswordHash = Helper.ByteArrayToString(passwordHash);
             acc.PasswordSalt = Helper.ByteArrayToString(passwordSalt);
@@ -68,6 +69,7 @@ namespace SunriseServer.Controllers
 
             acc = new Account();
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            acc.Id = await _accService.GetNextAccountId();
             acc.Email = request.Email;
             acc.FullName = request.FullName;
             acc.PasswordHash = Helper.ByteArrayToString(passwordHash);
@@ -97,6 +99,7 @@ namespace SunriseServer.Controllers
             // CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             acc = new Account ()
             {
+                Id = await _accService.GetNextAccountId(),
                 Email = request.Email,
                 FullName = request.FullName,
                 PasswordHash = "Default",
@@ -196,7 +199,8 @@ namespace SunriseServer.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, acc.Email),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, role),
+                new Claim(ClaimTypes.Sid, acc.Id.ToString())
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(

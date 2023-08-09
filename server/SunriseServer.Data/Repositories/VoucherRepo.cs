@@ -35,12 +35,9 @@ namespace SunriseServerData.Repositories
             return result.FirstOrDefault();
         }
 
-        public async Task<List<VoucherBag>> GetAccountVoucherAsync(string email)
+        public async Task<List<VoucherBag>> GetAccountVoucherAsync(int accountId)
         {
-            var builder = new StringBuilder($"DECLARE @Id INT = dbo.USF_GetAccountId('{email}');\n");
-            builder.Append($"EXEC USP_GetUserVoucher @AccountId=@Id;");
-
-            var result = await _dataContext.VoucherBag.FromSqlInterpolated($"EXECUTE({builder.ToString()});").ToListAsync();
+            var result = await _dataContext.VoucherBag.FromSqlInterpolated($"EXEC USP_GetUserVoucher @AccountId={accountId};").ToListAsync();
             return result;
         }
 
@@ -75,22 +72,16 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
-        public async Task<int> UpdateAccountRankAsync(string email)
+        public async Task<int> UpdateAccountRankAsync(int accountId)
         {
-            var builder = new StringBuilder($"DECLARE @Id INT = dbo.USF_GetAccountId('{email}');\n");
-            builder.Append($"EXEC USP_UpdateAccountRank @AccountId=@Id;");
-
-            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()});");
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXEC USP_UpdateAccountRank @AccountId={accountId};");
             return result;
         }
 
-        public async Task<int> RedeemVoucherAsync(string email, int voucherId)
+        public async Task<int> RedeemVoucherAsync(int accountId, int voucherId)
         {
-            var builder = new StringBuilder($"DECLARE @Id INT = dbo.USF_GetAccountId('{email}');\n");
-            builder.Append($"EXEC USP_RedeemVoucher @AccountId=@Id, @VoucherId={voucherId};");
-
             var result = await _dataContext.Database
-                .ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+                .ExecuteSqlInterpolatedAsync($"EXEC USP_RedeemVoucher @AccountId={accountId}, @VoucherId={voucherId};");
             return result;
         }
     }

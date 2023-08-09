@@ -26,10 +26,12 @@ namespace SunriseServer.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet, Authorize(Roles = GlobalConstant.User)] //, Authorize(Roles = GlobalConstant.User)
+        [HttpGet, Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<List<Order>>> GetAccountOrder()
         {
-            var result = await _orderService.GetAccountOrder(User.Identity.Name);
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+
+            var result = await _orderService.GetAccountOrder(accountId);
 
             if (result is null)
                 return NotFound("Cannot add booking.");
@@ -37,12 +39,14 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpPost, Authorize(Roles = GlobalConstant.User)] //, Authorize(Roles = GlobalConstant.User)
+        [HttpPost, Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<int>>> AddOrder(InputOrderDto orderDto)
         {
             var orderInfo = new ListOrderDto();
             SetPropValueByReflection.AddYToX(orderInfo, orderDto);
-            var result = await _orderService.CreateOrder(orderInfo, User.Identity.Name);
+
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            var result = await _orderService.CreateOrder(orderInfo, accountId);
 
             if (result == 0)
                 return BadRequest("Cannot add booking.");

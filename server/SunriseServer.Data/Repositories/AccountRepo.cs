@@ -24,8 +24,9 @@ namespace SunriseServerData.Repositories
             var builder = new StringBuilder(@"
                 DECLARE @result INT
                 EXEC @result = dbo.USP_AddAccount ");
+            builder.Append($"@Id = \'{acc.Id}\', ");
             builder.Append($"@Email = \'{acc.Email}\', ");
-            builder.Append($"@FullName = \'{acc.FullName}\', ");
+            builder.Append($"@FullName = N\'{acc.FullName}\', ");
             builder.Append($"@PasswordHash = \'{acc.PasswordHash}\', ");
             builder.Append($"@PasswordSalt = \'{acc.PasswordSalt}\', ");
             builder.Append($"@UserRole = \'{acc.UserRole}\', ");
@@ -74,6 +75,17 @@ namespace SunriseServerData.Repositories
                 .ToListAsync();
 
             return (result.FirstOrDefault()).MyValue;
-        }  
+        }
+
+        public async Task<int> GetNextAccountIdAsync()
+        {
+            var builder = new StringBuilder("dbo.USP_GetNextColumnId 'ACCOUNT', 'Id'");
+
+            var result = await _dataContext.Set<MyFuctionReturn>()
+                .FromSqlInterpolated($"DECLARE @Id INT;EXEC @Id = dbo.USP_GetNextColumnId 'ACCOUNT', 'Id';SELECT @Id;")
+                .ToListAsync();
+
+            return (result.FirstOrDefault()).MyValue;
+        } 
     }
 }

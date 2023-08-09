@@ -1,14 +1,13 @@
 ﻿USE MASTER
 GO
 
-IF DB_ID('SunriseDatabase') IS NOT NULL
-	DROP DATABASE SunriseDatabase
+DROP DATABASE IF EXISTS [sunrise-hotel];
 GO
 
-CREATE DATABASE SunriseDatabase
+CREATE DATABASE [sunrise-hotel]
 GO
 
-USE SunriseDatabase
+USE [sunrise-hotel]
 GO
 
 --!Hotel 

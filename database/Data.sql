@@ -96,6 +96,41 @@ INSERT INTO HOTEL VALUES(10, N'Crown Hotel Nha Trang',N'Việt Nam','HOTEL',N'Nh
 	N'Tọa lạc tại thành phố Nha Trang, cách Bãi biển Nha Trang 300 m, Crown Hotel Nha Trang cung cấp chỗ nghỉ với trung tâm thể dục, chỗ đỗ xe riêng miễn phí, sảnh khách chung và nhà hàng. Khách sạn 4 sao này có dịch vụ tiền sảnh, bàn đặt tour, lễ tân 24 giờ, dịch vụ đưa đón sân bay, dịch vụ phòng và WiFi miễn phí.',
 	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Crown%20Hotel%20Nha%20Trang/Crown%20Hotel%20Nha%20Trang.jpg');
 
+INSERT INTO HOTEL VALUES(11, N'Fati Botique Hotel Vũng Tàu', N'Việt Nam', 'HOTEL', N'Vũng Tàu',
+	N'112/3 Trần Phú Tòa nhà Fati Boutique, 112/3 Trần Phú, Phường 5, Vũng Tàu, Việt Nam',
+ 	4, 0,
+	N'Tọa lạc tại thành phố Vũng Tàu, cách Bãi Dâu vài bước chân, Fati Boutique Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, khu vườn, sân hiên và WiFi miễn phí.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg');
+
+INSERT INTO HOTEL VALUES(12, N'Halios Luxury Hotel Hạ Long', N'Việt Nam', 'HOTEL', N'Quảng Ninh',
+	N'38 Nguyễn Du, Hồng Gai, Thành phố Hạ Long, Quảng Ninh, Việt Nam',
+ 	5, 0,
+	N'Tọa lạc tại thành phố Vũng Tàu, cách Bãi Dâu vài bước chân, Fati Boutique Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, khu vườn, sân hiên và WiFi miễn phí.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg');
+
+INSERT INTO HOTEL VALUES(13, N'Mi Nhon Em Hotel Muine Phan Thiết', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+	N' 202 Nguyễn Đình Chiểu Kp 2, Ham Tien Village, Hòa Bình, Tp. Phan Thiết, Bình Thuận, Việt Nam',
+ 	3, 0,
+	N'Nằm ở thành phố Phan Thiết, cách Bãi biển Hàm Tiến vài bước chân, Mi Nhon Em Hotel Muine cung cấp chỗ nghỉ với xe đạp cho khách sử dụng miễn phí, chỗ đỗ xe riêng miễn phí, hồ bơi ngoài trời và khu vườn.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg');
+
+INSERT INTO HOTEL VALUES(14, N'DeLaSol Sapa Hotel', N'Việt Nam', 'HOTEL', N'Lào Cai',
+	N'16 Mường Hoa 16, Sa Pa, Việt Nam',
+ 	4, 0,
+	N'Tọa lạc tại thành phố Vũng Tàu, cách Bãi Dâu vài bước chân, Fati Boutique Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, khu vườn, sân hiên và WiFi miễn phí.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg');
+
+INSERT INTO HOTEL VALUES(15, N'Pistachio Sapa Hotel', N'Việt Nam', 'HOTEL', N'Lào Cai',
+	N'Số 5, Thác Bạc Street, Sapa, Lào Cai, Sa Pa, Việt Nam',
+ 	4, 0,
+	N'Nằm ở thị xã Sa Pa, cách Ga cáp treo Fansipan Legend 4,6 km, Pistachio Hotel Sapa cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, trung tâm thể dục và sảnh khách chung.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Pistachio%20Hotel%20Sapa/200762189.jpg');
+
+INSERT INTO HOTEL VALUES(16, N'Star City Riverside By Haviland Hotel', N'Việt Nam', 'HOTEL', N'Đà Nẵng',
+	N'147-149 Trần Hưng Đạo, Nại Hiên Đông, Sơn Trà, Đà Nẵng, Việt Nam',
+ 	5, 0,
+	N'Nằm bên bờ Sông Hàn, Star City Riverside By Haviland cung cấp không gian sinh hoạt hiện đại với tầm nhìn ra toàn cảnh thành phố Đà Nẵng.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/428612339.jpg');
 
 --!add room Facility
 INSERT INTO FACILITY_CONST VALUES(1,'SWIMMING_POOL');
@@ -656,6 +691,223 @@ INSERT INTO ROOM_SERVICE VALUES(10,2,1);
 INSERT INTO ROOM_SERVICE VALUES(10,3,1);
 
 
+----todo Fati Botique Hotel Vũng Tàu
+INSERT INTO ROOM_TYPE VALUES(11, 1, N'Suite Deluxe Gia Đình', 2, 60,4300000,
+	N'Phòng giường tầng này có ấm đun nước điện, tủ lạnh mini, nước lọc',
+	N'Nhìn ra thành phố, Nhìn ra địa danh nổi tiếng',
+	'BUNK');
+INSERT INTO ROOM_TYPE VALUES(11, 2, N'Suite Royal Nhìn ra Biển', 2, 70,4800000,
+	N'Phòng giường đôi này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Nhìn ra biển, Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng',
+	'DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(11, 3, N'Suite President Nhìn ra Thành Phố', 3, 80,5300000,
+	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'LARGE_DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(11,1,1);
+INSERT INTO ROOM_FACILITY VALUES(11,1,2);
+INSERT INTO ROOM_FACILITY VALUES(11,1,3);
+
+INSERT INTO ROOM_FACILITY VALUES(11,2,4);
+INSERT INTO ROOM_FACILITY VALUES(11,2,5);
+INSERT INTO ROOM_FACILITY VALUES(11,2,6);
+
+INSERT INTO ROOM_FACILITY VALUES(11,3,7);
+INSERT INTO ROOM_FACILITY VALUES(11,3,6);
+
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(11,1,2);
+INSERT INTO ROOM_SERVICE VALUES(11,1,4);
+
+INSERT INTO ROOM_SERVICE VALUES(11,2,3);
+
+INSERT INTO ROOM_SERVICE VALUES(11,3,5);
+INSERT INTO ROOM_SERVICE VALUES(11,3,4);
+
+----todo Halios Luxury Halong Hotel
+INSERT INTO ROOM_TYPE VALUES(12, 1, N'Suite Deluxe Giường Đôi / 2 Giường Đơn', 2, 60,4200000,
+	N'Phòng giường tầng này có ấm đun nước điện, tủ lạnh mini, nước lọc',
+	N'Nhìn ra thành phố, Nhìn ra địa danh nổi tiếng',
+	'SINGLE_OR_TWIN');
+INSERT INTO ROOM_TYPE VALUES(12, 2, N'Suite có Giường cỡ King và Bồn Tắm Spa', 2, 70,4700000,
+	N'Phòng giường đôi này có ấm đun nước điện, sofa, bàn ghế trang điểm, Bồn tắm spa, máy sấy.',
+	N'Nhìn ra biển, Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng',
+	'DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(12, 3, N'Suite', 3, 80,5100000,
+	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'LARGE_DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(12,1,1);
+INSERT INTO ROOM_FACILITY VALUES(12,1,2);
+INSERT INTO ROOM_FACILITY VALUES(12,1,3);
+
+INSERT INTO ROOM_FACILITY VALUES(12,2,4);
+INSERT INTO ROOM_FACILITY VALUES(12,2,5);
+INSERT INTO ROOM_FACILITY VALUES(12,2,6);
+
+INSERT INTO ROOM_FACILITY VALUES(12,3,7);
+INSERT INTO ROOM_FACILITY VALUES(12,3,6);
+
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(12,1,2);
+INSERT INTO ROOM_SERVICE VALUES(12,1,4);
+
+INSERT INTO ROOM_SERVICE VALUES(12,2,3);
+
+INSERT INTO ROOM_SERVICE VALUES(12,3,5);
+INSERT INTO ROOM_SERVICE VALUES(12,3,4);
+
+----todo Mi Nhon Em Hotel Muine Phan Thiết
+INSERT INTO ROOM_TYPE VALUES(13, 1, N'Suite Junior', 2, 60,4200000,
+	N'Phòng giường tầng này có ấm đun nước điện, tủ lạnh mini, nước lọc',
+	N'Nhìn ra thành phố, Nhìn ra địa danh nổi tiếng',
+	'BUNK');
+INSERT INTO ROOM_TYPE VALUES(13, 2, N'Suite Senior Nhìn ra biển', 2, 70,4500000,
+	N'Phòng giường lớn này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Nhìn ra biển, Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng',
+	'LARGE');
+INSERT INTO ROOM_TYPE VALUES(13, 3, N'Suite Gia Đình Có Cửa Thông Nhìn ra Biển', 3, 80,5200000,
+	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'LARGE_DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(13,1,11);
+INSERT INTO ROOM_FACILITY VALUES(13,1,4);
+INSERT INTO ROOM_FACILITY VALUES(13,1,7);
+
+INSERT INTO ROOM_FACILITY VALUES(13,2,2);
+INSERT INTO ROOM_FACILITY VALUES(13,2,5);
+INSERT INTO ROOM_FACILITY VALUES(13,2,9);
+
+INSERT INTO ROOM_FACILITY VALUES(13,3,7);
+INSERT INTO ROOM_FACILITY VALUES(13,3,6);
+INSERT INTO ROOM_FACILITY VALUES(13,3,9);
+INSERT INTO ROOM_FACILITY VALUES(13,3,12);
+
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(13,1,2);
+
+INSERT INTO ROOM_SERVICE VALUES(13,2,4);
+INSERT INTO ROOM_SERVICE VALUES(13,2,3);
+
+INSERT INTO ROOM_SERVICE VALUES(13,3,5);
+INSERT INTO ROOM_SERVICE VALUES(13,3,4);
+
+----todo DelaSol Sapa Hotel
+INSERT INTO ROOM_TYPE VALUES(14, 1, N'Suite President có Ban công', 2, 60,4500000,
+	N'Phòng một giường lớn này có ấm đun nước điện, Smart TV,bếp điện từ, minibar, đồ nội thất.',
+	N'Ban công,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng',
+	'LARGE');
+INSERT INTO ROOM_TYPE VALUES(14, 2, N'Suite Royal có Ban công', 2, 45,4800000,
+	N'Phòng giường đôi này có ấm đun nước điện, két sắt, bể sục, minibar và bàn trang điểm',
+	N'Ban công, Nhìn ra thành biển, Nhìn ra địa thành phố',
+	'DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(14, 3, N'Suite Luxury 3 Người', 3, 80,5500000,
+	N'Phòng giường đôi lớn này có ấm đun nước điện, sofa, điều hòa, minibar và đẩy đủ đồ nội thất..',
+	N'Nhìn ra núi, Nhìn ra rừng, Nhìn ra địa danh nổi tiếng',
+	'LARGE_DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(14,1,12);
+INSERT INTO ROOM_FACILITY VALUES(14,1,13);
+INSERT INTO ROOM_FACILITY VALUES(14,1,3);
+INSERT INTO ROOM_FACILITY VALUES(14,1,7);
+
+INSERT INTO ROOM_FACILITY VALUES(14,2,4);
+INSERT INTO ROOM_FACILITY VALUES(14,2,5);
+INSERT INTO ROOM_FACILITY VALUES(14,2,6);
+
+INSERT INTO ROOM_FACILITY VALUES(14,3,7);
+INSERT INTO ROOM_FACILITY VALUES(14,3,10);
+INSERT INTO ROOM_FACILITY VALUES(14,3,11);
+INSERT INTO ROOM_FACILITY VALUES(14,3,16);
+
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(14,1,1);
+
+INSERT INTO ROOM_SERVICE VALUES(14,2,4);
+INSERT INTO ROOM_SERVICE VALUES(14,2,3);
+
+INSERT INTO ROOM_SERVICE VALUES(14,3,1);
+INSERT INTO ROOM_SERVICE VALUES(14,3,4);
+INSERT INTO ROOM_SERVICE VALUES(14,3,5);
+
+----todo Pistachio Sapa Hotel
+INSERT INTO ROOM_TYPE VALUES(15, 1, N'Suite Junior', 2, 60,4200000,
+	N'Phòng giường tầng này có ấm đun nước điện, tủ lạnh mini, nước lọc',
+	N'Nhìn ra thành phố, Nhìn ra địa danh nổi tiếng',
+	'BUNK');
+INSERT INTO ROOM_TYPE VALUES(15, 2, N'Phòng Giường Đôi Có Ban Công', 2, 70,4500000,
+	N'Phòng giường đôi này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Ban công, Nhìn ra biển, Nhìn ra thành phố',
+	'DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(15, 3, N'Suite Panorama', 3, 80,5200000,
+	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'LARGE_DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(15,1,1);
+INSERT INTO ROOM_FACILITY VALUES(15,1,2);
+INSERT INTO ROOM_FACILITY VALUES(15,1,9);
+
+INSERT INTO ROOM_FACILITY VALUES(15,2,4);
+INSERT INTO ROOM_FACILITY VALUES(15,2,6);
+INSERT INTO ROOM_FACILITY VALUES(15,2,8);
+
+INSERT INTO ROOM_FACILITY VALUES(15,3,7);
+INSERT INTO ROOM_FACILITY VALUES(15,3,10);
+
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(15,1,2);
+INSERT INTO ROOM_SERVICE VALUES(15,1,4);
+
+INSERT INTO ROOM_SERVICE VALUES(15,2,3);
+
+INSERT INTO ROOM_SERVICE VALUES(15,3,5);
+INSERT INTO ROOM_SERVICE VALUES(15,3,4);
+
+----todo Star city Riverside by Haviland Hotel
+INSERT INTO ROOM_TYPE VALUES(16, 1, N'Suite Junior Giường Tầng Nhìn Ra Biển', 2, 60,4200000,
+	N'Phòng giường tầng này có ấm đun nước điện, tủ lạnh mini, nước lọc',
+	N'Nhìn ra biển, Nhìn ra địa danh nổi tiếng',
+	'BUNK');
+INSERT INTO ROOM_TYPE VALUES(16, 2, N'Phòng Excutive 2 Người', 2, 70,4500000,
+	N'Phòng giường đôi này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Nhìn ra biển, Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng',
+	'DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(16, 3, N'Phòng Superior 4 Người', 3, 80,5200000,
+	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Ban công rộng,Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng',
+	'LARGE_DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(16,1,1);
+INSERT INTO ROOM_FACILITY VALUES(16,1,3);
+INSERT INTO ROOM_FACILITY VALUES(16,1,4);
+
+INSERT INTO ROOM_FACILITY VALUES(16,2,5);
+INSERT INTO ROOM_FACILITY VALUES(16,2,7);
+INSERT INTO ROOM_FACILITY VALUES(16,2,12);
+
+INSERT INTO ROOM_FACILITY VALUES(16,3,11);
+INSERT INTO ROOM_FACILITY VALUES(16,3,12);
+
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(16,1,2);
+INSERT INTO ROOM_SERVICE VALUES(16,1,4);
+
+INSERT INTO ROOM_SERVICE VALUES(16,2,3);
+
+INSERT INTO ROOM_SERVICE VALUES(16,3,1);
+INSERT INTO ROOM_SERVICE VALUES(16,3,4);
+
+
 --! add room picture 
 --todo Triple E Hotel Metro Ben Thanh
 INSERT INTO ROOM_PICTURE VALUES(1,1,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Triple%20E%20Hotel%20Metro%20Ben%20Thanh/Suite%20Deluxe1.jpg');
@@ -788,6 +1040,69 @@ INSERT INTO ROOM_PICTURE VALUES(10,2,3,'https://atarceni.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(10,3,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Crown%20Hotel%20Nha%20Trang/Ph%C3%B2ng%20Superior%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i.2%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C6%A1n%20Nh%C3%ACn%20Ra%20Th%C3%A0nh%20Ph%E1%BB%911.jpg');
 INSERT INTO ROOM_PICTURE VALUES(10,3,2,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Crown%20Hotel%20Nha%20Trang/Ph%C3%B2ng%20Superior%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i.2%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C6%A1n%20Nh%C3%ACn%20Ra%20Th%C3%A0nh%20Ph%E1%BB%912.jpg');
 INSERT INTO ROOM_PICTURE VALUES(10,3,3,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Crown%20Hotel%20Nha%20Trang/Ph%C3%B2ng%20Superior%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i.2%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C6%A1n%20Nh%C3%ACn%20Ra%20Th%C3%A0nh%20Ph%E1%BB%913.jpg');
+
+----todo Star city Riverside by Haviland Hotel
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/245832649.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/246006672.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/246008656.jpg
+
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/246030927.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/346320600.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/346321690.jpg
+
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/428612339.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/441637874.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/77598478.jpg
+
+----todo DelaSol Sapa Hotel
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/DeLaSol%20Sapa%20Hotel/349612057.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/DeLaSol%20Sapa%20Hotel/349612102.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/DeLaSol%20Sapa%20Hotel/349612140.jpg
+
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/DeLaSol%20Sapa%20Hotel/349612055.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/DeLaSol%20Sapa%20Hotel/349611959.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/DeLaSol%20Sapa%20Hotel/340502432.jpg
+
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/DeLaSol%20Sapa%20Hotel/340502431.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/DeLaSol%20Sapa%20Hotel/340502425.jpg
+
+----todo Mi Nhon Em Hotel Muine Phan Thiết
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mi%20Nhon%20Em%20Hotel%20Muine/425765463.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mi%20Nhon%20Em%20Hotel%20Muine/425765562.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mi%20Nhon%20Em%20Hotel%20Muine/425788880.jpg
+
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mi%20Nhon%20Em%20Hotel%20Muine/425788884.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mi%20Nhon%20Em%20Hotel%20Muine/431896528.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mi%20Nhon%20Em%20Hotel%20Muine/434307989.jpg
+
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mi%20Nhon%20Em%20Hotel%20Muine/434961924.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mi%20Nhon%20Em%20Hotel%20Muine/434961996.jpg
+
+----todo Fati Botique Hotel Vũng Tàu
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/336208771.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/336292390.jpg
+
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/337086341.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/334384752.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/334369573.jpg
+
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/334369572.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/334369565.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/334369514.jpg
+
+----todo Pistachio Sapa Hotel
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Pistachio%20Hotel%20Sapa/200762189.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Pistachio%20Hotel%20Sapa/200762157.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Pistachio%20Hotel%20Sapa/200759957.jpg
+
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Pistachio%20Hotel%20Sapa/261685187.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Pistachio%20Hotel%20Sapa/269775654.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Pistachio%20Hotel%20Sapa/326287377.jpg
+
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Pistachio%20Hotel%20Sapa/413493798.jpg
+https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Pistachio%20Hotel%20Sapa/413435145.jpg
+
 
 insert into REVIEW (AccountId, HotelId, Points, Content) 
 values 

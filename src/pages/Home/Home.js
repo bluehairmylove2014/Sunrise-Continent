@@ -368,13 +368,15 @@ const Home = () => {
           <>
             {/* Hotel list */}
             <div className="home-trending__trending-list">
-              <TrendingHotel hotelShortDescribeList={hotHotelData} />
+              <TrendingHotel
+                hotelShortDescribeList={hotHotelData.slice(0, 6)}
+              />
             </div>
 
             {/* Page Pagination */}
             <div className="home-trending__page-pagination-wrapper">
               <p className="home-trending__page-limit">
-                Showing 7-12 of 121 trips
+                Hiển thị 0 - 6 trong {hotHotelData.length} khách sạn
               </p>
               {hotHotelData.length > 1 && (
                 <div className="home-trending__page-pagination">

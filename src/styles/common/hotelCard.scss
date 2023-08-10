@@ -1,7 +1,6 @@
 @import '../partial/mixin';
 
 .common-component__hotel-card--vertical {
-    cursor: pointer;
     width: 100%;
 
     .cc-hotel-card__top--v {
@@ -24,16 +23,11 @@
             margin-bottom: 0.5rem;
             // direction - justify content - align items - flex wrap
             @include dflex(row, space-between, center, nowrap);
+            height: 50px;
 
             h4 {
-                // direction - justify content - align items - flex wrap
-                @include dflex(row, space-between, flex-start, nowrap);
                 font-weight: 600;
-            }
-
-            button {
-                // border - border radius - background color - color - padding - font size
-                @include normal-btn(0, 0, transparent, black, auto, 1.25rem);
+                @include limit-line(2);
             }
         }
 

@@ -20,7 +20,7 @@ export const useAddToCart = () => {
 
   const onAddToCart = debouncePromise((params) => {
     return new Promise((resolve, reject) => {
-      addToCart(params.item, params.quantity);
+      addToCart(params.item);
       if (!state.accessToken) {
         // NOT LOGGED IN
         // Add to cart under LocalStorage & context
@@ -30,7 +30,7 @@ export const useAddToCart = () => {
         // Add to cart on server
         // Update cart first to change the interface first
         const localCart = getCartLocalStorage();
-        if (localCart?.items?.length) {
+        if (localCart.length) {
           // Check if there is a cart in LocalStorage yet
           // If there is and the cart currently has products then
           // update the cart in the database with this cart
@@ -52,9 +52,7 @@ export const useAddToCart = () => {
                 .catch((err) => {
                   console.error("Get refresh cart error: ", err);
                   // If there is an error, clear the entire cart
-                  setCart({
-                    items: [],
-                  });
+                  setCart([]);
                 });
               reject(error);
             });

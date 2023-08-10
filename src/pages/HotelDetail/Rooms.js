@@ -20,7 +20,7 @@ import { toast } from "react-hot-toast";
 import TypingLoader from "../../components/common/Loader/TypingLoader";
 // import { formatDate } from "../../utils/helpers/ShortenDatetime";
 
-const Rooms = ({ rooms_data }) => {
+const Rooms = ({ rooms_data, openGallery }) => {
   let room = null;
   const { id, ...dateTimeParams } = parseSearchParams(useLocation().search);
   const pickerFormDefaultValue = {
@@ -94,7 +94,10 @@ const Rooms = ({ rooms_data }) => {
                   );
                 })}
               </div>
-              <button className="main-infor__view-all-img">
+              <button
+                className="main-infor__view-all-img"
+                onClick={() => openGallery(rd.picture)}
+              >
                 Xem tất cả ảnh
               </button>
 

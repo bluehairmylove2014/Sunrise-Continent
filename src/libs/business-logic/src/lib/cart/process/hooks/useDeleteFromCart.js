@@ -34,9 +34,7 @@ export const useDeleteFromCart = () => {
               })
               .catch((err) => {
                 // If error, clear the entire cart
-                setCart({
-                  items: [],
-                });
+                setCart([]);
               });
             reject(error);
           });

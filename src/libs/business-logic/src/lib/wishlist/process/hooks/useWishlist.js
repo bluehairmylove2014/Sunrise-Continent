@@ -20,7 +20,7 @@ export const useWishlist = () => {
               payload: newWishlist,
             });
             setLocalWishlist(newWishlist);
-            resolve("Thêm vào giỏ hàng thành công");
+            resolve("Thêm vào yêu thích thành công");
           }
         } else {
           dispatch({
@@ -28,7 +28,7 @@ export const useWishlist = () => {
             payload: [item],
           });
           setLocalWishlist([item]);
-          resolve("Thêm vào giỏ hàng thành công");
+          resolve("Thêm vào yêu thích thành công");
         }
       } catch (error) {
         console.error(error);
@@ -51,7 +51,7 @@ export const useWishlist = () => {
             payload: newWishlist,
           });
           setLocalWishlist(newWishlist);
-          resolve("Xoá giỏ hàng thành công");
+          resolve("Xoá yêu thích thành công");
         } catch (error) {
           console.error(error);
           reject(new Error("Unknown error"));

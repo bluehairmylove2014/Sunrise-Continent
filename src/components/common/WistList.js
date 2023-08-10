@@ -119,7 +119,7 @@ const WistList = ({ isActive, callback }) => {
         </div>
       </div>
       <YesNoConfirm
-        label={"Bạn muốn xoá tôi khỏi wishlist ư?"}
+        label={"Bạn muốn xoá tôi khỏi yêu thích ư?"}
         callback={handleDeleteFromWishlist}
         ref={popUpRef}
       />

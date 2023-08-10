@@ -59,6 +59,14 @@ const getSpecificRoomSchema = z.object({
 const getRoomsSchema = z.array(getSpecificRoomSchema);
 
 const getHotHotelSchema = z.array(hotelDetailSchema);
+const getPictureSchema = z.array(
+  z.object({
+    hotelId: z.number(),
+    roomTypeId: z.number(),
+    id: z.number(),
+    pictureLink: z.string(),
+  })
+);
 
 export {
   searchSchema,
@@ -67,4 +75,5 @@ export {
   getSpecificRoomSchema,
   getHotHotelSchema,
   getRoomsSchema,
+  getPictureSchema,
 };

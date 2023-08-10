@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import { combineAddress } from "../../utils/helpers/Address";
 import { pointToLabel } from "../../utils/helpers/Rating";
@@ -9,18 +9,64 @@ import {
   ACCOMMODATION_FACILITIES,
   ROOM_OPTIONS,
 } from "../../constants/filter.constants";
-import map_img from "../../assets/images/graphics/image 31.png";
+// import map_img from "../../assets/images/graphics/image 31.png";
 import Rooms from "./Rooms";
 import {
   useGetHotelDetail,
   useGetRooms,
 } from "../../libs/business-logic/src/lib/hotel/process/hooks";
+import Gallery from "../../components/common/Gallery";
+import { useGetPictures } from "../../libs/business-logic/src/lib/hotel/process/hooks/useGetPictures";
+// import {
+//   hotelDetailMockData,
+//   pictureMockData,
+//   roomsMockData,
+// } from "./MockData";
+
+function numberToWord(number) {
+  const words = [
+    "zero",
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+  ];
+
+  if (number >= 0 && number < words.length) {
+    return words[number];
+  } else {
+    return "Invalid number";
+  }
+}
 
 const HotelDetail = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const hotelId = urlParams.get("id");
   const { data: hotelData } = useGetHotelDetail(hotelId);
   const roomsData = useGetRooms(hotelId);
+  const picturesData = useGetPictures({ id: hotelId });
+  // const hotelData = hotelDetailMockData;
+  // const roomsData = roomsMockData;
+  // const picturesData = pictureMockData;
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const previewImage = picturesData ? [...picturesData.slice(0, 5)] : null;
+  const [roomGallery, setRoomGallery] = useState(null);
+
+  const openRoomGallery = (roomPicture) => {
+    setRoomGallery(roomPicture);
+    setIsGalleryOpen(true);
+  };
+
+  const handleCloseGallery = (value) => {
+    setIsGalleryOpen(value);
+    setTimeout(() => setRoomGallery(null), 500);
+  };
 
   const renderAmenities = (facilities) => {
     if (!Array.isArray(facilities)) return <></>;
@@ -96,7 +142,7 @@ const HotelDetail = () => {
                       .scrollIntoView({ behavior: "smooth" })
                   }
                 >
-                  Show available room
+                  Xem phòng ngay
                 </button>
               </div>
             </div>
@@ -104,48 +150,34 @@ const HotelDetail = () => {
         </div>
       </section>
       <div className="container">
-        <section className="hotel-detail__gallery">
-          <button>
-            <img src={hotelData.image} alt="hotel 1" />
-          </button>
-          <button>
-            <img
-              src={`https://rialloer.sirv.com/Sunrise-Continent/hotels/7%20La%20Siesta%20Premium%20Sai%20Gon/409186486.jpg`}
-              alt="hotel 2"
-            />
-          </button>
-          <button>
-            <img
-              src={`https://rialloer.sirv.com/Sunrise-Continent/hotels/7%20La%20Siesta%20Premium%20Sai%20Gon/408965408.jpg`}
-              alt="hotel 1"
-            />
-          </button>
-          <button>
-            <img
-              src={`https://rialloer.sirv.com/Sunrise-Continent/hotels/7%20La%20Siesta%20Premium%20Sai%20Gon/408965292.jpg`}
-              alt="hotel 1"
-            />
-          </button>
-          <button>
-            <img
-              src={`https://rialloer.sirv.com/Sunrise-Continent/hotels/7%20La%20Siesta%20Premium%20Sai%20Gon/462028749.jpg`}
-              alt="hotel 1"
-            />
-          </button>
+        <section
+          className={`hotel-detail__gallery ${numberToWord(
+            picturesData ? previewImage.length : 0
+          )}`}
+        >
+          {previewImage ? (
+            previewImage.map((pi) => (
+              <button key={pi.id}>
+                <img src={pi.pictureLink} alt={hotelData.name} />
+              </button>
+            ))
+          ) : (
+            <></>
+          )}
 
-          <button className="gallery__view-all-btn">Xem tất cả ảnh</button>
+          <button
+            className="gallery__view-all-btn"
+            onClick={() => setIsGalleryOpen(true)}
+          >
+            Xem tất cả ảnh
+          </button>
         </section>
         <div className="custom-line-template">
           <img src={icon.lineIcon} alt="lineIcon" />
         </div>
         <section className="hotel-detail__description">
           <h3>Giới thiệu</h3>
-          <p>
-            Tọa lạc tại Manhattan, New York, HI New York City cách Công viên
-            Trung tâm và Đại học Columbia 15 phút đi bộ. Các tiện nghi nổi bật
-            bao gồm quầy lễ tân phục vụ 24/24, dịch vụ giữ hành lý và dịch vụ
-            giặt là. Khách sạn này có 5 phòng họp trống
-          </p>
+          <p>{hotelData.description}</p>
 
           <div className="description__room-options">
             {renderRoomOptions(hotelData.services)}
@@ -161,7 +193,7 @@ const HotelDetail = () => {
         <div className="custom-line-template">
           <img src={icon.lineIcon} alt="lineIcon" />
         </div>
-        <section className="hotel-detail__neighborhood">
+        {/* <section className="hotel-detail__neighborhood">
           <h3>Thành Phố và Khu Vực Lân Cận</h3>
 
           <img src={map_img} alt="ggmap" />
@@ -208,7 +240,7 @@ const HotelDetail = () => {
         </section>
         <div className="custom-line-template">
           <img src={icon.lineIcon} alt="lineIcon" />
-        </div>
+        </div> */}
         <section className="hotel-detail__reviews">
           <h3>Đánh giá</h3>
 
@@ -277,15 +309,6 @@ const HotelDetail = () => {
                   lưu và kết bạn mới. Tôi đã kết bạn với vô số người bạn mới và
                   những người bạn này đã thực hiện chuyến đi của tôi.
                 </p>
-
-                <div className="content__media">
-                  <div className="content__img-wrapper">
-                    <img
-                      src={`https://rialloer.sirv.com/Sunrise-Continent/hotels/7%20La%20Siesta%20Premium%20Sai%20Gon/409185038.jpg`}
-                      alt="review"
-                    />
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -316,7 +339,7 @@ const HotelDetail = () => {
                   những người bạn này đã thực hiện chuyến đi của tôi.
                 </p>
 
-                <div className="content__media">
+                {/* <div className="content__media">
                   <div className="content__img-wrapper">
                     <img
                       src={`https://rialloer.sirv.com/Sunrise-Continent/hotels/7%20La%20Siesta%20Premium%20Sai%20Gon/408965175.jpg`}
@@ -335,7 +358,7 @@ const HotelDetail = () => {
                       alt="review"
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -358,9 +381,14 @@ const HotelDetail = () => {
         <section id="rooms-section" className="hotel-detail__rooms">
           <h3>Chọn phòng</h3>
 
-          <Rooms rooms_data={roomsData} />
+          <Rooms rooms_data={roomsData} openGallery={openRoomGallery} />
         </section>
       </div>
+      <Gallery
+        data={roomGallery || picturesData}
+        isOpen={isGalleryOpen}
+        openCallback={handleCloseGallery}
+      />
     </main>
   ) : (
     <SunriseLoader />

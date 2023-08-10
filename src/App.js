@@ -20,10 +20,11 @@ import redux_store from "./redux/store";
 
 import { UserPageLayout } from "./components/layouts/UserPageLayout";
 import HomePage from "./pages/Home/Home";
-// Code spliting, lazy loading component=
+// Lazy loading component=
 const SearchPage = lazy(() => import("./pages/Search/Search"));
 const HotelDetail = lazy(() => import("./pages/HotelDetail/HotelDetail"));
 const PreCheckout = lazy(() => import("./pages/PreCheckout/PreCheckout"));
+const CountryPage = lazy(() => import("./pages/Country/Country"));
 const AuthenticationPage = lazy(() =>
   import("./pages/Authentication/Authentication")
 );
@@ -84,6 +85,14 @@ function App() {
                   element={
                     <UserPageLayout>
                       <PreCheckout />
+                    </UserPageLayout>
+                  }
+                />
+                <Route
+                  path={PAGES.COUNTRY}
+                  element={
+                    <UserPageLayout>
+                      <CountryPage />
                     </UserPageLayout>
                   }
                 />

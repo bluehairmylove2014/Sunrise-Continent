@@ -2,6 +2,7 @@ import { Services } from "../../service";
 import {
   bookingSchema,
   getHotHotelSchema,
+  getPictureSchema,
   getRoomsSchema,
   getSpecificRoomSchema,
   hotelDetailSchema,
@@ -17,6 +18,7 @@ export class HotelService extends Services {
   getSpecificRoomUrl = `/room/single`;
   getHotHotelUrl = `/hotel/recommend`;
   checkRoomAvailableUrl = `/hotel/booking`;
+  getPictureUrl = `/hotel/picture`;
 
   search = async (keys) => {
     this.abortController = new AbortController();
@@ -138,6 +140,27 @@ export class HotelService extends Services {
         data: params,
         signal: this.abortController.signal,
         transformResponse: (res) => res,
+      });
+      return response;
+    } catch (error) {
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error 6");
+        throw error;
+      }
+    }
+  };
+  getPictures = async (params) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "GET",
+        url: this.getPictureUrl,
+        schema: getPictureSchema,
+        params,
+        signal: this.abortController.signal,
+        transformResponse: (res) => res,
+        isProduction: true, // Do not have mock api now
       });
       return response;
     } catch (error) {

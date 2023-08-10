@@ -22,3 +22,8 @@ export const useGetHotHotelQuery = () => {
     hotelService.getHotHotel()
   );
 };
+export const useGetPicturesQuery = (hotelID) => {
+  return useQuery([QUERY_KEYS.GET_PICTURE, hotelID], () =>
+    hotelService.getPictures(hotelID)
+  );
+};

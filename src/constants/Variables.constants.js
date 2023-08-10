@@ -5,10 +5,6 @@ import {
   ROOM_OPTIONS,
 } from "./filter.constants";
 
-export const VARIABLES = {
-  AUTH_TOKEN_LSKEY: "authorization_token",
-  REMEMBER_ME_LSKEY: "remember_me_option",
-};
 export const BANNER_INPUT = {
   LOCATION: {
     INPUT_NAME: "location",
@@ -38,4 +34,9 @@ export const FILTER_INPUT = [
 export const CONVERSION_FACTOR = {
   ALL_TRIP: 100000,
   PER_ONE: 100000,
+};
+
+export const HOTEL_TYPE = {
+  VERTICAL: 1,
+  HORIZONTAL: 0,
 };

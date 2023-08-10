@@ -10,9 +10,9 @@ import { Link } from "react-router-dom";
 import { PAGES } from "../../constants/Link.constants";
 import { useWishlist } from "../../libs/business-logic/src/lib/wishlist";
 import { toast } from "react-hot-toast";
+import { HOTEL_TYPE } from "../../constants/Variables.constants";
 
-// hotelData: { id, name, imgUrl, star, rating, location, price, sale }
-const HotelCard = ({ hotelData }) => {
+const HotelCard = ({ hotelData, type }) => {
   const { addToWishlist } = useWishlist();
   const renderStar = (numberOfStar) => {
     let starList = [];
@@ -31,7 +31,7 @@ const HotelCard = ({ hotelData }) => {
         toast.error(error.message);
       });
   };
-  return (
+  return type === HOTEL_TYPE.VERTICAL ? (
     <div className="common-component__hotel-card--vertical">
       <div className="cc-hotel-card__top--v">
         <img src={hotelData.image} alt="hotel" />
@@ -40,8 +40,8 @@ const HotelCard = ({ hotelData }) => {
         <div className="cc-hotel-card-body__title">
           <h4>{hotelData.name}</h4>
           {/* <button>
-            <i className="fi fi-rs-heart"></i>
-          </button> */}
+              <i className="fi fi-rs-heart"></i>
+            </button> */}
           {/* <i className="fi fi-ss-heart"></i> */}
         </div>
         <div className="cc-hotel-card-body__rating">
@@ -93,6 +93,8 @@ const HotelCard = ({ hotelData }) => {
         </div>
       </div>
     </div>
+  ) : (
+    <></>
   );
 };
 

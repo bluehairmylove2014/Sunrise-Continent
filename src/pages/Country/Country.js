@@ -1,13 +1,17 @@
 import React from "react";
 import carEmptyIcon from "../../assets/images/graphics/car-empty.png";
 import "../../styles/component/country.scss";
+import { countryDetail } from "./MockData";
 
 const Country = () => {
-  const countryData = null;
+  const countryData = countryDetail;
   return (
     <>
       {countryData ? (
-        <>hello</>
+        <div className="countryDetail">
+          <div className="countryDetail__banner"></div>
+          <div className="countryDetail__title"></div>
+        </div>
       ) : (
         <div className="country__empty">
           <div className="empty__icon">

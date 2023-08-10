@@ -156,9 +156,11 @@ const Home = () => {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
   const handleMouseEnterMap = () => {
+    if (!mapRef.current || !mapRef.current.addEventListener) return;
     mapRef.current.addEventListener("mousemove", handleMouseMove);
   };
   const handleMouseLeaveMap = () => {
+    if (!mapRef.current || !mapRef.current.removeEventListener) return;
     mapRef.current.removeEventListener("mousemove", handleMouseMove);
   };
 

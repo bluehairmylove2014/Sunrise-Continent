@@ -20,12 +20,12 @@ export const providerConfig = [
   {
     key: "order",
     provider: OrderProvider,
-    isActive: true,
+    isActive: false,
   },
   {
     key: "cart",
     provider: CartProvider,
-    isActive: true,
+    isActive: false,
   },
   {
     key: "auth",

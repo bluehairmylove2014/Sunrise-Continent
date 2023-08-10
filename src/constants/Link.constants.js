@@ -8,4 +8,5 @@ export const PAGES = {
   CONTACT: "/contact",
   PRE_CHECKOUT: "/provide-information",
   COUNTRY: "/country",
+  VOUCHER_SHOP: "/voucher-shop",
 };

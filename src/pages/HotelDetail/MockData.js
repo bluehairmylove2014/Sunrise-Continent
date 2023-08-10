@@ -196,3 +196,110 @@ export const roomsMockData = [
     service: ["BREAKFAST_INCLUDED"],
   },
 ];
+
+export const hotelReviewMockData = [
+  {
+    id: 1,
+    userName: "Dương Minh",
+    userAvatar: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_10.png",
+    reviewDate: "2023-08-05",
+    points: 10,
+    content:
+      "Area specific over word force fine on while piece heart sort prove.",
+  },
+  {
+    id: 2,
+    userName: "Ba Phương",
+    userAvatar: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_11.png",
+    reviewDate: "2023-08-06",
+    points: 8,
+    content: "Live tend law there alone nice tough nature less together ever.",
+  },
+  {
+    id: 3,
+    userName: "Phúc Đạt",
+    userAvatar: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_12.png",
+    reviewDate: "2023-08-07",
+    points: 7,
+    content:
+      "Eight ready but how discussion scientist bag two remain house when month run.",
+  },
+  {
+    id: 4,
+    userName: "Diệu Linh",
+    userAvatar: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_3.png",
+    reviewDate: "2023-08-05",
+    points: 10,
+    content:
+      "Area specific over word force fine on while piece heart sort prove.",
+  },
+  {
+    id: 5,
+    userName: "Alice",
+    userAvatar: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_2.png",
+    reviewDate: "2023-08-06",
+    points: 8,
+    content: "Live tend law there alone nice tough nature less together ever.",
+  },
+  {
+    id: 6,
+    userName: "Dương Minh",
+    userAvatar: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_4.png",
+    reviewDate: "2023-08-07",
+    points: 7,
+    content:
+      "Eight ready but how discussion scientist bag two remain house when month run.",
+  },
+  {
+    id: 7,
+    userName: "Ba Phương",
+    userAvatar: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_5.png",
+    reviewDate: "2023-08-05",
+    points: 10,
+    content:
+      "Area specific over word force fine on while piece heart sort prove.",
+  },
+  {
+    id: 8,
+    userName: "Phúc Đạt",
+    userAvatar: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_6.png",
+    reviewDate: "2023-08-06",
+    points: 8,
+    content: "Live tend law there alone nice tough nature less together ever.",
+  },
+  {
+    id: 9,
+    userName: "Diệu Linh",
+    userAvatar: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_9.png",
+    reviewDate: "2023-08-07",
+    points: 7,
+    content:
+      "Eight ready but how discussion scientist bag two remain house when month run.",
+  },
+  {
+    id: 10,
+    userName: "Alice",
+    userAvatar: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_8.png",
+    reviewDate: "2023-08-05",
+    points: 10,
+    content:
+      "Area specific over word force fine on while piece heart sort prove.",
+  },
+  {
+    id: 11,
+    userName: "Diệu Linh",
+    userAvatar: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_7.png",
+    reviewDate: "2023-08-06",
+    points: 8,
+    content: "Live tend law there alone nice tough nature less together ever.",
+  },
+  {
+    id: 12,
+    userName: "Ba Phương",
+    userAvatar: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_1.png",
+    reviewDate: "2023-08-07",
+    points: 7,
+    content:
+      "Eight ready but how discussion scientist bag two remain house when month run.",
+  },
+];

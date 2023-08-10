@@ -258,6 +258,15 @@
                         background-color: var(--butterfly-bush);
                         color: white;
                     }
+
+                    &:disabled {
+                        opacity: 0.5;
+                        cursor: not-allowed;
+
+                        &:hover {
+                            background-color: transparent;
+                        }
+                    }
                 }
             }
         }

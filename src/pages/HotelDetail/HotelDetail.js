@@ -17,11 +17,20 @@ import {
 } from "../../libs/business-logic/src/lib/hotel/process/hooks";
 import Gallery from "../../components/common/Gallery";
 import { useGetPictures } from "../../libs/business-logic/src/lib/hotel/process/hooks/useGetPictures";
-// import {
-//   hotelDetailMockData,
-//   pictureMockData,
-//   roomsMockData,
-// } from "./MockData";
+import {
+  hotelDetailMockData,
+  pictureMockData,
+  roomsMockData,
+  hotelReviewMockData,
+} from "./MockData";
+import { formatDate } from "../../utils/helpers/ShortenDatetime";
+import {
+  handleNextPage,
+  handlePrevPage,
+  isDisableNext,
+  isDisablePrev,
+  slicePaginationData,
+} from "../../utils/helpers/Pagination";
 
 function numberToWord(number) {
   const words = [
@@ -45,18 +54,31 @@ function numberToWord(number) {
   }
 }
 
+const maximumPreviewImage = 5;
+const maximumReviewPerPage = 4;
+const defaultReviewStartPage = 1;
+
 const HotelDetail = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const hotelId = urlParams.get("id");
-  const { data: hotelData } = useGetHotelDetail(hotelId);
-  const roomsData = useGetRooms(hotelId);
-  const picturesData = useGetPictures({ id: hotelId });
-  // const hotelData = hotelDetailMockData;
-  // const roomsData = roomsMockData;
-  // const picturesData = pictureMockData;
+  // const { data: hotelData } = useGetHotelDetail(hotelId);
+  // const roomsData = useGetRooms(hotelId);
+  // const picturesData = useGetPictures({ id: hotelId });
+  const hotelData = hotelDetailMockData;
+  const roomsData = roomsMockData;
+  const picturesData = pictureMockData;
+  const hotelReview = hotelReviewMockData;
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
-  const previewImage = picturesData ? [...picturesData.slice(0, 5)] : null;
+  const previewImage = picturesData
+    ? [...picturesData.slice(0, maximumPreviewImage)]
+    : null;
   const [roomGallery, setRoomGallery] = useState(null);
+  const [reviewPagination, setReviewPagination] = useState({
+    currentPage: defaultReviewStartPage,
+    maxPage: hotelReview
+      ? hotelReview.length / maximumReviewPerPage
+      : defaultReviewStartPage,
+  });
 
   const openRoomGallery = (roomPicture) => {
     setRoomGallery(roomPicture);
@@ -244,136 +266,82 @@ const HotelDetail = () => {
         <section className="hotel-detail__reviews">
           <h3>Đánh giá</h3>
 
-          <div className="reviews__total-result">
-            <strong>{hotelData.rating.toFixed(1)}</strong>
-            <p className="total-result__label">
-              {pointToLabel(hotelData.rating)}
-            </p>
-            <p>
-              Dựa trên <span>10,300</span> Đánh giá đã được kiểm định
-            </p>
-          </div>
-
-          <div className="reviews__user-review">
-            <div className="user-review__avatar-wrapper">
-              <img
-                className="user-review__avatar"
-                src={`https://rialloer.sirv.com/Sunrise-Continent/Users/andre-tan-nX0mSJ999Og-unsplash.jpg?cw=60&ch=60&w=60&h=60`}
-                alt="user"
-              />
-            </div>
-            <div className="user-review__main">
-              <div className="user-review__rating">
+          {hotelReview ? (
+            <>
+              <div className="reviews__total-result">
                 <strong>{hotelData.rating.toFixed(1)}</strong>
-                <span className="total-result__label">
+                <p className="total-result__label">
                   {pointToLabel(hotelData.rating)}
-                </span>
-                &nbsp;|&nbsp;
-                <p>Nataliya, Tháng 2 2023</p>
-              </div>
-              <div className="user-review__content">
+                </p>
                 <p>
-                  Giá rất tốt cho chỗ ở NYC. Phòng rộng rãi và có nhiều chỗ để
-                  hành lý. Giường thoải mái và cơ sở vật chất sạch sẽ. Đây là
-                  lần đầu tiên tôi đi du lịch một mình và nhờ có ký túc xá HI mà
-                  tôi đã có một chuyến đi tuyệt vời. Ký túc xá giúp dễ dàng giao
-                  lưu và kết bạn mới. Tôi đã kết bạn với vô số người bạn mới và
-                  những người bạn này đã thực hiện chuyến đi của tôi.
+                  Dựa trên <span>{hotelReview.length}</span> đánh giá từ khách
+                  hàng
                 </p>
               </div>
-            </div>
-          </div>
-          <div className="reviews__user-review">
-            <div className="user-review__avatar-wrapper">
-              <img
-                className="user-review__avatar"
-                src={`https://rialloer.sirv.com/Sunrise-Continent/Users/Untitled-UaAu9kQf7-transformed.jpeg?cw=60&ch=60&w=60&h=60`}
-                alt="user"
-              />
-            </div>
-            <div className="user-review__main">
-              <div className="user-review__rating">
-                <strong>{hotelData.rating.toFixed(1)}</strong>
-                <span className="total-result__label">
-                  {pointToLabel(hotelData.rating)}
-                </span>
-                &nbsp;|&nbsp;
-                <p>Nataliya, Tháng 2 2023</p>
-              </div>
-              <div className="user-review__content">
-                <p>
-                  Giá rất tốt cho chỗ ở NYC. Phòng rộng rãi và có nhiều chỗ để
-                  hành lý. Giường thoải mái và cơ sở vật chất sạch sẽ. Đây là
-                  lần đầu tiên tôi đi du lịch một mình và nhờ có ký túc xá HI mà
-                  tôi đã có một chuyến đi tuyệt vời. Ký túc xá giúp dễ dàng giao
-                  lưu và kết bạn mới. Tôi đã kết bạn với vô số người bạn mới và
-                  những người bạn này đã thực hiện chuyến đi của tôi.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="reviews__user-review">
-            <div className="user-review__avatar-wrapper">
-              <img
-                className="user-review__avatar"
-                src={`https://rialloer.sirv.com/Sunrise-Continent/Users/IMG_0615-min%20(1).jpg?cw=60&ch=60&w=60&h=60`}
-                alt="user"
-              />
-            </div>
-            <div className="user-review__main">
-              <div className="user-review__rating">
-                <strong>{hotelData.rating.toFixed(1)}</strong>
-                <span className="total-result__label">
-                  {pointToLabel(hotelData.rating)}
-                </span>
-                &nbsp;|&nbsp;
-                <p>Nataliya, Tháng 2 2023</p>
-              </div>
-              <div className="user-review__content">
-                <p>
-                  Giá rất tốt cho chỗ ở NYC. Phòng rộng rãi và có nhiều chỗ để
-                  hành lý. Giường thoải mái và cơ sở vật chất sạch sẽ. Đây là
-                  lần đầu tiên tôi đi du lịch một mình và nhờ có ký túc xá HI mà
-                  tôi đã có một chuyến đi tuyệt vời. Ký túc xá giúp dễ dàng giao
-                  lưu và kết bạn mới. Tôi đã kết bạn với vô số người bạn mới và
-                  những người bạn này đã thực hiện chuyến đi của tôi.
-                </p>
+              {slicePaginationData(
+                hotelReview,
+                reviewPagination.currentPage,
+                reviewPagination.maxPage,
+                maximumReviewPerPage
+              ).map((hr) => (
+                <div className="reviews__user-review" key={hr.id}>
+                  <div className="user-review__avatar-wrapper">
+                    <img
+                      className="user-review__avatar"
+                      src={hr.userAvatar}
+                      alt="user"
+                    />
+                  </div>
+                  <div className="user-review__main">
+                    <div className="user-review__rating">
+                      <strong>{hr.points.toFixed(1)}</strong>
+                      <span className="total-result__label">
+                        {pointToLabel(hr.points)}
+                      </span>
+                      &nbsp;|&nbsp;
+                      <p>
+                        {hr.userName}, {formatDate(hr.reviewDate).dateMonthYear}
+                      </p>
+                    </div>
+                    <div className="user-review__content">
+                      <p>{hr.content}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
 
-                {/* <div className="content__media">
-                  <div className="content__img-wrapper">
-                    <img
-                      src={`https://rialloer.sirv.com/Sunrise-Continent/hotels/7%20La%20Siesta%20Premium%20Sai%20Gon/408965175.jpg`}
-                      alt="review"
-                    />
-                  </div>
-                  <div className="content__img-wrapper max">
-                    <img
-                      src={`https://rialloer.sirv.com/Sunrise-Continent/hotels/7%20La%20Siesta%20Premium%20Sai%20Gon/462028697.jpg`}
-                      alt="review"
-                    />
-                  </div>
-                  <div className="content__img-wrapper">
-                    <img
-                      src={`https://rialloer.sirv.com/Sunrise-Continent/hotels/7%20La%20Siesta%20Premium%20Sai%20Gon/462028749.jpg`}
-                      alt="review"
-                    />
-                  </div>
-                </div> */}
+              <div className="reviews__pagination">
+                <button
+                  disabled={isDisablePrev({
+                    currentPage: reviewPagination.currentPage,
+                  })}
+                  className="pagination__coordination"
+                  onClick={() =>
+                    handlePrevPage(reviewPagination, setReviewPagination)
+                  }
+                >
+                  Prev
+                </button>
+                <p>
+                  {reviewPagination.currentPage} trên {reviewPagination.maxPage}
+                </p>
+                <button
+                  disabled={isDisableNext({
+                    currentPage: reviewPagination.currentPage,
+                    maxPage: reviewPagination.maxPage,
+                  })}
+                  className="pagination__coordination"
+                  onClick={() =>
+                    handleNextPage(reviewPagination, setReviewPagination)
+                  }
+                >
+                  Next
+                </button>
               </div>
-            </div>
-          </div>
-
-          <div className="reviews__pagination">
-            <button disabled={true} className="pagination__coordination">
-              Prev
-            </button>
-            <p>
-              {`1`} trên {`8`}
-            </p>
-            <button disabled={false} className="pagination__coordination">
-              Next
-            </button>
-          </div>
+            </>
+          ) : (
+            <></>
+          )}
         </section>
         <div className="custom-line-template">
           <img src={icon.lineIcon} alt="lineIcon" />

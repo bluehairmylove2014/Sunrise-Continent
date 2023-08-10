@@ -23,6 +23,17 @@ import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import { bannerData, countriesData, roomTypesData } from "./Data";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { PAGES } from "../../constants/Link.constants";
+import {
+  calculateFromIndex,
+  calculateMaxPage,
+  calculateNumberList,
+  calculateToIndex,
+  handleNextPage,
+  handlePrevPage,
+  isDisableNext,
+  isDisablePrev,
+  slicePaginationData,
+} from "../../utils/helpers/Pagination";
 
 const geoUrl =
   "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
@@ -43,18 +54,29 @@ const defaultSearchInputVal = {
   budget: "Ngân sách của bạn thế nào?",
 };
 
+const maximumHotHotelPerPage = 3;
+const defaultReviewStartPage = 1;
+
 const Home = () => {
   // Define
   const [banners, setBanner] = useState([]);
   const [countries, setCountries] = useState([]);
   const [roomType, setRoomType] = useState([]);
-  const [trendingHotelPage, setTrendingHotelPage] = useState(1);
   const [searchInputVal, setSearchInputVal] = useState(defaultSearchInputVal);
   const navigate = useNavigate();
   const { data: hotHotelData } = useGetHotHotelQuery();
   const mapRef = useRef(null);
+  const [hotHotelPagination, setHotHotelPagination] = useState({
+    currentPage: defaultReviewStartPage,
+    maxPage: calculateMaxPage(hotHotelData, maximumHotHotelPerPage),
+  });
 
-  const trendingHotelPerPage = 6;
+  useEffect(() => {
+    setHotHotelPagination({
+      ...hotHotelPagination,
+      maxPage: calculateMaxPage(hotHotelData, maximumHotHotelPerPage),
+    });
+  }, [hotHotelData]);
 
   // Methods
   const updateSearchInputVal = (key, value) => {
@@ -64,32 +86,13 @@ const Home = () => {
     }));
   };
   const handleChangeTrendingHotelPage = (e) => {
-    setTrendingHotelPage(Number(e.target.getAttribute("data-pagenumber")));
+    setHotHotelPagination({
+      ...hotHotelPagination,
+      currentPage: Number(e.target.getAttribute("data-pagenumber")),
+    });
   };
   const renderPagePaginationNumberBtn = (targetPage, numberOfPages) => {
-    const displayPages = [];
-
-    if (targetPage === 1) {
-      for (let i = 0; i < 3 && targetPage + i <= numberOfPages; i++) {
-        displayPages.push({
-          page: targetPage + i,
-          active: i === 0 ? true : false,
-        });
-      }
-    } else if (targetPage < numberOfPages) {
-      displayPages.push(
-        { page: targetPage - 1, active: false },
-        { page: targetPage, active: true },
-        { page: targetPage + 1, active: false }
-      );
-    } else if (targetPage === numberOfPages) {
-      for (let i = 2; i >= 0 && targetPage - i >= 1; i--) {
-        displayPages.push({
-          page: targetPage - i,
-          active: i === 0 ? true : false,
-        });
-      }
-    }
+    const displayPages = calculateNumberList(targetPage, numberOfPages);
 
     const htmlDisplayPages = displayPages.map((p, i) => {
       return (
@@ -135,21 +138,24 @@ const Home = () => {
     { location, roomType, start_date, end_date, budget }
   ) => {
     e.preventDefault();
-    if (
-      defaultSearchInputVal.location === location ||
-      defaultSearchInputVal.roomType === roomType ||
-      defaultSearchInputVal.start_date === start_date ||
-      defaultSearchInputVal.end_date === end_date ||
-      defaultSearchInputVal.budget === budget
-    ) {
+    let params = {};
+    defaultSearchInputVal.location !== location &&
+      (params = { ...params, location });
+    defaultSearchInputVal.roomType !== roomType &&
+      (params = { ...params, roomType });
+    defaultSearchInputVal.start_date !== start_date &&
+      (params = { ...params, start_date });
+    defaultSearchInputVal.end_date !== end_date &&
+      (params = { ...params, end_date });
+    defaultSearchInputVal.budget !== budget &&
+      (params = {
+        ...params,
+        budget: JSON.stringify(extractMinAndMax(searchInputVal.budget)),
+      });
+    if (Object.keys(params).length === 0) {
       toast.error("Please fill all criteria!");
     } else {
-      navigate(
-        `/search${stringifySearchParams({
-          ...searchInputVal,
-          budget: JSON.stringify(extractMinAndMax(searchInputVal.budget)),
-        })}`
-      );
+      navigate(`/search${stringifySearchParams(params)}`);
     }
   };
   const [tooltipContent, setTooltipContent] = useState(null);
@@ -369,33 +375,78 @@ const Home = () => {
             {/* Hotel list */}
             <div className="home-trending__trending-list">
               <TrendingHotel
-                hotelShortDescribeList={hotHotelData.slice(0, 6)}
+                hotelShortDescribeList={slicePaginationData(
+                  hotHotelData,
+                  hotHotelPagination.currentPage,
+                  hotHotelPagination.maxPage,
+                  maximumHotHotelPerPage
+                )}
               />
             </div>
 
             {/* Page Pagination */}
             <div className="home-trending__page-pagination-wrapper">
               <p className="home-trending__page-limit">
-                Hiển thị 0 - 6 trong {hotHotelData.length} khách sạn
+                Hiển thị{" "}
+                {calculateFromIndex(
+                  hotHotelPagination.currentPage,
+                  maximumHotHotelPerPage
+                )}{" "}
+                -{" "}
+                {calculateToIndex(
+                  hotHotelData,
+                  hotHotelPagination.currentPage,
+                  maximumHotHotelPerPage
+                )}{" "}
+                trong {hotHotelData.length} khách sạn nổi bật
               </p>
               {hotHotelData.length > 1 && (
                 <div className="home-trending__page-pagination">
-                  <button>
+                  <button
+                    disabled={hotHotelPagination.currentPage === 1}
+                    onClick={() =>
+                      setHotHotelPagination({
+                        ...hotHotelPagination,
+                        currentPage: 1,
+                      })
+                    }
+                  >
                     <i className="fi fi-rs-angle-double-small-left"></i>
                   </button>
-                  <button>
+                  <button
+                    disabled={isDisablePrev(hotHotelPagination.currentPage)}
+                    onClick={() =>
+                      handlePrevPage(hotHotelPagination, setHotHotelPagination)
+                    }
+                  >
                     <i className="fi fi-rs-angle-small-left"></i>
                   </button>
 
                   {renderPagePaginationNumberBtn(
-                    trendingHotelPage,
-                    Math.ceil(hotHotelData.length / trendingHotelPerPage)
+                    hotHotelPagination.currentPage,
+                    hotHotelPagination.maxPage
                   )}
 
-                  <button>
+                  <button
+                    disabled={isDisableNext(hotHotelPagination)}
+                    onClick={() =>
+                      handleNextPage(hotHotelPagination, setHotHotelPagination)
+                    }
+                  >
                     <i className="fi fi-rs-angle-small-right"></i>
                   </button>
-                  <button>
+                  <button
+                    disabled={
+                      hotHotelPagination.currentPage ===
+                      hotHotelPagination.maxPage
+                    }
+                    onClick={() =>
+                      setHotHotelPagination({
+                        ...hotHotelPagination,
+                        currentPage: hotHotelPagination.maxPage,
+                      })
+                    }
+                  >
                     <i className="fi fi-rs-angle-double-small-right"></i>
                   </button>
                 </div>

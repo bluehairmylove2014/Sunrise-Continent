@@ -6,7 +6,7 @@ import { CONVERSION_FACTOR } from "../../constants/Variables.constants";
 import { debounce } from "lodash";
 import "../../styles/common/budgetRange.scss";
 
-const defaultRange = [0, 1000];
+const defaultRange = [0, 100];
 
 const BudgetRange = ({ callbackOnchange, defaultValues }) => {
   const [priceRange, setPriceRange] = useState(
@@ -38,7 +38,7 @@ const BudgetRange = ({ callbackOnchange, defaultValues }) => {
         }}
         valueLabelDisplay="off"
         min={0}
-        max={1000}
+        max={100}
       />
       <div className="cc-modern-input__price-detail">
         <span>

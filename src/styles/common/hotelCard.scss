@@ -44,6 +44,12 @@
                 }
             }
 
+            &>p {
+                font-weight: 600;
+                opacity: 0.6;
+                font-size: 0.6rem
+            }
+
             .hotel-card-body-rating__review {
                 // direction - justify content - align items - flex wrap
                 @include dflex(row, flex-end, flex-end, nowrap);
@@ -79,6 +85,7 @@
             }
 
             span {
+                font-size: 0.75rem;
                 // This config to show only 2 line
                 // If overflow, use "..." instead
                 display: -webkit-box;

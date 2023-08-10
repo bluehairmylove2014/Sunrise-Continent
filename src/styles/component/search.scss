@@ -1,6 +1,8 @@
 @import '../partial/mixin';
 
 .search {
+    margin-bottom: 100px;
+
     .search__banner {
         background-color: var(--linen);
         width: 100vw;
@@ -125,7 +127,7 @@
             .filterboard__location-types {
                 // direction - justify content - align items - flex wrap
                 @include dflex(column, center, flex-start, nowrap);
-                gap: 15px;
+                gap: 20px;
             }
         }
 

@@ -34,6 +34,7 @@ export const FILTER_INPUT = [
 export const CONVERSION_FACTOR = {
   ALL_TRIP: 100000,
   PER_ONE: 100000,
+  VOUCHER: 1000,
 };
 
 export const HOTEL_TYPE = {

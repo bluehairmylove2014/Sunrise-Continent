@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   useGetHotelDetail,
   useGetSpecificRoom,
@@ -12,23 +12,28 @@ import { icon, nationality } from "./Data";
 import { formatDate } from "../../utils/helpers/ShortenDatetime";
 import { calcNight } from "../../utils/helpers/Datetime";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
-import { calculateDiscountedPrice } from "../../utils/helpers/Discount";
-import { parseSearchParams } from "../../utils/helpers/params";
+// import { calculateDiscountedPrice } from "../../utils/helpers/Discount";
+import {
+  parseSearchParams,
+  stringifySearchParams,
+} from "../../utils/helpers/params";
 import { toast } from "react-hot-toast";
-import { useCreateOrder } from "../../libs/business-logic/src/lib/order";
+import { toggleClass } from "../../utils/helpers/ToggleClass";
+import OrderDetailPicker from "../../components/common/OrderDetailPicker";
+import { PAGES } from "../../constants/Link.constants";
+import SelectVoucer from "./SelectVoucer";
+import { CONVERSION_FACTOR } from "../../constants/Variables.constants";
 
 const PreCheckout = () => {
-  const [sunriseVoucher, setSunriseVoucher] = useState(0);
-  const { hotelID, roomID, start_date, end_date, adult, children, rooms } =
+  const { hotelID, roomID, start_date, end_date, adults, childrens, rooms } =
     parseSearchParams(window.location.search);
 
-  const startDateFormatted = formatDate(start_date);
-  const endDateFormatted = formatDate(end_date);
-  const night = calcNight(start_date, end_date);
+  const pickerRef = useRef(null);
 
   const { data: hotelData } = useGetHotelDetail(hotelID);
   const { data: roomData } = useGetSpecificRoom(hotelID, roomID);
-  const { onCreateOrder } = useCreateOrder();
+  const [sunriseVoucher, setSunriseVoucher] = useState(null);
+  const [isChoosingVoucher, setIsChoosingVoucher] = useState(false);
 
   const contactForm = useForm({
     defaultValues: {
@@ -46,10 +51,37 @@ const PreCheckout = () => {
       isAcceptPolicy: false,
     },
   });
+  const [bookingFormValue, setBookingFormValue] = useState({
+    start_date,
+    end_date,
+    rooms,
+    adults,
+    childrens,
+  });
+  const bookingForm = useForm({
+    defaultValues: bookingFormValue,
+  });
 
-  useEffect(() => {
-    setSunriseVoucher(0.2);
-  }, []);
+  const startDateFormatted = formatDate(bookingFormValue.start_date);
+  const endDateFormatted = formatDate(bookingFormValue.end_date);
+  const night = calcNight(
+    bookingFormValue.start_date,
+    bookingFormValue.end_date
+  );
+
+  const handleEdit = (data) => {
+    setBookingFormValue(data);
+    window.history.pushState(
+      null,
+      null,
+      PAGES.PRE_CHECKOUT +
+        stringifySearchParams({
+          hotelID,
+          roomID,
+          ...data,
+        })
+    );
+  };
 
   const handleFocus = (target) => {
     if (target && target.parentNode) {
@@ -70,32 +102,32 @@ const PreCheckout = () => {
       toast.error("Hãy đồng ý với điều khoản và chính sách nhé!");
       return;
     }
-    onCreateOrder({
-      fullName: data.fullName,
-      nation: data.nationality,
-      dateOfBirth: data.dob,
-      email: data.email,
-      phoneNumber: data.phone,
-      specialNeeds: "",
-      notes: data.otherRequirements,
-      voucherId: 0,
-      orders: [
-        {
-          hotelId: hotelID,
-          roomTypeId: roomID,
-          checkIn: start_date,
-          checkOut: end_date,
-          numberOfRoom: rooms,
-        },
-      ],
-    })
-      .then((message) => {
-        toast.success(message);
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error(error.message);
-      });
+    // onCreateOrder({
+    //   fullName: data.fullName,
+    //   nation: data.nationality,
+    //   dateOfBirth: data.dob,
+    //   email: data.email,
+    //   phoneNumber: data.phone,
+    //   specialNeeds: "",
+    //   notes: data.otherRequirements,
+    //   voucherId: 0,
+    //   orders: [
+    //     {
+    //       hotelId: hotelID,
+    //       roomTypeId: roomID,
+    //       checkIn: bookingFormValue.start_date,
+    //       checkOut: bookingFormValue.end_date,
+    //       numberOfRoom: bookingFormValue.rooms,
+    //     },
+    //   ],
+    // })
+    //   .then((message) => {
+    //     toast.success(message);
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //     toast.error(error.message);
+    //   });
   };
   const onContactFormError = (error) => {
     toast.error(error[Object.keys(error)[0]].message);
@@ -143,6 +175,7 @@ const PreCheckout = () => {
                   <select
                     {...field}
                     id="nationality"
+                    style={{ width: "100%" }}
                     onFocus={(e) => handleFocus(e.target)}
                     onBlur={(e) => handleBlur(e.target)}
                   >
@@ -318,10 +351,6 @@ const PreCheckout = () => {
             <button id="checkout" type="submit">
               THANH TOÁN NGAY
             </button>
-            <p>Hoặc</p>
-            <button id="add-to-cart" type="button">
-              LƯU ĐƠN VÀO GIỎ HÀNG
-            </button>
           </section>
         </form>
         <section className="checkout-infor">
@@ -369,7 +398,10 @@ const PreCheckout = () => {
               </div>
 
               <p>
-                {adult} người lớn{children > 0 ? `, ${children} trẻ em` : ""}
+                {bookingFormValue.adults} người lớn
+                {bookingFormValue.childrens > 0
+                  ? `, ${bookingFormValue.childrens} trẻ em`
+                  : ""}
               </p>
             </div>
             <div className="detail__row">
@@ -378,7 +410,7 @@ const PreCheckout = () => {
                 <span>Số phòng:</span>
               </div>
 
-              <p>{rooms} phòng</p>
+              <p>{bookingFormValue.rooms} phòng</p>
             </div>
             <div className="detail__row">
               <div className="row__label">
@@ -388,11 +420,24 @@ const PreCheckout = () => {
 
               <p>{roomData.name}</p>
             </div>
+            <div className="detail__row">
+              <div className="row__label"></div>
+
+              <button
+                className="checkout-infor__edit-btn"
+                onClick={() => {
+                  toggleClass(pickerRef.current);
+                }}
+              >
+                <i className="fi fi-ss-user-pen"></i>
+                Chỉnh sửa
+              </button>
+            </div>
             <hr />
             <div className="detail__row">
               <div className="row__label">
                 <span>
-                  {rooms} phòng x {night} đêm
+                  {bookingFormValue.rooms} phòng x {night} đêm
                 </span>
               </div>
 
@@ -421,14 +466,17 @@ const PreCheckout = () => {
                   -{" "}
                   {convertNumberToCurrency(
                     "vietnamdong",
-                    calculateDiscountedPrice(
-                      roomData.price * night,
-                      sunriseVoucher
-                    ).discountedPrice
+                    // calculateDiscountedPrice(
+                    //   roomData.price * night,
+                    //   sunriseVoucher.value
+                    // ).discountedPrice
+                    sunriseVoucher
+                      ? sunriseVoucher.value * CONVERSION_FACTOR.VOUCHER
+                      : 0
                   )}
                 </p>
               ) : (
-                <button>
+                <button onClick={() => setIsChoosingVoucher(true)}>
                   <i className="fi fi-br-plus-small"></i>
                   Voucher
                 </button>
@@ -443,16 +491,37 @@ const PreCheckout = () => {
               <p className="price total">
                 {convertNumberToCurrency(
                   "vietnamdong",
-                  calculateDiscountedPrice(
-                    roomData.price * night,
-                    sunriseVoucher
-                  ).amountToPay
+                  roomData.price * night -
+                    (sunriseVoucher
+                      ? sunriseVoucher.value * CONVERSION_FACTOR.VOUCHER
+                      : 0)
+                  // calculateDiscountedPrice(
+                  //   roomData.price * night,
+                  //   sunriseVoucher
+                  // ).amountToPay
                 )}
               </p>
             </div>
           </div>
         </section>
       </div>
+      <OrderDetailPicker
+        ref={pickerRef}
+        form={bookingForm}
+        defaultValues={bookingFormValue}
+        roomDetail={roomData}
+        edit={true}
+        editCallback={handleEdit}
+      />
+
+      <SelectVoucer
+        isOpen={isChoosingVoucher}
+        chooseVoucherCallback={(voucher) => {
+          setIsChoosingVoucher(false);
+          setSunriseVoucher(voucher);
+        }}
+        closeCallback={() => setIsChoosingVoucher(false)}
+      />
     </main>
   ) : (
     <SunriseLoader />

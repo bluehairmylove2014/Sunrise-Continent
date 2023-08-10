@@ -19,7 +19,7 @@ const HotelCard = ({ hotelData, type }) => {
     for (let i = 0; i < numberOfStar; i++) {
       starList.push(<img src={star} alt="star" key={`star@${i}`} />);
     }
-    console.log({ numberOfStar, starList });
+    console.log(starList.length);
     return starList;
   };
   const handleAddToWishlist = (e, hotel) => {
@@ -46,10 +46,12 @@ const HotelCard = ({ hotelData, type }) => {
           {/* <i className="fi fi-ss-heart"></i> */}
         </div>
         <div className="cc-hotel-card-body__rating">
-          {hotelData.stars && hotelData.stars > 0 && (
+          {hotelData.stars && hotelData.stars > 0 ? (
             <div className="hotel-card-body-rating__star">
-              {renderStar(hotelData.stars) || <></>}
+              {renderStar(hotelData.stars)}
             </div>
+          ) : (
+            <p>Không xếp hạng</p>
           )}
           <div className="hotel-card-body-rating__review">
             {/* <small>{hotelData.rating.reviews} reviews</small> */}

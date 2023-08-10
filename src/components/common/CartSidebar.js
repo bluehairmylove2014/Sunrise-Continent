@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import "../../styles/common/cartSidebar.scss";
+// import "../../styles/common/cartSidebar.scss";
 import Empty from "./Empty";
 import { toast } from "react-hot-toast";
 import { combineAddress } from "../../utils/helpers/Address";

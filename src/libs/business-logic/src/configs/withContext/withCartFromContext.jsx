@@ -2,24 +2,23 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../lib/auth/process/context/authContext";
 import { CartContext } from "../../lib/cart/process/context/cartContext";
+import { useAccessToken } from "../../lib/auth/process/hooks/useAccessToken";
 
-
-export const withCartFromContext = (
-  WrappedComponent
-) => {
+export const withCartFromContext = (WrappedComponent) => {
   const EnhancedComponent = (props) => {
+    const { getToken } = useAccessToken();
     const {
-      state: { token }
+      state: { token },
     } = useContext(AuthContext);
     const {
-      state: { cart }
+      state: { cart },
     } = useContext(CartContext);
 
     return React.useMemo(
       () => (
         <WrappedComponent
           {...props}
-          accessToken={token ?? null}
+          accessToken={token ?? getToken()}
           cart={cart ?? null}
         />
       ),

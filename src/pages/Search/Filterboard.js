@@ -5,7 +5,7 @@ import BudgetRange from "../../components/common/BudgetRange";
 import Checkbox from "../../components/common/Checkbox";
 import { Controller } from "react-hook-form";
 
-const defaultRange = [0, 1000];
+const defaultRange = [0, 100];
 const budgetName = "budget";
 const Filterboard = ({ form, defaultValues, callback }) => {
   const onCheckboxChange = (checkboxName, paramKey) => {
@@ -18,19 +18,17 @@ const Filterboard = ({ form, defaultValues, callback }) => {
   const renderCheckbox = (parentForm, checkboxData, paramKey) => {
     const keyList = Object.keys(checkboxData);
     if (Array.isArray(keyList)) {
-      return keyList.map((k) => {
-        return (
-          <Checkbox
-            form={parentForm}
-            name={checkboxData[k].INPUT_NAME}
-            label={checkboxData[k].LABEL}
-            callbackOnChange={(callbackData) => {
-              onCheckboxChange(callbackData, paramKey);
-            }}
-            key={checkboxData[k].INPUT_NAME}
-          />
-        );
-      });
+      return keyList.map((k) => (
+        <Checkbox
+          form={parentForm}
+          name={checkboxData[k].INPUT_NAME}
+          label={checkboxData[k].LABEL}
+          callbackOnChange={(callbackData) => {
+            onCheckboxChange(callbackData, paramKey);
+          }}
+          key={checkboxData[k].INPUT_NAME}
+        />
+      ));
     } else {
       return <></>;
     }

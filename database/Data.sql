@@ -132,6 +132,30 @@ INSERT INTO HOTEL VALUES(16, N'Star City Riverside By Haviland Hotel', N'Việt 
 	N'Nằm bên bờ Sông Hàn, Star City Riverside By Haviland cung cấp không gian sinh hoạt hiện đại với tầm nhìn ra toàn cảnh thành phố Đà Nẵng.',
 	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/428612339.jpg');
 
+INSERT INTO HOTEL VALUES(17, N'Na Hostel Hue', N'Việt Nam', 'HOTEL', N'Huế',
+	N'69 Võ Thị Sáu, Huế, Việt Nam',
+ 	2, 9.4,
+	N'Featuring 2-star accommodation, Na Hostel Hue is located in Hue, 1.3 km from Trang Tien Bridge and 2 km from Dong Ba Market. With a terrace, the 2-star hotel has air-conditioned rooms with free WiFi. The accommodation provides airport transfers, while a bicycle rental service is also available.',
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Na%20Hostel%20Hue/Na%20Hostel%20Hue.jpg');
+
+INSERT INTO HOTEL VALUES(18, N'The Chum Boutique', N'Việt Nam', 'HOTEL', N'Huế',
+	N'5 Trương Định, Huế, Việt Nam',
+ 	3, 9.1,
+	N'The Chum Boutique cung cấp phòng nghỉ tại thành phố Huế, cách Tử Cấm Thành 2,8 km và Hồ Tịnh Tâm 3,3 km. Chỗ nghỉ này nằm gần một số điểm tham quan nổi tiếng, cách Bảo tàng Hồ Chí Minh 1,1 km, Nhà thờ Dòng Chúa Cứu Thế 1,7 km và Cung An Định 1,8 km. Ngoài WiFi miễn phí, chỗ nghỉ còn có sân hiên cũng như phòng xông hơi khô.',
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Deluxe%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i%20C%C3%B3%20B%E1%BB%93n%20T%E1%BA%AFm1.jpg');
+
+INSERT INTO HOTEL VALUES(19, N'Art Garden Dalat', N'Việt Nam', 'HOTEL', N'Đà Lạt',
+	N'79 Đường Đào Duy Từ, Đà Lạt, Việt Nam',
+ 	0, 8.1,
+	N'Art Garden Dalat features city views, free WiFi and free private parking, located in Da Lat, 3.9 km from Truc Lam Temple. There is a private bathroom with shower in every unit, along with bathrobes, slippers and a hair dryer.',
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Art%20Garden%20Dalat/Ph%C3%B2ng%20Gia%20%C4%90%C3%ACnh1.jpg');
+
+INSERT INTO HOTEL VALUES(20, N'Đà Lạt Thanh Xuân Hotel', N'Việt Nam', 'HOTEL', N'Đà Lạt',
+	N'126 Đường Tô Hiến Thành, Đà Lạt, Việt Nam',
+ 	4, 8.3,
+	N'Tọa lạc tại thành phố Đà Lạt, cách Công viên Yersin 1,6 km, Đà Lạt Thanh Xuân Hotel cung cấp chỗ nghỉ với sân hiên, chỗ đỗ xe riêng miễn phí và nhà hàng. Khách sạn 4 sao này có dịch vụ tiền sảnh, bàn đặt tour, dịch vụ phòng, lễ tân 24 giờ và dịch vụ thu đổi ngoại tệ cho khách.',
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel.jpg');
+
 --!add room Facility
 INSERT INTO FACILITY_CONST VALUES(1,'SWIMMING_POOL');
 INSERT INTO FACILITY_CONST VALUES(2,'INTERNET');
@@ -908,6 +932,157 @@ INSERT INTO ROOM_SERVICE VALUES(16,3,1);
 INSERT INTO ROOM_SERVICE VALUES(16,3,4);
 
 
+----todo Na Hostel Hue
+INSERT INTO ROOM_TYPE VALUES(17, 1, N'Phòng Có Giường Cỡ King', 3, 24,1650000,
+	N'This double room features air conditioning, an electric kettle, a flat-screen TV and city views. The unit offers 1 bed.',
+	N'Nhìn ra thành phố',
+	'LARGE_DOUBLE');
+
+INSERT INTO ROOM_TYPE VALUES(17, 2, N'Phòng Deluxe Giường Đôi', 5, 24,1650000,
+	N'The spacious double room features air conditioning, a wardrobe, as well as a private bathroom boasting a shower and a hairdryer. The unit has 2 beds.',
+	N'Nhìn ra thành phố',
+	'SINGLE_OR_TWIN');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(17,1,2);
+INSERT INTO ROOM_FACILITY VALUES(17,1,3);
+INSERT INTO ROOM_FACILITY VALUES(17,1,4);
+INSERT INTO ROOM_FACILITY VALUES(17,1,8);
+INSERT INTO ROOM_FACILITY VALUES(17,1,11);
+
+INSERT INTO ROOM_FACILITY VALUES(17,2,2);
+INSERT INTO ROOM_FACILITY VALUES(17,2,3);
+INSERT INTO ROOM_FACILITY VALUES(17,2,4);
+INSERT INTO ROOM_FACILITY VALUES(17,2,8);
+INSERT INTO ROOM_FACILITY VALUES(17,2,11);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(17,1,1);
+INSERT INTO ROOM_SERVICE VALUES(17,2,1);
+
+----todo The Chum Boutique
+INSERT INTO ROOM_TYPE VALUES(18, 1, N'Phòng Duplex 4 Người', 1, 40,2768000,
+	N'Offering free toiletries and bathrobes, this quadruple room includes a private bathroom with a shower, a hairdryer and slippers. The quadruple room offers air conditioning, soundproof walls, a safe deposit box, a flat-screen TV, as well as city views. The unit has 2 beds.',
+	N'Nhìn ra thành phố',
+	'LARGE_DOUBLE');
+
+INSERT INTO ROOM_TYPE VALUES(18, 2, N'Phòng Deluxe Giường Đôi Có Bồn Tắm', 3, 30, 1960000,
+	N'The spacious double room features air conditioning, soundproof walls, as well as a private bathroom boasting a bath and a shower. This double room provides a safe deposit box, a flat-screen TV and city views. The unit has 1 bed.',
+	N'Nhìn ra thành phố',
+	'LARGE_DOUBLE');
+
+INSERT INTO ROOM_TYPE VALUES(18, 3, N'Phòng Giường Đôi', 5, 25,1872000,
+	N'Featuring free toiletries and bathrobes, this double room includes a private bathroom with a shower, a hairdryer and slippers. The double room features air conditioning, soundproof walls, a safe deposit box, a flat-screen TV, as well as city views. The unit has 1 bed.',
+	N'Nhìn ra thành phố',
+	'LARGE_DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(18,1,2);
+INSERT INTO ROOM_FACILITY VALUES(18,1,3);
+INSERT INTO ROOM_FACILITY VALUES(18,1,4);
+INSERT INTO ROOM_FACILITY VALUES(18,1,7);
+INSERT INTO ROOM_FACILITY VALUES(18,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(18,2,2);
+INSERT INTO ROOM_FACILITY VALUES(18,2,3);
+INSERT INTO ROOM_FACILITY VALUES(18,2,4);
+INSERT INTO ROOM_FACILITY VALUES(18,2,7);
+INSERT INTO ROOM_FACILITY VALUES(18,2,8);
+
+INSERT INTO ROOM_FACILITY VALUES(18,3,2);
+INSERT INTO ROOM_FACILITY VALUES(18,3,3);
+INSERT INTO ROOM_FACILITY VALUES(18,3,4);
+INSERT INTO ROOM_FACILITY VALUES(18,3,7);
+INSERT INTO ROOM_FACILITY VALUES(18,3,8);
+
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(18,1,1);
+INSERT INTO ROOM_SERVICE VALUES(18,2,1);
+INSERT INTO ROOM_SERVICE VALUES(18,3,1);
+
+----todo Art Garden Dalat
+INSERT INTO ROOM_TYPE VALUES(19, 1, N'Phòng Gia Đình', 1, 25,1637500,
+	N'Offering free toiletries and bathrobes, this family room includes a private bathroom with a shower, a hairdryer and slippers. The family room features a dining area, a wardrobe, an electric kettle as well as a balcony with city views. The unit offers 3 beds.',
+	N'Ban công,Nhìn ra thành phố',
+	'DOUBLE');
+
+INSERT INTO ROOM_TYPE VALUES(19, 2, N'Phòng Giường Đôi', 3, 15,1450000,
+	N'Providing free toiletries and bathrobes, this double room includes a private bathroom with a shower, a hairdryer and slippers. The double room features a dining area, a wardrobe, an electric kettle as well as a balcony with city views. The unit offers 1 bed.',
+	N'Ban công,Nhìn ra thành phố',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(19,1,2);
+INSERT INTO ROOM_FACILITY VALUES(19,1,3);
+INSERT INTO ROOM_FACILITY VALUES(19,1,7);
+INSERT INTO ROOM_FACILITY VALUES(19,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(19,2,2);
+INSERT INTO ROOM_FACILITY VALUES(19,2,3);
+INSERT INTO ROOM_FACILITY VALUES(19,2,7);
+INSERT INTO ROOM_FACILITY VALUES(19,2,8);
+
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(19,1,1);
+INSERT INTO ROOM_SERVICE VALUES(19,2,1);
+
+----todo Đà Lạt Thanh Xuân Hotel
+INSERT INTO ROOM_TYPE VALUES(20, 1, N'Phòng Gia đình nhìn ra Núi', 2, 30,1892500,
+	N'Phòng gia đình này được bố trí phòng tắm riêng với buồng tắm đứng, máy sấy tóc, dép và đồ vệ sinh cá nhân miễn phí. Phòng gia đình có tiện nghi BBQ, TV màn hình phẳng, tầm nhìn ra núi cũng như rượu vang/rượu sâm panh cho khách. Căn này được trang bị 2 giường.',
+	N'Nhìn ra núi',
+	'SINGLE_OR_DOUBLE');
+
+INSERT INTO ROOM_TYPE VALUES(20, 2, N'Phòng Có Giường Cỡ King Với Ban Công', 3, 25,1700000,
+	N'Phòng giường đôi này được bố trí phòng tắm riêng với buồng tắm đứng, máy sấy tóc, dép và đồ vệ sinh cá nhân miễn phí. Phòng giường đôi có tiện nghi BBQ, TV màn hình phẳng, tầm nhìn ra thành phố cũng như rượu vang/rượu sâm panh cho khách. Căn này được trang bị 1 giường.',
+	N'Sân trong,Ban công,Nhìn ra thành phố',
+	'LARGE_DOUBLE');
+
+INSERT INTO ROOM_TYPE VALUES(20, 3, N'Phòng Deluxe Giường Đôi', 3, 20,1539000,
+	N'Phòng giường đôi này được bố trí phòng tắm riêng với buồng tắm đứng, máy sấy tóc, dép và đồ vệ sinh cá nhân miễn phí. Phòng giường đôi có tiện nghi BBQ, TV màn hình phẳng và sân hiên. Căn này được trang bị 1 giường.',
+	N'Sân hiên',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(20,1,2);
+INSERT INTO ROOM_FACILITY VALUES(20,1,3);
+INSERT INTO ROOM_FACILITY VALUES(20,1,4);
+INSERT INTO ROOM_FACILITY VALUES(20,1,6);
+INSERT INTO ROOM_FACILITY VALUES(20,1,7);
+INSERT INTO ROOM_FACILITY VALUES(20,1,8);
+INSERT INTO ROOM_FACILITY VALUES(20,1,9);
+INSERT INTO ROOM_FACILITY VALUES(20,1,10);
+INSERT INTO ROOM_FACILITY VALUES(20,1,11);
+INSERT INTO ROOM_FACILITY VALUES(20,1,13);
+INSERT INTO ROOM_FACILITY VALUES(20,1,14);
+
+INSERT INTO ROOM_FACILITY VALUES(20,2,2);
+INSERT INTO ROOM_FACILITY VALUES(20,2,3);
+INSERT INTO ROOM_FACILITY VALUES(20,2,4);
+INSERT INTO ROOM_FACILITY VALUES(20,2,6);
+INSERT INTO ROOM_FACILITY VALUES(20,2,7);
+INSERT INTO ROOM_FACILITY VALUES(20,2,8);
+INSERT INTO ROOM_FACILITY VALUES(20,2,9);
+INSERT INTO ROOM_FACILITY VALUES(20,2,10);
+INSERT INTO ROOM_FACILITY VALUES(20,2,11);
+INSERT INTO ROOM_FACILITY VALUES(20,2,13);
+INSERT INTO ROOM_FACILITY VALUES(20,2,14);
+
+INSERT INTO ROOM_FACILITY VALUES(20,3,2);
+INSERT INTO ROOM_FACILITY VALUES(20,3,3);
+INSERT INTO ROOM_FACILITY VALUES(20,3,4);
+INSERT INTO ROOM_FACILITY VALUES(20,3,6);
+INSERT INTO ROOM_FACILITY VALUES(20,3,7);
+INSERT INTO ROOM_FACILITY VALUES(20,3,8);
+INSERT INTO ROOM_FACILITY VALUES(20,3,9);
+INSERT INTO ROOM_FACILITY VALUES(20,3,10);
+INSERT INTO ROOM_FACILITY VALUES(20,3,11);
+INSERT INTO ROOM_FACILITY VALUES(20,3,13);
+INSERT INTO ROOM_FACILITY VALUES(20,3,14);
+
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(20,1,2);
+INSERT INTO ROOM_SERVICE VALUES(20,2,2);
+INSERT INTO ROOM_SERVICE VALUES(20,3,2);
+
 --! add room picture 
 --todo Triple E Hotel Metro Ben Thanh
 INSERT INTO ROOM_PICTURE VALUES(1,1,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Triple%20E%20Hotel%20Metro%20Ben%20Thanh/Suite%20Deluxe1.jpg');
@@ -1114,6 +1289,54 @@ INSERT INTO ROOM_PICTURE VALUES(16,2,3,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(16,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/428612339.jpg');
 INSERT INTO ROOM_PICTURE VALUES(16,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/441637874.jpg');
 INSERT INTO ROOM_PICTURE VALUES(16,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/77598478.jpg');
+
+----todo Na Hostel Hue
+INSERT INTO ROOM_PICTURE VALUES(17,1,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Na%20Hostel%20Hue/Ph%C3%B2ng%20C%C3%B3%20Gi%C6%B0%E1%BB%9Dng%20C%E1%BB%A1%20King1.jpg');
+INSERT INTO ROOM_PICTURE VALUES(17,1,2,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Na%20Hostel%20Hue/Ph%C3%B2ng%20C%C3%B3%20Gi%C6%B0%E1%BB%9Dng%20C%E1%BB%A1%20King2.jpg');
+INSERT INTO ROOM_PICTURE VALUES(17,1,3,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Na%20Hostel%20Hue/Ph%C3%B2ng%20C%C3%B3%20Gi%C6%B0%E1%BB%9Dng%20C%E1%BB%A1%20King3.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(17,2,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Na%20Hostel%20Hue/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i1.jpg');
+INSERT INTO ROOM_PICTURE VALUES(17,2,2,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Na%20Hostel%20Hue/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i2.jpg');
+INSERT INTO ROOM_PICTURE VALUES(17,2,3,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Na%20Hostel%20Hue/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i3.jpg');
+
+----todo The Chum Boutique
+INSERT INTO ROOM_PICTURE VALUES(18,1,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Duplex%204%20Ng%C6%B0%E1%BB%9Di1.jpg');
+INSERT INTO ROOM_PICTURE VALUES(18,1,2,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Duplex%204%20Ng%C6%B0%E1%BB%9Di2.jpg');
+INSERT INTO ROOM_PICTURE VALUES(18,1,3,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Duplex%204%20Ng%C6%B0%E1%BB%9Di3.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(18,2,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Deluxe%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i%20C%C3%B3%20B%E1%BB%93n%20T%E1%BA%AFm1.jpg');
+INSERT INTO ROOM_PICTURE VALUES(18,2,2,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Deluxe%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i%20C%C3%B3%20B%E1%BB%93n%20T%E1%BA%AFm2.jpg');
+INSERT INTO ROOM_PICTURE VALUES(18,2,3,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Deluxe%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i%20C%C3%B3%20B%E1%BB%93n%20T%E1%BA%AFm3.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(18,3,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i1.jpg');
+INSERT INTO ROOM_PICTURE VALUES(18,3,2,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i2.jpg');
+INSERT INTO ROOM_PICTURE VALUES(18,3,3,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i3.jpg');
+
+----todo Art Garden Dalat
+INSERT INTO ROOM_PICTURE VALUES(19,1,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Art%20Garden%20Dalat/Ph%C3%B2ng%20Gia%20%C4%90%C3%ACnh1.jpg');
+INSERT INTO ROOM_PICTURE VALUES(19,1,2,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Art%20Garden%20Dalat/Ph%C3%B2ng%20Gia%20%C4%90%C3%ACnh2.jpg');
+INSERT INTO ROOM_PICTURE VALUES(19,1,3,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Art%20Garden%20Dalat/Ph%C3%B2ng%20Gia%20%C4%90%C3%ACnh3.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(19,2,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Art%20Garden%20Dalat/Ph%C3%B2ng%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i11.jpg');
+INSERT INTO ROOM_PICTURE VALUES(19,2,2,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Art%20Garden%20Dalat/Ph%C3%B2ng%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i22.jpg');
+INSERT INTO ROOM_PICTURE VALUES(19,2,3,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Art%20Garden%20Dalat/Ph%C3%B2ng%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i33.jpg');
+
+----todo Đà Lạt Thanh Xuân Hotel
+INSERT INTO ROOM_PICTURE VALUES(20,1,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/Ph%C3%B2ng%20Gia%20%C4%91%C3%ACnh%20nhi%CC%80n%20ra%20N%C3%BAi1.jpg');
+INSERT INTO ROOM_PICTURE VALUES(20,1,2,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/Ph%C3%B2ng%20Gia%20%C4%91%C3%ACnh%20nhi%CC%80n%20ra%20N%C3%BAi2.jpg');
+INSERT INTO ROOM_PICTURE VALUES(20,1,3,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/Ph%C3%B2ng%20Gia%20%C4%91%C3%ACnh%20nhi%CC%80n%20ra%20N%C3%BAi3.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(20,2,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/Ph%C3%B2ng%20C%C3%B3%20Gi%C6%B0%E1%BB%9Dng%20C%E1%BB%A1%20King%20V%E1%BB%9Bi%20Ban%20C%C3%B4ng1.jpg');
+INSERT INTO ROOM_PICTURE VALUES(20,2,2,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/Ph%C3%B2ng%20C%C3%B3%20Gi%C6%B0%E1%BB%9Dng%20C%E1%BB%A1%20King%20V%E1%BB%9Bi%20Ban%20C%C3%B4ng2.jpg');
+INSERT INTO ROOM_PICTURE VALUES(20,2,3,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/Ph%C3%B2ng%20C%C3%B3%20Gi%C6%B0%E1%BB%9Dng%20C%E1%BB%A1%20King%20V%E1%BB%9Bi%20Ban%20C%C3%B4ng3.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(20,3,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i11.jpg');
+INSERT INTO ROOM_PICTURE VALUES(20,3,2,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i22.jpg');
+INSERT INTO ROOM_PICTURE VALUES(20,3,3,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i33.jpg');
+
+
+
+
 
 
 insert into REVIEW (AccountId, HotelId, Points, Content) 

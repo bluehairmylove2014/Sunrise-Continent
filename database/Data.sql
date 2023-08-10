@@ -36,8 +36,8 @@ INSERT INTO VOUCHER (VoucherId, Name, Value, Point, AccountRank) VALUES
 	(5, 'Voucher 1Tr', 1000000, 1000, 'Diamond');
 
 --!add hotel 
-INSERT INTO HOTEL VALUES(1, N'Triple E Hotel Metro Ben Thanh',N'Việt Nam','HOTEL',N'Hồ Chí Minh City',
-	 N'Phường Nguyễn Thái Bình 146- 148 Đường Ký Con, District 1, Ho Chi Minh City, Vietnam',
+INSERT INTO HOTEL VALUES(1, N'Triple E Hotel Metro Ben Thanh',N'Việt Nam','HOTEL',N'TP Hồ Chí Minh',
+	 N'146- 148 Đường Ký Con, Phường Nguyễn Thái Bình, Quận 1, Thành phố Hồ Chí Minh, Việt Nam',
 	 3, 8.8, 
 	 N'Tọa lạc ở Thành phố Hồ Chí Minh, cách Bảo tàng Mỹ thuật 300 m, Triple E Hotel Metro Ben Thanh cung cấp chỗ nghỉ 3 sao với trung tâm thể dục.Khách sạn 3 sao này cung cấp WiFi miễn phí, dịch vụ phòng và dịch vụ lễ tân 24 giờ. Nhân viên tại đây có thể thu xếp dịch vụ đưa đón cho khách.',
 	 N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Triple%20E%20Hotel%20Metro%20Ben%20Thanh/Triple%20E%20Hotel%20Metro%20Ben%20Thanh.jpg');
@@ -45,11 +45,11 @@ INSERT INTO HOTEL VALUES(1, N'Triple E Hotel Metro Ben Thanh',N'Việt Nam','HOT
 INSERT INTO HOTEL VALUES(2, N'Nexus House Thao Dien',N'Việt Nam','HOMESTAY',N'Hồ Chí Minh City',
 	N'8/9 Võ Trường Toản, An Phú, Quận 2, TP. Hồ Chí Minh, Việt Nam',
  	0, 9.5,
-	N'Located 6.3 km from Vietnam History Museum, Nexus House Thao Dien offers a garden, a terrace and air-conditioned accommodation with a balcony and free WiFi.',
+	N'Nằm cách Bảo tàng Lịch sử Việt Nam 6,3 km, Nexus House Thao Dien có khu vườn, sân hiên và chỗ nghỉ gắn máy điều hòa với ban công cùng WiFi miễn phí.',
 	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Nexus%20House%20Thao%20Dien/Studio%20Nh%C3%ACn%20Ra%20V%C6%B0%E1%BB%9Dn1.jpg');
 
-INSERT INTO HOTEL VALUES(3, N'Landmark Plus Luxury - Vinhomes Central Park',N'Việt Nam','SINGLE_APARTMENT',N'Hồ Chí Minh City', 
-	N'Phường Nguyễn Thái Bình 146- 148 Đường Ký Con, District 1, Ho Chi Minh City, Vietnam',
+INSERT INTO HOTEL VALUES(3, N'Landmark Plus Luxury - Vinhomes Central Park',N'Việt Nam','SINGLE_APARTMENT',N'TP Hồ Chí Minh', 
+	N'146- 148 Đường Ký Con, Phường Nguyễn Thái Bình, Quận 1,Thành phố Hồ Chí Minh , Việt Nam',
 	0, 8.1, 
 	N'Tọa lạc tại Thành phố Hồ Chí Minh, Landmark Plus Luxury - Vinhomes Central Park cung cấp chỗ nghỉ với hồ bơi ngoài trời, khu vườn, sảnh khách chung, sân hiên, quầy bar và tầm nhìn ra thành phố.',
 	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Landmark%20Plus%20Luxury%20-%20Vinhomes%20Central%20Park/landmark.jpg');
@@ -57,17 +57,17 @@ INSERT INTO HOTEL VALUES(3, N'Landmark Plus Luxury - Vinhomes Central Park',N'Vi
 INSERT INTO HOTEL VALUES(4, N'Musketeers Guest House',N'Việt Nam','HOTEL',N'Hà Nội', 
 	N'21 Ngõ 67 Tô Ngọc Vân Quảng An, Quận Tây Hồ, Hà Nội, Việt Nam',
 	0, 9.7, 
-	N'Located in Hanoi, 3.2 km from West Lake, Musketeers Guest House provides accommodation with a shared lounge, free private parking, a terrace and a bar. Among the facilities at this property are a 24-hour front desk and a concierge service, along with free WiFi throughout the property. Guests can enjoy garden views.',
+	N'Tọa lạc tại thành phố Hà Nội, cách Hồ Tây 3,2 km, Musketeers Guest House cung cấp chỗ nghỉ với sảnh khách chung, chỗ đỗ xe riêng miễn phí, sân hiên và quầy bar. Trong số các tiện nghi tại chỗ nghỉ này có quầy lễ tân 24 giờ, dịch vụ trợ giúp đặc biệt và Wi-Fi miễn phí trong toàn bộ khuôn viên. Du khách có thể ngắm nhìn quang cảnh khu vườn.',
 	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Musketeers%20Guest%20House/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i1.jpg');
 
 INSERT INTO HOTEL VALUES(5, N'Cristina Boutique Hotel',N'Việt Nam','HOTEL',N'Hà Nội', 
 	N'4A Ngõ Phất Lộc, Quận Hoàn Kiếm, Hà Nội, Việt Nam',
 	3, 9.1, 
-	N'Situated conveniently in the centre of Hanoi, Cristina Boutique Hotel features 3-star accommodation close to Hanoi Old City Gate and Thang Long Water Puppet Theater. This 3-star hotel has air-conditioned rooms with a private bathroom. The accommodation offers a 24-hour front desk, airport transfers, room service and free WiFi.',
+	N'Tọa lạc tại một vị trí thuận tiện ở trung tâm thành phố Hà Nội, Cristina Boutique Hotel cung cấp chỗ nghỉ 3 sao gần Ô Quan Chưởng Hà Nội và Nhà hát múa rối nước Thăng Long. Khách sạn 3 sao này cung cấp các phòng máy lạnh với phòng tắm riêng. Chỗ nghỉ có lễ tân 24 giờ, dịch vụ đưa đón sân bay, dịch vụ phòng và WiFi miễn phí.',
 	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Cristina%20Boutique%20Hotel/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i2%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C6%A1n%20C%C3%B3%20Ban%20C%C3%B4ng1.jpg');
 
 INSERT INTO HOTEL VALUES(6, N'SMARANA Hanoi HERITAGE',N'Việt Nam','HOTEL',N'Hà Nội', 
-	N'Phường Dịch Vọng Hầu, Quận Cầu Giấy Số 5, Ngõ 82/1 Dịch Vọng Hậu, Cau Giay, Hà Nội, Việt Nam',
+	N'Phường Dịch Vọng Hầu, Quận Cầu Giấy Số 5, Ngõ 82/1 Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội, Việt Nam',
 	5, 9.7, 
 	N'Tọa lạc tại thành phố Hà Nội, cách Bảo tàng Dân tộc học Việt Nam 2,4 km, SMARANA Hanoi HERITAGE có dịch vụ tiền sảnh, phòng nghỉ không hút thuốc, sân hiên, WiFi miễn phí trong toàn bộ khuôn viên và nhà hàng. Khách sạn 5 sao này cung cấp dịch vụ phòng, dịch vụ lễ tân 24 giờ, dịch vụ đưa đón sân bay và dịch vụ cho thuê xe đạp.',
 	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/SMARANA%20Hanoi%20HERITAGE/smarana-hanoi-heritage.jpg');
@@ -75,7 +75,7 @@ INSERT INTO HOTEL VALUES(6, N'SMARANA Hanoi HERITAGE',N'Việt Nam','HOTEL',N'H�
 INSERT INTO HOTEL VALUES(7, N'An Hiên Homestay Hội An',N'Việt Nam','HOMESTAY',N'Hội An', 
 	N'164 Lý Thái Tổ, phường Cẩm Châu, Cẩm Châu, Hội An, Việt Nam',
 	0, 9.6, 
-	N'Located in Hoi An, 1.2 km from Hoi An Historic Museum and 1.6 km from Assembly Hall of Chaozhou Chinese Congregation, An Hiên Homestay Hội An provides accommodation with free WiFi, air conditioning, free bikes and a garden.',
+	N'Tọa lạc tại thành phố Hội An, cách Bảo tàng Lịch sử Hội An 1,2 km và Hội quán Triều Châu Trung Quốc 1,6 km, An Hiên Homestay Hội An cung cấp chỗ nghỉ với WiFi miễn phí, máy điều hòa, xe đạp miễn phí và khu vườn.',
 	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/An%20Hi%C3%AAn%20Homestay%20H%E1%BB%99i%20An/An%20Hi%C3%AAn%20Homestay%20H%E1%BB%99i%20An.jpg');
 
 INSERT INTO HOTEL VALUES(8, N'iHome Hoi An',N'Việt Nam','HOTEL',N'Hội An', 

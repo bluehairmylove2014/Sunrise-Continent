@@ -18,9 +18,9 @@ import {
 import Gallery from "../../components/common/Gallery";
 import { useGetPictures } from "../../libs/business-logic/src/lib/hotel/process/hooks/useGetPictures";
 import {
-  hotelDetailMockData,
-  pictureMockData,
-  roomsMockData,
+  // hotelDetailMockData,
+  // pictureMockData,
+  // roomsMockData,
   hotelReviewMockData,
 } from "./MockData";
 import { formatDate } from "../../utils/helpers/ShortenDatetime";
@@ -61,12 +61,12 @@ const defaultReviewStartPage = 1;
 const HotelDetail = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const hotelId = urlParams.get("id");
-  // const { data: hotelData } = useGetHotelDetail(hotelId);
-  // const roomsData = useGetRooms(hotelId);
-  // const picturesData = useGetPictures({ id: hotelId });
-  const hotelData = hotelDetailMockData;
-  const roomsData = roomsMockData;
-  const picturesData = pictureMockData;
+  const { data: hotelData } = useGetHotelDetail(hotelId);
+  const roomsData = useGetRooms(hotelId);
+  const picturesData = useGetPictures({ id: hotelId });
+  // const hotelData = hotelDetailMockData;
+  // const roomsData = roomsMockData;
+  // const picturesData = pictureMockData;
   const hotelReview = hotelReviewMockData;
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const previewImage = picturesData

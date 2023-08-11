@@ -41,7 +41,11 @@ const Header = () => {
           catelist.map((c, i) => {
             return (
               <li key={`header-category@${i}`}>
-                <NavDropdown name_il={c.icon} name={c.category_name} />
+                <NavDropdown
+                  name_il={c.icon}
+                  name={c.category_name}
+                  href={c.href}
+                />
               </li>
             );
           })

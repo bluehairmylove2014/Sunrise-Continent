@@ -8,6 +8,7 @@ import { useSearch } from "../../libs/business-logic/src/lib/hotel";
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import { HOTEL_TYPE } from "../../constants/Variables.constants";
 import HotelCard from "../../components/common/HotelCard";
+import BannerLayout from "../../components/layouts/BannerLayout";
 
 const Country = () => {
   const countryData = countryDetail;
@@ -37,13 +38,11 @@ const Country = () => {
     <>
       {countryData ? (
         <div className="countryDetail">
-          <div className="countryDetail__banner">
-            <img src={countryData.picture} alt={countryData.name} />
-          </div>
-          <div className="countryDetail__title">
-            <h2>{countryData.name}</h2>
-            <p>{countryData.decription}</p>
-          </div>
+          <BannerLayout
+            banner={countryData.picture}
+            title={countryData.name}
+            subtitle={countryData.decription}
+          />
           <div className="countryDetail__content container">
             <div className="content__header">
               <h4>Có thể bạn sẽ thích</h4>

@@ -1,17 +1,20 @@
+import { PAGES } from "../../constants/Link.constants";
 
 export const categories = [
-    {
-        category_name: 'Chỗ ở',
-        icon: "fi fi-ss-apartment"
-    },
-    {
-        category_name: 'Khuyến mãi và ưu đãi',
-        icon: "fi fi-ss-ticket"
-    }
-]
+  {
+    category_name: "Chỗ ở",
+    icon: "fi fi-ss-apartment",
+    href: PAGES.VOUCHER_SHOP,
+  },
+  {
+    category_name: "Khuyến mãi và ưu đãi",
+    icon: "fi fi-ss-ticket",
+    href: PAGES.VOUCHER_SHOP,
+  },
+];
 export const languages = [
-    {
-        option_name: 'Tiếng Việt',
-        option_url: '/vi'
-    }
-]
+  {
+    option_name: "Tiếng Việt",
+    option_url: "/vi",
+  },
+];

@@ -25,6 +25,7 @@ const SearchPage = lazy(() => import("./pages/Search/Search"));
 const HotelDetail = lazy(() => import("./pages/HotelDetail/HotelDetail"));
 const PreCheckout = lazy(() => import("./pages/PreCheckout/PreCheckout"));
 const CountryPage = lazy(() => import("./pages/Country/Country"));
+const VoucherShop = lazy(() => import("./pages/VoucherShop/VoucherShop"));
 const AuthenticationPage = lazy(() =>
   import("./pages/Authentication/Authentication")
 );
@@ -93,6 +94,14 @@ function App() {
                   element={
                     <UserPageLayout>
                       <CountryPage />
+                    </UserPageLayout>
+                  }
+                />
+                <Route
+                  path={PAGES.VOUCHER_SHOP}
+                  element={
+                    <UserPageLayout>
+                      <VoucherShop />
                     </UserPageLayout>
                   }
                 />

@@ -1,21 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useGetVoucher } from "../../libs/business-logic/src/lib/voucher";
-import SunriseLoader from "../../components/common/Loader/SunriseLoader";
-import voucherIcon from "../../assets/images/icons/gift-voucher.png";
-import { RankList } from "../../constants/Rank";
 import Empty from "../../components/common/Empty";
+import SunriseLoader from "../../components/common/Loader/SunriseLoader";
+import Voucher from "../../components/common/Voucher";
 import { PAGES } from "../../constants/Link.constants";
+import { useGetVoucher } from "../../libs/business-logic/src/lib/voucher";
 
-function convertRankToEnglish(vietnameseRank) {
-  const rankKeys = Object.keys(RankList);
-  for (const key of rankKeys) {
-    if (RankList[key].label === vietnameseRank) {
-      return key;
-    }
-  }
-  return null;
-}
 const SelectVoucer = ({ isOpen, chooseVoucherCallback, closeCallback }) => {
   const voucherData = useGetVoucher();
   return (
@@ -28,24 +18,10 @@ const SelectVoucer = ({ isOpen, chooseVoucherCallback, closeCallback }) => {
         <div className="box__voucher-list">
           {voucherData && Array.isArray(voucherData) ? (
             voucherData.map((vd) => (
-              <div
-                className={`voucher ${convertRankToEnglish(
-                  RankList[vd.requiredRank].label
-                )}`}
-                key={vd.voucherId}
-                onClick={() => chooseVoucherCallback(vd)}
-              >
-                <div className="dot"></div>
-                <div className="dot"></div>
-                <img src={voucherIcon} alt="voucher" />
-                <div className="voucher__content">
-                  <h6>{vd.name}</h6>
-                  <small>Số lượng: {vd.quantity}</small>
-                </div>
-                <div className="rank">
-                  <img src={RankList[vd.requiredRank].image} alt="rank" />
-                </div>
-              </div>
+              <Voucher
+                voucherData={vd}
+                chooseVoucherCallback={chooseVoucherCallback}
+              />
             ))
           ) : voucherData === null ? (
             <div className="emptyWrapper">

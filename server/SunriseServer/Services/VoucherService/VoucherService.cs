@@ -1,4 +1,6 @@
+using SunriseServer.Common.Helper;
 using SunriseServerCore.Dtos;
+using SunriseServerCore.Dtos.Voucher;
 using SunriseServerCore.Models;
 
 namespace SunriseServer.Services.VoucherService
@@ -24,11 +26,23 @@ namespace SunriseServer.Services.VoucherService
             return result;
         }
 
-        public async Task<List<VoucherBag>> GetAccountVoucher(int accountId)
+        #nullable enable
+        public async Task<List<VoucherDto>> GetAccountVoucher(int accountId, string? rank)
         {
-            var result = await _unitOfWork.VoucherRepo.GetAccountVoucherAsync(accountId);
+            var rawVoucher = await _unitOfWork.VoucherRepo.GetAccountVoucherAsync(accountId, rank);
+            var result = new List<VoucherDto>();
+
+            rawVoucher.ForEach(v => {
+                VoucherDto voucher = new() {
+                    RequiredRank = v.AccountRank
+                };
+                SetPropValueByReflection.AddYToX(voucher, v);
+                result.Add(voucher);
+            });
+
             return result;
         }
+        #nullable disable
 
         public async Task<int> CreateVoucher(AddVoucherDto voucher)
         {

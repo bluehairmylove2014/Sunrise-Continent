@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SunriseServerCore.Dtos;
+using SunriseServerCore.Dtos.Voucher;
 
 namespace SunriseServerCore.RepoInterfaces
 {
     public interface IVoucherRepo : IRepository<Voucher>
     {
-        Task<List<VoucherBag>> GetAccountVoucherAsync(int accountId);
+        #nullable enable
+        Task<List<VoucherBag>> GetAccountVoucherAsync(int accountId, string? rank);
+        #nullable disable
+
         Task<int> CreateAsync(AddVoucherDto voucher);
         Task<int> UpdateVoucherAsync(Voucher voucher);
         Task<int> DeleteVoucherAsync(int voucherId);

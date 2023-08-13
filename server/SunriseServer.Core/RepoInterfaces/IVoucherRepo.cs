@@ -18,6 +18,6 @@ namespace SunriseServerCore.RepoInterfaces
         Task<int> UpdateVoucherAsync(Voucher voucher);
         Task<int> DeleteVoucherAsync(int voucherId);
         Task<int> UpdateAccountRankAsync(int accountId);
-        Task<int> RedeemVoucherAsync(int accountId, int voucherId);
+        Task<int> RedeemVoucherAsync(int accountId, int voucherId, int number);
     }
 }

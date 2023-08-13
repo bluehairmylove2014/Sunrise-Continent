@@ -85,10 +85,11 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
-        public async Task<int> RedeemVoucherAsync(int accountId, int voucherId)
+        public async Task<int> RedeemVoucherAsync(int accountId, int voucherId, int number)
         {
             var result = await _dataContext.Database
-                .ExecuteSqlInterpolatedAsync($"EXEC USP_RedeemVoucher @AccountId={accountId}, @VoucherId={voucherId};");
+                .ExecuteSqlInterpolatedAsync($"EXEC USP_RedeemVoucher @AccountId={accountId}, @VoucherId={voucherId}, @Number={number};");
+
             return result;
         }
     }

@@ -68,9 +68,9 @@ namespace SunriseServer.Services.VoucherService
             return result;
         }
 
-        public async Task<int> RedeemVoucher(int accountId, int voucherId)
+        public async Task<int> RedeemVoucher(int accountId, int voucherId, int number = 1)
         {
-            var result = await _unitOfWork.VoucherRepo.RedeemVoucherAsync(accountId, voucherId);
+            var result = await _unitOfWork.VoucherRepo.RedeemVoucherAsync(accountId, voucherId, number);
             return result;
         }
     }

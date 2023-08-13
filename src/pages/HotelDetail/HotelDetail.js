@@ -31,6 +31,8 @@ import {
   isDisablePrev,
   slicePaginationData,
 } from "../../utils/helpers/Pagination";
+import { useWishlist } from "../../libs/business-logic/src/lib/wishlist/process/hooks";
+import { toast } from "react-hot-toast";
 
 function numberToWord(number) {
   const words = [
@@ -59,6 +61,7 @@ const maximumReviewPerPage = 4;
 const defaultReviewStartPage = 1;
 
 const HotelDetail = () => {
+  const { addToWishlist } = useWishlist();
   const urlParams = new URLSearchParams(window.location.search);
   const hotelId = urlParams.get("id");
   const { data: hotelData } = useGetHotelDetail(hotelId);
@@ -121,6 +124,17 @@ const HotelDetail = () => {
     });
   };
 
+  const handleAddToWishlist = (e, hotel) => {
+    e.stopPropagation();
+    addToWishlist(hotel)
+      .then((message) => {
+        toast.success(message);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
+
   return hotelData ? (
     <main className="hotel-detail">
       <section className="hotel-detail__overall-wrapper">
@@ -153,7 +167,7 @@ const HotelDetail = () => {
                 &nbsp;/ night
               </p>
               <div className="booking-price__interact">
-                <button>
+                <button onClick={(e) => handleAddToWishlist(e, hotelData)}>
                   <i className="fi fi-rr-heart"></i>
                   Yêu thích
                 </button>
@@ -349,7 +363,11 @@ const HotelDetail = () => {
         <section id="rooms-section" className="hotel-detail__rooms">
           <h3>Chọn phòng</h3>
 
-          <Rooms rooms_data={roomsData} openGallery={openRoomGallery} />
+          <Rooms
+            hotelData={hotelData}
+            roomsData={roomsData}
+            openGallery={openRoomGallery}
+          />
         </section>
       </div>
       <Gallery

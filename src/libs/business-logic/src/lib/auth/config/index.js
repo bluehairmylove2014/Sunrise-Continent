@@ -5,6 +5,10 @@ export const authUrls = [
     authUrl: "/provide-information",
     redirectUrl: "/login",
   },
+  {
+    authUrl: "/voucher-shop",
+    redirectUrl: "/login",
+  },
 ];
 
 export const Loader = DefaultLoader;

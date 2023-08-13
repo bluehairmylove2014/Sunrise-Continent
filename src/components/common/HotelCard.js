@@ -19,7 +19,6 @@ const HotelCard = ({ hotelData, type }) => {
     for (let i = 0; i < numberOfStar; i++) {
       starList.push(<img src={star} alt="star" key={`star@${i}`} />);
     }
-    console.log(starList.length);
     return starList;
   };
   const handleAddToWishlist = (e, hotel) => {

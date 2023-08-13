@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import {
   BANNER_INPUT,
   FILTER_INPUT,
+  PAGINATION_MODEL,
 } from "../../constants/Variables.constants";
 import { useLocation } from "react-router-dom";
 import {
@@ -18,16 +19,23 @@ import Hotel from "./Hotel";
 import { toggleClass } from "../../utils/helpers/ToggleClass";
 import { useSearch } from "../../libs/business-logic/src/lib/hotel";
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
-import { calcMaxPage } from "../../utils/helpers/Pages";
 import { FILTER_CHECKBOX_KEY } from "../../constants/filter.constants";
+import Pagination from "../../components/common/Pagination";
+import Empty from "../../components/common/Empty";
+import {
+  calculateMaxPage,
+  slicePaginationData,
+} from "../../utils/helpers/Pagination";
 
-const itemsPerPage = 14;
+const itemsPerPage = 5;
 const budgetKey = "budget";
 const Search = () => {
   const { onSearch, isLoading: isSearching } = useSearch();
   const sortDropdownRef = useRef(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [maxPage, setMaxPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    maxPage: 1,
+  });
   const [hotels, setHotels] = useState([]);
   const [criteria, setCriteria] = useState(
     parseSearchParams(useLocation().search)
@@ -65,19 +73,25 @@ const Search = () => {
     handleSearch(criteria);
   }, []);
 
+  const scrollToTop = () => {
+    const element = document.querySelector(`.search__results`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const handleSearch = (criteria) => {
     if (typeof criteria.budget === "string") return;
     if (Object.keys(criteria).length) {
       onSearch(criteria)
         .then((data) => {
           setHotels(data);
-          setMaxPage(
-            calcMaxPage(
-              Array.isArray(data) ? data.length : 0,
-              currentPage,
-              itemsPerPage
-            )
-          );
+          setPagination({
+            ...pagination,
+            maxPage: Array.isArray(data)
+              ? calculateMaxPage(data, itemsPerPage)
+              : 1,
+          });
         })
         .catch((err) => {
           console.error(err);
@@ -168,53 +182,20 @@ const Search = () => {
   }, []);
 
   const renderHotels = (hotelList) => {
-    if (!Array.isArray(hotelList)) return <></>;
-    return hotelList.map((hotel) => {
+    if (!Array.isArray(hotelList))
+      return (
+        <div className="empty">
+          <Empty label={"Không có khách sạn nào cả"} />
+        </div>
+      );
+    return slicePaginationData(
+      hotelList,
+      pagination.currentPage,
+      pagination.maxPage,
+      itemsPerPage
+    ).map((hotel) => {
       return <Hotel data={hotel} key={hotel.id} criteria={criteria} />;
     });
-  };
-
-  const renderPagePaginationNumberBtn = (targetPage, numberOfPages) => {
-    const displayPages = [];
-
-    if (targetPage === 1) {
-      for (let i = 0; i < 3 && targetPage + i <= numberOfPages; i++) {
-        displayPages.push({
-          page: targetPage + i,
-          active: i === 0 ? true : false,
-        });
-      }
-    } else if (targetPage < numberOfPages) {
-      displayPages.push(
-        { page: targetPage - 1, active: false },
-        { page: targetPage, active: true },
-        { page: targetPage + 1, active: false }
-      );
-    } else if (targetPage === numberOfPages) {
-      for (let i = 2; i >= 0 && targetPage - i >= 1; i--) {
-        displayPages.push({
-          page: targetPage - i,
-          active: i === 0 ? true : false,
-        });
-      }
-    }
-
-    const htmlDisplayPages = displayPages.map((p, i) => {
-      return (
-        <button
-          className={p.active ? "active" : ""}
-          data-pagenumber={p.page}
-          onClick={(e) => {
-            setCurrentPage(p.page);
-          }}
-          key={`trending-hotel-page-number@${i}`}
-        >
-          {p.page}
-        </button>
-      );
-    });
-
-    return <>{htmlDisplayPages}</>;
   };
 
   return (
@@ -304,47 +285,17 @@ const Search = () => {
               </div>
               <div className="results__list">
                 {renderHotels(hotels)}
-                <div className="results__page-pagination-wrapper">
-                  {
-                    <div className="results__page-pagination">
-                      <button
-                        onClick={() => {
-                          setCurrentPage(1);
-                        }}
-                      >
-                        <i className="fi fi-rs-angle-double-small-left"></i>
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (currentPage > 1) {
-                            setCurrentPage(currentPage - 1);
-                          }
-                        }}
-                      >
-                        <i className="fi fi-rs-angle-small-left"></i>
-                      </button>
-
-                      {renderPagePaginationNumberBtn(currentPage, maxPage)}
-
-                      <button
-                        onClick={() => {
-                          if (currentPage > maxPage) {
-                            setCurrentPage(currentPage + 1);
-                          }
-                        }}
-                      >
-                        <i className="fi fi-rs-angle-small-right"></i>
-                      </button>
-                      <button
-                        onClick={() => {
-                          setCurrentPage(maxPage);
-                        }}
-                      >
-                        <i className="fi fi-rs-angle-double-small-right"></i>
-                      </button>
-                    </div>
-                  }
-                </div>
+                <Pagination
+                  data={hotels}
+                  defaultStartPage={1}
+                  maxElementPerPage={itemsPerPage}
+                  paginationState={{
+                    state: pagination,
+                    setState: setPagination,
+                  }}
+                  model={PAGINATION_MODEL.SIMPLE}
+                  callback={scrollToTop}
+                />
               </div>
             </div>
           </>

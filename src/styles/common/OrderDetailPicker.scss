@@ -70,6 +70,17 @@
         &:hover {
             transform: scale(1.1);
         }
+
+        &.add-to-cart {
+            margin-top: 20px;
+            background-color: transparent;
+            border: 1px solid black;
+            color: black;
+
+            &:hover {
+                transform: scale(1.02);
+            }
+        }
     }
 
     &.active {

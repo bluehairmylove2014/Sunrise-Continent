@@ -228,48 +228,6 @@
             // columns - row - gap
             @include dgrid(repeat(3, 1fr), auto, 1rem);
         }
-
-        .home-trending__page-pagination-wrapper {
-            // direction - justify content - align items - flex wrap
-            @include dflex(row, space-between, center, nowrap);
-
-            .home-trending__page-limit {
-                font-weight: 600;
-            }
-
-            .home-trending__page-pagination {
-                button {
-                    margin-left: 1.5rem;
-                    font-weight: 600;
-                    transition: all 0.2s ease-in;
-                    // border - border radius - background color - color - padding - font size
-                    @include normal-btn(none, 5px, transparent, black, 0.5rem 1rem, 1rem);
-
-                    i {
-                        position: relative;
-                        bottom: -2px;
-                    }
-
-                    &:hover {
-                        background-color: var(--quill-grey);
-                    }
-
-                    &.active {
-                        background-color: var(--butterfly-bush);
-                        color: white;
-                    }
-
-                    &:disabled {
-                        opacity: 0.5;
-                        cursor: not-allowed;
-
-                        &:hover {
-                            background-color: transparent;
-                        }
-                    }
-                }
-            }
-        }
     }
 
     .home__why-choosing-us {

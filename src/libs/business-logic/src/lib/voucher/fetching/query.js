@@ -4,8 +4,8 @@ import { QUERY_KEYS } from "../constants";
 
 const voucherService = new VoucherService();
 
-export const useGetVoucherQuery = (token) => {
-  return useQuery([QUERY_KEYS.GET_VOUCHER, token], () =>
-    voucherService.getVoucher(token)
+export const useGetVoucherQuery = (token, rank) => {
+  return useQuery([QUERY_KEYS.GET_VOUCHER, token, rank], () =>
+    voucherService.getVoucher(token, rank)
   );
 };

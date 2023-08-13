@@ -24,16 +24,11 @@ import { bannerData, countriesData, roomTypesData } from "./Data";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { PAGES } from "../../constants/Link.constants";
 import {
-  calculateFromIndex,
   calculateMaxPage,
-  calculateNumberList,
-  calculateToIndex,
-  handleNextPage,
-  handlePrevPage,
-  isDisableNext,
-  isDisablePrev,
   slicePaginationData,
 } from "../../utils/helpers/Pagination";
+import Pagination from "../../components/common/Pagination";
+import { PAGINATION_MODEL } from "../../constants/Variables.constants";
 
 const geoUrl =
   "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
@@ -84,30 +79,6 @@ const Home = () => {
       ...prevState,
       [key]: value,
     }));
-  };
-  const handleChangeTrendingHotelPage = (e) => {
-    setHotHotelPagination({
-      ...hotHotelPagination,
-      currentPage: Number(e.target.getAttribute("data-pagenumber")),
-    });
-  };
-  const renderPagePaginationNumberBtn = (targetPage, numberOfPages) => {
-    const displayPages = calculateNumberList(targetPage, numberOfPages);
-
-    const htmlDisplayPages = displayPages.map((p, i) => {
-      return (
-        <button
-          className={p.active ? "active" : ""}
-          data-pagenumber={p.page}
-          onClick={(e) => handleChangeTrendingHotelPage(e)}
-          key={`trending-hotel-page-number@${i}`}
-        >
-          {p.page}
-        </button>
-      );
-    });
-
-    return <>{htmlDisplayPages}</>;
   };
   const extractMinAndMax = (rangeString) => {
     // Check if the input is not a string or is null/undefined
@@ -169,7 +140,12 @@ const Home = () => {
     if (!mapRef.current || !mapRef.current.removeEventListener) return;
     mapRef.current.removeEventListener("mousemove", handleMouseMove);
   };
-
+  const scrollToTop = () => {
+    const element = document.querySelector(`.home__trending`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   const handleMouseMove = (event) => {
     const { clientX, clientY } = event;
     setTooltipPosition({ x: clientX + 10, y: clientY - 20 });
@@ -385,73 +361,17 @@ const Home = () => {
             </div>
 
             {/* Page Pagination */}
-            <div className="home-trending__page-pagination-wrapper">
-              <p className="home-trending__page-limit">
-                Hiển thị{" "}
-                {calculateFromIndex(
-                  hotHotelPagination.currentPage,
-                  maximumHotHotelPerPage
-                )}{" "}
-                -{" "}
-                {calculateToIndex(
-                  hotHotelData,
-                  hotHotelPagination.currentPage,
-                  maximumHotHotelPerPage
-                )}{" "}
-                trong {hotHotelData.length} khách sạn nổi bật
-              </p>
-              {hotHotelData.length > 1 && (
-                <div className="home-trending__page-pagination">
-                  <button
-                    disabled={hotHotelPagination.currentPage === 1}
-                    onClick={() =>
-                      setHotHotelPagination({
-                        ...hotHotelPagination,
-                        currentPage: 1,
-                      })
-                    }
-                  >
-                    <i className="fi fi-rs-angle-double-small-left"></i>
-                  </button>
-                  <button
-                    disabled={isDisablePrev(hotHotelPagination.currentPage)}
-                    onClick={() =>
-                      handlePrevPage(hotHotelPagination, setHotHotelPagination)
-                    }
-                  >
-                    <i className="fi fi-rs-angle-small-left"></i>
-                  </button>
-
-                  {renderPagePaginationNumberBtn(
-                    hotHotelPagination.currentPage,
-                    hotHotelPagination.maxPage
-                  )}
-
-                  <button
-                    disabled={isDisableNext(hotHotelPagination)}
-                    onClick={() =>
-                      handleNextPage(hotHotelPagination, setHotHotelPagination)
-                    }
-                  >
-                    <i className="fi fi-rs-angle-small-right"></i>
-                  </button>
-                  <button
-                    disabled={
-                      hotHotelPagination.currentPage ===
-                      hotHotelPagination.maxPage
-                    }
-                    onClick={() =>
-                      setHotHotelPagination({
-                        ...hotHotelPagination,
-                        currentPage: hotHotelPagination.maxPage,
-                      })
-                    }
-                  >
-                    <i className="fi fi-rs-angle-double-small-right"></i>
-                  </button>
-                </div>
-              )}
-            </div>
+            <Pagination
+              data={hotHotelData}
+              defaultStartPage={defaultReviewStartPage}
+              maxElementPerPage={maximumHotHotelPerPage}
+              paginationState={{
+                state: hotHotelPagination,
+                setState: setHotHotelPagination,
+              }}
+              model={PAGINATION_MODEL.DETAIL}
+              callback={scrollToTop}
+            />
           </>
         ) : (
           <SunriseLoader />

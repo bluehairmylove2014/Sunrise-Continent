@@ -9,4 +9,5 @@ export const PAGES = {
   PRE_CHECKOUT: "/provide-information",
   COUNTRY: "/country",
   VOUCHER_SHOP: "/voucher-shop",
+  CHECKOUT: "/checkout",
 };

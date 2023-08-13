@@ -13,7 +13,7 @@ import { toggleClass } from "../../utils/helpers/ToggleClass";
 import { parseSearchParams } from "../../utils/helpers/params";
 import OrderDetailPicker from "../../components/common/OrderDetailPicker";
 
-const Rooms = ({ rooms_data, openGallery }) => {
+const Rooms = ({ hotelData, roomsData, openGallery }) => {
   let room = null;
   const { id, ...dateTimeParams } = parseSearchParams(useLocation().search);
   const pickerFormDefaultValue = {
@@ -28,8 +28,12 @@ const Rooms = ({ rooms_data, openGallery }) => {
   });
   const pickerRef = useRef(null);
 
-  if (Array.isArray(rooms_data)) {
-    room = rooms_data.map((rd) => {
+  const addToCart = () => {
+    console.log({ hotelData, roomsData });
+  };
+
+  if (Array.isArray(roomsData)) {
+    room = roomsData.map((rd) => {
       return (
         <div className="room__wrapper" key={`room@${rd.id}`}>
           <h5>{rd.name}</h5>
@@ -145,14 +149,19 @@ const Rooms = ({ rooms_data, openGallery }) => {
                   </span>{" "}
                   / đêm
                 </p>
-                <button
-                  onClick={() => {
-                    toggleClass(pickerRef.current);
-                  }}
-                  className={rd.vacancy ? "booking" : "change"}
-                >
-                  {rd.vacancy ? "Đặt phòng ngay" : "Đổi ngày đặt"}
-                </button>
+                <div className="btn__wrapper">
+                  <button
+                    onClick={() => {
+                      toggleClass(pickerRef.current);
+                    }}
+                    className={rd.vacancy ? "booking" : "change"}
+                  >
+                    {rd.vacancy ? "Đặt ngay" : "Đổi ngày"}
+                  </button>
+                  <button className="cart" onClick={() => addToCart()}>
+                    <i className="fi fi-sr-shopping-cart-add"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -4,15 +4,19 @@ import voucherData from "../data/voucher.json";
 import { getApiUrl } from "../../config/url";
 
 axiosMockAdapterInstance
-  .onGet(getApiUrl(false) + new VoucherService().getVoucherUrl)
+  .onPost(getApiUrl(false) + new VoucherService().redeemVoucherUrl)
   .reply((config) => {
     const token = config.headers?.Authorization.replace("Bearer ", "");
-    const rank = config.params.rank;
-    const voucherList = rank
-      ? voucherData.filter((vd) => vd.requiredRank === rank)
-      : voucherData;
+    const { voucherId, quantity } = JSON.parse(config.data);
+    const voucher = voucherData.find((vd) => vd.voucherId === voucherId);
+    voucher.quantity += quantity;
     if (token) {
-      return [200, voucherList];
+      return [
+        200,
+        {
+          message: "Redeem Success",
+        },
+      ];
     } else {
       return [
         401,

@@ -23,12 +23,17 @@ import OrderDetailPicker from "../../components/common/OrderDetailPicker";
 import { PAGES } from "../../constants/Link.constants";
 import SelectVoucer from "./SelectVoucer";
 import { CONVERSION_FACTOR } from "../../constants/Variables.constants";
+import { useNavigate } from "react-router-dom";
+import { useInitOrder } from "../../libs/business-logic/src/lib/order/process/hooks";
 
 const PreCheckout = () => {
   const { hotelID, roomID, start_date, end_date, adults, childrens, rooms } =
     parseSearchParams(window.location.search);
 
+  const navigate = useNavigate();
+
   const pickerRef = useRef(null);
+  const { onInitOrder } = useInitOrder();
 
   const { data: hotelData } = useGetHotelDetail(hotelID);
   const { data: roomData } = useGetSpecificRoom(hotelID, roomID);
@@ -102,32 +107,26 @@ const PreCheckout = () => {
       toast.error("Hãy đồng ý với điều khoản và chính sách nhé!");
       return;
     }
-    // onCreateOrder({
-    //   fullName: data.fullName,
-    //   nation: data.nationality,
-    //   dateOfBirth: data.dob,
-    //   email: data.email,
-    //   phoneNumber: data.phone,
-    //   specialNeeds: "",
-    //   notes: data.otherRequirements,
-    //   voucherId: 0,
-    //   orders: [
-    //     {
-    //       hotelId: hotelID,
-    //       roomTypeId: roomID,
-    //       checkIn: bookingFormValue.start_date,
-    //       checkOut: bookingFormValue.end_date,
-    //       numberOfRoom: bookingFormValue.rooms,
-    //     },
-    //   ],
-    // })
-    //   .then((message) => {
-    //     toast.success(message);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //     toast.error(error.message);
-    //   });
+    navigate(PAGES.CHECKOUT);
+    onInitOrder({
+      fullName: data.fullName,
+      nation: data.nationality,
+      dateOfBirth: data.dob,
+      email: data.email,
+      phoneNumber: data.phone,
+      specialNeeds: "",
+      notes: data.otherRequirements,
+      voucherId: 0,
+      orders: [
+        {
+          hotelId: hotelID,
+          roomTypeId: roomID,
+          checkIn: bookingFormValue.start_date,
+          checkOut: bookingFormValue.end_date,
+          numberOfRoom: bookingFormValue.rooms,
+        },
+      ],
+    });
   };
   const onContactFormError = (error) => {
     toast.error(error[Object.keys(error)[0]].message);

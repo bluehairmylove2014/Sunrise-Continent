@@ -30,7 +30,7 @@ export class HotelService extends Services {
         params: keys,
         signal: this.abortController.signal,
         transformResponse: (res) => res,
-        isProduction: true,
+        // isProduction: true,
       });
       return response;
     } catch (error) {
@@ -53,7 +53,7 @@ export class HotelService extends Services {
         },
         signal: this.abortController.signal,
         transformResponse: (res) => res,
-        isProduction: true,
+        // isProduction: true,
       });
       return response;
     } catch (error) {
@@ -76,7 +76,7 @@ export class HotelService extends Services {
         },
         signal: this.abortController.signal,
         transformResponse: (res) => res,
-        isProduction: true,
+        // isProduction: true,
       });
       return response;
     } catch (error) {
@@ -166,7 +166,7 @@ export class HotelService extends Services {
     } catch (error) {
       if (!this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 6");
+        console.error("Catch error 7");
         throw error;
       }
     }

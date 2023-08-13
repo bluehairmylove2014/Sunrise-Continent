@@ -5,6 +5,7 @@ import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import Voucher from "../../components/common/Voucher";
 import { PAGES } from "../../constants/Link.constants";
 import { useGetVoucher } from "../../libs/business-logic/src/lib/voucher";
+import { VOUCHER_DISPLAY_TYPE } from "../../constants/Variables.constants";
 
 const SelectVoucer = ({ isOpen, chooseVoucherCallback, closeCallback }) => {
   const voucherData = useGetVoucher();
@@ -21,6 +22,7 @@ const SelectVoucer = ({ isOpen, chooseVoucherCallback, closeCallback }) => {
               <Voucher
                 voucherData={vd}
                 chooseVoucherCallback={chooseVoucherCallback}
+                type={VOUCHER_DISPLAY_TYPE.STORAGE}
               />
             ))
           ) : voucherData === null ? (

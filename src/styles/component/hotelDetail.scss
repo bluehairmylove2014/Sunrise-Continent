@@ -731,28 +731,39 @@
                             }
                         }
 
-                        button {
-                            // border - border radius - background color - color - padding - font size
-                            @include normal-btn(none, 5px, var(--ultramarine-blue), white, 10px 20px, 0.75rem);
-                            font-weight: 600;
+                        .btn__wrapper {
+                            // direction - justify content - align items - flex wrap
+                            @include dflex(row, space-between, center, nowrap);
+                            gap: 10px;
 
-                            &.booking {
-                                background-color: var(var(--ultramarine-blue));
+                            button:not(.cart) {
+                                // border - border radius - background color - color - padding - font size
+                                @include normal-btn(none, 5px, var(--ultramarine-blue), white, 10px 20px, 0.75rem);
+                                font-weight: 600;
 
-                                &:hover {
-                                    background-color: var(--soft-blue);
+                                &.booking {
+                                    background-color: var(var(--ultramarine-blue));
+
+                                    &:hover {
+                                        background-color: var(--soft-blue);
+                                    }
+                                }
+
+                                &.change {
+                                    background-color: var(--heavy-white-smoke);
+                                    color: black;
+
+                                    &:hover {
+                                        background-color: var(--quill-grey);
+                                    }
                                 }
                             }
 
-                            &.change {
-                                background-color: var(--heavy-white-smoke);
-                                color: black;
+                            .cart {
+                                // border - border radius - background color - color - padding - font size
+                                @include normal-btn(1px solid black, 5px, transparent, black, 6px 12px, 1rem);
 
-                                &:hover {
-                                    background-color: var(--quill-grey);
-                                }
                             }
-
                         }
                     }
                 }

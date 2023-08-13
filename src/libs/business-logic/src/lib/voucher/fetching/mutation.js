@@ -9,3 +9,8 @@ export const useGetVoucherMutation = () => {
     retry: mutationConfig.RETRY,
   });
 };
+export const useRedeemVoucherMutation = () => {
+  return useMutation(voucherService.redeemVoucher, {
+    retry: mutationConfig.RETRY,
+  });
+};

@@ -46,7 +46,6 @@ const OrderDetailPicker = React.forwardRef(
             CheckOut: data.end_date,
           })
             .then((message) => {
-              toast.success(message);
               navigate(
                 PAGES.PRE_CHECKOUT +
                   `?hotelID=${rd.hotelId}&roomID=${rd.id}` +
@@ -55,6 +54,7 @@ const OrderDetailPicker = React.forwardRef(
                   `&childrens=${defaultValues.childrens}` +
                   `&rooms=${defaultValues.rooms}`
               );
+              toast.success(message);
             })
             .catch((error) => {
               toast.error(error.message);
@@ -62,6 +62,7 @@ const OrderDetailPicker = React.forwardRef(
         }
       }
     };
+
     return (
       <form
         className="room__pre-checkout-picker"
@@ -118,6 +119,9 @@ const OrderDetailPicker = React.forwardRef(
         <button type="submit" className="search__submit-btn">
           Xác nhận
         </button>
+        {/* <button type="button" className="search__submit-btn add-to-cart">
+          Thêm vào giỏ hàng
+        </button> */}
       </form>
     );
   }

@@ -4,3 +4,4 @@ export * from "./useGetTax";
 export * from "./useCreateOrder";
 export * from "./useGetCoupon";
 export * from "./useGetTotal";
+export * from "./useInitOrder";

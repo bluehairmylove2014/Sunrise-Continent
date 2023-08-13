@@ -41,3 +41,12 @@ export const HOTEL_TYPE = {
   VERTICAL: 1,
   HORIZONTAL: 0,
 };
+
+export const VOUCHER_DISPLAY_TYPE = {
+  SHOP: 1,
+  STORAGE: 0,
+};
+export const PAGINATION_MODEL = {
+  DETAIL: 1,
+  SIMPLE: 2,
+};

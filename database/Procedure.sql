@@ -1130,17 +1130,23 @@ AS
 						WHERE p1.RankName like (@Rank))
 GO
 
+-- // Check
 CREATE OR ALTER PROCEDURE USP_GetUserVoucher
 	@AccountId INT,
-	@Rank VARCHAR(20)
+	@Rank VARCHAR(20) = null
 AS
 BEGIN
 	IF (@Rank IS NULL)
-		SELECT @Rank = AccountRank FROM ACCOUNT WHERE Id = @AccountId
-
-	SELECT ISNULL(VB.AccountId, 0) as AccountId, VC.*, ISNULL(VB.Quantity, 0) as Quantity 
-	FROM (SELECT * FROM dbo.USF_GetVoucherByRank(@Rank)) VC
-	LEFT JOIN (SELECT * FROM VOUCHER_BAG WHERE AccountId = @AccountId) VB ON VC.VoucherId = VB.VoucherId;
+	BEGIN
+		SELECT vb.AccountId, vc.*, vb.Quantity FROM (SELECT * FROM VOUCHER_BAG WHERE AccountId = @AccountId) vb
+		JOIN VOUCHER vc ON vb.VoucherId = vc.VoucherId;
+	END
+	ELSE
+	BEGIN
+		SELECT ISNULL(VB.AccountId, 0) as AccountId, VC.*, ISNULL(VB.Quantity, 0) as Quantity 
+		FROM (SELECT * FROM VOUCHER WHERE AccountRank like @Rank) VC
+		LEFT JOIN (SELECT * FROM VOUCHER_BAG WHERE AccountId = @AccountId) VB ON VC.VoucherId = VB.VoucherId;
+	END
 END
 GO
 
@@ -1202,10 +1208,12 @@ BEGIN
 END
 GO
 
---TODO proc đổi điểm
+--TODO proc đổi điểm // Check --// WARNING
 CREATE OR ALTER PROCEDURE USP_RedeemVoucher
     @AccountId INT,
-    @VoucherId INT
+    @VoucherId INT,
+    @Number INT = 1,
+	@DateRecorded VARCHAR(30)
 AS
 BEGIN
 	DECLARE @VoucherValue INT;
@@ -1216,8 +1224,8 @@ BEGIN
 	IF NOT EXISTS (SELECT TOP(1) Id FROM ACCOUNT WHERE Id = @AccountId)
 		OR NOT EXISTS (SELECT TOP(1) VoucherId FROM VOUCHER WHERE VoucherId = @VoucherId)
 	BEGIN
-		-- Trả về giá trị 0 nếu tài khoản hoặc voucher không tồn tại
-		RETURN -1;
+		-- Trả về giá trị -1 nếu tài khoản hoặc voucher không tồn tại
+		RETURN -2;
 	END
 
 	DECLARE @RankName VARCHAR(20);
@@ -1227,18 +1235,20 @@ BEGIN
 						WHERE p1.RankName like (SELECT TOP(1) AccountRank FROM ACCOUNT WHERE Id = @AccountId)))
 	BEGIN
 		RAISERROR(N'Tài khoản không đủ quyền đổi voucher này', 11, 1)
-		RETURN -1;
+		RETURN -3;
 	END
 
 	-- Lấy giá trị voucher cần đổi và số điểm hiện tại của tài khoản
 	SELECT @VoucherValue = Point FROM VOUCHER WHERE VoucherId = @VoucherId;
 	SELECT @CurrentPoints = MemberPoint FROM ACCOUNT WHERE Id = @AccountId;
 
+	IF (@DateRecorded IS NULL) SET @DateRecorded = FORMAT(GETDATE(), 'yyyy-MM-dd HH:mm:ss.fffffff');
+
 	-- Kiểm tra xem tài khoản có đủ điểm để đổi voucher không
-	IF (@CurrentPoints < @VoucherValue)
+	IF (@CurrentPoints < (@VoucherValue * @Number))
 	BEGIN
 		RAISERROR(N'Tài khoản không đủ điểm để đổi voucher này', 11, 1)
-		RETURN -1; -- Trả về giá trị -1 nếu tài khoản không đủ điểm để đổi voucher
+		RETURN -4; -- Trả về giá trị -3 nếu tài khoản không đủ điểm để đổi voucher
 	END
 	ELSE
 	BEGIN
@@ -1250,15 +1260,15 @@ BEGIN
 			SELECT @Quantity = Quantity FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
 
 			IF (@Quantity IS NULL)
-				INSERT INTO VOUCHER_BAG (AccountId, VoucherId, Quantity) VALUES (@AccountId, @VoucherId, 1);
+				INSERT INTO VOUCHER_BAG (AccountId, VoucherId, Quantity) VALUES (@AccountId, @VoucherId, @Number);
 			ELSE
-				UPDATE VOUCHER_BAG SET Quantity = @Quantity + 1 WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
+				UPDATE VOUCHER_BAG SET Quantity = @Quantity + @Number WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
 
 			-- Cập nhật điểm của tài khoản
-			UPDATE ACCOUNT SET MemberPoint = @CurrentPoints - @VoucherValue WHERE Id = @AccountId;
+			UPDATE ACCOUNT SET MemberPoint = @CurrentPoints - (@VoucherValue * @Number) WHERE Id = @AccountId;
 
 			-- Lưu lịch sử sử dụng điểm vào bảng POINT_HISTORY
-			INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime) VALUES (@AccountId, -@VoucherValue, GETDATE());
+			INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime) VALUES (@AccountId, -(@VoucherValue * @Number), @DateRecorded);
 		END TRY
 
 		BEGIN CATCH
@@ -1276,9 +1286,10 @@ GO
 
 GO
 --todo proc tính điểm từ giao dịch và lưu thay đổi điểm 
-CREATE OR ALTER PROCEDURE USP_UpdateMemberPoints
+CREATE OR ALTER PROCEDURE USP_UpdateMemberPoints --// WARNING!!!!!!
     @AccountId INTEGER,
     @TotalPay INT,
+	@DateRecorded VARCHAR(30),
     @ExchangeRate INT = 1
 AS
 BEGIN
@@ -1293,7 +1304,7 @@ BEGIN
 		UPDATE ACCOUNT SET MemberPoint = MemberPoint + CAST(@EarnedPoints as INT) WHERE Id = @AccountId;
 
 		-- Ghi lại lịch sử điểm vào bảng POINT_HISTORY
-		INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime) VALUES (@AccountId, @EarnedPoints, GETDATE());
+		INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime) VALUES (@AccountId, @EarnedPoints, @DateRecorded);
 	END TRY
 
 	BEGIN CATCH
@@ -1495,7 +1506,8 @@ CREATE OR ALTER PROC USP_AddFullOrder (
 	@Email VARCHAR(200),
 	@PhoneNumber VARCHAR(20),
 	@SpecialNeeds NVARCHAR(500),
-	@Notes NVARCHAR(500))
+	@Notes NVARCHAR(500),
+	@DateRecorded VARCHAR(30))
 AS
 BEGIN
 	BEGIN TRAN
@@ -1504,8 +1516,10 @@ BEGIN
 		DECLARE @OrderId INT;
 		EXEC @OrderId = USP_GetNextColumnId 'ACCOUNT_ORDER', 'OrderId ';
 
+		IF (@DateRecorded IS NULL) SET @DateRecorded = FORMAT(GETDATE(), 'yyyy-MM-dd HH:mm:ss.fffffff');
+
 		INSERT INTO ACCOUNT_ORDER (OrderId, AccountId, FullName, Nation, DateOfBirth, Email, PhoneNumber, SpecialNeeds, Notes, VoucherId, Total, Paid, CreatedAt) VALUES 
-			(@OrderId, @AccountId, @FullName, @Nation, @DateOfBirth, @Email, @PhoneNumber, @SpecialNeeds, @Notes, 0, 0, 0, GETDATE());
+			(@OrderId, @AccountId, @FullName, @Nation, @DateOfBirth, @Email, @PhoneNumber, @SpecialNeeds, @Notes, 0, 0, 0, @DateRecorded);
 	END TRY
 
 	BEGIN CATCH
@@ -1597,7 +1611,7 @@ RETURNS INT
 AS
 BEGIN
 	DECLARE @Result INT = 0;
-	SELECT @Result = (RT.Price + dbo.USF_GetServiceFee()) * BA.NumberOfRoom 
+	SELECT @Result = (RT.Price) * BA.NumberOfRoom 
 	FROM (SELECT * FROM BOOKING_ACCOUNT WHERE BookingId = @BookingId) BA 
 	JOIN ROOM_TYPE RT ON RT.HotelId = BA.HotelId AND RT.Id = BA.RoomTypeId;
 
@@ -1622,10 +1636,12 @@ GO
 
 -- //
 GO
-CREATE OR ALTER PROC USP_ConfirmOrder
+CREATE OR ALTER PROC USP_ConfirmOrder --// WARNING!!!!!!
 	@OrderId INT,
 	@AccountId INT,
-	@VoucherId INTEGER
+	@VoucherId INTEGER,
+	@MultipleConfirm BIT = 0,
+	@DateRecorded VARCHAR(30)
 AS
 BEGIN
 	IF (@OrderId IS NULL OR @OrderId <= 0)
@@ -1660,12 +1676,14 @@ BEGIN
 	END
 
 	BEGIN TRAN
+	--SET TRAN ISOLATION LEVEL SERIALIZABLE
+
 	BEGIN TRY
 		DECLARE @Discount FLOAT = 0;
 		SELECT @Discount = Value FROM VOUCHER WHERE VoucherId = @VoucherId;
 		DECLARE @Total INT = dbo.USF_GetOrderTotal(@OrderId);
 
-		IF (@VoucherId IS NOT NULL AND @VoucherId > 0)
+		IF ((@VoucherId IS NOT NULL OR @MultipleConfirm = 0) AND @VoucherId > 0)
 		BEGIN
 			-- Giảm số lượng voucher trong túi.
 			IF (@Quantity = 1)
@@ -1682,7 +1700,7 @@ BEGIN
 		WHERE OrderId = @OrderId;
 
 		-- Cập nhật điểm thành viên.
-		EXEC USP_UpdateMemberPoints @AccountId, @Total;
+		EXEC USP_UpdateMemberPoints @AccountId, @Total, @DateRecorded;
 	END TRY
 
 	BEGIN CATCH
@@ -1697,28 +1715,28 @@ END;
 GO
 
 -- ++
-GO
-CREATE OR ALTER PROC USP_ConfirmOrderWithTotal
-	@OrderId INT,
-	@AccountId INT,
-	@VoucherId INT,
-	@Total INT
-AS
-BEGIN
-	-- Kiểm tra số tiền thanh toán.
-	DECLARE @Discount INT = 0;
-	DECLARE @Check INT = dbo.USF_GetOrderTotal(@OrderId);
-	SELECT @Discount = Value FROM VOUCHER WHERE VoucherId = @VoucherId;
+--GO
+--CREATE OR ALTER PROC USP_ConfirmOrderWithTotal
+--	@OrderId INT,
+--	@AccountId INT,
+--	@VoucherId INT,
+--	@Total INT
+--AS
+--BEGIN
+--	-- Kiểm tra số tiền thanh toán.
+--	DECLARE @Discount INT = 0;
+--	DECLARE @Check INT = dbo.USF_GetOrderTotal(@OrderId);
+--	SELECT @Discount = Value FROM VOUCHER WHERE VoucherId = @VoucherId;
 
-	IF (@Total + @Discount - @Check < 0)
-	BEGIN
-		RAISERROR(N'Không đủ tiền thanh toán', 11, 1);
-		RETURN -1;
-	END
+--	IF (@Total + @Discount - @Check < 0)
+--	BEGIN
+--		RAISERROR(N'Không đủ tiền thanh toán', 11, 1);
+--		RETURN -1;
+--	END
 
-	EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId;
-END
-GO
+--	EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId;
+--END
+--GO
 
 
 CREATE OR ALTER FUNCTION USF_GetAccountId (@Email VARCHAR(50))

@@ -43,10 +43,11 @@ namespace SunriseServerData.Repositories
                             .GroupBy(o => o.HotelId)
                             .Select(x => x.Select(v => v).ToList())
                             .ToList();
-
+            var multipleConfirm = hotelList.Count > 1 ? 1 : 0;
+            
             foreach (var item in hotelList)
             {
-                builder.Append($"EXEC @OrderId = USP_AddFullOrder {str.Remove(start, count)};\n");
+                builder.Append($"EXEC @OrderId = USP_AddFullOrder {str.Remove(start, count)}, @DateRecorded='{DateTime.Now.ToString($"yyyy-MM-dd HH:mm:ss.fffffff")}';\n");
                 
                 foreach (var hotel in item)
                 {
@@ -55,15 +56,15 @@ namespace SunriseServerData.Repositories
                     builder.Append($"EXEC USP_AddBookingByOrderId @OrderId, @BookingId;\n");
                 }
 
-                builder.Append($"EXEC USP_ConfirmOrder @OrderId=null, @AccountId={accountId}, @VoucherId=0;\n");
+                builder.Append($"EXEC USP_ConfirmOrder @OrderId=null, @AccountId={accountId}, @VoucherId={order.VoucherId}, @MultipleConfirm={multipleConfirm}, @DateRecorded='{DateTime.Now.ToString($"yyyy-MM-dd HH:mm:ss.fffffff")}';\n");
             }
 
             var sqlString = builder.ToString();
-            var lastindex = sqlString.LastIndexOf("@VoucherId");
-            builder.Remove(lastindex, "@VoucherId=0;\n".Length);
-            builder.Append($"@VoucherId={order.VoucherId};\n");
+            var lastindex = sqlString.LastIndexOf("@MultipleConfirm");
+            builder.Remove(lastindex, $"@MultipleConfirm={multipleConfirm}".Length);
+            builder.Insert(lastindex, $"@MultipleConfirm=0");
 
-            // await Task.Delay(100);
+            // await Task.Delay(10); var result = 1;
             Console.WriteLine(builder.ToString());
             
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");

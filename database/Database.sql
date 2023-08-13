@@ -143,7 +143,7 @@ CREATE TABLE POINT_HISTORY
 (
 	AccountId INT,
 	Value INT,
-	RecordedTime DATETIME,
+	RecordedTime VARCHAR(30),
 
 	PRIMARY KEY(AccountId, RecordedTime)
 )
@@ -202,7 +202,7 @@ CREATE TABLE ACCOUNT_ORDER
 	VoucherId INT,
 	Total INT,
 	Paid BIT, -- 1 = True, 0 = False
-	CreatedAt DATETIME,
+	CreatedAt VARCHAR(30),
 	--OrderStatus VARCHAR(10),
 
 	PRIMARY KEY (OrderId)

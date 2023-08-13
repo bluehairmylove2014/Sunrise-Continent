@@ -18,6 +18,6 @@ namespace SunriseServer.Services.VoucherService
         Task<int> UpdateVoucher(Voucher voucher);
         Task<int> DeleteVoucher(int voucherId);
         Task<int> UpdateAccountRank(int accountId);
-        Task<int> RedeemVoucher(int accountId, int voucherId);
+        Task<int> RedeemVoucher(int accountId, int voucherId, int number);
     }
 }

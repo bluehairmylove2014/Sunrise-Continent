@@ -18,6 +18,6 @@ namespace SunriseServerCore.Models
         public int VoucherId { get; set; }
         public int Total { get; set; }
         public bool Paid { get; set; } //-- 1 = True, 0 = False
-        public DateTime CreatedAt { get; set; }
+        public string CreatedAt { get; set; } = string.Empty;
     }
 }

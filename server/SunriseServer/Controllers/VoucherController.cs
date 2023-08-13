@@ -69,6 +69,9 @@ namespace SunriseServer.Controllers
         [HttpPut(""), Authorize(Roles = GlobalConstant.Admin)]
         public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateVoucher(Voucher voucher)
         {
+            if (voucher.Value > 1 || voucher.Value < 0)
+                return BadRequest("Cannot Update voucher.");
+
             var result = await _voucherService.UpdateVoucher(voucher);
 
             if (result == 0)
@@ -101,13 +104,22 @@ namespace SunriseServer.Controllers
         }
         
         [HttpPost("redeem"), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<ResponseMessageDetails<int>>> RedeemVoucher(int voucherId)
+        public async Task<ActionResult<ResponseMessageDetails<int>>> RedeemVoucher(int voucherId, int number = 1)
         {
+            if (number <= 0) 
+                return BadRequest("Number of voucher incorrect");
+            
             Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
-            var result = await _voucherService.RedeemVoucher(accountId, voucherId);
 
-            if (result == 0)
-                return NotFound("Account not found.");
+            int result = 0;
+            try
+            {
+                result = await _voucherService.RedeemVoucher(accountId, voucherId, number);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(exception.Message);
+            }
 
             return Ok(new ResponseMessageDetails<int>("Redeem voucher successfully", result));
         }

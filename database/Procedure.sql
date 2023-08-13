@@ -66,7 +66,7 @@ GO
 
 
 
--- //
+-- // check
 GO
 CREATE OR ALTER FUNCTION USF_GetServiceFee () -- CartItem
 RETURNS INT
@@ -76,23 +76,23 @@ END
 GO
 
 
-CREATE OR ALTER PROC USP_SearchByName 
-	@search_query NVARCHAR(100)
-AS
-	IF NOT EXISTS (select * from HOTEL where Description like (N'%' + @search_query + N'%'))
-	BEGIN
-		RETURN 0
-	END
+--CREATE OR ALTER PROC USP_SearchByName 
+--	@search_query NVARCHAR(100)
+--AS
+--	IF NOT EXISTS (select * from HOTEL where Description like (N'%' + @search_query + N'%'))
+--	BEGIN
+--		RETURN 0
+--	END
 
-	SELECT Id, Name, Address, Stars, Image,
-			dbo.USF_GetReviewNum(Id) Reviews, 
-			dbo.USF_GetAvgReview(Id) Points,
-			dbo.USF_GetMinRoomPrice(Id) Price
-	FROM HOTEL
-	WHERE Description like (N'%' + @search_query + N'%')
+--	SELECT Id, Name, Address, Stars, Image,
+--			dbo.USF_GetReviewNum(Id) Reviews, 
+--			dbo.USF_GetAvgReview(Id) Points,
+--			dbo.USF_GetMinRoomPrice(Id) Price
+--	FROM HOTEL
+--	WHERE Description like (N'%' + @search_query + N'%')
 
-	RETURN 1
-GO
+--	RETURN 1
+--GO
 
 
 GO
@@ -298,11 +298,13 @@ AS
 	JOIN PERSONAL_DETAILS PD ON ACC.Id = PD.AccountId;
 GO
 
-
+-- /NEW/ // check
 CREATE OR ALTER PROC USP_GetHotelReviews
 	@Id INT
 AS
-	SELECT * FROM REVIEW where HotelId = @Id;
+	SELECT rv.ReviewId as Id, pd.FullName as UserName, pd.Image as UserAvatar, rv.ReviewDate, rv.Points, rv.Content
+	FROM (SELECT * FROM REVIEW WHERE HotelId = @Id) rv 
+	LEFT JOIN PERSONAL_DETAILS pd ON rv.AccountId = pd.AccountId;
 GO
 
 
@@ -324,8 +326,14 @@ BEGIN
 	BEGIN TRY
 		INSERT INTO ACCOUNT VALUES (@Id, 0, 'Bronze', @Email, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires)
 
-		INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank) 
-			VALUES (@Id, @FullName, @Email, 'default', '01-01-2002', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze')
+		IF NOT EXISTS (SELECT AccountId FROM PERSONAL_DETAILS WHERE AccountId = @Id)
+			INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank) 
+				VALUES (@Id, @FullName, @Email, 'default', '01-01-2002', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze');
+		ELSE
+			UPDATE PERSONAL_DETAILS SET
+				FullName = @FullName,
+				EmailAddress = @Email
+			WHERE AccountId = @Id;
 	END TRY
 
 	BEGIN CATCH
@@ -344,7 +352,7 @@ GO
 CREATE OR ALTER PROC USP_UpdateAccount
 	@Id INTEGER,
 	@MemberPoint INTEGER,
-	@AccountRank VARCHAR(10),
+	@AccountRank VARCHAR(20),
 	@Email VARCHAR(50),
 	@PasswordHash VARCHAR(500),
 	@PasswordSalt VARCHAR(500)
@@ -442,7 +450,7 @@ GO
 
 --TODO PROCEDURE CRUD LOẠI PHÒNG
 
---!Thêm loại phòng
+--!Thêm loại phòng // Check
 CREATE OR ALTER PROCEDURE USP_AddRoomType
     @HotelId INT,
     @Id INT,
@@ -857,11 +865,8 @@ GO
 --TODO PROC CRUD ẢNH CỦA REVIEW
 --!THÊM
 CREATE OR ALTER PROCEDURE USP_AddReviewImage
-    @AccountId INT,
-    @HotelId INT,
-    @ImageId INT,
-    @ImageLink VARCHAR(1000),
-    @Result INT OUTPUT
+    @ReviewId INT,
+    @ImageLink VARCHAR(1000)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -870,22 +875,23 @@ BEGIN
 
     BEGIN TRY
         -- Thêm REVIEW_IMAGE mới
-        INSERT INTO REVIEW_IMAGE (AccountId, HotelId, ImageId, ImageLink)
-        VALUES (@AccountId, @HotelId, @ImageId, @ImageLink);
+        INSERT INTO REVIEW_IMAGE (ReviewId, ImageLink)
+        VALUES (@ReviewId , @ImageLink);
 
-        COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi thêm thành công
     END TRY
     BEGIN CATCH
         ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+        RETURN -1; -- Trả về kết quả -1 khi xảy ra lỗi
     END CATCH;
+
+	COMMIT;
+    RETURN 0; -- Trả về kết quả 0 khi thêm thành công
 END
 GO
 
 --!XÓA
 CREATE OR ALTER PROCEDURE USP_DeleteReviewImage
-    @AccountId INT,
+    @ReviewId INT,
     @HotelId INT,
     @ImageId INT,
     @Result INT OUTPUT
@@ -898,23 +904,22 @@ BEGIN
     BEGIN TRY
         -- Xóa REVIEW_IMAGE
         DELETE FROM REVIEW_IMAGE
-        WHERE AccountId = @AccountId
-        AND HotelId = @HotelId
-        AND ImageId = @ImageId;
+        WHERE ReviewId = @ReviewId;
 
-        COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi xóa thành công
     END TRY
     BEGIN CATCH
         ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+        RETURN -1; -- Trả về kết quả -1 khi xảy ra lỗi
     END CATCH;
+
+	COMMIT;
+    RETURN 0; -- Trả về kết quả 0 khi thêm thành công
 END
 GO
 
 --!SỬA
 CREATE OR ALTER PROCEDURE USP_UpdateReviewImage
-    @AccountId INT,
+    @ReviewId INT,
     @HotelId INT,
     @ImageId INT,
     @NewImageLink VARCHAR(1000),
@@ -929,17 +934,17 @@ BEGIN
         -- Cập nhật thông tin REVIEW_IMAGE
         UPDATE REVIEW_IMAGE
         SET ImageLink = @NewImageLink
-        WHERE AccountId = @AccountId
-        AND HotelId = @HotelId
-        AND ImageId = @ImageId;
+        WHERE ReviewId = @ReviewId;
 
-        COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi cập nhật thành công
     END TRY
-    BEGIN CATCH
+    
+	BEGIN CATCH
         ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+        RETURN -1; -- Trả về kết quả -1 khi xảy ra lỗi
     END CATCH;
+
+	COMMIT;
+    RETURN 0; -- Trả về kết quả 0 khi thêm thành công
 END
 GO
 
@@ -948,9 +953,9 @@ GO
 --! THÊM
 CREATE OR ALTER PROCEDURE USP_AddVoucher
     @Name NVARCHAR(500),
-    @Value INT,
+    @Value FLOAT,
     @Point INT,
-	@AccountRank VARCHAR(10)
+	@AccountRank VARCHAR(20)
 AS
 BEGIN
 	BEGIN TRY
@@ -997,9 +1002,9 @@ GO
 CREATE OR ALTER PROCEDURE USP_UpdateVoucher
     @VoucherId INT,
     @Name NVARCHAR(500),
-    @Value INT,
+    @Value FLOAT,
 	@Point INT,
-	@AccountRank VARCHAR(10)
+	@AccountRank VARCHAR(20)
 AS
 BEGIN
 	BEGIN TRY
@@ -1114,12 +1119,28 @@ BEGIN
 END
 GO
 
+--! Update
+GO
+CREATE OR ALTER FUNCTION USF_GetVoucherByRank (@Rank VARCHAR(20))
+RETURNS TABLE
+AS
+	RETURN SELECT * FROM VOUCHER 
+		WHERE AccountRank IN (SELECT p2.RankName FROM POINT_RANK p1
+						JOIN POINT_RANK p2 ON p1.RankValue >= p2.RankValue
+						WHERE p1.RankName like (@Rank))
+GO
+
 CREATE OR ALTER PROCEDURE USP_GetUserVoucher
-	@AccountId INT
+	@AccountId INT,
+	@Rank VARCHAR(20)
 AS
 BEGIN
-	SELECT VB.AccountId, VC.*, VB.Quantity FROM VOUCHER_BAG VB JOIN VOUCHER VC ON VB.VoucherId = VC.VoucherId
-	WHERE AccountId = @AccountId;
+	IF (@Rank IS NULL)
+		SELECT @Rank = AccountRank FROM ACCOUNT WHERE Id = @AccountId
+
+	SELECT ISNULL(VB.AccountId, 0) as AccountId, VC.*, ISNULL(VB.Quantity, 0) as Quantity 
+	FROM (SELECT * FROM dbo.USF_GetVoucherByRank(@Rank)) VC
+	LEFT JOIN (SELECT * FROM VOUCHER_BAG WHERE AccountId = @AccountId) VB ON VC.VoucherId = VB.VoucherId;
 END
 GO
 
@@ -1136,17 +1157,17 @@ CREATE OR ALTER FUNCTION USF_GetTotalPointSpent (@AccountId INT)
 RETURNS INT
 BEGIN
 	DECLARE @TotalSpent INT;
-	SELECT @TotalSpent = -SUM(p.Value) FROM POINT_HISTORY p 
-	WHERE p.Value < 0 AND p.AccountId = @AccountId;
+	SELECT @TotalSpent = SUM(p.Value) FROM POINT_HISTORY p 
+	WHERE p.Value > 0 AND p.AccountId = @AccountId;
 	RETURN @TotalSpent;
 END
 GO
 
 GO
 CREATE OR ALTER FUNCTION USF_GetAccountRank (@AccountId INT)
-RETURNS VARCHAR(10)
+RETURNS VARCHAR(20)
 BEGIN
-	DECLARE @Rank VARCHAR(10) = 'Bronze';
+	DECLARE @Rank VARCHAR(20) = 'Bronze';
 
 	SELECT TOP(1) @Rank = RankName from POINT_RANK 
 	WHERE RankValue <= dbo.USF_GetTotalPointSpent(@AccountId)
@@ -1161,7 +1182,7 @@ CREATE OR ALTER PROC USP_UpdateAccountRank (
 	@AccountId INT)
 AS
 BEGIN
-	DECLARE @Rank VARCHAR(10) = dbo.USF_GetAccountRank (@AccountId);
+	DECLARE @Rank VARCHAR(20) = dbo.USF_GetAccountRank (@AccountId);
 	
 	BEGIN TRAN
 
@@ -1199,7 +1220,7 @@ BEGIN
 		RETURN -1;
 	END
 
-	DECLARE @RankName VARCHAR(10);
+	DECLARE @RankName VARCHAR(20);
 	SELECT @RankName = AccountRank FROM VOUCHER WHERE VoucherId = @VoucherId;
 	IF NOT (@RankName IN (SELECT p2.RankName FROM POINT_RANK p1
 						JOIN POINT_RANK p2 ON p1.RankValue >= p2.RankValue
@@ -1569,7 +1590,7 @@ RETURN
 GO
 
 
--- //
+-- // check
 GO
 CREATE OR ALTER FUNCTION USF_GetBookingTotalById (@BookingId INT)
 RETURNS INT
@@ -1640,7 +1661,7 @@ BEGIN
 
 	BEGIN TRAN
 	BEGIN TRY
-		DECLARE @Discount INT = 0;
+		DECLARE @Discount FLOAT = 0;
 		SELECT @Discount = Value FROM VOUCHER WHERE VoucherId = @VoucherId;
 		DECLARE @Total INT = dbo.USF_GetOrderTotal(@OrderId);
 
@@ -1656,7 +1677,7 @@ BEGIN
 		UPDATE ACCOUNT_ORDER
 		SET
 			VoucherId = @VoucherId,
-			Total = @Total - @Discount,
+			Total = @Total - CAST(@Total * @Discount AS FLOAT),
 			Paid = 1
 		WHERE OrderId = @OrderId;
 
@@ -1728,24 +1749,24 @@ GO
 
 
 --! proc lấy danh sách toàn bộ account
-CREATE OR ALTER PROC USP_GetAccountDetailList	
-AS
-	SELECT * FROM PERSONAL_DETAILS
-GO
+--CREATE OR ALTER PROC USP_GetAccountDetailList	
+--AS
+--	SELECT * FROM PERSONAL_DETAILS
+--GO
 --! proc lấy thông tin chi tiết tài khoản
-CREATE OR ALTER PROC USP_GetAccountDetail
-	@AccountId INTEGER
-AS
-	SELECT * FROM PERSONAL_DETAILS
-	WHERE AccountId = @AccountId
-GO
+--CREATE OR ALTER PROC USP_GetAccountDetail
+--	@AccountId INTEGER
+--AS
+--	SELECT * FROM PERSONAL_DETAILS
+--	WHERE AccountId = @AccountId
+--GO
 
---! proc lấy thông tin chi tiết tài khoản
+--! proc lấy thông tin chi tiết tài khoản // Check
 CREATE OR ALTER PROC USP_GetAccountDetailByEmail
 	@Email NVARCHAR(200)
 AS
-	SELECT * FROM PERSONAL_DETAILS
-	WHERE EmailAddress = @Email
+	SELECT pd.*, acc.MemberPoint as Point FROM (SELECT * FROM PERSONAL_DETAILS WHERE EmailAddress = @Email) pd
+	JOIN ACCOUNT acc on pd.AccountId = acc.Id;
 GO
 
 --! Func tính điểm input tổng số tiền và số thứ tự của đơn đặt phòng

@@ -11,6 +11,7 @@ using SunriseServer.Services.HotelService;
 using System.Security.Claims;
 using SunriseServerCore.Dtos;
 using SunriseServerCore.Common.Enum;
+using SunriseServerCore.Dtos.Voucher;
 
 namespace SunriseServer.Controllers
 {
@@ -36,21 +37,27 @@ namespace SunriseServer.Controllers
             return Ok(result.ToList());
         }
 
+        #nullable enable
         [HttpGet("bag"), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<List<Voucher>>> GetVoucherBag()
+        public async Task<ActionResult<List<VoucherDto>>> GetVoucherBag(string? rank)
         {
             Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
-            var result = await _voucherService.GetAccountVoucher(accountId);
+            var result = await _voucherService.GetAccountVoucher(accountId, rank);
 
             if (result == null)
                 return BadRequest("Cannot get account voucher.");
 
-            return Ok(result.ToList());
+            return Ok(result);
         }
+        #nullable disable
+
 
         [HttpPost(""), Authorize(Roles = GlobalConstant.Admin)]
         public async Task<ActionResult<ResponseMessageDetails<int>>> AddVoucher(AddVoucherDto voucherDto)
         {
+            if (voucherDto.Value > 1)
+                return BadRequest("Voucher value incorrect.");
+            
             var result = await _voucherService.CreateVoucher(voucherDto);
 
             if (result == 0)

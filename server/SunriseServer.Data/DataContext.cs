@@ -29,7 +29,7 @@ namespace SunriseServerData
                 .HasKey(x => new { x.AccountId, x.HotelId, x.RoomTypeId, x.CheckIn });
 
             modelBuilder.Entity<Review>()
-                .HasKey(x => new { x.HotelId, x.AccountId });
+                .HasKey(x => new { x.Id, });
             
             modelBuilder.Entity<Voucher>()
                 .HasKey(x => new { x.VoucherId });
@@ -48,6 +48,12 @@ namespace SunriseServerData
 
             modelBuilder.Entity<PersonalDetail>()
                 .HasNoKey();
+
+            modelBuilder.Entity<RoomPicture>()
+                .HasKey(x => new { x.HotelId, x.RoomTypeId, x.Id });
+
+            modelBuilder.Entity<Review>()
+                .HasKey(x => new { x.Id });
         }
 
         public DbSet<Hotel> Hotel { get; set; }

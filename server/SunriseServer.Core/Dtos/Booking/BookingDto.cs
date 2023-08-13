@@ -1,4 +1,5 @@
 ﻿using SunriseServerCore.Models;
+
 namespace SunriseServerCore.Dtos.Booking
 {
     public class BookingDto
@@ -14,8 +15,7 @@ namespace SunriseServerCore.Dtos.Booking
         public bool Paid { get; set; } = false; //-- 1 = True, 0 = False
         public DateTime CreatedAt { get; set; }
         public Account Account { get; set; }
-        public SunriseServerCore.Models.Hotel Hotel { get; set; }
+        public Models.Hotel Hotel { get; set; }
         public RoomType RoomType { get; set; }
-        public Voucher Voucher { get; set; }
     }
 }

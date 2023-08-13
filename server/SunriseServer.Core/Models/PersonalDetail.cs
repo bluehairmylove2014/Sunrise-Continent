@@ -10,5 +10,6 @@
         public string Gender { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
         public string Rank { get; set; } = string.Empty;
+        public int Point { get; set; }
     }
 }

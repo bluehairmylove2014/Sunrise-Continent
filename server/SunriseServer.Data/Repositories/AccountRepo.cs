@@ -61,10 +61,8 @@ namespace SunriseServerData.Repositories
 
         public async Task<PersonalDetail> GetAccountDetailsByEmail(string email)
         {
-            var builder = new StringBuilder($"dbo.USP_GetAccountDetailByEmail @Email = \'{email}\';");
-
-            Console.WriteLine(builder.ToString());
-            var result = await _dataContext.PersonalDetail.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            var result = await _dataContext.PersonalDetail
+                .FromSqlInterpolated($"EXEC USP_GetAccountDetailByEmail @Email = {email};").ToListAsync();
             return result.FirstOrDefault();
         }
 

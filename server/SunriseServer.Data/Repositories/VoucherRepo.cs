@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SunriseServerData;
 using SunriseServerCore.Dtos;
+using SunriseServerCore.Dtos.Voucher;
 using SunriseServerCore.Models;
 using SunriseServerCore.RepoInterfaces;
 using SunriseServer.Common.Helper;
@@ -18,7 +19,7 @@ namespace SunriseServerData.Repositories
     public class VoucherRepo : RepositoryBase<Voucher>, IVoucherRepo
     {
         readonly DataContext _dataContext;
-        public VoucherRepo(DataContext dbContext) : base(dbContext) 
+        public VoucherRepo(DataContext dbContext) : base(dbContext)
         {
             _dataContext = dbContext;
         }
@@ -35,11 +36,17 @@ namespace SunriseServerData.Repositories
             return result.FirstOrDefault();
         }
 
-        public async Task<List<VoucherBag>> GetAccountVoucherAsync(int accountId)
+        #nullable enable
+        public async Task<List<VoucherBag>> GetAccountVoucherAsync(int accountId, string? rank)
         {
-            var result = await _dataContext.VoucherBag.FromSqlInterpolated($"EXEC USP_GetUserVoucher @AccountId={accountId};").ToListAsync();
+            var check = rank is null ? "null" : rank;
+            var str = $"EXEC USP_GetUserVoucher @AccountId={accountId}, @Rank={check};";
+
+            Console.WriteLine(str);
+            var result = await _dataContext.VoucherBag.FromSqlInterpolated($"EXECUTE({str})").ToListAsync();
             return result;
         }
+        #nullable disable
 
         public async Task<int> CreateAsync(AddVoucherDto voucher)
         {
@@ -50,7 +57,7 @@ namespace SunriseServerData.Repositories
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({str})");
             return result;
         }
-        
+
         public async Task<int> UpdateVoucherAsync(Voucher voucher)
         {
             var builder = new StringBuilder("EXEC USP_UpdateVoucher ");
@@ -65,7 +72,7 @@ namespace SunriseServerData.Repositories
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
             return result;
         }
-        
+
         public async Task<int> DeleteVoucherAsync(int voucherId)
         {
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXEC USP_DeleteVoucher {voucherId}");

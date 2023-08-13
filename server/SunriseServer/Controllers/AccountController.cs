@@ -21,6 +21,7 @@ namespace SunriseServer.Controllers
         [HttpGet("current-account"), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<PersonalDetail>> GetCurrentAccount()
         {
+            // lấy điểm của user
             var result = await _accountService.GetAccountDetailsByEmail(User.Identity.Name);
             if (result is null)
                 return NotFound("Account not found");

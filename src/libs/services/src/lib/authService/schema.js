@@ -9,6 +9,7 @@ const getUserResponseSchema = z.object({
   gender: z.string(),
   image: z.string(),
   rank: z.string(),
+  point: z.number(),
 });
 
 const authenticationResponseSchema = z.object({

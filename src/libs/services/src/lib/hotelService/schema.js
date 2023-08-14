@@ -33,9 +33,7 @@ const hotelDetailSchema = z.object({
   services: z.array(z.string()),
 });
 
-const bookingSchema = z.object({
-  message: z.string(),
-});
+const bookingSchema = z.boolean();
 
 const getSpecificRoomSchema = z.object({
   hotelId: z.number(),
@@ -67,6 +65,16 @@ const getPictureSchema = z.array(
     pictureLink: z.string(),
   })
 );
+const getReviewSchema = z.array(
+  z.object({
+    id: z.number(),
+    userName: z.string(),
+    userAvatar: z.string(),
+    reviewDate: z.string(),
+    points: z.number(),
+    content: z.string(),
+  })
+);
 
 export {
   searchSchema,
@@ -76,4 +84,5 @@ export {
   getHotHotelSchema,
   getRoomsSchema,
   getPictureSchema,
+  getReviewSchema,
 };

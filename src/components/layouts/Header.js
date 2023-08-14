@@ -1,5 +1,6 @@
-import React, { useCallback, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../../styles/component/header.scss";
 import logoVerticalImg from "../../assets/images/logos/sc-vertical.png";
 import logoHorizontalImg from "../../assets/images/logos/sc-horizontal.png";
@@ -10,7 +11,7 @@ import NavDropdown from "../common/NavDropdown";
 import UserSidebar from "./UserSidebar";
 import { useForm } from "react-hook-form";
 import { useIsLogged } from "../../libs/business-logic/src/lib/auth";
-import { categories, languages } from "./Data";
+import { categories, languages, partner } from "./Data";
 import WistList from "../common/WistList";
 import CartSidebar from "../common/CartSidebar";
 import { useGetUser } from "../../libs/business-logic/src/lib/auth/process/hooks";
@@ -21,6 +22,10 @@ const Header = () => {
   const [isWishlistActive, setIsWishlistActive] = useState(false);
   const [isCartActive, setIsCartActive] = useState(false);
   const [logoSrc, setLogoSrc] = useState(logoVerticalImg);
+  const [isSimplyHeader, setIsSimplyHeader] = useState(false);
+  const timeskipScroll = useRef(false);
+  const location = useLocation();
+
   const isLogin = useIsLogged();
 
   const userData = useGetUser();
@@ -32,6 +37,63 @@ const Header = () => {
   const navigate = useNavigate();
 
   const { handleSubmit, register, reset } = useForm();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!timeskipScroll.current) {
+        if (window.scrollY > scrollPosition + 10) {
+          if (
+            categories.findIndex(
+              (c) => c.category_name === partner.category_name
+            ) === -1
+          ) {
+            timeskipScroll.current = true;
+            categories.push(partner);
+          }
+          handleBlurSearchbox();
+          setLogoSrc(logoHorizontalImg);
+          setIsSimplyHeader(true);
+          headerRef.current && headerRef.current.classList.add("simply");
+
+          setTimeout(() => {
+            timeskipScroll.current = false;
+          }, 500);
+        } else if (window.scrollY < scrollPosition - 10) {
+          const targetIndex = categories.findIndex(
+            (c) => c.category_name === partner.category_name
+          );
+          if (targetIndex !== -1) {
+            timeskipScroll.current = true;
+            categories.splice(targetIndex, 1);
+          }
+          handleBlurSearchbox();
+          setLogoSrc(logoVerticalImg);
+          setIsSimplyHeader(false);
+          headerRef.current && headerRef.current.classList.remove("simply");
+
+          setTimeout(() => {
+            timeskipScroll.current = false;
+          }, 500);
+        }
+      }
+
+      scrollPosition = window.scrollY;
+    };
+
+    let scrollPosition = 0;
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsSimplyHeader(false);
+    setLogoSrc(logoVerticalImg);
+    headerRef.current && headerRef.current.classList.remove("simply");
+  }, [location]);
 
   // Methods
   const renderCategories = (catelist) => {
@@ -56,8 +118,8 @@ const Header = () => {
     );
   };
   const handleBlurSearchbox = () => {
-    headerRef.current.classList.remove("active");
-    setLogoSrc(logoVerticalImg);
+    headerRef.current && headerRef.current.classList.remove("active");
+    !isSimplyHeader && setLogoSrc(logoVerticalImg);
     document.removeEventListener("click", handleClickOutside);
   };
   const handleClickOutside = (event) => {
@@ -96,33 +158,62 @@ const Header = () => {
         </Link>
         <div className="header__search">
           <div className="search-box__wrapper">
-            <form onSubmit={handleSubmit(onSearch)}>
-              <button type="submit">
-                <i className="fi fi-rr-search"></i>
-              </button>
-              <input
-                name="search"
-                defaultValue=""
-                type="text"
-                placeholder="Bạn muốn đặt chân đến nơi nào?"
-                onFocus={handleFocusSearchbox}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleSubmit(onSearch);
-                  }
-                }}
-                {...register("search", {
-                  required: true,
-                })}
-              />
-            </form>
+            {isSimplyHeader ? (
+              <form
+                onSubmit={handleSubmit(onSearch)}
+                className="simply-search-box"
+              >
+                <button type="submit" className="search-box__submit">
+                  <i className="fi fi-rr-search"></i>
+                </button>
+                <input
+                  name="search"
+                  defaultValue=""
+                  type="text"
+                  placeholder="Bạn muốn đặt chân đến nơi nào?"
+                  onFocus={handleFocusSearchbox}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSubmit(onSearch);
+                    }
+                  }}
+                  {...register("search", {
+                    required: true,
+                  })}
+                />
+              </form>
+            ) : (
+              <form
+                onSubmit={handleSubmit(onSearch)}
+                className="normal-search-box"
+              >
+                <button type="submit" className="search-box__submit">
+                  <i className="fi fi-rr-search"></i>
+                </button>
+                <input
+                  name="search"
+                  defaultValue=""
+                  type="text"
+                  placeholder="Bạn muốn đặt chân đến nơi nào?"
+                  onFocus={handleFocusSearchbox}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSubmit(onSearch);
+                    }
+                  }}
+                  {...register("search", {
+                    required: true,
+                  })}
+                />
+              </form>
+            )}
           </div>
           <nav className="header__main-nav">
             <ul className="header-main-nav__infor">
               <li>
-                <Link to={PAGES.CONTACT} target="_blank">
-                  <i className="fi fi-sr-chart-user"></i>
-                  Kênh đối tác
+                <Link to={partner.href} target="_blank">
+                  <i className={partner.icon}></i>
+                  {partner.category_name}
                 </Link>
               </li>
               <li>
@@ -180,26 +271,52 @@ const Header = () => {
             </ul>
           </nav>
         </div>
+
         <nav className="header__product-nav">
+          <button
+            type="button"
+            className="search-box__trigger-open"
+            onClick={() => handleFocusSearchbox()}
+          >
+            <i className="fi fi-rr-search"></i>
+          </button>
+
           {renderCategories(categories)}
+
           <button
             className="product-nav__wish-list"
             onClick={() => setIsWishlistActive(!isWishlistActive)}
           >
-            <div className="wishlist__length">
-              {Array.isArray(wishlist) ? wishlist.length : 0}
-            </div>
-            <span className="wishlist-btn__label">
-              <i className="fi fi-rs-heart"></i>
-              Wish List
-            </span>
-            <span className="wishlist-btn__content">
-              {Array.isArray(wishlist) ? wishlist.length : 0}&nbsp;
-            </span>
-            <span className="wishlist-btn__content">i</span>
-            <span className="wishlist-btn__content">t</span>
-            <span className="wishlist-btn__content">e</span>
-            <span className="wishlist-btn__content">ms</span>
+            {isSimplyHeader ? (
+              <>
+                <div className="wishlist__length">
+                  {Array.isArray(wishlist) ? wishlist.length : 0}
+                </div>
+                <span className="wishlist-btn__label">
+                  <i className="fi fi-rs-heart"></i>
+                </span>
+                <span className="wishlist-btn__content">
+                  {Array.isArray(wishlist) ? wishlist.length : 0}
+                </span>
+              </>
+            ) : (
+              <>
+                <div className="wishlist__length">
+                  {Array.isArray(wishlist) ? wishlist.length : 0}
+                </div>
+                <span className="wishlist-btn__label">
+                  <i className="fi fi-rs-heart"></i>
+                  Wish List
+                </span>
+                <span className="wishlist-btn__content">
+                  {Array.isArray(wishlist) ? wishlist.length : 0}&nbsp;
+                </span>
+                <span className="wishlist-btn__content">i</span>
+                <span className="wishlist-btn__content">t</span>
+                <span className="wishlist-btn__content">e</span>
+                <span className="wishlist-btn__content">ms</span>
+              </>
+            )}
           </button>
           <button
             className="product-nav__cart"
@@ -212,10 +329,58 @@ const Header = () => {
               <img src={cartIcon} alt="cart" />
             </span>
           </button>
+          {isSimplyHeader ? (
+            <>
+              <ul
+                className={`header-main-nav__user-interact ${
+                  !isLogin && "active"
+                }`}
+              >
+                <li>
+                  <Link
+                    to={PAGES.LOGIN}
+                    className="header-user-interact__login-btn"
+                  >
+                    Đăng nhập
+                  </Link>
+                </li>
+              </ul>
+              {/* user avatar when logged in */}
+              <ul
+                className={`header-main-nav__user-interact ${
+                  isLogin && "active"
+                }`}
+              >
+                <li className="header-main-nav__user-avatar">
+                  {userData && (
+                    <>
+                      <button
+                        onClick={() =>
+                          setIsUserSidebarActive(!isUserSidebarActive)
+                        }
+                      >
+                        <img src={userData.image} alt="user-avatar" />
+                      </button>
+                    </>
+                  )}
+                </li>
+              </ul>
+            </>
+          ) : (
+            <></>
+          )}
         </nav>
         <div className="search-box__introduction">
           <img src={worker_gif} alt="worker_gif" />
           <div>
+            <h3>Tính năng tự phân tích bằng AI chưa được hỗ trợ!</h3>
+            <p>
+              Bạn chỉ có thể tìm kiếm theo vị trí như quốc gia, tỉnh thành, địa
+              chỉ, ...v.v...
+            </p>
+            <small>Ví dụ: Thành phố Hồ Chí Minh </small>
+          </div>
+          {/* <div>
             <h3>Hãy thoải mái yêu cầu những gì bạn muốn!</h3>
             <p>
               Bạn có thể nhập bất kỳ yêu cầu gì với bất kì văn phong nào. Chúng
@@ -225,7 +390,7 @@ const Header = () => {
               Ví dụ: Hãy tìm cho tôi một căn Villa tại Đà Lạt với hai phòng đơn,
               một phòng đôi và có bồn tắm ngoài trời{" "}
             </small>
-          </div>
+          </div> */}
         </div>
       </header>
       <WistList

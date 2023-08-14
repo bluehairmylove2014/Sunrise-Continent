@@ -14,8 +14,8 @@ export const useCheckRoomAvailable = () => {
       // Handle keys here
       checkRoomAvailableMutation
         .mutateAsync({ HotelId, RoomTypeId, NumberOfRoom, CheckIn, CheckOut })
-        .then((res) => {
-          resolve(res.message);
+        .then((data) => {
+          resolve(data);
         })
         .catch((error) => {
           reject(error);

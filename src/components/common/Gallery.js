@@ -20,7 +20,7 @@ const Gallery = ({ data, isOpen, openCallback }) => {
                 return (
                   <button
                     className="content__picture"
-                    key={pd.id}
+                    key={`room` + pd.roomTypeId + `picture` + pd.id}
                     onClick={() => setSelectedPicture(pd)}
                   >
                     <img src={pd.pictureLink || pd.link} alt={pd.id} />

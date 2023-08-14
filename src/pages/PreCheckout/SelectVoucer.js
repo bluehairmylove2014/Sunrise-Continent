@@ -23,6 +23,7 @@ const SelectVoucer = ({ isOpen, chooseVoucherCallback, closeCallback }) => {
                 voucherData={vd}
                 chooseVoucherCallback={chooseVoucherCallback}
                 type={VOUCHER_DISPLAY_TYPE.STORAGE}
+                key={vd.voucherId}
               />
             ))
           ) : voucherData === null ? (

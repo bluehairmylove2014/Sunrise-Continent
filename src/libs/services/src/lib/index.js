@@ -5,3 +5,4 @@ export * from "./orderService";
 export * from "./searchService";
 export * from "./cartService";
 export * from "./voucherService";
+export * from "./checkoutService";

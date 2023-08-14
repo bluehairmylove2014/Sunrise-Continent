@@ -3,6 +3,7 @@ import {
   bookingSchema,
   getHotHotelSchema,
   getPictureSchema,
+  getReviewSchema,
   getRoomsSchema,
   getSpecificRoomSchema,
   hotelDetailSchema,
@@ -17,12 +18,14 @@ export class HotelService extends Services {
   getRoomsUrl = `/room`;
   getSpecificRoomUrl = `/room/single`;
   getHotHotelUrl = `/hotel/recommend`;
-  checkRoomAvailableUrl = `/hotel/booking`;
+  checkRoomAvailableUrl = `/room/available`;
   getPictureUrl = `/hotel/picture`;
+  getReviewUrl = `/hotel/review`;
 
   search = async (keys) => {
     this.abortController = new AbortController();
     try {
+      console.log(keys);
       const response = await this.fetchApi({
         method: "GET",
         url: this.searchUrl,
@@ -44,6 +47,7 @@ export class HotelService extends Services {
   getHotelDetail = async (hotelID) => {
     this.abortController = new AbortController();
     try {
+      if (!hotelID) return null;
       const response = await this.fetchApi({
         method: "GET",
         url: this.getHotelDetailUrl,
@@ -53,7 +57,7 @@ export class HotelService extends Services {
         },
         signal: this.abortController.signal,
         transformResponse: (res) => res,
-        // isProduction: true,
+        isProduction: true,
       });
       return response;
     } catch (error) {
@@ -76,7 +80,7 @@ export class HotelService extends Services {
         },
         signal: this.abortController.signal,
         transformResponse: (res) => res,
-        // isProduction: true,
+        isProduction: true,
       });
       return response;
     } catch (error) {
@@ -90,6 +94,7 @@ export class HotelService extends Services {
   getSpecificRoom = async (hotelID, roomID) => {
     this.abortController = new AbortController();
     try {
+      if (!hotelID || !roomID) return null;
       const response = await this.fetchApi({
         method: "GET",
         url: this.getSpecificRoomUrl,
@@ -100,6 +105,7 @@ export class HotelService extends Services {
         },
         signal: this.abortController.signal,
         transformResponse: (res) => res,
+        isProduction: true,
       });
       return response;
     } catch (error) {
@@ -134,12 +140,13 @@ export class HotelService extends Services {
     this.abortController = new AbortController();
     try {
       const response = await this.fetchApi({
-        method: "POST",
+        method: "GET",
         url: this.checkRoomAvailableUrl,
         schema: bookingSchema,
-        data: params,
+        params,
         signal: this.abortController.signal,
         transformResponse: (res) => res,
+        isProduction: true,
       });
       return response;
     } catch (error) {
@@ -167,6 +174,27 @@ export class HotelService extends Services {
       if (!this.isCancel(error)) {
         // Handle other errors
         console.error("Catch error 7");
+        throw error;
+      }
+    }
+  };
+  getReview = async (params) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "GET",
+        url: this.getReviewUrl,
+        schema: getReviewSchema,
+        params,
+        signal: this.abortController.signal,
+        transformResponse: (res) => res,
+        isProduction: true, // Do not have mock api now
+      });
+      return response;
+    } catch (error) {
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error review");
         throw error;
       }
     }

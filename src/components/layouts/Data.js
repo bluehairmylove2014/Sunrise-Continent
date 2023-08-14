@@ -12,6 +12,11 @@ export const categories = [
     href: PAGES.VOUCHER_SHOP,
   },
 ];
+export const partner = {
+  category_name: "Kênh đối tác",
+  icon: "fi fi-sr-chart-user",
+  href: PAGES.CONTACT,
+};
 export const languages = [
   {
     option_name: "Tiếng Việt",

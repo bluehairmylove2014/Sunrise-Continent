@@ -45,16 +45,20 @@ const OrderDetailPicker = React.forwardRef(
             CheckIn: data.start_date,
             CheckOut: data.end_date,
           })
-            .then((message) => {
-              navigate(
-                PAGES.PRE_CHECKOUT +
-                  `?hotelID=${rd.hotelId}&roomID=${rd.id}` +
-                  `&start_date=${data.start_date}&end_date=${data.end_date}` +
-                  `&adults=${defaultValues.adults}` +
-                  `&childrens=${defaultValues.childrens}` +
-                  `&rooms=${defaultValues.rooms}`
-              );
-              toast.success(message);
+            .then((isAvailable) => {
+              if (isAvailable) {
+                navigate(
+                  PAGES.PRE_CHECKOUT +
+                    `?hotelID=${rd.hotelId}&roomID=${rd.id}` +
+                    `&start_date=${data.start_date}&end_date=${data.end_date}` +
+                    `&adults=${defaultValues.adults}` +
+                    `&childrens=${defaultValues.childrens}` +
+                    `&rooms=${defaultValues.rooms}`
+                );
+                toast.success("Thành công");
+              } else {
+                toast.error("Phòng đã hết chỗ vào ngày này!");
+              }
             })
             .catch((error) => {
               toast.error(error.message);

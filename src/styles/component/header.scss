@@ -8,6 +8,7 @@
     width: 100%;
     background-color: white;
     box-shadow: 0px 3px 10px -2px rgba(41, 41, 41, 0.2);
+    transition: height 0.2s ease-in;
     // columns - row - gap
     @include dgrid(min-content 1fr, auto auto, 0);
 
@@ -65,7 +66,7 @@
             // direction - justify content - align items - flex wrap
             @include dflex(column, flex-start, normal, nowrap);
 
-            form {
+            .normal-search-box {
                 position: relative;
                 height: 100%;
                 width: 100%;
@@ -92,12 +93,40 @@
                     // transition: all 0.2s ease-in;
                 }
             }
+
+            .simply-search-box {
+                height: 70px;
+                width: 100vw;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 999;
+                background-color: white;
+                visibility: hidden;
+                opacity: 0;
+                pointer-events: none;
+                // direction - justify content - align items - flex wrap
+                @include dflex(row, flex-start, center, nowrap);
+
+                button {
+                    margin-left: 20px;
+                }
+
+                input {
+                    width: 100%;
+                    height: 70px;
+                    border: none;
+                    padding: 0 20px;
+                }
+            }
+
         }
 
         .header__main-nav {
             height: 100%;
             width: 100%;
             grid-column: 2;
+            transition: all 0.2s ease-in;
             // direction - justify content - align items - flex wrap
             @include dflex(row, flex-end, center, nowrap);
 
@@ -215,12 +244,22 @@
         }
     }
 
+
     .header__product-nav {
         grid-column: 2;
         grid-row: 2;
 
         // direction - justify content - align items - flex wrap
         @include dflex(row, flex-end, center, nowrap);
+
+        .search-box__trigger-open {
+            display: none;
+            cursor: pointer;
+
+            i {
+                bottom: -3px;
+            }
+        }
 
         ul {
             border-right: 1px solid var(--quill-grey);
@@ -365,11 +404,170 @@
             height: 70px;
         }
 
+        .header__search {
+
+            .search-box__wrapper {
+                opacity: 1 !important;
+
+                .simply-search-box {
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    pointer-events: all !important;
+                }
+
+            }
+        }
+
         .search-box__introduction {
             height: 200px;
             visibility: visible;
             opacity: 1;
             pointer-events: all;
+        }
+    }
+
+    &.simply {
+        height: 70px;
+
+        .header__logo-container {
+            height: 70px;
+        }
+
+        .header__search {
+
+            height: 0;
+
+            .header__main-nav {
+                visibility: hidden;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .search-box__wrapper {
+                visibility: hidden;
+                opacity: 0;
+                pointer-events: none;
+
+                .normal-search-box {
+
+                    .search-box__submit,
+                    input {
+                        display: none;
+                    }
+                }
+
+            }
+        }
+
+        .header__product-nav {
+
+            ul {
+                li {
+                    margin: 0 0.5rem;
+                }
+            }
+
+            .search-box__trigger-open {
+                display: block;
+                margin-right: 1rem;
+            }
+
+            .header-main-nav__user-interact {
+                margin: 0 2rem;
+                display: none;
+
+                li {
+                    .header-user-interact__login-btn {
+                        font-weight: 600;
+                        // border - border radius - background color - color - padding - font size
+                        @include normal-btn(none, 5px, black, white, 10px 30px, 0.75rem);
+
+                        &:hover {
+                            padding: 10px 40px;
+                        }
+
+                        &.active {
+                            display: block;
+                        }
+                    }
+
+                    .header-user-interact__register-btn {
+                        margin-left: 1rem;
+                        font-weight: 700;
+                        // border - border radius - background color - color - padding - font size
+                        @include normal-btn(none, 5px, white, black, 10px 8px, 0.75rem);
+
+                        &:hover {
+                            background-color: var(--heavy-white-smoke);
+                            padding: 10px 30px;
+                        }
+
+                        &.active {
+                            display: block;
+                        }
+                    }
+                }
+
+                .header-main-nav__user-avatar {
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(row, flex-end, center, nowrap);
+
+                    span {
+                        margin: 0 0.75rem 0 0.5rem;
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                    }
+
+                    &>img {
+                        object-fit: contain;
+                        width: 35px;
+                        height: 35px
+                    }
+
+                    button {
+                        display: block;
+                        position: relative;
+                        width: 40px;
+                        height: 40px;
+                        overflow: hidden;
+                        // border - border radius - background color - color - padding - font size
+                        @include normal-btn(none, 50px, white, black, 0, 0.75rem);
+
+                        img {
+                            object-fit: contain;
+                            width: 100%;
+                            height: 100%
+                        }
+                    }
+                }
+
+                &.active {
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(row, flex-start, center, nowrap);
+                }
+            }
+
+            .header-main-nav__user-interact {
+                border-right: none;
+                margin: 0;
+            }
+
+            .product-nav__wish-list {
+                width: fit-content;
+                padding: 10px 15px;
+
+                i {
+                    margin: 0;
+                    font-size: 0.8rem;
+                }
+            }
+
+            .product-nav__cart {
+                img {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
         }
     }
 }

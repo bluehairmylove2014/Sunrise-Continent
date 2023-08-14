@@ -33,7 +33,10 @@ const UserSidebar = ({ isActive, userData, callback }) => {
           {userData && (
             <>
               <img src={RankList[userData.rank].image} alt="rank" />
-              <span>{RankList[userData.rank].label}</span>
+              <span>
+                {RankList[userData.rank].label} <br />
+                <small>{userData.point} Điểm</small>
+              </span>
             </>
           )}
         </div>

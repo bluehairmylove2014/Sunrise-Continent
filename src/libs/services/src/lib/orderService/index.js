@@ -117,7 +117,7 @@ export class OrderService extends Services {
         },
         signal: this.abortController.signal,
         transformResponse: (res) => res,
-        // isProduction: true,
+        isProduction: true,
       });
       return response;
     } catch (error) {

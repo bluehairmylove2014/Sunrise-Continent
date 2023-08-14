@@ -14,15 +14,16 @@ import Rooms from "./Rooms";
 import {
   useGetHotelDetail,
   useGetRooms,
+  useGetReview,
 } from "../../libs/business-logic/src/lib/hotel/process/hooks";
 import Gallery from "../../components/common/Gallery";
 import { useGetPictures } from "../../libs/business-logic/src/lib/hotel/process/hooks/useGetPictures";
-import {
-  // hotelDetailMockData,
-  // pictureMockData,
-  // roomsMockData,
-  hotelReviewMockData,
-} from "./MockData";
+// import {
+//   // hotelDetailMockData,
+//   // pictureMockData,
+//   // roomsMockData,
+//   // hotelReviewMockData,
+// } from "./MockData";
 import { formatDate } from "../../utils/helpers/ShortenDatetime";
 import {
   handleNextPage,
@@ -70,7 +71,8 @@ const HotelDetail = () => {
   // const hotelData = hotelDetailMockData;
   // const roomsData = roomsMockData;
   // const picturesData = pictureMockData;
-  const hotelReview = hotelReviewMockData;
+  // const hotelReview = hotelReviewMockData;
+  const hotelReview = useGetReview({ hotelId });
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const previewImage = picturesData
     ? [...picturesData.slice(0, maximumPreviewImage)]
@@ -193,7 +195,7 @@ const HotelDetail = () => {
         >
           {previewImage ? (
             previewImage.map((pi) => (
-              <button key={pi.id}>
+              <button key={`room` + pi.roomTypeId + `picture` + pi.id}>
                 <img src={pi.pictureLink} alt={hotelData.name} />
               </button>
             ))

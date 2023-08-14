@@ -116,7 +116,10 @@ const PreCheckout = () => {
       phoneNumber: data.phone,
       specialNeeds: "",
       notes: data.otherRequirements,
-      voucherId: 0,
+      voucherId: sunriseVoucher ? sunriseVoucher.voucherId : 0,
+      total:
+        roomData.price * night -
+        (sunriseVoucher ? sunriseVoucher.value * CONVERSION_FACTOR.VOUCHER : 0),
       orders: [
         {
           hotelId: hotelID,

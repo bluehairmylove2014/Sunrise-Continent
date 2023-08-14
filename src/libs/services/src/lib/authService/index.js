@@ -12,7 +12,7 @@ export class AuthService extends Services {
   registerUrl = "/auth/register";
   loginUrl = "/auth/login";
   refreshTokenUrl = "/auth/refreshToken";
-  getUserUrl = "/auth/get-user";
+  getUserUrl = "/account/current-account";
 
   register = async (data) => {
     this.abortController = new AbortController();
@@ -97,7 +97,6 @@ export class AuthService extends Services {
     this.abortController = new AbortController();
     try {
       if (!token) return null;
-
       const response = await this.fetchApi({
         method: "GET",
         url: this.getUserUrl,
@@ -105,6 +104,7 @@ export class AuthService extends Services {
         headers: { Authorization: `Bearer ${token}` },
         signal: this.abortController.signal,
         transformResponse: (res) => res,
+        isProduction: true,
       });
       return response;
     } catch (error) {

@@ -27,3 +27,8 @@ export const useGetPicturesQuery = (hotelID) => {
     hotelService.getPictures(hotelID)
   );
 };
+export const useGetReviewQuery = ({ hotelId }) => {
+  return useQuery([QUERY_KEYS.GET_PICTURE, hotelId], () =>
+    hotelService.getReview({ hotelId })
+  );
+};

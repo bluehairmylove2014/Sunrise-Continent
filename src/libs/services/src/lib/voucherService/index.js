@@ -25,7 +25,7 @@ export class VoucherService extends Services {
           },
           signal: this.abortController.signal,
           transformResponse: (res) => res,
-          // isProduction: true,
+          isProduction: true,
         });
         return response;
       }
@@ -53,8 +53,9 @@ export class VoucherService extends Services {
         },
         signal: this.abortController.signal,
         transformResponse: (res) => res,
-        // isProduction: true,
+        isProduction: true,
       });
+      console.log("RESPONSE: ", response);
       return response;
     } catch (error) {
       if (!this.isCancel(error)) {

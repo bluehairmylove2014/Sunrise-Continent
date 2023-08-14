@@ -152,8 +152,8 @@ namespace SunriseServer.Controllers
             [FromQuery] double max_budget,
             [FromQuery] int rooms,
             [FromQuery] int adults,
-            [FromQuery] int children
-            // [FromQuery] HotelSearchPagingInputDto hotelDto
+            [FromQuery] int children,
+            [FromQuery] HotelSearchPagingInputDto hotelDto
         )
         {
 

@@ -104,9 +104,9 @@ namespace SunriseServer.Controllers
         }
         
         [HttpPost("redeem"), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<ResponseMessageDetails<int>>> RedeemVoucher(int voucherId, int quantity = 1)
+        public async Task<ActionResult<ResponseMessageDetails<int>>> RedeemVoucher(RedeemVoucherDto voucherDto)
         {
-            if (quantity <= 0) 
+            if (voucherDto.Quantity <= 0) 
                 return BadRequest("Number of voucher incorrect");
             
             Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
@@ -114,7 +114,7 @@ namespace SunriseServer.Controllers
             int result = 0;
             try
             {
-                result = await _voucherService.RedeemVoucher(accountId, voucherId, quantity);
+                result = await _voucherService.RedeemVoucher(accountId, voucherDto.VoucherId, voucherDto.Quantity);
             }
             catch (Microsoft.Data.SqlClient.SqlException exception)
             {

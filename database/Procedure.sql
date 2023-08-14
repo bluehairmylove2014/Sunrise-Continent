@@ -386,6 +386,91 @@ AS
 GO
 
 
+-- Email, password
+
+--FullName NVARCHAR(1000),
+--EmailAddress VARCHAR(100),
+--PhoneNumber VARCHAR(20),
+--DateOfBirth DATE,
+--Gender NVARCHAR(100),
+--Image VARCHAR(1000),
+
+GO
+CREATE OR ALTER PROC USP_UpdateAccountEmail -- // Check
+	@AccountId INTEGER,
+	@Email VARCHAR(50)
+AS
+BEGIN
+	IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @AccountId)
+	BEGIN
+		RAISERROR(N'Account Id not existed', 11, 1);
+		RETURN -2;
+	END
+
+	IF EXISTS (SELECT Id FROM ACCOUNT WHERE Email = @Email AND Id != @AccountId)
+	BEGIN
+		RAISERROR(N'Account Email existed', 11, 1);
+		RETURN -3;
+	END
+	
+	BEGIN TRAN
+
+	BEGIN TRY
+		UPDATE ACCOUNT SET Email = @Email WHERE Id = @AccountId;
+		UPDATE PERSONAL_DETAILS SET EmailAddress = @Email WHERE AccountId = @AccountId;
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR(N'Account Id not existed', 11, 1);
+		ROLLBACK;
+		RETURN -1;
+	END CATCH
+
+	COMMIT;
+	RETURN 0;
+END
+GO
+
+GO
+CREATE OR ALTER PROC USP_UpdateAccountPersonalInfo -- // Check
+	@AccountId INTEGER,
+	@FullName NVARCHAR(1000),
+	@PhoneNumber VARCHAR(20),
+	@DateOfBirth DATE,
+	@Gender NVARCHAR(100),
+	@Image VARCHAR(1000)
+AS
+BEGIN
+	IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @AccountId)
+	BEGIN
+		RAISERROR(N'Account Id not existed', 11, 1);
+		RETURN -2;
+	END
+	
+	BEGIN TRAN
+
+	BEGIN TRY
+		UPDATE PERSONAL_DETAILS SET 
+			FullName = @FullName,
+			PhoneNumber = @PhoneNumber,
+			DateOfBirth = @DateOfBirth,
+			Gender = @Gender,
+			Image = @Image
+		WHERE AccountId = @AccountId;
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR(N'Account Id not existed', 11, 1);
+		ROLLBACK;
+		RETURN -1;
+	END CATCH
+
+	COMMIT;
+	RETURN 0;
+END
+GO
+
+
 GO
 CREATE OR ALTER PROC USP_DeleteAccount
 	@Id INTEGER
@@ -1772,12 +1857,12 @@ GO
 --	SELECT * FROM PERSONAL_DETAILS
 --GO
 --! proc lấy thông tin chi tiết tài khoản
---CREATE OR ALTER PROC USP_GetAccountDetail
---	@AccountId INTEGER
---AS
---	SELECT * FROM PERSONAL_DETAILS
---	WHERE AccountId = @AccountId
---GO
+CREATE OR ALTER PROC USP_GetAccountDetailById
+	@AccountId INTEGER
+AS
+	SELECT pd.*, acc.MemberPoint as Point FROM (SELECT * FROM PERSONAL_DETAILS WHERE AccountId = @AccountId) pd
+	JOIN ACCOUNT acc on pd.AccountId = acc.Id;
+GO
 
 --! proc lấy thông tin chi tiết tài khoản // Check
 CREATE OR ALTER PROC USP_GetAccountDetailByEmail

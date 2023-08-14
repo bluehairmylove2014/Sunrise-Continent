@@ -11,7 +11,8 @@ namespace SunriseServerCore.RepoInterfaces
     {
         Task<int> GetNextAccountIdAsync();
         Task<Account> GetByUsername(string username);
-        Task<int> GetAccountIdByEmail(string email);
-        Task<PersonalDetail> GetAccountDetailsByEmail(string email);
+        // Task<string> GetAccountEmailByIdAsync(int accountId);
+        Task<PersonalDetail> GetAccountDetailsByIdAsync(int accountId);
+        Task<PersonalDetail> GetAccountDetailsByEmailAsync(string email);
     }
 }

@@ -59,21 +59,21 @@ namespace SunriseServerData.Repositories
             return result.FirstOrDefault();
         }
 
-        public async Task<PersonalDetail> GetAccountDetailsByEmail(string email)
+        public async Task<PersonalDetail> GetAccountDetailsByEmailAsync(string email)
         {
             var result = await _dataContext.PersonalDetail
                 .FromSqlInterpolated($"EXEC USP_GetAccountDetailByEmail @Email = {email};").ToListAsync();
             return result.FirstOrDefault();
         }
 
-        public async Task<int> GetAccountIdByEmail(string email)
-        {
-            var result = await _dataContext.Set<MyFuctionReturn>()
-                .FromSqlInterpolated($"select dbo.USF_GetAccountId({email}) as value;")
-                .ToListAsync();
+        // public async Task<int> GetAccountIdByEmail(string email)
+        // {
+        //     var result = await _dataContext.Set<MyFuctionReturn>()
+        //         .FromSqlInterpolated($"select dbo.USF_GetAccountId({email}) as value;")
+        //         .ToListAsync();
 
-            return (result.FirstOrDefault()).MyValue;
-        }
+        //     return (result.FirstOrDefault()).MyValue;
+        // }
 
         public async Task<int> GetNextAccountIdAsync()
         {
@@ -84,6 +84,22 @@ namespace SunriseServerData.Repositories
                 .ToListAsync();
 
             return (result.FirstOrDefault()).MyValue;
-        } 
+        }
+
+        // public async Task<string> GetAccountEmailByIdAsync(int accountId)
+        // {
+        //     var result = await _dataContext.PersonalDetail
+        //         .FromSqlInterpolated($"EXEC USP_GetAccountDetailById @AccountId={accountId};").ToListAsync();
+        //     return "hh";
+        // }
+
+        public async Task<PersonalDetail> GetAccountDetailsByIdAsync(int accountId)
+        {
+            var result = await _dataContext.PersonalDetail
+                .FromSqlInterpolated($"EXEC USP_GetAccountDetailById @AccountId={accountId};").ToListAsync();
+            return result.FirstOrDefault();
+        }
+
+
     }
 }

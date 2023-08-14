@@ -19,6 +19,7 @@ namespace SunriseServerCore.Dtos.Order
         public string SpecialNeeds { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
         public int VoucherId { get; set; }
+        public int Total { get; set; }
         public List<OrderDto> Orders { get; set; }
     }
 

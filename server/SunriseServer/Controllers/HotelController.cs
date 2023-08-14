@@ -153,6 +153,7 @@ namespace SunriseServer.Controllers
             [FromQuery] int rooms,
             [FromQuery] int adults,
             [FromQuery] int children
+            // [FromQuery] HotelSearchPagingInputDto hotelDto
         )
         {
 

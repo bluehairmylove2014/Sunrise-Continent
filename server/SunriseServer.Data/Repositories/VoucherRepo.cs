@@ -87,8 +87,10 @@ namespace SunriseServerData.Repositories
 
         public async Task<int> RedeemVoucherAsync(int accountId, int voucherId, int number)
         {
+            string dateRecorded = DateTime.Now.ToString($"yyyy-MM-dd HH:mm:ss.fffffff");
+
             var result = await _dataContext.Database
-                .ExecuteSqlInterpolatedAsync($"EXEC USP_RedeemVoucher @AccountId={accountId}, @VoucherId={voucherId}, @Number={number};");
+                .ExecuteSqlInterpolatedAsync($"EXEC USP_RedeemVoucher @AccountId={accountId}, @VoucherId={voucherId}, @Number={number}, @DateRecorded={dateRecorded};");
 
             return result;
         }

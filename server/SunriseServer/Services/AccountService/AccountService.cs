@@ -73,7 +73,7 @@ namespace SunriseServer.Services.AccountService
 
         public async Task<PersonalDetail> GetAccountDetailsByEmail(string email)
         {
-            return await _unitOfWork.AccountRepo.GetAccountDetailsByEmail(email);
+            return await _unitOfWork.AccountRepo.GetAccountDetailsByEmailAsync(email);
         }
     }
 }

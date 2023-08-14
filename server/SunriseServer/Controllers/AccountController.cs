@@ -48,5 +48,15 @@ namespace SunriseServer.Controllers
 
             return Ok(result);
         }
+
+        [HttpPut("personal-info"), Authorize(Roles = GlobalConstant.User)]
+        public async Task<ActionResult<List<Hotel>>> UpdateAccountPersonalInfo(int id, Account request)
+        {
+            var result = await _accountService.UpdateAccount(request);
+            if (result is null)
+                return NotFound("Account not found.");
+
+            return Ok(result);
+        }
     }
 }

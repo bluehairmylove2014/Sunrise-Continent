@@ -1,0 +1,67 @@
+@import '../partial/mixin';
+
+.common-component__checkbox {
+    width: 100%;
+    text-overflow: ellipsis;
+    // direction - justify content - align items - flex wrap
+    @include dflex(row, flex-start, center, nowrap);
+
+    .cc-checkbox__container {
+        cursor: pointer;
+        font-size: 0.85rem;
+        padding-left: 35px;
+        position: relative;
+        color: rgba(0, 0, 0, 0.8);
+        transition: all 0.1s ease-in;
+        white-space: nowrap;
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, flex-start, center, nowrap);
+
+        input {
+            position: absolute;
+            left: -4px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        span {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+            transition: all 0.1s ease-in;
+            // direction - justify content - align items - flex wrap
+            @include dflex(column, center, center, nowrap);
+
+            i {
+                font-size: 0.7em;
+                color: white;
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        &:hover {
+            color: var(--ultramarine-blue);
+
+            span {
+                border-color: var(--ultramarine-blue);
+            }
+        }
+
+        input:checked+span {
+            background-color: var(--butterfly-bush);
+
+            i {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    }
+}

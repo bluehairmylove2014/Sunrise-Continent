@@ -13,6 +13,7 @@ using SunriseServer.Services.RoomService;
 using SunriseServerCore.Dtos.Room;
 using System.Data;
 using SunriseServerCore.Dtos.Hotel;
+using SunriseServer.Services.CacheService;
 
 namespace SunriseServer.Controllers
 {
@@ -24,11 +25,13 @@ namespace SunriseServer.Controllers
     {
         readonly IHotelService _hotelService;
         readonly IRoomService _roomService;
+        readonly ICacheService _cacheService;
 
-        public HotelController(IHotelService hotelService, IRoomService roomService)
+        public HotelController(IHotelService hotelService, IRoomService roomService, ICacheService cacheService)
         {
             _hotelService = hotelService;
             _roomService = roomService;
+            _cacheService = cacheService;
         }
 
         private async Task<HotelDto> TransferHotelData(Hotel rawData)
@@ -56,6 +59,11 @@ namespace SunriseServer.Controllers
         [HttpGet("")]
         public async Task<ActionResult<List<HotelDto>>> GetAllHotelInfo()
         {
+            var cacheHotelData = _cacheService.GetData<IEnumerable<HotelDto>>("hotels");
+
+            if (cacheHotelData != null && cacheHotelData.Count() > 0)
+                return Ok(cacheHotelData);
+
             var result = await _hotelService.GetAllHotels();
 
             var finalResult = new List<HotelDto>();
@@ -65,17 +73,30 @@ namespace SunriseServer.Controllers
                 finalResult.Add(await TransferHotelData(item));
             }
 
+            // Set expiry time
+            var expiryTime = DateTimeOffset.Now.AddSeconds(120);
+            _cacheService.SetData<IEnumerable<HotelDto>>("hotels", finalResult, expiryTime);
+
             return Ok(finalResult);
         }
 
         [HttpGet("single")]
         public async Task<ActionResult<HotelDto>> GetSingleHotel(int id)
         {
+            var cacheHotelData = _cacheService.GetData<HotelDto>($"hotel{id}");
+
+            if (cacheHotelData != null)
+                return Ok(cacheHotelData);
+
             var rawData = await _hotelService.GetSingleHotel(id);
             if (rawData is null)
                 return NotFound("Hotel not found.");
 
             var result = await TransferHotelData(rawData);
+
+            // Set expiry time
+            var expiryTime = DateTimeOffset.Now.AddSeconds(120);
+            _cacheService.SetData<HotelDto>($"hotel{id}", result, expiryTime);
 
             return Ok(result);
         }
@@ -89,16 +110,24 @@ namespace SunriseServer.Controllers
         [HttpGet("recommend")]
         public async Task<ActionResult<List<HotelDto>>> GetRecommendedHotel()
         {
+            var cacheHotelData = _cacheService.GetData<IEnumerable<HotelDto>>($"recommended-hotels");
+
+            if (cacheHotelData != null && cacheHotelData.Count() > 0)
+                return Ok(cacheHotelData);
+
             var rawData = await _hotelService.GetRecommendedHotel(10);
             if (rawData is null)
                 return NotFound("No Hotel available.");
 
             var result = new List<HotelDto>();
-
             foreach(var item in rawData)
             {
                 result.Add(await TransferHotelData(item));
             };
+
+            // Set expiry time
+            var expiryTime = DateTimeOffset.Now.AddSeconds(120);
+            _cacheService.SetData<IEnumerable<HotelDto>>($"recommended-hotels", result, expiryTime);
 
             return Ok(result);
         }
@@ -136,6 +165,7 @@ namespace SunriseServer.Controllers
         public async Task<ActionResult<ResponseMessageDetails<Hotel>>> DeleteHotel(int id)
         {
             var result = await _hotelService.DeleteHotel(id);
+            _cacheService.RemoveData($"hotel{id}");
             if (result is null)
                 return NotFound("Hotel not found.");
 
@@ -156,6 +186,12 @@ namespace SunriseServer.Controllers
             [FromQuery] HotelSearchPagingInputDto hotelDto
         )
         {
+            // cache
+            var cacheHotelData = _cacheService.GetData<IEnumerable<HotelDto>>("search-hotels");
+
+            if (cacheHotelData != null && cacheHotelData.Count() > 0)
+                return Ok(cacheHotelData);
+            // end cache
 
             max_budget = max_budget == 0 ? Int32.MaxValue : max_budget;
             var result = await _hotelService.GetSearchHotels(
@@ -172,13 +208,29 @@ namespace SunriseServer.Controllers
                 finalResult.Add(await TransferHotelData(item));
             }
 
+
+            // Set expiry time
+            var expiryTime = DateTimeOffset.Now.AddSeconds(120);
+            _cacheService.SetData<IEnumerable<HotelDto>>("search-hotels", finalResult, expiryTime);
+
             return Ok(finalResult);
         }
 
         [HttpGet("review")]
         public async Task<ActionResult<List<Review>>> GetAllHotelReview(int hotelId)
         {
+            var cacheHotelData = _cacheService.GetData<IEnumerable<Review>>($"reviews-hotel{hotelId}");
+
+            if (cacheHotelData != null && cacheHotelData.Count() > 0)
+                return Ok(cacheHotelData);
+            // end cache
+
             var result = await _hotelService.GetHotelReview(hotelId);
+
+
+            // Set expiry time
+            var expiryTime = DateTimeOffset.Now.AddSeconds(120);
+            _cacheService.SetData<IEnumerable<Review>>($"reviews-hotel{hotelId}", result, expiryTime);
 
             return Ok(result);
         }

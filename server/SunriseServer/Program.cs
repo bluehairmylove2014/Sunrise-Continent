@@ -11,6 +11,7 @@ using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using SunriseServer.Services.CacheService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -62,6 +64,8 @@ builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
 builder.Services.AddServicesData();
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("StripeSettings")); // AZURE_SQL_CONNECTIONSTRING Sunrise
 builder.Services.AddUnitOfWork(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
+builder.Services.AddDistributedRedisCache(options =>
+    options.Configuration = builder.Configuration.GetConnectionString("CacheConnectionString"));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

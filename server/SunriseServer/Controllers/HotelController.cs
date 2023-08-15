@@ -14,6 +14,8 @@ using SunriseServerCore.Dtos.Room;
 using System.Data;
 using SunriseServerCore.Dtos.Hotel;
 using SunriseServer.Services.CacheService;
+using SunriseServerCore.Common.Helper;
+using Newtonsoft.Json;
 
 namespace SunriseServer.Controllers
 {
@@ -183,14 +185,26 @@ namespace SunriseServer.Controllers
             [FromQuery] int rooms,
             [FromQuery] int adults,
             [FromQuery] int children,
-            [FromQuery] HotelSearchPagingInputDto hotelDto
+            [FromQuery] HotelPagingDto hotelDto
         )
         {
             // cache
             var cacheHotelData = _cacheService.GetData<IEnumerable<HotelDto>>("search-hotels");
 
             if (cacheHotelData != null && cacheHotelData.Count() > 0)
-                return Ok(cacheHotelData);
+            {
+                var re_page = PageList<HotelDto>.ToPageList(cacheHotelData.AsQueryable(), hotelDto.page_number, hotelDto.page_size);
+  
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(new {
+                    re_page.TotalCount,
+                    re_page.PageSize,
+                    re_page.CurrentPage,
+                    re_page.TotalPages,
+                    re_page.HasNext,
+                    re_page.HasPrevious
+                }));
+                return Ok(re_page);
+            }
             // end cache
 
             max_budget = max_budget == 0 ? Int32.MaxValue : max_budget;
@@ -208,12 +222,21 @@ namespace SunriseServer.Controllers
                 finalResult.Add(await TransferHotelData(item));
             }
 
+            var pages = PageList<HotelDto>.ToPageList(finalResult.AsQueryable(), hotelDto.page_number, hotelDto.page_size);
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(new {
+                pages.TotalCount,
+                pages.PageSize,
+                pages.CurrentPage,
+                pages.TotalPages,
+                pages.HasNext,
+                pages.HasPrevious
+            }));
 
             // Set expiry time
             var expiryTime = DateTimeOffset.Now.AddSeconds(120);
             _cacheService.SetData<IEnumerable<HotelDto>>("search-hotels", finalResult, expiryTime);
 
-            return Ok(finalResult);
+            return Ok(pages);
         }
 
         [HttpGet("review")]

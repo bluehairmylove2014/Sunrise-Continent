@@ -89,7 +89,7 @@ namespace SunriseServer.Controllers
         }
 
         [HttpGet("available")]
-        public async Task<ActionResult<ResponseMessageDetails<bool>>> GetHotelRoomAvailable(
+        public async Task<ActionResult<bool>> GetHotelRoomAvailable(
             int HotelId,
             int RoomTypeId,
             int NumberOfRoom,

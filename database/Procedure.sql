@@ -1885,7 +1885,7 @@ BEGIN
 END
 
 GO
---! Proc lấy điểm bonus
+--! Proc tính diểm thành viên dựa trên số lần đặt cùng một loại phòng của khách sạn.
 CREATE OR ALTER PROC USP_GetBookingLengthBonusPoint (
 	@AccountId INT,
 	@BookingId INT,

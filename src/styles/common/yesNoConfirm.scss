@@ -1,0 +1,75 @@
+@import '../partial/mixin';
+
+.yes-no-confirm {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    // direction - justify content - align items - flex wrap
+    @include dflex(row, center, center, nowrap);
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease-in;
+    z-index: 999;
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba($color: #000000, $alpha: 0.7);
+        z-index: 999;
+        pointer-events: none;
+    }
+
+    .yes-no-confirm__box {
+        position: relative;
+        z-index: 999;
+        background-color: white;
+        padding: 30px 40px;
+        border-radius: 5px;
+
+        p {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .yes-no-confirm__btn {
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, space-between, center, nowrap);
+
+            button {
+                // border - border radius - background color - color - padding - font size
+                @include normal-btn(none, 5px, transparent, black, 10px 25px, 0.6rem);
+
+                &:nth-child(1) {
+                    background-color: white;
+                    border: 1px solid black;
+
+                    &:hover {
+                        background-color: var(--desert-storm);
+                    }
+                }
+
+                &:nth-child(2) {
+                    background-color: var(--dirty-orange);
+                    color: white;
+                    border: 1px solid var(--dirty-orange);
+
+                    &:hover {
+                        background-color: var(--light-dirty-orange);
+                    }
+                }
+            }
+        }
+    }
+
+    &.active {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: all;
+    }
+}

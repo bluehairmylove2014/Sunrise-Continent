@@ -1,0 +1,3 @@
+export const QUERY_KEYS = {
+  GET_VOUCHER: "QUERY_GET_VOUCHER",
+};

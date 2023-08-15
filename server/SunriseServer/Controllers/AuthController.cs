@@ -60,6 +60,9 @@ namespace SunriseServer.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<ResponseMessageDetails<string>>> Register(RegisterDto request)
         {
+            if (request.Password.Length < 6)
+                return BadRequest("Password is too weak, must be greater than 6 characters");
+
             var acc = await _accService.GetByUsername(request.Email);
 
             if (acc != null)

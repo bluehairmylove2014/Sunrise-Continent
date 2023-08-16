@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useLogout } from "../../libs/business-logic/src/lib/auth";
 import "../../styles/common/userSidebar.scss";
 import { RankList } from "../../constants/Rank";
+import { PAGES } from "../../constants/Link.constants";
 
 const UserSidebar = ({ isActive, userData, callback }) => {
   const sidebarRef = useRef(null);
@@ -49,17 +50,17 @@ const UserSidebar = ({ isActive, userData, callback }) => {
       </div>
       <ul>
         <li>
-          <Link to="/profile">
+          <Link to={PAGES.HOME}>
             <i className="fi fi-rr-user"></i>
             <span>Your profile</span>
           </Link>
         </li>
-        <li>
+        {/* <li>
           <Link to="/setting">
             <i className="fi fi-rr-settings"></i>
             <span>Setting</span>
           </Link>
-        </li>
+        </li> */}
         <li>
           <button
             onClick={() => {

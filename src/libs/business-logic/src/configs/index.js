@@ -37,7 +37,7 @@ export const providerConfig = [
   {
     key: "cart",
     provider: CartProvider,
-    isActive: false,
+    isActive: true,
   },
   {
     key: "auth",

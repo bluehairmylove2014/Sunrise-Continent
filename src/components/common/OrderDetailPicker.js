@@ -10,13 +10,49 @@ import { BANNER_INPUT } from "../../constants/Variables.constants";
 import { setRedirectUrl } from "../../utils/helpers/RedirectUrlSaver";
 import { PAGES } from "../../constants/Link.constants";
 import { toast } from "react-hot-toast";
+import { useInitOrder } from "../../libs/business-logic/src/lib/order/process/hooks";
 
 const OrderDetailPicker = React.forwardRef(
   ({ form, defaultValues, roomDetail, edit, editCallback }, ref) => {
+    if (!Array.isArray(roomDetail)) {
+      roomDetail = [
+        {
+          hotel: {
+            id: roomDetail.hotelId,
+          },
+          rooms: [
+            {
+              id: roomDetail.id,
+              name: roomDetail.name,
+              price: roomDetail.price,
+            },
+          ],
+        },
+      ];
+    }
     const navigate = useNavigate();
     const isLoggedIn = useIsLogged();
     const { onCheckRoomAvailable, isLoading: isCheckingRoomAvailable } =
       useCheckRoomAvailable();
+    const { onInitOrder } = useInitOrder();
+    const checkRoomsAvailability = (
+      selectedRooms,
+      checkIn,
+      checkOut,
+      numberOfRooms
+    ) => {
+      const promises = selectedRooms.rooms.map((detail) => {
+        return onCheckRoomAvailable({
+          HotelId: selectedRooms.hotel.id,
+          RoomTypeId: detail.id,
+          NumberOfRoom: numberOfRooms,
+          CheckIn: checkIn,
+          CheckOut: checkOut,
+        });
+      });
+
+      return Promise.all(promises);
+    };
 
     const onPreCheckout = (data, rd) => {
       if (!isLoggedIn) {
@@ -33,31 +69,49 @@ const OrderDetailPicker = React.forwardRef(
             console.error(err);
           }
         } else {
-          if (data.start_date.length === 0 || data.end_date.length === 0) {
+          if (
+            !data ||
+            !data.start_date ||
+            !data.end_date ||
+            data.start_date.length === 0 ||
+            data.end_date.length === 0
+          ) {
             toast.error("Hãy chọn ngày bắt đầu và ngày kết thúc");
             return;
           }
-          // Check room available
-          onCheckRoomAvailable({
-            HotelId: rd.hotelId,
-            RoomTypeId: rd.id,
-            NumberOfRoom: data.rooms,
-            CheckIn: data.start_date,
-            CheckOut: data.end_date,
-          })
-            .then((isAvailable) => {
-              if (isAvailable) {
-                navigate(
-                  PAGES.PRE_CHECKOUT +
-                    `?hotelID=${rd.hotelId}&roomID=${rd.id}` +
-                    `&start_date=${data.start_date}&end_date=${data.end_date}` +
-                    `&adults=${defaultValues.adults}` +
-                    `&childrens=${defaultValues.childrens}` +
-                    `&rooms=${defaultValues.rooms}`
-                );
+          console.log(data);
+          checkRoomsAvailability(rd, data.start_date, data.end_date, data.rooms)
+            .then((results) => {
+              const allAvailable = results.every((isAvailable) => isAvailable);
+              if (allAvailable) {
+                onInitOrder({
+                  fullName: null,
+                  nation: null,
+                  dateOfBirth: null,
+                  email: null,
+                  phoneNumber: null,
+                  specialNeeds: null,
+                  notes: null,
+                  voucherId: null,
+                  total: null,
+                  orders: rd.rooms.map((detail) => ({
+                    hotelId: rd.hotel.id,
+                    roomTypeId: detail.id,
+                    checkIn: data.start_date,
+                    checkOut: data.end_date,
+                    numberOfRoom: data.rooms,
+                    adults: data.adults,
+                    childrens: data.childrens,
+                  })),
+                });
+
+                navigate(PAGES.PRE_CHECKOUT);
                 toast.success("Thành công");
               } else {
                 toast.error("Phòng đã hết chỗ vào ngày này!");
+                // Array.isArray(rd)
+                //   ? toast.error("Một số phòng đã hết chỗ vào ngày này!")
+                //   : toast.error("Phòng đã hết chỗ vào ngày này!");
               }
             })
             .catch((error) => {
@@ -71,7 +125,9 @@ const OrderDetailPicker = React.forwardRef(
       <form
         className="room__pre-checkout-picker"
         ref={ref}
-        onSubmit={form.handleSubmit((data) => onPreCheckout(data, roomDetail))}
+        onSubmit={form.handleSubmit((data) =>
+          onPreCheckout(data, roomDetail[0])
+        )}
       >
         {isCheckingRoomAvailable && (
           <div className="pre-checkout-picker__loading">

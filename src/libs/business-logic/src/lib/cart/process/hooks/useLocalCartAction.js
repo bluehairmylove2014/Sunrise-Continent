@@ -19,7 +19,7 @@ export const useLocalCartAction = () => {
     const localCart = getCartLocalStorage(); // Get cart from LocalStorage
     if (localCart) {
       // Case if cart is in LocalStorage
-      let newCart = { ...localCart }; // Make a copy
+      let newCart = [...localCart]; // Make a copy
       if (!newCart || !newCart.length) {
         // If cart does not have product
         // Or if product variable is an empty array
@@ -29,9 +29,25 @@ export const useLocalCartAction = () => {
         // Cart already has other products then find if the product
         // Need to add is already in the cart or not, if yes then add
         // The quantity. Not yet then push to the top (for user to see :V)
-        const productInCart = newCart.find((p) => p.id === product.id);
+        const productInCart = newCart.find(
+          (p) => p.hotel.id === product.hotel.id
+        );
         if (!productInCart) {
           newCart.unshift(product);
+        } else if (
+          productInCart.room.findIndex((rd) => rd.id === product.room[0].id) !==
+          -1
+        ) {
+          return {
+            isSuccess: false,
+            msg: "Sản phẩm đã tồn tại",
+          };
+        } else {
+          newCart = newCart.filter(
+            (cartItem) => cartItem.hotel.id !== product.hotel.id
+          );
+          productInCart.room.push(product.room[0]);
+          newCart.push(productInCart);
         }
       }
       setCart(newCart);
@@ -39,12 +55,33 @@ export const useLocalCartAction = () => {
       // Otherwise, set new for both
       setCart([product]);
     }
+
+    return {
+      isSuccess: true,
+      msg: "Thêm vào giỏ hàng thành công",
+    };
   };
-  const deleteFromCartLocalStorage = (productID) => {
+  const deleteFromCartLocalStorage = (productID, type) => {
     const localCart = getCartLocalStorage(); // Get cart from LocalStorage
     if (localCart) {
       // Case if cart is in LocalStorage
-      setCartLocalStorage(localCart.filter((p) => p.id !== productID));
+      if (type === "room") {
+        const targetHotelIndex = localCart.findIndex(
+          (cartItem) => cartItem.hotel.id === productID.hotelId
+        );
+        const targetHotel = localCart[targetHotelIndex];
+        targetHotel.room = targetHotel.room.filter(
+          (r) => r.id !== productID.roomId
+        );
+        if (!targetHotel.room || targetHotel.room.length === 0) {
+          localCart.splice(targetHotelIndex, 1);
+        } else {
+          localCart[targetHotelIndex] = targetHotel;
+        }
+        setCartLocalStorage(localCart);
+      } else if (type === "hotel") {
+        setCartLocalStorage(localCart.filter((p) => p.hotel.id !== productID));
+      }
     }
   };
 

@@ -598,6 +598,12 @@
                         span {
                             font-size: 0.75rem;
                             margin-left: 10px;
+                            @include limit-line(3)
+                        }
+
+                        .room-view-wrapper {
+                            // direction - justify content - align items - flex wrap
+                            @include dflex(column, flex-start, flex-start, nowrap);
                         }
                     }
                 }
@@ -763,6 +769,10 @@
                                 // border - border radius - background color - color - padding - font size
                                 @include normal-btn(1px solid black, 5px, transparent, black, 6px 12px, 1rem);
 
+                                &:disabled {
+                                    cursor: not-allowed;
+                                    opacity: 0.6;
+                                }
                             }
                         }
                     }

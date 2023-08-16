@@ -44,17 +44,14 @@
             button {
                 // border - border radius - background color - color - padding - font size
                 @include normal-btn(none, 5px, transparent, black, 10px 25px, 0.6rem);
+                background-color: white;
+                border: 1px solid black;
 
-                &:nth-child(1) {
-                    background-color: white;
-                    border: 1px solid black;
-
-                    &:hover {
-                        background-color: var(--desert-storm);
-                    }
+                &:hover {
+                    background-color: var(--desert-storm);
                 }
 
-                &:nth-child(2) {
+                &:last-child {
                     background-color: var(--dirty-orange);
                     color: white;
                     border: 1px solid var(--dirty-orange);

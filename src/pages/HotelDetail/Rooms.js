@@ -12,6 +12,8 @@ import { BANNER_INPUT } from "../../constants/Variables.constants";
 import { toggleClass } from "../../utils/helpers/ToggleClass";
 import { parseSearchParams } from "../../utils/helpers/params";
 import OrderDetailPicker from "../../components/common/OrderDetailPicker";
+import { useAddToCart } from "../../libs/business-logic/src/lib/cart";
+import { toast } from "react-hot-toast";
 
 const Rooms = ({ hotelData, roomsData, openGallery }) => {
   let room = null;
@@ -27,9 +29,34 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
     defaultValues: pickerFormDefaultValue,
   });
   const pickerRef = useRef(null);
+  const { onAddToCart, isLoading: isAddToCartLoading } = useAddToCart();
 
-  const addToCart = () => {
-    console.log({ hotelData, roomsData });
+  const handleAddToCart = (rdata) => {
+    onAddToCart({
+      hotel: {
+        id: hotelData.id,
+        inputName: "hotel4",
+        name: hotelData.name,
+        country: hotelData.country,
+        provinceCity: hotelData.provinceCity,
+        address: hotelData.address,
+        image: hotelData.image,
+      },
+      room: [
+        {
+          id: rdata.id,
+          inputName: `hotel${hotelData.id}room${rdata.id}`,
+          name: rdata.name,
+          price: rdata.price,
+        },
+      ],
+    })
+      .then((message) => {
+        toast.success(message);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
   };
 
   if (Array.isArray(roomsData)) {
@@ -72,7 +99,19 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
               <div className="main-infor__hightlight" style={{ opacity: 1 }}>
                 <img src={icon.viewIcon} alt="view" />
 
-                <span>{rd.roomView}</span>
+                <div className="room-view-wrapper">
+                  {rd.roomView
+                    .split(",")
+                    .slice(0, 3)
+                    .map((rv) => (
+                      <span key={`room@${rd.id}view@${rv}`}>{rv}</span>
+                    ))}
+                  {rd.roomView.split(",").length > 3 ? (
+                    <span>+ {rd.roomView.split(",").length - 3} more</span>
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </div>
             </div>
             <div className="room__facilities-services">
@@ -158,7 +197,11 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
                   >
                     {rd.vacancy ? "Đặt ngay" : "Đổi ngày"}
                   </button>
-                  <button className="cart" onClick={() => addToCart()}>
+                  <button
+                    className="cart"
+                    disabled={isAddToCartLoading}
+                    onClick={() => handleAddToCart(rd)}
+                  >
                     <i className="fi fi-sr-shopping-cart-add"></i>
                   </button>
                 </div>

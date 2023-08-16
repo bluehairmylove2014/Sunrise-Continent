@@ -10,11 +10,11 @@ export const useDeleteFromCart = () => {
   const { deleteFromCartLocalStorage, setCart } = useLocalCartAction();
   const { onGetCart } = useGetCart();
 
-  const onDeleteItem = (id) => {
+  const onDeleteItem = ({ type, id }) => {
     return new Promise((resolve, reject) => {
       dispatch({
         type: "DELETE_ACTION",
-        payload: { id },
+        payload: { type, id },
       });
       if (state.accessToken) {
         deleteFromCartMutation
@@ -39,7 +39,7 @@ export const useDeleteFromCart = () => {
             reject(error);
           });
       } else {
-        deleteFromCartLocalStorage(id);
+        deleteFromCartLocalStorage(id, type);
         resolve("Delete from cart success");
       }
     });

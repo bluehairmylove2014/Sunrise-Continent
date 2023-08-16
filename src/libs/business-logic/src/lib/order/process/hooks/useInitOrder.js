@@ -1,4 +1,5 @@
 import { useOrderContext } from "../context";
+import { setOrderLocalStorage } from "../helpers/localStorageOrder";
 
 export const useInitOrder = () => {
   const { dispatch } = useOrderContext();
@@ -8,6 +9,7 @@ export const useInitOrder = () => {
       type: "SET_ORDER",
       payload: order,
     });
+    setOrderLocalStorage(order);
   };
 
   return {

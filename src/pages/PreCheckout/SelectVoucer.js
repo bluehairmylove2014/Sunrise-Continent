@@ -17,7 +17,9 @@ const SelectVoucer = ({ isOpen, chooseVoucherCallback, closeCallback }) => {
           <button onClick={() => closeCallback()}>x</button>
         </div>
         <div className="box__voucher-list">
-          {voucherData && Array.isArray(voucherData) ? (
+          {voucherData &&
+          Array.isArray(voucherData) &&
+          voucherData.length > 0 ? (
             voucherData.map((vd) => (
               <Voucher
                 voucherData={vd}
@@ -26,7 +28,8 @@ const SelectVoucer = ({ isOpen, chooseVoucherCallback, closeCallback }) => {
                 key={vd.voucherId}
               />
             ))
-          ) : voucherData === null ? (
+          ) : voucherData === null ||
+            (Array.isArray(voucherData) && voucherData.length === 0) ? (
             <div className="emptyWrapper">
               <Empty
                 label={

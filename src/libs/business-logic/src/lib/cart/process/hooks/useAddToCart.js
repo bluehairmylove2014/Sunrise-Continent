@@ -20,11 +20,11 @@ export const useAddToCart = () => {
 
   const onAddToCart = debouncePromise((params) => {
     return new Promise((resolve, reject) => {
-      addToCart(params.item);
+      const result = addToCart(params);
       if (!state.accessToken) {
         // NOT LOGGED IN
         // Add to cart under LocalStorage & context
-        resolve("Add to cart local success");
+        resolve(result.msg);
       } else {
         // LOGGED IN
         // Add to cart on server

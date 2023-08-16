@@ -2,13 +2,15 @@
 import React, { useEffect, useReducer } from "react";
 import { OrderContext } from "../context/orderContext";
 import { orderReducer } from "../context/reducer";
-import { defaultOrder } from "../../constants";
+import { getOrderLocalStorage } from "../helpers/localStorageOrder";
 
 export const ContextProvider = ({ children, accessToken }) => {
   const [state, dispatch] = useReducer(orderReducer, {
     order: null,
     accessToken: accessToken,
   });
+  const localCart = getOrderLocalStorage();
+
   useEffect(() => {
     dispatch({
       type: "SET_TOKEN_ACTION",
@@ -17,12 +19,10 @@ export const ContextProvider = ({ children, accessToken }) => {
   }, [accessToken]);
 
   useEffect(() => {
-    if (!state.order) {
-      dispatch({
-        type: "SET_ORDER",
-        payload: defaultOrder,
-      });
-    }
+    dispatch({
+      type: "SET_ORDER",
+      payload: localCart,
+    });
   }, []);
 
   return (

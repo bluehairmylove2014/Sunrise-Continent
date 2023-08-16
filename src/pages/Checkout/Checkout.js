@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "../../styles/component/checkout.scss";
-// import { useGetOrder } from "../../libs/business-logic/src/lib/order/process/hooks";
+import { useGetOrder } from "../../libs/business-logic/src/lib/order/process/hooks";
 import { useGetCheckoutUrl } from "../../libs/business-logic/src/lib/checkout/process/hooks";
 import sunriseHorizontalLogo from "../../assets/images/logos/sc-horizontal.png";
 import { checkoutMethods } from "../../constants/CheckoutMethods";
 import {
   useGetHotelDetail,
-  useGetSpecificRoom,
+  useGetRooms,
 } from "../../libs/business-logic/src/lib/hotel/process/hooks";
 import { combineAddress } from "../../utils/helpers/Address";
 import { formatDate } from "../../utils/helpers/ShortenDatetime";
@@ -14,39 +14,42 @@ import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import { calcNight } from "../../utils/helpers/Datetime";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 
-const mockData = {
-  fullName: "Phan Phúc Đạt",
-  nation: "vietnam",
-  dateOfBirth: "2023-08-08",
-  email: "phucdat4102@gmail.com",
-  phoneNumber: "+84337839146",
-  specialNeeds: "",
-  notes: "Không",
-  voucherId: 0,
-  total: 980000,
-  orders: [
-    {
-      hotelId: 1,
-      roomTypeId: 3,
-      checkIn: "2023-08-15T13:37",
-      checkOut: "2023-08-17T13:37",
-      numberOfRoom: 1,
-    },
-  ],
-};
+// const mockData = {
+//   fullName: "Phan Phúc Đạt",
+//   nation: "vietnam",
+//   dateOfBirth: "2023-08-08",
+//   email: "phucdat4102@gmail.com",
+//   phoneNumber: "+84337839146",
+//   specialNeeds: "",
+//   notes: "Không",
+//   voucherId: 0,
+//   total: 980000,
+//   orders: [
+//     {
+//       hotelId: 1,
+//       roomTypeId: 3,
+//       checkIn: "2023-08-15T13:37",
+//       checkOut: "2023-08-17T13:37",
+//       numberOfRoom: 1,
+//     },
+//   ],
+// };
 
 const Checkout = () => {
-  const [selectedMethod, setSelectedMethod] = useState(checkoutMethods.MOMO.id);
-  // const orderDetail = useGetOrder();
-  const orderDetail = mockData;
+  const [selectedMethod, setSelectedMethod] = useState(checkoutMethods.VISA.id);
+  const orderDetail = useGetOrder();
+  // const orderDetail = mockData;
   const hotelId =
     orderDetail && orderDetail.orders[0] ? orderDetail.orders[0].hotelId : null;
-  const roomId =
-    orderDetail && orderDetail.orders[0]
-      ? orderDetail.orders[0].roomTypeId
-      : null;
+  const roomIds = orderDetail
+    ? orderDetail.orders.map((rdata) => rdata.roomTypeId)
+    : null;
   const { data: hotelData } = useGetHotelDetail(hotelId);
-  const { data: roomsData } = useGetSpecificRoom(hotelId, roomId);
+  const allRoomData = useGetRooms(hotelId);
+  const roomsData =
+    Array.isArray(allRoomData) && Array.isArray(roomIds)
+      ? allRoomData.filter((rd) => roomIds.includes(rd.id))
+      : [];
   const { onGetCheckoutUrl, isLoading: isGettingCheckoutUrl } =
     useGetCheckoutUrl();
 
@@ -104,6 +107,10 @@ const Checkout = () => {
                 <button
                   onClick={() => setSelectedMethod(checkoutMethods.VISA.id)}
                 >
+                  <img
+                    src={checkoutMethods.MASTERCARD.icon}
+                    alt="mastercardLogo"
+                  />
                   <img src={checkoutMethods.VISA.icon} alt="visaLogo" />
                 </button>
               </li>
@@ -158,7 +165,11 @@ const Checkout = () => {
             </p>
             <p>
               <i className="fi fi-ss-bed-alt"></i>
-              Loại phòng: {roomsData.name}
+              Loại phòng:{" "}
+              {roomsData.map(
+                (rd, index) =>
+                  rd.name + (index + 1 === roomsData.length ? "" : ", ")
+              )}
             </p>
             <p>
               <i className="fi fi-ss-marker"></i>
@@ -185,15 +196,19 @@ const Checkout = () => {
             </p>
             <p>
               <i className="fi fi-sr-bed"></i>
-              Số phòng: <b>{orderDetail.orders[0].numberOfRoom} phòng</b>
+              Số phòng:{" "}
+              <b>
+                {orderDetail.orders[0].numberOfRoom * orderDetail.orders.length}{" "}
+                phòng
+              </b>
             </p>
-            <p>
+            {/* <p>
               <i className="fi fi-sr-sack-dollar"></i>
               Đơn giá:{" "}
               <b>
                 {convertNumberToCurrency("vietnamdong", roomsData.price)} / đêm
               </b>
-            </p>
+            </p> */}
 
             <hr />
             <h6>Chi tiết người liên hệ</h6>
@@ -211,7 +226,7 @@ const Checkout = () => {
             </p>
             <p>
               <i className="fi fi-sr-calendar"></i>
-              {formatDate(orderDetail.dateOfBirth).dateMonthYear}
+              Ngày sinh: {formatDate(orderDetail.dateOfBirth).dateMonthYear}
             </p>
             <p>
               <i className="fi fi-br-world"></i>
@@ -219,7 +234,7 @@ const Checkout = () => {
             </p>
             <p>
               <i className="fi fi-sr-comment-pen"></i>
-              Ghi chú: {orderDetail.notes}
+              Ghi chú: {orderDetail.notes ? orderDetail.notes : "Không"}
             </p>
             <p>
               <i className="fi fi-sr-notebook"></i>

@@ -173,8 +173,7 @@ const Pagination = ({
       </div>
     );
   };
-
-  return state.currentPage && state.maxPage ? (
+  return !Number.isNaN(state.currentPage) && !Number.isNaN(state.maxPage) ? (
     model === PAGINATION_MODEL.DETAIL ? (
       detailPagination({ data, maxElementPerPage })
     ) : (

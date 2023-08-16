@@ -10,7 +10,6 @@ export const useGetCheckoutUrl = () => {
     return new Promise((resolve, reject) => {
       if (!state.accessToken) {
         // NOT LOGGED IN
-        console.log(state);
         reject("Unauthorized");
       } else {
         getCheckoutUrlMutation

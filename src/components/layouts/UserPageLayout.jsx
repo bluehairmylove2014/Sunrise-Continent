@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
+import { useLocation } from "react-router-dom";
 
 export const UserPageLayout = ({ children }) => {
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const location = useLocation();
   // Handle the scroll event to show/hide the scroll button
   const handleScroll = () => {
     if (window.scrollY > 200) {
@@ -26,6 +28,11 @@ export const UserPageLayout = ({ children }) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [location]);
+
   return (
     <>
       <Header />

@@ -46,6 +46,7 @@ export const useClearCart = () => {
       } else {
         // NOT LOGGED IN => Delete local cart
         setCartLocalStorage(null);
+        resolve("Xoá giỏ hàng thành công");
       }
     });
   };

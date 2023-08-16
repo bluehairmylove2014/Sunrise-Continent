@@ -14,7 +14,7 @@ import { facebookPopupPostMessage } from "../helper/windowEventHelper";
 import { useAccessToken } from "./useAccessToken";
 
 const isRememberMeDefault = true;
-const successMessage = "Login success";
+// const successMessage = "Login success";
 const failedMessage = "Login failed";
 
 const fbAppId = process.env.REACT_APP_FACEBOOK_APP_ID || "";
@@ -109,8 +109,9 @@ export const useFacebookLogin = () => {
                       fullName: res.firstName + " " + res.lastName,
                     })
                     .then((res) => {
+                      setToken(res.token, isRememberMeDefault);
                       handleExit(handleAuthentication);
-                      resolve(successMessage);
+                      resolve(res.message);
                     })
                     .catch((error) => {
                       console.error("Error update account infor: ", error);

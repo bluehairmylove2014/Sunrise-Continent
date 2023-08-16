@@ -16,6 +16,7 @@ import WistList from "../common/WistList";
 import CartSidebar from "../common/CartSidebar";
 import { useGetUser } from "../../libs/business-logic/src/lib/auth/process/hooks";
 import { useWishlist } from "../../libs/business-logic/src/lib/wishlist";
+import { useCartContext } from "../../libs/business-logic/src/lib/cart/process/context";
 
 const Header = () => {
   const [isUserSidebarActive, setIsUserSidebarActive] = useState(false);
@@ -32,7 +33,8 @@ const Header = () => {
   const headerRef = useRef(null);
   const { getWishlist } = useWishlist();
   const wishlist = getWishlist();
-  const cart = null;
+  const { state } = useCartContext();
+  const cart = state.cart;
 
   const navigate = useNavigate();
 
@@ -41,7 +43,7 @@ const Header = () => {
   useEffect(() => {
     const handleScroll = () => {
       if (!timeskipScroll.current) {
-        if (window.scrollY > scrollPosition + 10) {
+        if (window.scrollY > scrollPosition + 5) {
           if (
             categories.findIndex(
               (c) => c.category_name === partner.category_name
@@ -58,7 +60,7 @@ const Header = () => {
           setTimeout(() => {
             timeskipScroll.current = false;
           }, 500);
-        } else if (window.scrollY < scrollPosition - 10) {
+        } else if (window.scrollY < scrollPosition - 5) {
           const targetIndex = categories.findIndex(
             (c) => c.category_name === partner.category_name
           );
@@ -256,7 +258,7 @@ const Header = () => {
               }`}
             >
               <li className="header-main-nav__user-avatar">
-                {userData && (
+                {userData ? (
                   <>
                     <button
                       onClick={() =>
@@ -266,6 +268,8 @@ const Header = () => {
                       <img src={userData.image} alt="user-avatar" />
                     </button>
                   </>
+                ) : (
+                  <div className="spinner"></div>
                 )}
               </li>
             </ul>
@@ -352,7 +356,7 @@ const Header = () => {
                 }`}
               >
                 <li className="header-main-nav__user-avatar">
-                  {userData && (
+                  {userData ? (
                     <>
                       <button
                         onClick={() =>
@@ -362,6 +366,8 @@ const Header = () => {
                         <img src={userData.image} alt="user-avatar" />
                       </button>
                     </>
+                  ) : (
+                    <div className="spinner"></div>
                   )}
                 </li>
               </ul>

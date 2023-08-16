@@ -11,7 +11,7 @@ import { useAccessToken } from "./useAccessToken";
 import { useAuthBroadcastChannel } from "./useAuthBroadcastChannel";
 
 const isRememberMeDefault = true;
-const successMessage = "Login success";
+// const successMessage = "Login success";
 const failedMessage = "Login failed";
 
 const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || "";
@@ -90,7 +90,7 @@ export const useGoogleLogin = () => {
                 .then((data) => {
                   // If web cannot get the user information
                   // => do not set token, do not login, do not broadcast
-                  setToken(payload.accessToken, isRememberMeDefault);
+                  // setToken(payload.accessToken, isRememberMeDefault);
                   // Send login notification message to other tabs
                   postMessage({
                     message: BROADCAST_MESSAGE.SEND_TOKEN,
@@ -105,8 +105,9 @@ export const useGoogleLogin = () => {
                     })
                     .then((res) => {
                       // Remove listener
+                      setToken(res.token, isRememberMeDefault);
                       handleExit(handleAuthentication);
-                      resolve(successMessage);
+                      resolve(res.message);
                     })
                     .catch((error) => {
                       console.error("Error update account infor: ", error);

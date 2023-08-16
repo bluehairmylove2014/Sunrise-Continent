@@ -36,24 +36,29 @@ const Search = () => {
     currentPage: 1,
     maxPage: 1,
   });
+  const location = useLocation();
   const [hotels, setHotels] = useState([]);
-  const [criteria, setCriteria] = useState(
-    parseSearchParams(useLocation().search)
-  );
+  const [criteria, setCriteria] = useState(parseSearchParams(location.search));
+  const defaultFormValue = Object.keys(BANNER_INPUT).reduce((values, key) => {
+    const inputName = BANNER_INPUT[key].INPUT_NAME;
+    if (Array.isArray(inputName)) {
+      inputName.forEach((n) => {
+        values[n] = criteria[n];
+      });
+      return values;
+    } else {
+      values[BANNER_INPUT[key].INPUT_NAME] =
+        criteria[BANNER_INPUT[key].INPUT_NAME];
+      return values;
+    }
+  }, {});
+
+  defaultFormValue["adults"] === undefined && (defaultFormValue["adults"] = 1);
+  defaultFormValue["childrens"] === undefined &&
+    (defaultFormValue["childrens"] = 0);
+  defaultFormValue["rooms"] === undefined && (defaultFormValue["rooms"] = 1);
   const searchBoardForm = useForm({
-    defaultValues: Object.keys(BANNER_INPUT).reduce((values, key) => {
-      const inputName = BANNER_INPUT[key].INPUT_NAME;
-      if (Array.isArray(inputName)) {
-        inputName.forEach((n) => {
-          values[n] = criteria[n];
-        });
-        return values;
-      } else {
-        values[BANNER_INPUT[key].INPUT_NAME] =
-          criteria[BANNER_INPUT[key].INPUT_NAME];
-        return values;
-      }
-    }, {}),
+    defaultValues: defaultFormValue,
   });
   let filterTrueList = [];
   FILTER_CHECKBOX_KEY.forEach((fc) => {
@@ -70,6 +75,10 @@ const Search = () => {
   });
 
   useEffect(() => {
+    setCriteria(parseSearchParams(location.search));
+  }, [location]);
+
+  useEffect(() => {
     handleSearch(criteria);
   }, []);
 
@@ -83,7 +92,7 @@ const Search = () => {
   const handleSearch = (criteria) => {
     if (typeof criteria.budget === "string") return;
     if (Object.keys(criteria).length) {
-      onSearch(criteria)
+      onSearch({ ...criteria, page_number: pagination.currentPage })
         .then((data) => {
           setHotels(data);
           setPagination({
@@ -92,6 +101,7 @@ const Search = () => {
               ? calculateMaxPage(data, itemsPerPage)
               : 1,
           });
+          console.log(data);
         })
         .catch((err) => {
           console.error(err);

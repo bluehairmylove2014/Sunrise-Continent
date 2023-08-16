@@ -52,6 +52,9 @@
                             width: 100%;
                             height: 100%;
                             cursor: pointer;
+                            // direction - justify content - align items - flex wrap
+                            @include dflex(row, center, center, nowrap);
+                            gap: 10px;
 
                             img {
                                 width: auto;

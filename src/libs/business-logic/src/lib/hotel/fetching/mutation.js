@@ -14,3 +14,8 @@ export const useCheckRoomAvailableMutation = () => {
     retry: mutationConfig.RETRY,
   });
 };
+export const useGetRoomDataMutation = () => {
+  return useMutation(hotelService.getSpecificRoom, {
+    retry: mutationConfig.RETRY,
+  });
+};

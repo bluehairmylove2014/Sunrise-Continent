@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useRef, useState } from "react";
 import {
   useGetHotelDetail,
-  useGetSpecificRoom,
+  useGetRooms,
 } from "../../libs/business-logic/src/lib/hotel/process/hooks";
 import { Controller, useForm } from "react-hook-form";
 import "../../styles/component/preCheckout.scss";
@@ -13,10 +14,7 @@ import { formatDate } from "../../utils/helpers/ShortenDatetime";
 import { calcNight } from "../../utils/helpers/Datetime";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 // import { calculateDiscountedPrice } from "../../utils/helpers/Discount";
-import {
-  parseSearchParams,
-  stringifySearchParams,
-} from "../../utils/helpers/params";
+import { stringifySearchParams } from "../../utils/helpers/params";
 import { toast } from "react-hot-toast";
 import { toggleClass } from "../../utils/helpers/ToggleClass";
 import OrderDetailPicker from "../../components/common/OrderDetailPicker";
@@ -25,18 +23,34 @@ import SelectVoucer from "./SelectVoucer";
 import { CONVERSION_FACTOR } from "../../constants/Variables.constants";
 import { useNavigate } from "react-router-dom";
 import { useInitOrder } from "../../libs/business-logic/src/lib/order/process/hooks";
+import { getOrderLocalStorage } from "../../libs/business-logic/src/lib/order/process/helpers/localStorageOrder";
 
 const PreCheckout = () => {
-  const { hotelID, roomID, start_date, end_date, adults, childrens, rooms } =
-    parseSearchParams(window.location.search);
+  const selectedRoomsObject = getOrderLocalStorage();
+  // Extract common fields from the first order
+  const {
+    hotelId,
+    adults,
+    childrens,
+    numberOfRoom: rooms,
+    checkIn: start_date,
+    checkOut: end_date,
+  } = selectedRoomsObject.orders[0];
+
+  // Map room types to an array of room IDs
+  const roomIds = selectedRoomsObject.orders.map((order) => order.roomTypeId);
 
   const navigate = useNavigate();
 
   const pickerRef = useRef(null);
   const { onInitOrder } = useInitOrder();
 
-  const { data: hotelData } = useGetHotelDetail(hotelID);
-  const { data: roomData } = useGetSpecificRoom(hotelID, roomID);
+  const { data: hotelData } = useGetHotelDetail(hotelId);
+  const allRoomData = useGetRooms(hotelId);
+  const roomsData =
+    Array.isArray(allRoomData) && Array.isArray(roomIds)
+      ? allRoomData.filter((rd) => roomIds.includes(rd.id))
+      : [];
   const [sunriseVoucher, setSunriseVoucher] = useState(null);
   const [isChoosingVoucher, setIsChoosingVoucher] = useState(false);
 
@@ -74,6 +88,24 @@ const PreCheckout = () => {
     bookingFormValue.end_date
   );
 
+  let total = roomsData.reduce((acc, roomData) => {
+    if (roomData && roomData.price) {
+      return acc + roomData.price * night;
+    }
+    return acc;
+  }, 0);
+
+  total -= sunriseVoucher
+    ? sunriseVoucher.value * CONVERSION_FACTOR.VOUCHER
+    : 0;
+
+  const today = new Date();
+  const minDate = new Date(today);
+  minDate.setFullYear(minDate.getFullYear() - 18);
+  const formattedMinDate = `${minDate.getFullYear()}-${String(
+    minDate.getMonth() + 1
+  ).padStart(2, "0")}-${String(minDate.getDate()).padStart(2, "0")}`;
+
   const handleEdit = (data) => {
     setBookingFormValue(data);
     window.history.pushState(
@@ -81,13 +113,30 @@ const PreCheckout = () => {
       null,
       PAGES.PRE_CHECKOUT +
         stringifySearchParams({
-          hotelID,
-          roomID,
+          hotelId,
+          roomID: roomIds[0],
           ...data,
         })
     );
   };
+  const getSelectedOptions = (formData) => {
+    const selectedOptions = [];
 
+    if (formData.isNeedHighFloor) {
+      selectedOptions.push("Tôi muốn phòng ở tầng cao");
+    }
+    if (formData.isNeedCrib) {
+      selectedOptions.push("Thêm nôi trẻ em (phụ phí)");
+    }
+    if (formData.isNeedBreezeRoom) {
+      selectedOptions.push("Tôi muốn phòng hướng gió");
+    }
+    if (formData.isNeedGoodView) {
+      selectedOptions.push("Tôi muốn phòng view đẹp");
+    }
+
+    return selectedOptions;
+  };
   const handleFocus = (target) => {
     if (target && target.parentNode) {
       const labelEl = target.parentNode.querySelector("label");
@@ -114,27 +163,23 @@ const PreCheckout = () => {
       dateOfBirth: data.dob,
       email: data.email,
       phoneNumber: data.phone,
-      specialNeeds: "",
+      specialNeeds: getSelectedOptions(contactForm.getValues()).join(", "),
       notes: data.otherRequirements,
       voucherId: sunriseVoucher ? sunriseVoucher.voucherId : 0,
-      total:
-        roomData.price * night -
-        (sunriseVoucher ? sunriseVoucher.value * CONVERSION_FACTOR.VOUCHER : 0),
-      orders: [
-        {
-          hotelId: hotelID,
-          roomTypeId: roomID,
-          checkIn: bookingFormValue.start_date,
-          checkOut: bookingFormValue.end_date,
-          numberOfRoom: bookingFormValue.rooms,
-        },
-      ],
+      total,
+      orders: roomsData.map((rdata) => ({
+        hotelId: hotelId,
+        roomTypeId: rdata.id,
+        checkIn: bookingFormValue.start_date,
+        checkOut: bookingFormValue.end_date,
+        numberOfRoom: bookingFormValue.rooms,
+      })),
     });
   };
   const onContactFormError = (error) => {
     toast.error(error[Object.keys(error)[0]].message);
   };
-  return hotelData && roomData ? (
+  return hotelData && Array.isArray(roomsData) ? (
     <main className="pre-checkout">
       <div className="container">
         <h3>Điền thông tin liên hệ</h3>
@@ -206,6 +251,7 @@ const PreCheckout = () => {
                     id="dob"
                     onFocus={(e) => handleFocus(e.target)}
                     onBlur={(e) => handleBlur(e.target)}
+                    max={formattedMinDate}
                   />
                 </div>
               )}
@@ -296,21 +342,25 @@ const PreCheckout = () => {
                 form={contactForm}
                 name={"isNeedHighFloor"}
                 label={"Tôi muốn phòng ở tầng cao"}
+                checkboxSize={"14px"}
               />
               <Checkbox
                 form={contactForm}
                 name={"isNeedCrib"}
                 label={"Thêm nôi trẻ em (phụ phí)"}
+                checkboxSize={"14px"}
               />
               <Checkbox
                 form={contactForm}
                 name={"isNeedBreezeRoom"}
                 label={"Tôi muốn phòng hướng gió"}
+                checkboxSize={"14px"}
               />
               <Checkbox
                 form={contactForm}
                 name={"isNeedGoodView"}
                 label={"Tôi muốn phòng view đẹp"}
+                checkboxSize={"14px"}
               />
             </div>
 
@@ -349,6 +399,7 @@ const PreCheckout = () => {
               label={
                 "Tôi đồng ý với điều khoản và chính sách bảo mật của Sunrise Continent"
               }
+              checkboxSize={"16px"}
             />
             <button id="checkout" type="submit">
               THANH TOÁN NGAY
@@ -414,14 +465,14 @@ const PreCheckout = () => {
 
               <p>{bookingFormValue.rooms} phòng</p>
             </div>
-            <div className="detail__row">
+            {/* <div className="detail__row">
               <div className="row__label">
                 <img src={icon.roomIcon} alt="room" />
                 <span>Loại phòng:</span>
               </div>
 
               <p>{roomData.name}</p>
-            </div>
+            </div> */}
             <div className="detail__row">
               <div className="row__label"></div>
 
@@ -436,29 +487,32 @@ const PreCheckout = () => {
               </button>
             </div>
             <hr />
-            <div className="detail__row">
-              <div className="row__label">
-                <span>
-                  {bookingFormValue.rooms} phòng x {night} đêm
-                </span>
-              </div>
-
-              <p className="price primary">
-                {roomData
-                  ? convertNumberToCurrency(
-                      "vietnamdong",
-                      roomData.price * night
-                    )
-                  : "Đang tính toán"}
-              </p>
-            </div>
-            <div className="detail__row">
+            {Array.isArray(roomsData) ? (
+              roomsData.map((rd) => (
+                <div className="detail__row" key={rd.id}>
+                  <div className="row__label">
+                    <span>
+                      {bookingFormValue.rooms} phòng x {night} đêm <br />
+                      {rd.name}
+                    </span>
+                  </div>
+                  <p className="price primary">
+                    {roomsData
+                      ? convertNumberToCurrency("vietnamdong", rd.price * night)
+                      : "Đang tính toán"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <></>
+            )}
+            {/* <div className="detail__row">
               <div className="row__label">
                 <span>Giảm giá của khách sạn: </span>
               </div>
 
               <p>Không</p>
-            </div>
+            </div> */}
             <div className="detail__row">
               <div className="row__label">
                 <span>Thêm voucher: </span>
@@ -491,17 +545,7 @@ const PreCheckout = () => {
               </div>
 
               <p className="price total">
-                {convertNumberToCurrency(
-                  "vietnamdong",
-                  roomData.price * night -
-                    (sunriseVoucher
-                      ? sunriseVoucher.value * CONVERSION_FACTOR.VOUCHER
-                      : 0)
-                  // calculateDiscountedPrice(
-                  //   roomData.price * night,
-                  //   sunriseVoucher
-                  // ).amountToPay
-                )}
+                {convertNumberToCurrency("vietnamdong", total)}
               </p>
             </div>
           </div>
@@ -511,7 +555,7 @@ const PreCheckout = () => {
         ref={pickerRef}
         form={bookingForm}
         defaultValues={bookingFormValue}
-        roomDetail={roomData}
+        roomDetail={roomsData}
         edit={true}
         editCallback={handleEdit}
       />

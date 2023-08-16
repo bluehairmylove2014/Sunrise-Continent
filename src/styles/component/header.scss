@@ -234,6 +234,25 @@
                             height: 100%
                         }
                     }
+
+                    .spinner {
+                        border: 4px solid rgba(63, 55, 94, 0.1);
+                        border-left-color: transparent;
+                        border-radius: 50%;
+                        width: 32px;
+                        height: 32px;
+                        animation: spin89345 1s linear infinite;
+                    }
+
+                    @keyframes spin89345 {
+                        0% {
+                            transform: rotate(0deg);
+                        }
+
+                        100% {
+                            transform: rotate(360deg);
+                        }
+                    }
                 }
 
                 &.active {
@@ -251,6 +270,60 @@
 
         // direction - justify content - align items - flex wrap
         @include dflex(row, flex-end, center, nowrap);
+
+
+        .header-main-nav__user-avatar {
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, flex-end, center, nowrap);
+
+            span {
+                margin: 0 0.75rem 0 0.5rem;
+                font-size: 0.75rem;
+                font-weight: 600;
+            }
+
+            &>img {
+                object-fit: contain;
+                width: 35px;
+                height: 35px
+            }
+
+            button {
+                display: block;
+                position: relative;
+                width: 40px;
+                height: 40px;
+                overflow: hidden;
+                // border - border radius - background color - color - padding - font size
+                @include normal-btn(none, 50px, white, black, 0, 0.75rem);
+
+                img {
+                    object-fit: contain;
+                    width: 100%;
+                    height: 100%
+                }
+            }
+
+
+            .spinner {
+                border: 4px solid rgba(63, 55, 94, 0.1);
+                border-left-color: transparent;
+                border-radius: 50%;
+                width: 32px;
+                height: 32px;
+                animation: spin89345 1s linear infinite;
+            }
+
+            @keyframes spin89345 {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        }
 
         .search-box__trigger-open {
             display: none;
@@ -508,38 +581,6 @@
                     }
                 }
 
-                .header-main-nav__user-avatar {
-                    // direction - justify content - align items - flex wrap
-                    @include dflex(row, flex-end, center, nowrap);
-
-                    span {
-                        margin: 0 0.75rem 0 0.5rem;
-                        font-size: 0.75rem;
-                        font-weight: 600;
-                    }
-
-                    &>img {
-                        object-fit: contain;
-                        width: 35px;
-                        height: 35px
-                    }
-
-                    button {
-                        display: block;
-                        position: relative;
-                        width: 40px;
-                        height: 40px;
-                        overflow: hidden;
-                        // border - border radius - background color - color - padding - font size
-                        @include normal-btn(none, 50px, white, black, 0, 0.75rem);
-
-                        img {
-                            object-fit: contain;
-                            width: 100%;
-                            height: 100%
-                        }
-                    }
-                }
 
                 &.active {
                     // direction - justify content - align items - flex wrap

@@ -1,6 +1,6 @@
 @import '../partial/mixin';
 
-.common-component__wishlist {
+.common-component__cart {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -20,10 +20,10 @@
         opacity: 1;
         visibility: visible;
         pointer-events: all;
-        width: 500px;
+        width: 600px;
     }
 
-    .wishlist__title {
+    .cart__title {
         width: calc(100% - 40px);
         margin-top: 20px;
         padding: 20px;
@@ -40,52 +40,109 @@
             font-size: 0.8rem;
         }
 
-        .wishlist__close-btn {
+        .cart__close-btn {
             // border - border radius - background color - color - padding - font size
             @include normal-btn(none, 50%, var(--heavy-white-smoke), var(--hard-pink), 5px 10px, 0.8rem);
         }
     }
 
-    .wishlist__content {
+    .cart__content {
         width: calc(100% - 30px);
         flex-grow: 1;
         padding: 15px;
         overflow-y: auto;
+        overflow-x: hidden;
 
-        .wishlist-content__hotel {
+        .cart-content__hotel {
             position: relative;
             // direction - justify content - align items - flex wrap
             @include dflex(row, space-between, flex-start, nowrap);
             gap: 15px;
             width: 100%;
-            height: 150px;
             margin-bottom: 20px;
             border: 1px solid var(--heavy-white-smoke);
             transition: all 0.2s ease;
-            cursor: pointer;
+            height: 180px;
 
             .hotel__img-container {
-                width: 50%;
+                position: relative;
+                width: 30%;
                 height: 100%;
                 overflow: hidden;
 
                 img {
-                    object-fit: cover;
-                    width: 100%;
+                    @include absolute-center;
                     height: 100%;
+                    width: 100%;
+                    object-fit: cover;
                 }
             }
 
             .hotel__information {
                 // direction - justify content - align items - flex wrap
-                @include dflex(column, space-between, flex-start, nowrap);
+                @include dflex(column, flex-start, flex-start, nowrap);
                 height: calc(100% - 30px);
                 margin: 15px 0;
+                width: 70%;
 
                 .information__title {
+                    height: 45px;
+
+                    h6 {
+                        @include limit-line(1);
+                    }
+
                     p {
+                        @include limit-line(1);
                         margin: 6px 0;
                         font-size: 0.5rem;
+                    }
+                }
+
+                .information__room-list {
+                    overflow-y: auto;
+                    overflow-x: hidden;
+                    max-height: 105px;
+                    margin-top: 15px;
+                    width: calc(100% - 15px);
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(column, flex-start, flex-start, nowrap);
+                    gap: 20px;
+                    padding-right: 15px;
+                    padding-bottom: 5px;
+
+                    .room {
+                        width: 100%;
+                        // direction - justify content - align items - flex wrap
+                        @include dflex(row, space-between, center, nowrap);
+                        gap: 20px;
+
+                        .wrapper {
+
+                            .common-component__checkbox {
+
+                                .cc-checkbox__container {
+                                    font-size: 0.6rem;
+                                    overflow-x: hidden;
+                                    @include limit-line(1);
+                                }
+                            }
+
+                            .room__price {
+                                white-space: nowrap;
+                                font-weight: 600;
+                                color: var(--butterfly-bush);
+                                font-size: 0.6rem;
+                                margin-top: 10px;
+                                margin-left: 35px;
+                            }
+                        }
+
+
+                        &>button {
+                            color: red;
+                            cursor: pointer;
+                        }
                     }
                 }
 
@@ -121,10 +178,59 @@
                 // border - border radius - background color - color - padding - font size
                 @include normal-btn(0, 50%, red, white, 4px 8px 5px 8px, 0.6rem);
             }
+        }
+    }
 
-            &:hover {
-                box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+    .cart__interact {
+        // height: 50px;
+        width: 100%;
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, space-evenly, center, nowrap);
+        padding: 20px 0;
+        box-shadow: 0px -12px 15px -3px rgba(0, 0, 0, 0.1);
+
+        button {
+            // border - border radius - background color - color - padding - font size
+            @include normal-btn(none, 5px, var(--gold), black, 12px 20px, 0.6rem);
+
+            &:nth-child(1) {
+                &:hover {
+                    background-color: var(--old-gold);
+                }
+
+                &:disabled {
+                    background-color: var(--heavy-white-smoke);
+                }
             }
+
+            &:nth-child(2) {
+                background-color: white;
+                border: 1px solid black;
+
+                i {
+                    bottom: -1px;
+                }
+
+                &:hover {
+                    background-color: red;
+                    color: white;
+                }
+
+                &:disabled {
+                    background-color: var(--heavy-white-smoke);
+                    color: black;
+                    border: none;
+                }
+            }
+
+            &:disabled {
+                cursor: not-allowed;
+            }
+        }
+
+        p {
+            font-size: 0.6rem;
+            font-weight: 600;
         }
     }
 }

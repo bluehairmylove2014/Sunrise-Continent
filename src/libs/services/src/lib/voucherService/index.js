@@ -55,7 +55,6 @@ export class VoucherService extends Services {
         transformResponse: (res) => res,
         isProduction: true,
       });
-      console.log("RESPONSE: ", response);
       return response;
     } catch (error) {
       if (!this.isCancel(error)) {

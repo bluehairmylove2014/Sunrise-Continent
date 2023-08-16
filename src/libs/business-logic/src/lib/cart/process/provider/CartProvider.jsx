@@ -1,9 +1,10 @@
 import React from "react";
+import { ContextProvider } from "./ContextProvider";
 // import { withTokenFromContext } from "../../../../configs/withContext";
 // import { ContextProvider } from "./ContextProvider";
 
 export const CartProvider = ({ children }) => {
   // const EnhancedProvider = withTokenFromContext(ContextProvider);
   // return <EnhancedProvider>{children}</EnhancedProvider>;
-  return <CartProvider accessToken={null}>{children}</CartProvider>;
+  return <ContextProvider accessToken={null}>{children}</ContextProvider>;
 };

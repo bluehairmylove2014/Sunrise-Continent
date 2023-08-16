@@ -33,7 +33,7 @@ export class HotelService extends Services {
         params: keys,
         signal: this.abortController.signal,
         transformResponse: (res) => res,
-        // isProduction: true,
+        isProduction: true,
       });
       return response;
     } catch (error) {
@@ -48,18 +48,20 @@ export class HotelService extends Services {
     this.abortController = new AbortController();
     try {
       if (!hotelID) return null;
-      const response = await this.fetchApi({
-        method: "GET",
-        url: this.getHotelDetailUrl,
-        schema: hotelDetailSchema,
-        params: {
-          id: hotelID,
-        },
-        signal: this.abortController.signal,
-        transformResponse: (res) => res,
-        isProduction: true,
-      });
-      return response;
+      else {
+        const response = await this.fetchApi({
+          method: "GET",
+          url: this.getHotelDetailUrl,
+          schema: hotelDetailSchema,
+          params: {
+            id: hotelID,
+          },
+          signal: this.abortController.signal,
+          transformResponse: (res) => res,
+          isProduction: true,
+        });
+        return response;
+      }
     } catch (error) {
       if (!this.isCancel(error)) {
         // Handle other errors

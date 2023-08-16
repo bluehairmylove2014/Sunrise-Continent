@@ -14,10 +14,6 @@ import "./App.scss";
 // Component
 import PageLoader from "./components/common/Loader/PageLoader";
 
-// Redux
-import { Provider } from "react-redux";
-import redux_store from "./redux/store";
-
 import { UserPageLayout } from "./components/layouts/UserPageLayout";
 import HomePage from "./pages/Home/Home";
 // Lazy loading component=
@@ -46,90 +42,88 @@ function App() {
   }, []);
 
   return (
-    <Provider store={redux_store}>
-      <BusinessLogicProvider>
-        <div className="App">
-          <div className="app__notification">
-            <Toaster />
-          </div>
-          <Suspense fallback={<PageLoader />}>
-            {isLoading ? (
-              <PageLoader />
-            ) : (
-              <Routes>
-                <Route
-                  exact
-                  path={PAGES.HOME}
-                  element={
-                    <UserPageLayout>
-                      <HomePage />
-                    </UserPageLayout>
-                  }
-                />
-                <Route
-                  path={PAGES.SEARCH}
-                  element={
-                    <UserPageLayout>
-                      <SearchPage />
-                    </UserPageLayout>
-                  }
-                />
-                <Route
-                  path={PAGES.HOTEL_DETAIL}
-                  element={
-                    <UserPageLayout>
-                      <HotelDetail />
-                    </UserPageLayout>
-                  }
-                />
-                <Route
-                  path={PAGES.PRE_CHECKOUT}
-                  element={
-                    <UserPageLayout>
-                      <PreCheckout />
-                    </UserPageLayout>
-                  }
-                />
-                <Route
-                  path={PAGES.COUNTRY}
-                  element={
-                    <UserPageLayout>
-                      <CountryPage />
-                    </UserPageLayout>
-                  }
-                />
-                <Route
-                  path={PAGES.VOUCHER_SHOP}
-                  element={
-                    <UserPageLayout>
-                      <VoucherShop />
-                    </UserPageLayout>
-                  }
-                />
-                <Route
-                  path={PAGES.CHECKOUT}
-                  element={
-                    <UserPageLayout>
-                      <Checkout />
-                    </UserPageLayout>
-                  }
-                />
-                <Route
-                  exact
-                  path={PAGES.LOGIN}
-                  element={<AuthenticationPage />}
-                />
-                <Route
-                  exact
-                  path={PAGES.REGISTER}
-                  element={<AuthenticationPage />}
-                />
-              </Routes>
-            )}
-          </Suspense>
+    <BusinessLogicProvider>
+      <div className="App">
+        <div className="app__notification">
+          <Toaster />
         </div>
-      </BusinessLogicProvider>
-    </Provider>
+        <Suspense fallback={<PageLoader />}>
+          {isLoading ? (
+            <PageLoader />
+          ) : (
+            <Routes>
+              <Route
+                exact
+                path={PAGES.HOME}
+                element={
+                  <UserPageLayout>
+                    <HomePage />
+                  </UserPageLayout>
+                }
+              />
+              <Route
+                path={PAGES.SEARCH}
+                element={
+                  <UserPageLayout>
+                    <SearchPage />
+                  </UserPageLayout>
+                }
+              />
+              <Route
+                path={PAGES.HOTEL_DETAIL}
+                element={
+                  <UserPageLayout>
+                    <HotelDetail />
+                  </UserPageLayout>
+                }
+              />
+              <Route
+                path={PAGES.PRE_CHECKOUT}
+                element={
+                  <UserPageLayout>
+                    <PreCheckout />
+                  </UserPageLayout>
+                }
+              />
+              <Route
+                path={PAGES.COUNTRY}
+                element={
+                  <UserPageLayout>
+                    <CountryPage />
+                  </UserPageLayout>
+                }
+              />
+              <Route
+                path={PAGES.VOUCHER_SHOP}
+                element={
+                  <UserPageLayout>
+                    <VoucherShop />
+                  </UserPageLayout>
+                }
+              />
+              <Route
+                path={PAGES.CHECKOUT}
+                element={
+                  <UserPageLayout>
+                    <Checkout />
+                  </UserPageLayout>
+                }
+              />
+              <Route
+                exact
+                path={PAGES.LOGIN}
+                element={<AuthenticationPage />}
+              />
+              <Route
+                exact
+                path={PAGES.REGISTER}
+                element={<AuthenticationPage />}
+              />
+            </Routes>
+          )}
+        </Suspense>
+      </div>
+    </BusinessLogicProvider>
   );
 }
 

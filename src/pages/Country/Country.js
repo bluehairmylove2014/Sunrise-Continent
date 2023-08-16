@@ -9,9 +9,13 @@ import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import { HOTEL_TYPE } from "../../constants/Variables.constants";
 import HotelCard from "../../components/common/HotelCard";
 import BannerLayout from "../../components/layouts/BannerLayout";
+import { useLocation } from "react-router-dom";
 
 const Country = () => {
-  const countryData = countryDetail;
+  const localtion = useLocation();
+  const countryData = localtion.search.includes("Vietnam")
+    ? countryDetail
+    : null;
   const [provinceSelected, setProvinceSelected] = useState(null);
   const [provinceHotel, setProvinceHotel] = useState(null);
   const { onSearch } = useSearch();

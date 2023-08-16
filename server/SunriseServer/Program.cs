@@ -63,7 +63,7 @@ builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
 
 builder.Services.AddServicesData();
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("StripeSettings")); // AZURE_SQL_CONNECTIONSTRING Sunrise
-builder.Services.AddUnitOfWork(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Sunrise")));
+builder.Services.AddUnitOfWork(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
 builder.Services.AddDistributedRedisCache(options =>
     options.Configuration = builder.Configuration.GetConnectionString("CacheConnectionString"));
 var app = builder.Build();

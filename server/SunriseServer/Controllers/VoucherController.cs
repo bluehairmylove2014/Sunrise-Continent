@@ -58,9 +58,17 @@ namespace SunriseServer.Controllers
             if (voucherDto.Value > 1)
                 return BadRequest("Voucher value incorrect.");
             
-            var result = await _voucherService.CreateVoucher(voucherDto);
+            int result;
+            try
+            {
+                result = await _voucherService.CreateVoucher(voucherDto);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(exception.Message);
+            }
 
-            if (result == 0)
+            if (result == -1)
                 return BadRequest("Cannot create voucher.");
 
             return Ok(new ResponseMessageDetails<int>("Create voucher successfully.", result));
@@ -70,12 +78,17 @@ namespace SunriseServer.Controllers
         public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateVoucher(Voucher voucher)
         {
             if (voucher.Value > 1 || voucher.Value < 0)
-                return BadRequest("Cannot Update voucher.");
+                return BadRequest("Wrong voucher value.");
 
-            var result = await _voucherService.UpdateVoucher(voucher);
-
-            if (result == 0)
-                return BadRequest("Cannot Update voucher.");
+            int result;
+            try
+            {
+                result = await _voucherService.UpdateVoucher(voucher);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(exception.Message);
+            }
 
             return Ok(new ResponseMessageDetails<int>("Update voucher successfully", result));
         }

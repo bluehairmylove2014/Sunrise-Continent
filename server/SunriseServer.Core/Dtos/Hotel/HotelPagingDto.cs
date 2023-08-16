@@ -1,23 +1,13 @@
 namespace SunriseServerCore.Dtos.Hotel
 {
-    public class HotelSearchPagingInputDto
+    public class HotelPagingDto
     {
         const int maxPageSize = 20;
 
-        public string Location { get; set; }
-        public string Room_type { get; set; }
-        // DateTime start_date,
-        // DateTime end_date,
-        // double min_budget,
-        // double max_budget,
-        // int rooms,
-        // int adults,
-        // int children
+        public int page_number { get; set; } = 1;
 
-        public int PageNumber { get; set; } = 1;
-
-        private int _pageSize = 10;
-        public int PageSize
+        private int _pageSize = 8;
+        public int page_size
         {
             get
             {

@@ -1043,12 +1043,16 @@ CREATE OR ALTER PROCEDURE USP_AddVoucher
 	@AccountRank VARCHAR(20)
 AS
 BEGIN
+
+	IF (@Point < 1) OR (@Value > 1 OR @Value <= 0)
+	OR (@AccountRank not in (select RankName from POINT_RANK))
+	BEGIN
+		RAISERROR('Sai dữ liệu hạng hoặc giá trị voucher', 11, 1);
+		RETURN -2;
+	END
+
+	BEGIN TRAN
 	BEGIN TRY
-		IF (@Value < 1) OR (@Point < 1)
-		OR (@AccountRank not in (select RankName from POINT_RANK))
-		BEGIN
-			RETURN -1;
-		END
 
 		DECLARE @Id INT;
 		EXEC @Id = USP_GetNextColumnId 'VOUCHER', 'VoucherId'
@@ -1058,9 +1062,12 @@ BEGIN
 	END TRY
 
 	BEGIN CATCH
-			RETURN -1; -- Thất bại
+		ROLLBACK;
+		RAISERROR('Lỗi tạo voucher', 11, 1);
+		RETURN -1; -- Thất bại
 	END CATCH
 
+	COMMIT;
 	RETURN @Id;
 END
 GO
@@ -1070,16 +1077,21 @@ CREATE OR ALTER PROCEDURE USP_DeleteVoucher
     @VoucherId INT
 AS
 BEGIN
+	BEGIN TRAN
+
 	BEGIN TRY
 		DELETE FROM VOUCHER
 		WHERE VoucherId = @VoucherId
-
-		RETURN 0;
 	END TRY
 
 	BEGIN CATCH
-		RETURN -1;
+		ROLLBACK;
+		RAISERROR('Lỗi xóa voucher', 11, 1);
+		RETURN -1; -- Thất bại
 	END CATCH
+
+	COMMIT;
+	RETURN 0;
 END
 GO
 
@@ -1092,6 +1104,8 @@ CREATE OR ALTER PROCEDURE USP_UpdateVoucher
 	@AccountRank VARCHAR(20)
 AS
 BEGIN
+	BEGIN TRAN
+
 	BEGIN TRY
 		UPDATE VOUCHER
 		SET Name = @Name,
@@ -1099,13 +1113,16 @@ BEGIN
 			Point = @Point,
 			AccountRank = @AccountRank
 		WHERE VoucherId = @VoucherId
-
-		RETURN 0;
 	END TRY
 
 	BEGIN CATCH
-		RETURN -1;
+		ROLLBACK;
+		RAISERROR('Lỗi cập nhật voucher', 11, 1);
+		RETURN -1; -- Thất bại
 	END CATCH
+
+	COMMIT;
+	RETURN 0;
 END
 GO
 
@@ -1309,7 +1326,7 @@ BEGIN
 	IF NOT EXISTS (SELECT TOP(1) Id FROM ACCOUNT WHERE Id = @AccountId)
 		OR NOT EXISTS (SELECT TOP(1) VoucherId FROM VOUCHER WHERE VoucherId = @VoucherId)
 	BEGIN
-		-- Trả về giá trị -1 nếu tài khoản hoặc voucher không tồn tại
+		RAISERROR(N'Tài khoản hoặc voucher không tồn tại', 11, 1)-- Trả về giá trị -1 nếu tài khoản hoặc voucher không tồn tại
 		RETURN -2;
 	END
 

@@ -6,7 +6,7 @@ namespace SunriseServerCore.Dtos.Hotel
 
         public int page_number { get; set; } = 1;
 
-        private int _pageSize = 10;
+        private int _pageSize = 8;
         public int page_size
         {
             get

@@ -50,7 +50,7 @@ namespace SunriseServerData.Repositories
 
         public async Task<int> CreateAsync(AddVoucherDto voucher)
         {
-            var str = $@"EXEC @Id = USP_AddVoucher @Name=N'{voucher.Name}', @Value={voucher.Value}, @Point={voucher.Point}, @AccountRank='{voucher.AccountRank}';";
+            var str = $@"EXEC USP_AddVoucher @Name=N'{voucher.Name}', @Value={voucher.Value}, @Point={voucher.Point}, @AccountRank='{voucher.AccountRank}';";
 
             Console.WriteLine(str);
 

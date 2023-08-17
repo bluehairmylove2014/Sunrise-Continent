@@ -1630,6 +1630,7 @@ CREATE OR ALTER PROC USP_AddFullOrder (
 	@PhoneNumber VARCHAR(20),
 	@SpecialNeeds NVARCHAR(500),
 	@Notes NVARCHAR(500),
+	@Total INT,
 	@DateRecorded VARCHAR(30))
 AS
 BEGIN
@@ -1642,7 +1643,7 @@ BEGIN
 		IF (@DateRecorded IS NULL) SET @DateRecorded = FORMAT(GETDATE(), 'yyyy-MM-dd HH:mm:ss.fffffff');
 
 		INSERT INTO ACCOUNT_ORDER (OrderId, AccountId, FullName, Nation, DateOfBirth, Email, PhoneNumber, SpecialNeeds, Notes, VoucherId, Total, Paid, CreatedAt) VALUES 
-			(@OrderId, @AccountId, @FullName, @Nation, @DateOfBirth, @Email, @PhoneNumber, @SpecialNeeds, @Notes, 0, 0, 0, @DateRecorded);
+			(@OrderId, @AccountId, @FullName, @Nation, @DateOfBirth, @Email, @PhoneNumber, @SpecialNeeds, @Notes, 0, @Total, 0, @DateRecorded);
 	END TRY
 
 	BEGIN CATCH
@@ -1712,6 +1713,10 @@ BEGIN
 	RETURN 1;
 END;
 GO
+
+select * from order_detail
+select * from account_order
+select * from booking_account
 
 
 -- //
@@ -1819,7 +1824,7 @@ BEGIN
 		SET
 			VoucherId = @VoucherId,
 			Total = @Total - CAST(@Total * @Discount AS FLOAT),
-			Paid = 1
+			Paid = 0
 		WHERE OrderId = @OrderId;
 
 		-- Cập nhật điểm thành viên.

@@ -64,7 +64,6 @@ namespace SunriseServerData.Repositories
             builder.Remove(lastindex, $"@MultipleConfirm={multipleConfirm}".Length);
             builder.Insert(lastindex, $"@MultipleConfirm=0");
 
-            // await Task.Delay(10); var result = 1;
             Console.WriteLine(builder.ToString());
             
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");

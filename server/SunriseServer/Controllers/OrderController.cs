@@ -2,16 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using SunriseServer.Common.Constant;
 using SunriseServer.Services.BookingService;
-using SunriseServer.Services.AccountService;
-using SunriseServer.Services.VoucherService;
-using SunriseServer.Services.RoomService;
 using SunriseServer.Common.Helper;
-using SunriseServerCore.Dtos.Booking;
-using SunriseServer.Services.HotelService;
 using System.Security.Claims;
 using SunriseServerCore.Dtos;
-using SunriseServerCore.Common.Enum;
 using SunriseServerCore.Dtos.Order;
+using SunriseServer.Services.PaymentService;
 
 namespace SunriseServer.Controllers
 {
@@ -20,10 +15,12 @@ namespace SunriseServer.Controllers
     public class OrderController : ControllerBase
     {
         readonly IOrderService _orderService;
+        readonly IPaymentService _paymentService;
 
-        public OrderController(IOrderService orderService)
+        public OrderController(IOrderService orderService, IPaymentService paymentService)
         {
             _orderService = orderService;
+            _paymentService = paymentService;
         }
 
         [HttpGet, Authorize(Roles = GlobalConstant.User)]
@@ -51,7 +48,22 @@ namespace SunriseServer.Controllers
             if (result == 0)
                 return BadRequest("Cannot add booking.");
 
-            return Ok(new ResponseMessageDetails<int>("Add booking successfully", result));
+            try
+            {
+                var checkoutUrl = _paymentService.Checkout($"{orderDto.Total}");
+
+                if (string.IsNullOrEmpty(checkoutUrl))
+                {
+                    return BadRequest("Not enough money to pay your order");
+                }
+
+                return Ok(checkoutUrl);
+
+            }
+            catch (Exception)
+            {
+                return BadRequest("An error occurs when checkout");
+            }
         }
 
         // [HttpPut("confirm"), Authorize(Roles = GlobalConstant.User)] //, Authorize(Roles = GlobalConstant.User)

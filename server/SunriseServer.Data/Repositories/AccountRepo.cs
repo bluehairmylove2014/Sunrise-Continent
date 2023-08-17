@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SunriseServerCore.Common.Helper;
+using SunriseServerCore.Dtos;
 using SunriseServerCore.Models;
 using SunriseServerCore.RepoInterfaces;
 using System;
@@ -100,6 +101,28 @@ namespace SunriseServerData.Repositories
             return result.FirstOrDefault();
         }
 
+        public async Task<PersonalDetail> GetAccountDetailSocialAsync(string email, string fullName)
+        {
+            var result = await _dataContext.PersonalDetail
+                .FromSqlInterpolated($"EXEC USP_GetAccountSocial @Email={email}, @FullName={fullName};").ToListAsync();
+            return result.FirstOrDefault();
+        }
 
+        public async Task<int> CreateSocialAsync(CreateSocialDto acc)
+        {
+            var builder = new StringBuilder(@"
+                DECLARE @result INT
+                EXEC @result = USP_AddAccountSocial ");
+            builder.Append($"@Id = \'{acc.Id}\', ");
+            builder.Append($"@Email = \'{acc.Email}\', ");
+            builder.Append($"@FullName = N\'{acc.FullName}\', ");
+            builder.Append($"@RefreshToken = \'{acc.RefreshToken}\', ");
+            builder.Append($"@TokenCreated = \'{acc.TokenCreated}\', ");
+            builder.Append($"@TokenExpires = \'{acc.TokenExpires}\';");
+
+            // Console.WriteLine(builder.ToString());
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            return result;
+        }
     }
 }

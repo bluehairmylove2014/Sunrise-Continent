@@ -2,6 +2,8 @@
 using SunriseServerData;
 using SunriseServerCore.Models;
 using System.Security.Claims;
+using SunriseServerCore.Dtos;
+
 
 namespace SunriseServer.Services.AccountService
 {
@@ -74,6 +76,16 @@ namespace SunriseServer.Services.AccountService
         public async Task<PersonalDetail> GetAccountDetailsByEmail(string email)
         {
             return await _unitOfWork.AccountRepo.GetAccountDetailsByEmailAsync(email);
+        }
+
+        public async Task<PersonalDetail> GetAccountDetailSocial(string email, string fullName)
+        {
+            return await _unitOfWork.AccountRepo.GetAccountDetailSocialAsync(email, fullName);
+        }
+
+        public async Task<int> CreateSocial(CreateSocialDto acc)
+        {
+            return await _unitOfWork.AccountRepo.CreateSocialAsync(acc);
         }
     }
 }

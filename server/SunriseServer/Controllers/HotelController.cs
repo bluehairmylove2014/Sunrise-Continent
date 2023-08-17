@@ -188,24 +188,7 @@ namespace SunriseServer.Controllers
             [FromQuery] HotelPagingDto hotelDto
         )
         {
-            // cache
-            var cacheHotelData = _cacheService.GetData<IEnumerable<HotelDto>>("search-hotels");
-
-            if (cacheHotelData != null && cacheHotelData.Count() > 0)
-            {
-                var re_page = PageList<HotelDto>.ToPageList(cacheHotelData.AsQueryable(), hotelDto.page_number, hotelDto.page_size);
-  
-                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(new {
-                    re_page.TotalCount,
-                    re_page.PageSize,
-                    re_page.CurrentPage,
-                    re_page.TotalPages,
-                    re_page.HasNext,
-                    re_page.HasPrevious
-                }));
-                return Ok(re_page);
-            }
-            // end cache
+            // Thêm filter sort
 
             max_budget = max_budget == 0 ? Int32.MaxValue : max_budget;
             var result = await _hotelService.GetSearchHotels(
@@ -231,10 +214,6 @@ namespace SunriseServer.Controllers
                 pages.HasNext,
                 pages.HasPrevious
             }));
-
-            // Set expiry time
-            var expiryTime = DateTimeOffset.Now.AddSeconds(120);
-            _cacheService.SetData<IEnumerable<HotelDto>>("search-hotels", finalResult, expiryTime);
 
             return Ok(pages);
         }

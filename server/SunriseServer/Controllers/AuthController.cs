@@ -9,6 +9,8 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using SunriseServerCore.Common.Helper;
 using SunriseServerCore.Common.Enum;
+using SunriseServer.Common.Helper;
+
 
 namespace SunriseServer.Controllers
 {
@@ -89,24 +91,17 @@ namespace SunriseServer.Controllers
             });
         }
 
-        [HttpPost("register-social")]
-        public async Task<ActionResult<ResponseMessageDetails<string>>> RegisterSocial(RegisterSocialDto request)
+        [HttpPost("login-social")]
+        public async Task<ActionResult<ResponseMessageDetails<string>>> LoginSocial(LoginSocialDto request)
         {
-            var acc = await _accService.GetByUsername(request.Email);
+            var personalDetail = await _accService.GetAccountDetailSocial(request.Email, request.FullName);
+            var MyId = personalDetail is null ? await _accService.GetNextAccountId() : personalDetail.AccountId;
 
-            if (acc != null)
+            var acc = new Account ()
             {
-                return BadRequest("Email exists");
-            }
-
-            // CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            acc = new Account ()
-            {
-                Id = await _accService.GetNextAccountId(),
+                Id = MyId,
                 Email = request.Email,
                 FullName = request.FullName,
-                PasswordHash = "Default",
-                PasswordSalt = "Default",
                 UserRole = GlobalConstant.User
             };
 
@@ -114,9 +109,16 @@ namespace SunriseServer.Controllers
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, acc);
 
-            await _accService.AddAccount(acc);
+            if (personalDetail == null)
+            {
+                var newAcc = new CreateSocialDto ();
+                SetPropValueByReflection.AddYToX(newAcc, acc);
+
+                await _accService.CreateSocial(newAcc);
+            }
+
             return Ok(new {
-                Message = "Register with social successfully",
+                Message = "Login successfully",
                 Token = token
             });
         }

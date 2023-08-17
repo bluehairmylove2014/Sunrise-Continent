@@ -262,6 +262,27 @@ AS
 	SELECT * FROM ACCOUNT
 GO
 
+CREATE OR ALTER PROC USP_GetAccountSocial (
+	@Email VARCHAR(50),
+	@FullName NVARCHAR(1000))
+AS
+	SELECT pd.* FROM (SELECT * FROM PERSONAL_DETAILS WHERE EmailAddress = @Email AND FullName = @FullName) pd
+	JOIN ACCOUNT acc ON pd.AccountId = acc.AccountRank AND acc.PasswordHash = 'Social';
+GO
+
+GO
+CREATE OR ALTER PROC USP_AddAccountSocial (
+	@Id INT,
+	@Email VARCHAR(50),
+	@FullName NVARCHAR(100),
+	@RefreshToken VARCHAR(200),
+	@TokenCreated DATETIME,
+	@TokenExpires DATETIME)
+AS
+	EXEC USP_AddAccount @Id, @Email, @FullName, 'Social', 'Social', 'User', @RefreshToken, @TokenCreated, @TokenExpires;
+	RETURN @Id;
+GO
+
 
 CREATE OR ALTER PROC USP_GetAccountByUsername
 	@Email VARCHAR(50)

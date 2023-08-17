@@ -1,4 +1,5 @@
-﻿using SunriseServerCore.Models;
+﻿using SunriseServerCore.Dtos;
+using SunriseServerCore.Models;
 using SunriseServerData;
 
 namespace SunriseServer.Services.AccountService
@@ -14,5 +15,7 @@ namespace SunriseServer.Services.AccountService
         Task<PersonalDetail> GetAccountDetailsByEmail(string username);
         Task<Account> UpdateAccount(Account acc);
         void SaveChanges();
+        Task<int> CreateSocial(CreateSocialDto acc);
+        Task<PersonalDetail> GetAccountDetailSocial(string email, string fullName);
     }
 }

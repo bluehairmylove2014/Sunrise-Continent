@@ -1,4 +1,5 @@
-﻿using SunriseServerCore.Models;
+﻿using SunriseServerCore.Dtos;
+using SunriseServerCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace SunriseServerCore.RepoInterfaces
         // Task<string> GetAccountEmailByIdAsync(int accountId);
         Task<PersonalDetail> GetAccountDetailsByIdAsync(int accountId);
         Task<PersonalDetail> GetAccountDetailsByEmailAsync(string email);
+        Task<int> CreateSocialAsync(CreateSocialDto acc);
+        Task<PersonalDetail> GetAccountDetailSocialAsync(string email, string fullName);
     }
 }

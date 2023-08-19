@@ -13,7 +13,7 @@ namespace SunriseServer.Services.BookingService
             _unitOfWork = uof;
         }
 
-        public async Task<List<Order>> GetAccountOrder(int accountId)
+        public async Task<IEnumerable<Order>> GetAccountOrder(int accountId)
         {
             var result = await _unitOfWork.OrderRepo.GetAccountOrderAsync(accountId);
             return result;
@@ -26,9 +26,9 @@ namespace SunriseServer.Services.BookingService
             return result;
         }
 
-        public async Task<int> ConfirmOrder(int orderId, int accountId, int voucherId)
+        public async Task<int> ConfirmOrder(string sessionId)
         {
-            var result = await _unitOfWork.OrderRepo.ConfirmOrderAsync(orderId, accountId, voucherId);
+            var result = await _unitOfWork.OrderRepo.ConfirmOrderAsync(sessionId);
             return result;
         }
     }

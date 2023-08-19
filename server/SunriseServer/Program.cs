@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using SunriseServer.Services.CacheService;
 using SunriseServer.Services.PaymentService;
+using SunriseServerCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,8 +64,9 @@ builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
         policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
     }));
 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddServicesData();
-builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("StripeSettings")); // AZURE_SQL_CONNECTIONSTRING Sunrise
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("StripeSettings"));
 builder.Services.AddUnitOfWork(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
 builder.Services.AddDistributedRedisCache(options =>
     options.Configuration = builder.Configuration.GetConnectionString("CacheConnectionString"));

@@ -1,8 +1,10 @@
-﻿namespace SunriseServer.Services.PaymentService
+﻿using SunriseServerCore.Dtos.Payment;
+
+namespace SunriseServer.Services.PaymentService
 {
     public interface IPaymentService
     {
-        string Checkout(string totalPay);
+        PaymentDto Checkout(string totalPay);
     }
 };
 

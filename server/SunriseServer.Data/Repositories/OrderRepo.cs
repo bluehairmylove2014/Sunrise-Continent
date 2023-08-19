@@ -16,15 +16,13 @@ namespace SunriseServerData.Repositories
     {
         readonly DataContext _dataContext;
 
-        // RepositoryBase<BookingAccount>,  : base (dataContext)
         public OrderRepo(DataContext dataContext) {
             _dataContext = dataContext;
         }
 
-        public async Task<List<Order>> GetAccountOrderAsync(int accountId)
+        public async Task<IEnumerable<Order>> GetAccountOrderAsync(int accountId)
         {
-            var result = await _dataContext.Order.FromSqlInterpolated($"EXEC USP_GetAllAccountOrder @AccountId={accountId};").ToListAsync();
-            return result;
+            return await _dataContext.Order.FromSqlInterpolated($"EXEC USP_GetAllAccountOrder {accountId};").IgnoreQueryFilters().ToListAsync();
         }
 
         public async Task<int> CreateOrderAsync(ListOrderDto order, int accountId)
@@ -43,7 +41,7 @@ namespace SunriseServerData.Repositories
                             .GroupBy(o => o.HotelId)
                             .Select(x => x.Select(v => v).ToList())
                             .ToList();
-            var multipleConfirm = hotelList.Count > 1 ? 1 : 0;
+            var multipleConfirm = hotelList.Count > 1;
             
             foreach (var item in hotelList)
             {
@@ -56,7 +54,7 @@ namespace SunriseServerData.Repositories
                     builder.Append($"EXEC USP_AddBookingByOrderId @OrderId, @BookingId;\n");
                 }
 
-                builder.Append($"EXEC USP_ConfirmOrder @OrderId=null, @AccountId={accountId}, @VoucherId={order.VoucherId}, @MultipleConfirm={multipleConfirm}, @DateRecorded='{DateTime.Now.ToString($"yyyy-MM-dd HH:mm:ss.fffffff")}';\n");
+                builder.Append($"EXEC USP_UpdateVoucherAndTotal @OrderId=null, @AccountId={accountId}, @VoucherId={order.VoucherId}, @MultipleConfirm={multipleConfirm}, @DateRecorded='{DateTime.Now.ToString($"yyyy-MM-dd HH:mm:ss.fffffff")}';\n");
             }
 
             var sqlString = builder.ToString();
@@ -70,10 +68,10 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
-        public async Task<int> ConfirmOrderAsync(int orderId, int accountId, int voucherId)
+        public async Task<int> ConfirmOrderAsync(string sessionId)
         {
             return await _dataContext.Database
-                .ExecuteSqlInterpolatedAsync($"EXEC USP_ConfirmOrder @OrderId={orderId}, @AccountId={accountId}, @VoucherId={voucherId};");
+                .ExecuteSqlInterpolatedAsync($"EXEC USP_ConfirmPaid @SessionId={sessionId};");
         }
     }
 }

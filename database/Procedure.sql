@@ -1568,15 +1568,25 @@ BEGIN
 END
 GO
 
-
 -- //
 GO
 CREATE OR ALTER PROC USP_GetAllAccountOrder (
 	@AccountId INT)
 AS
-	SELECT * FROM ACCOUNT_ORDER AO WHERE AO.AccountId = @AccountId;
+BEGIN
+	SELECT BA.RoomTypeId, BA.HotelId, H.Name as HotelName, H.Country, H.HotelType, H.ProvinceCity, H.Address, H.Stars, H.Rating, H.Image,
+			AO.OrderId, AO.AccountId, AO.FullName, AO.Nation, AO.DateOfBirth, 
+			AO.Email, AO.PhoneNumber, AO.SpecialNeeds, AO.Notes, AO.VoucherId, 
+			AO.Total, AO.Paid, BA.CheckIn, BA.CheckOut, BA.NumberOfRoom, 
+			RT.Name as RoomName, RT.Vacancy, RT.RoomInfo, RT.RoomView, RT.BedType
+	FROM ACCOUNT_ORDER AO LEFT JOIN ORDER_DETAIL OD ON AO.OrderId = OD.OrderId
+							LEFT JOIN BOOKING_ACCOUNT BA ON BA.BookingId = OD.BookingId
+							LEFT JOIN HOTEL H ON H.Id = BA.HotelId
+							LEFT JOIN ROOM_TYPE RT ON RT.Id = BA.RoomTypeId and RT.HotelId = BA.HotelId
+	WHERE AO.AccountId = @AccountId;
+END
 GO
-
+--exec USP_GetAllAccountOrder 10
 -- //
 GO
 CREATE OR ALTER PROC USP_GetUnconfirmOrder (
@@ -1618,7 +1628,6 @@ BEGIN
 	RETURN @OrderId;
 END;
 GO
-
 -- //
 GO
 CREATE OR ALTER PROC USP_AddFullOrder (
@@ -1631,7 +1640,9 @@ CREATE OR ALTER PROC USP_AddFullOrder (
 	@SpecialNeeds NVARCHAR(500),
 	@Notes NVARCHAR(500),
 	@Total INT,
-	@DateRecorded VARCHAR(30))
+	@DateRecorded VARCHAR(30),
+	@SessionId VARCHAR(200)
+)
 AS
 BEGIN
 	BEGIN TRAN
@@ -1642,8 +1653,8 @@ BEGIN
 
 		IF (@DateRecorded IS NULL) SET @DateRecorded = FORMAT(GETDATE(), 'yyyy-MM-dd HH:mm:ss.fffffff');
 
-		INSERT INTO ACCOUNT_ORDER (OrderId, AccountId, FullName, Nation, DateOfBirth, Email, PhoneNumber, SpecialNeeds, Notes, VoucherId, Total, Paid, CreatedAt) VALUES 
-			(@OrderId, @AccountId, @FullName, @Nation, @DateOfBirth, @Email, @PhoneNumber, @SpecialNeeds, @Notes, 0, @Total, 0, @DateRecorded);
+		INSERT INTO ACCOUNT_ORDER (OrderId, AccountId, FullName, Nation, DateOfBirth, Email, PhoneNumber, SpecialNeeds, Notes, VoucherId, Total, Paid, CreatedAt, SessionId) VALUES 
+			(@OrderId, @AccountId, @FullName, @Nation, @DateOfBirth, @Email, @PhoneNumber, @SpecialNeeds, @Notes, 0, @Total, 0, @DateRecorded, @SessionId);
 	END TRY
 
 	BEGIN CATCH
@@ -1764,7 +1775,7 @@ GO
 
 -- //
 GO
-CREATE OR ALTER PROC USP_ConfirmOrder --// WARNING!!!!!!
+CREATE OR ALTER PROC USP_UpdateVoucherAndTotal
 	@OrderId INT,
 	@AccountId INT,
 	@VoucherId INTEGER,
@@ -1840,6 +1851,17 @@ BEGIN
 	COMMIT;
 	RETURN 0;
 END;
+GO
+
+GO
+CREATE OR ALTER PROCEDURE USP_ConfirmPaid (@SessionId VARCHAR(200))
+AS
+BEGIN
+	UPDATE ACCOUNT_ORDER
+		SET
+			Paid = 1
+		WHERE SessionId = @SessionId;
+END
 GO
 
 -- ++

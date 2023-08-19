@@ -6,8 +6,8 @@ namespace SunriseServerCore.RepoInterfaces
 {
     public interface IOrderRepo
     {
-        Task<List<Order>> GetAccountOrderAsync(int accountId);
+        Task<IEnumerable<Order>> GetAccountOrderAsync(int accountId);
         Task<int> CreateOrderAsync(ListOrderDto order, int accountId);
-        Task<int> ConfirmOrderAsync(int orderId, int accountId, int voucherId);        
+        Task<int> ConfirmOrderAsync(string sessionId);        
     }
 }

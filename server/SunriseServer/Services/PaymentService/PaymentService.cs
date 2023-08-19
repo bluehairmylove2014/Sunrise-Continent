@@ -3,6 +3,7 @@ using Stripe;
 using SunriseServerCore.Dtos;
 using SunriseServerCore.Models;
 using Microsoft.Extensions.Options;
+using SunriseServerCore.Dtos.Payment;
 
 namespace SunriseServer.Services.PaymentService
 {
@@ -10,15 +11,15 @@ namespace SunriseServer.Services.PaymentService
     {
         readonly StripeSettings _stripeSettings;
         // call api to confirm order (update paid column in Account_Order table)
-        public const string SUCCESS_URL = "https://sunrise-hotel.azurewebsites.net/api/order/confirm";
-        const string FAIL_URL = "https://www.facebook.com/";
+        public const string SUCCESS_URL = "http://www.sunrise-continent.online";
+        const string FAIL_URL = "http://www.sunrise-continent.online";
         const string CURRENCY = "vnd";
         public string SessionId { get; set; }
         public PaymentService(IOptions<StripeSettings> stripeSettings) {
             _stripeSettings = stripeSettings.Value;
         }
 
-        public string Checkout(string totalPay)
+        public PaymentDto Checkout(string totalPay)
         {
             var currency = CURRENCY;
             var successUrl = SUCCESS_URL;
@@ -62,12 +63,14 @@ namespace SunriseServer.Services.PaymentService
                     CancelUrl = cancelUrl
                 };
 
+                var result = new PaymentDto();
                 var service = new SessionService();
                 var session = service.Create(options);
-                SessionId = session.Id;
+                result.Url = session.Url;
+                result.SessionId = session.Id;
 
                 // url to stripe payment page
-                return session.Url;
+                return result;
             }
             catch
             {

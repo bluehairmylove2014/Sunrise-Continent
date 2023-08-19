@@ -203,6 +203,7 @@ CREATE TABLE ACCOUNT_ORDER
 	Total INT,
 	Paid BIT, -- 1 = True, 0 = False
 	CreatedAt VARCHAR(30),
+	SessionId VARCHAR(200)
 	--OrderStatus VARCHAR(10),
 
 	PRIMARY KEY (OrderId)

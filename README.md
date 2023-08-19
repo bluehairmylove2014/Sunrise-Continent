@@ -1,4 +1,11 @@
-﻿# Working with Git
+﻿# Sunrise Server
+[![ASP.NET](https://github.com/bluehairmylove2014/Sunrise-Continent/actions/workflows/main_sunrise-hotel.yml/badge.svg)](https://github.com/bluehairmylove2014/Sunrise-Continent/actions/workflows/main_sunrise-hotel.yml)
+
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=CityDiscoverTourist_CityDiscoverTouristServer&metric=sqale_rating)](https://github.com/bluehairmylove2014/Sunrise-Continent)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+# Working with Git
 _ Nhánh chính là nhánh **Master** chứa code chung, không được push code trực tiếp vào nhánh này mà phải **checkout** nhánh khác và tạo **Pull Request** .
 
 _ Lưu ý  khi **checkout** giữa các nhánh

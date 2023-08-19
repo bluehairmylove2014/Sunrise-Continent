@@ -7,7 +7,12 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# Working with Git
+### How to build
+```
+dotnet build -c Release
+```
+
+### Working with Git
 _ Nhánh chính là nhánh **Master** chứa code chung, không được push code trực tiếp vào nhánh này mà phải **checkout** nhánh khác và tạo **Pull Request** .
 
 _ Lưu ý  khi **checkout** giữa các nhánh
@@ -17,19 +22,22 @@ _ Lưu ý  khi **checkout** giữa các nhánh
  
 _ Quy trình làm việc với git khi thêm tính năng mới:
 
- 1. `git checkout master`
- 2. `git pull`
- 3. `git checkout -b Feature/MyBranch`
+```
+ 1. git checkout master
+ 2. git pull
+ 3. git checkout -b Feature/MyBranch
+```
 
 _ Quy trình tạo **Pull Request**
-
- 1. `git checkout master`
- 2. `git pull`
- 3. `git checkout Feature/MyBranch`
- 4. `git merge main`
+```
+ 1. git checkout master
+ 2. git pull
+ 3. git checkout Feature/MyBranch
+ 4. git merge main
+```
 
 _ Việc luôn **checkout master** và **pull** master giúp cho code master ở local của chúng ta luôn mới để tránh code ở local đã quá cũ sau này resolve conflict sẽ rất mệt.
-# Coding Conventions
+### Coding Conventions
 
  1. **Fields**: var orangeJuice
  2. **Properties**: var OrangeJuice
@@ -37,9 +45,9 @@ _ Việc luôn **checkout master** và **pull** master giúp cho code master ở
  4. **Functions**: int AddTwoDecimals(int num1, int num2)
  5. **Private members**: private int _recordTime
 
-# Clean code
+### Clean code
 Các quy tắc **clean code** cơ bản nên theo:
 
  1. Một hàm hay một lớp chỉ đảm nhiệm duy nhất 1 nhiệm vụ (đọc thêm **SOLID PRINCIPLES**).
  2. Hardcode các hằng số (nên tạo các file hằng số để dùng chung cho cả dự án).
- 3. Không viết tách hàm và tận dụng lại hàm.
+ 3. Viết tách nhỏ hàm và tận dụng lại hàm.

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
 using SunriseServer.Services.BookingService;
@@ -9,11 +10,12 @@ namespace SunriseServer.Controllers
     [Route("api/webhook")]
     public class StripeWebHookController : Controller
     {
-        const string secret = "whsec_d5a5dd966416fd9228baa57a1c6383b032acd156916ad6cc053b3ea8eb76ce0e";
         readonly IOrderService _orderService;
+        readonly StripeSettings _stripeSettings;
 
-        public StripeWebHookController(IOrderService orderService) {
+        public StripeWebHookController(IOptions<StripeSettings> stripeSettings, IOrderService orderService) {
             _orderService = orderService;
+            _stripeSettings = stripeSettings.Value;
         }
 
         // stripe uses this api to confirm order (cannot access outside stripe)
@@ -32,7 +34,7 @@ namespace SunriseServer.Controllers
                 var stripeEvent = EventUtility.ConstructEvent(
                   json,
                   Request.Headers["Stripe-Signature"],
-                  secret
+                  _stripeSettings.WebHookKey
                 );
 
                 // update order

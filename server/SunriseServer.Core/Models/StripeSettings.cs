@@ -10,5 +10,6 @@ namespace SunriseServerCore.Models
     {
         public string SecretKey { get; set; }
         public string PublicKey { get; set; }
+        public string WebHookKey { get; set; }
     }
 }

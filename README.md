@@ -1,6 +1,8 @@
 ﻿# Sunrise Server
 [![ASP.NET](https://github.com/bluehairmylove2014/Sunrise-Continent/actions/workflows/main_sunrise-hotel.yml/badge.svg)](https://github.com/bluehairmylove2014/Sunrise-Continent/actions/workflows/main_sunrise-hotel.yml)
 
+[![React-NextJS](https://github.com/bluehairmylove2014/Sunrise-Continent/actions/workflows/fe-cicd.yml/badge.svg)](https://github.com/bluehairmylove2014/Sunrise-Continent/actions/workflows/fe-cicd.yml)
+
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=CityDiscoverTourist_CityDiscoverTouristServer&metric=sqale_rating)](https://github.com/bluehairmylove2014/Sunrise-Continent)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

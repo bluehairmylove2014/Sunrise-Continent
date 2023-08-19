@@ -173,49 +173,101 @@ INSERT INTO HOTEL VALUES(23, N'Movenpick Hotel Phan Thiet', N'Việt Nam', 'HOTE
 	N'Đường Hòn Giò - Thuận Quý, Thôn Tiến Hòa, Xã Tiến Thành, Thành phố Phan Thiết, Bình Thuận',
  	4, 0,
 	N'Quay mặt ra bãi biển ở thành phố Phan Thiết, Mövenpick Resort Phan Thiet cung cấp chỗ nghỉ 5 sao và có hồ bơi ngoài trời, trung tâm thể dục cũng như khu vườn. Resort này còn có CLB trẻ em, nhà hàng và sân hiên. Chỗ nghỉ cung cấp dịch vụ phòng, dịch vụ lễ tân 24 giờ và phòng giữ hành lý cho khách.',
-	N'');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Movenpick%20Resort%20Phan%20Thiet/334369514.jpg');
 
 INSERT INTO HOTEL VALUES(24, N'Radisson Resort Phan Thiet', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'Đường Lạc Long Quân, Thôn Tiến Hòa, Xã Tiến Thành , Phan Thiết',
  	4, 0,
 	N'ọa lạc tại thành phố Phan Thiết, cách ga Phan Thiết 14 km, Radisson Resort Phan Thiet cung cấp chỗ nghỉ với xe đạp cho khách sử dụng miễn phí, chỗ đỗ xe riêng miễn phí, hồ bơi ngoài trời và trung tâm thể dục. Khách sạn 4 sao này có khu vườn và phòng nghỉ gắn máy điều hòa với WiFi miễn phí.',
-	N'');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Radisson%20Resort%20Phan%20Thiet/367681542.jpg');
 
 INSERT INTO HOTEL VALUES(25, N'Kim Long Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'Hẻm 69 Nguyễn Đình Chiểu, Hàm Tiến, Phan Thiết',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi đá Ông Địa 1,8 km và Suối Tiên 6,5 km, Kim Long Hotel cung cấp chỗ nghỉ có WiFi miễn phí, máy điều hòa, khu vực bãi biển riêng và khu vườn.',
-	N'');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Kim%20Long%20Hotel/468897403.jpg');
 
 INSERT INTO HOTEL VALUES(26, N'Mui Ne Alena Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'265/5 Nguyễn Đình Chiểu, Phường Hàm Tiến, Thành phố Phan Thiết,',
  	4, 0,
 	N'ọa lạc tại thành phố Phan Thiết, cách Bãi biển Hàm Tiến vài bước chân, Mui Ne Alena Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, khu vườn và sảnh khách chung. Chỗ nghỉ này có dịch vụ phòng, nhà hàng, sòng bạc và sân chơi cho trẻ em.',
-	N'');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mui%20Ne%20Alena%20Hotel/236967178.jpg');
 
 INSERT INTO HOTEL VALUES(27, N'Wanderlust Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'375 Nguyễn Đình Chiểu, Phan Thiết',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi biển Hàm Tiến 300 m và Suối Tiên 1,3 km, Wanderlust Hotel cung cấp chỗ nghỉ với WiFi miễn phí. Chỗ nghỉ này nằm trong bán kính 17 km từ Sân golf Sea Link, 18 km từ Bến xe Bình Thuận và 19 km từ ga Phan Thiết.',
-	N'');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Wanderlust%20Hotel/465910803.jpg');
 
 INSERT INTO HOTEL VALUES(28, N'Sea Night Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'N4 - 11 Phan Trung, Phú Thuỷ, Khu đô thị phố biển Phan Thiết, Bình Thuận',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi biển Đồi Dương 700 m, Sea Night Hotel có chỗ nghỉ với sảnh khách chung, chỗ đỗ xe riêng miễn phí, sân hiên và quầy bar. Khách sạn này nằm trong bán kính khoảng 2,4 km từ Bãi biển Thương Chánh và 700 m từ Sân golf Sea Link',
-	N'');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sea%20Night%20Hotel/333122531.jpg');
 
 INSERT INTO HOTEL VALUES(29, N'EMERALD OCEAN HOTEL', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'D5/01 Khu Đô Thị Du Lịch Biển - Phú Thủy - Phan Thiết, Phan Thiết',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bến xe Bình Thuận 2,7 km, EMERALD OCEAN HOTEL cung cấp chỗ nghỉ với nhà hàng, chỗ đỗ xe riêng miễn phí, quán bar và sân hiên. Khách sạn này nằm trong bán kính khoảng 5 km từ Phố ẩm thực Phan Thiết, 2,5 km từ Bảo tàng Hồ Chí Minh và 2,6 km từ Cảng cá Phan Thiết. ',
-	N'');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/EMERALD%20OCEAN%20HOTEL/426295909.jpg');
 
 INSERT INTO HOTEL VALUES(30, N'TIFFANY HOTEL & RESTAURANT', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'D3 79-80 Khu Đô Thị Biển Phan Thiết, Phường Phú Thuỷ, Thành Phố Phan Thiết',
  	4, 0,
 	N'TIFFANY HOTEL & RESTAURANT là khách sạn 3 sao tọa lạc tại Phan Thiết, đối diện với bãi biển. Ngoài dịch vụ phòng, nơi nghỉ này còn chào đón du khách với nhà hàng, công viên nước và sân hiên. Khách sạn cũng cung cấp Wi-Fi miễn phí cũng như dịch vụ đưa đón sân bay có tính phí.',
-	N'');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/TIFFANY%20HOTEL%20%26%20RESTAURANT/411699222.jpg');
+	
+INSERT INTO HOTEL VALUES(31, N'Long Life Riverside Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'61 Nguyễn Phúc Chu, Minh An, Hội An',
+ 	4, 0,
+	N'Chỉ mất 2 phút đi dạo ngắn từ Long Life Riverside Hotel là du khách có thể đến Phố Cổ Hội An nổi tiếng, Di sản thế giới được UNESCO công nhận. Khách sạn boutique này có hồ bơi ngoài trời và các lựa chọn ăn uống ngay trong khuôn viên. Du khách có thể truy cập Wi-Fi miễn phí ở tất cả các khu vực.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/117079623.jpg');
+INSERT INTO HOTEL VALUES(32, N'Hoi An Dream City Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N' 39 Trần Cao Vân, Sơn Phong, Hội An',
+ 	5, 0,
+	N'Nằm cách Phố Cổ Hội An 5 phút đi bộ, Hoi An Dream City Hotel có hồ bơi ngoài trời cũng như nhà hàng trong khuôn viên. Khách sạn này cung cấp chỗ nghỉ ấm cúng với Wi-Fi miễn phí.Tất cả phòng nghỉ tại đây đều có cửa sổ lớn, máy điều hòa và không gian lớn hơn. TV truyền hình cáp màn hình phẳng và bàn làm việc cũng được trang bị trong phòng.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121432858.jpg');
+INSERT INTO HOTEL VALUES(33, N'Hoa My II Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'44 Trần Cao Vân, Sơn Phong, Hội An',
+ 	4, 0,
+	N'Hoa My II có nhà hàng, hồ bơi trong nhà và cung cấp các phòng với Wi-Fi miễn phí. Nằm trên đường Trần Cao Vân, khách sạn cách vài bước chân từ khu trung tâm thành phố Hội An, Di sản Thế giới được UNESCO công nhận. Tất cả các phòng đều được trang bị máy điều hòa và cho tầm nhìn ra quang cảnh thành phố.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433652.jpg');
+INSERT INTO HOTEL VALUES(34, N'HOI AN HISTORIC HOTEL', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'10 Trần Hưng Đạo, Sơn Phong, Hội An',
+ 	5, 0,
+	N'Tọa lạc tại vị trí lý tưởng ở thành phố Hội An, HOI AN HISTORIC HOTEL cung cấp phòng nghỉ gắn máy điều hòa với WiFi miễn phí, chỗ đỗ xe riêng miễn phí và dịch vụ phòng. Khách sạn này có xe đạp cho khách sử dụng miễn phí, khu vườn, quầy bar, trung tâm thể dục, hồ bơi ngoài trời mở cửa quanh năm và sân hiên. Du khách có thể dùng bữa tại nhà hàng.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302775.jpg');
+INSERT INTO HOTEL VALUES(35, N'HY Local Budget Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'694 Đường Hai Bà Trưng phường Cẩm Phô, TP Hội An',
+ 	5, 0,
+	N'Tọa lạc tại vị trí tuyệt đẹp ở thành phố Hội An, HY Local Budget Hotel by Hoianese - 5 mins walk to Hoi An Ancient Town có phòng nghỉ gắn máy điều hòa, nhà hàng, WiFi miễn phí và quầy bar. Khách sạn 1 sao này cung cấp dịch vụ phòng và dịch vụ tiền sảnh. Một số phòng nghỉ tại đây có ban công nhìn ra thành phố.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/336597848.jpg');
+INSERT INTO HOTEL VALUES(36, N'Golden River Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N' 04 Nguyễn Phúc Nguyên, Minh An, TP Hội An',
+ 	5, 0,
+	N'Golden River Hotel nằm chỉ một vài bước chân từ phố cổ Hội An và cung cấp chỗ ở thoải mái, hồ bơi trong nhà và Wi-Fi miễn phí. Ngay trong khuôn viên khách sạn còn có nhà hàng. Các phòng nghỉ của khách sạn Golden River được trang bị máy lạnh đầy đủ và truyền hình cáp màn hình phẳng, minibar và khu vực tiếp khách. Các phòng đều có phòng tắm riêng với đồ vệ sinh cá nhân miễn phí.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239870611.jpg');
+INSERT INTO HOTEL VALUES(37, N'Hoi An Pho Library Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'96 Bà Triệu, phường Cẩm Phô, TP Hội An',
+ 	4, 0,
+	N'Tọa lạc tại trung tâm thành phố Hội An, cách Khu Phố Cổ giàu giá trị văn hóa chỉ 5 phút đi bộ, Hoi An Pho Library Hotel chào đón du khách bằng đồ uống đồng thời cung cấp hồ bơi trên sân thượng, các phòng hiện đại với những tác phẩm thủ công của địa phương và Wi-Fi miễn phí trong toàn khuôn viên.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/64559435.jpg');
+INSERT INTO HOTEL VALUES(38, N'Uptown Hoi An Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'209 Lý Thường Kiệt, Sơn Phong, Hội An',
+ 	4, 0,
+	N'Tọa lạc tại thành phố Hội An, cách Bảo tàng Lịch sử Hội An 800 m, Uptown Hoi An Hotel & Spa có hồ bơi ngoài trời, khu vườn và tầm nhìn ra khu vườn. Trong số các tiện nghi của chỗ nghỉ này có nhà hàng, lễ tân 24 giờ, dịch vụ phòng và WiFi miễn phí. Nơi đây có máy ATM, dịch vụ tiền sảnh và dịch vụ thu đổi ngoại tệ cho khách.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/218594100.jpg');
+INSERT INTO HOTEL VALUES(39, N'Thanh Binh Central Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'98 Bà Triệu, Cẩm Phô, Hội An',
+ 	4, 0,
+	N'Tọa lạc tại trung tâm Thành phố Hội An, Thanh Binh III - Serene Hotel cung cấp các phòng nghỉ trang nhã với Wi-Fi miễn phí và tầm nhìn ra quang cảnh hồ bơi/thành phố. Khách sạn có spa và hồ bơi ngoài trời.hanh Binh III Hotel tọa lạc tại vị trí thuận tiện nằm trong bán kính chưa đến 5 phút đi bộ từ Khu Phố Cổ, nơi có các điểm tham quan như Bảo tàng Chứng tích Chiến tranh.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/246386236.jpg');
+INSERT INTO HOTEL VALUES(40, N'Thanh Van 1 Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'78 Trần Hưng Đạo, Sơn Phong, Hội An',
+ 	5, 0,
+	N'Thanh Van 1 Hotel ở Phố Cổ Hội An, cách Bãi biển An Bàng một đoạn tản bộ. Wi-Fi được cung cấp miễn phí trong toàn bộ khuôn viên nơi này.Các phòng máy lạnh tại Thanh Van 1 Hotel cung cấp tầm nhìn tuyệt vời hướng ra khu vườn. Trong phòng có các tiện nghi phòng tắm riêng, không gian tiếp khách rộng rãi và bàn làm việc.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059761.jpg');
+
 
 --!add room Facility
 INSERT INTO FACILITY_CONST VALUES(1,'SWIMMING_POOL');
@@ -1441,12 +1493,12 @@ INSERT INTO ROOM_FACILITY VALUES(29,3,14);
 INSERT INTO ROOM_FACILITY VALUES(29,3,12);
 --! ADD ROOM SERVICE
 INSERT INTO ROOM_SERVICE VALUES(29,1,5);
-INSERT INTO ROOM_SERVICE VALUES(19,1,3);
+INSERT INTO ROOM_SERVICE VALUES(29,1,3);
 
-INSERT INTO ROOM_SERVICE VALUES(19,2,4);
+INSERT INTO ROOM_SERVICE VALUES(29,2,4);
 
-INSERT INTO ROOM_SERVICE VALUES(19,3,1);
-INSERT INTO ROOM_SERVICE VALUES(19,3,2);
+INSERT INTO ROOM_SERVICE VALUES(29,3,1);
+INSERT INTO ROOM_SERVICE VALUES(29,3,2);
 
 --todo TIFFANY HOTEL & RESTAURANT
 INSERT INTO ROOM_TYPE VALUES(30, 1,N'Suite President Nhìn ra Thành Phố', 3, 80,5500000,
@@ -1481,6 +1533,347 @@ INSERT INTO ROOM_SERVICE VALUES(30,2,1);
 
 INSERT INTO ROOM_SERVICE VALUES(30,3,2);
 INSERT INTO ROOM_SERVICE VALUES(30,3,5);
+
+
+--todo Long Life Riverside Hotel
+INSERT INTO ROOM_TYPE VALUES(31, 1,N'Phòng Giường Đôi Nhìn Ra Hồ Bơi', 3, 85,4200000,
+	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra hồ bơi',
+	'DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(31, 2,N'Phòng 2 Giường Đôi có ban công', 3, 60,4500000,
+	N'Phòng 2 giường đôi cực lớn này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra rừng',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(31, 3,N'Phòng Superior Giường Đôi/2 Giường Đơn Nhìn Ra Thành Phố', 3, 70,5200000,
+	N'Phòng 2 Giường Đơn này có ban công, ấm đun nước điện và máy điều hòa.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra vườn',
+	'SINGLE_OR_TWIN');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(31,1,3);
+INSERT INTO ROOM_FACILITY VALUES(31,1,6);
+INSERT INTO ROOM_FACILITY VALUES(31,1,7);
+
+INSERT INTO ROOM_FACILITY VALUES(31,2,3);
+INSERT INTO ROOM_FACILITY VALUES(31,2,15);
+INSERT INTO ROOM_FACILITY VALUES(31,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(31,3,14);
+INSERT INTO ROOM_FACILITY VALUES(31,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(31,1,5);
+INSERT INTO ROOM_SERVICE VALUES(31,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(31,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(31,3,1);
+INSERT INTO ROOM_SERVICE VALUES(31,3,2);
+
+--todo Hoi An Dream City Hotel
+INSERT INTO ROOM_TYPE VALUES(32, 1,N'Suite President Nhìn ra Thành Phố', 3, 85,4250000,
+	N'Phòng 2 giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra vườn',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(32, 2,N'Phòng Deluxe Gia Đình', 3, 60,4590000,
+	N'Phòng giường đôi cực lớn này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra đường phố',
+	'DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(32, 3,N'Suite Royal Nhìn ra Thành phố', 3, 4950000,
+	N'Phòng 2 Giường Đơn này có ban công, ấm đun nước điện và máy điều hòa.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra hồ bơi',
+	'LARGE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(32,1,1);
+INSERT INTO ROOM_FACILITY VALUES(32,1,2);
+INSERT INTO ROOM_FACILITY VALUES(32,1,3);
+
+INSERT INTO ROOM_FACILITY VALUES(32,2,7);
+INSERT INTO ROOM_FACILITY VALUES(32,2,8);
+INSERT INTO ROOM_FACILITY VALUES(32,2,9);
+
+INSERT INTO ROOM_FACILITY VALUES(32,3,11);
+INSERT INTO ROOM_FACILITY VALUES(32,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(32,1,1);
+INSERT INTO ROOM_SERVICE VALUES(32,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(32,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(32,3,1);
+INSERT INTO ROOM_SERVICE VALUES(32,3,2);
+
+--todo Hoa My II Hotel
+INSERT INTO ROOM_TYPE VALUES(33, 1,N'Phòng Deluxe Giường Đôi Có Bồn Tắm', 3, 85,2890000,
+	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra hồ bơi',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(33, 2,N'Phòng 2 Giường Đôi có ban công', 3, 60,3150000,
+	N'Phòng 2 giường đơn cực lớn này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'SINGLE_OR_TWIN');
+INSERT INTO ROOM_TYPE VALUES(33, 3,N'Phòng Deluxe Có Giường Cỡ King', 3, 70,2430000,
+	N'Phòng Giường Đơn cực lớn này có ban công, ấm đun nước điện và máy điều hòa.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra vườn',
+	'LARGE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(33,1,13);
+INSERT INTO ROOM_FACILITY VALUES(33,1,16);
+INSERT INTO ROOM_FACILITY VALUES(33,1,7);
+
+INSERT INTO ROOM_FACILITY VALUES(33,2,4);
+INSERT INTO ROOM_FACILITY VALUES(33,2,11);
+INSERT INTO ROOM_FACILITY VALUES(33,2,7);
+
+INSERT INTO ROOM_FACILITY VALUES(33,3,14);
+INSERT INTO ROOM_FACILITY VALUES(33,3,2);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(33,1,2);
+INSERT INTO ROOM_SERVICE VALUES(33,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(33,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(33,3,5);
+INSERT INTO ROOM_SERVICE VALUES(33,3,2);
+
+--todo HOI AN HISTORIC HOTEL
+INSERT INTO ROOM_TYPE VALUES(34, 1,N'Phòng Deluxe Giường Đôi Có Bồn Tắm', 3, 85,3740000,
+	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra bãi cát',
+	'LARGE');
+INSERT INTO ROOM_TYPE VALUES(34, 2,N'Phòng 2 Giường Đôi có ban công', 3, 60,3350000,
+	N'Phòng 2 giường đôi cực lớn này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra hồ bơi',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(34, 3,N'Phòng Deluxe Giường Tầng', 3, 70,4260000,
+	N'Phòng có Giường Tầng này có ban công, ấm đun nước điện và máy điều hòa.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra vườn xanh',
+	'BUNK');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(34,1,3);
+INSERT INTO ROOM_FACILITY VALUES(34,1,6);
+INSERT INTO ROOM_FACILITY VALUES(34,1,7);
+
+INSERT INTO ROOM_FACILITY VALUES(34,2,3);
+INSERT INTO ROOM_FACILITY VALUES(34,2,15);
+INSERT INTO ROOM_FACILITY VALUES(34,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(34,3,14);
+INSERT INTO ROOM_FACILITY VALUES(34,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(34,1,5);
+INSERT INTO ROOM_SERVICE VALUES(34,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(34,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(34,3,1);
+INSERT INTO ROOM_SERVICE VALUES(34,3,2);
+
+--todo HY Local Budget Hotel
+INSERT INTO ROOM_TYPE VALUES(35, 1,N'Phòng Deluxe Giường Đôi Có Bồn Tắm', 3, 85,2200000,
+	N'Phòng 2 giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(35, 2,N'Phòng 2 Giường Đôi có ban công', 3, 60,1750000,
+	N'Phòng giường đôi cực lớn này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'LARGE');
+INSERT INTO ROOM_TYPE VALUES(35, 3,N'Phòng Deluxe Giường Đơn', 3, 70,1300000,
+	N'Phòng Giường Đơn này có ban công, ấm đun nước điện và máy điều hòa.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'SINGLE_OR_TWIN');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(35,1,3);
+INSERT INTO ROOM_FACILITY VALUES(35,1,9);
+INSERT INTO ROOM_FACILITY VALUES(35,1,2);
+
+INSERT INTO ROOM_FACILITY VALUES(35,2,8);
+INSERT INTO ROOM_FACILITY VALUES(35,2,5);
+INSERT INTO ROOM_FACILITY VALUES(35,2,13);
+
+INSERT INTO ROOM_FACILITY VALUES(35,3,11);
+INSERT INTO ROOM_FACILITY VALUES(35,3,2);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(35,1,5);
+INSERT INTO ROOM_SERVICE VALUES(35,1,2);
+
+INSERT INTO ROOM_SERVICE VALUES(35,2,5);
+
+INSERT INTO ROOM_SERVICE VALUES(35,3,1);
+INSERT INTO ROOM_SERVICE VALUES(35,3,2);
+
+--todo Golden River Hotel
+INSERT INTO ROOM_TYPE VALUES(36, 1,N'Phòng Deluxe Giường Đôi/2 Giường Đơn Nhìn Ra Thành Phố', 3, 85,3200000,
+	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'LARGE');
+INSERT INTO ROOM_TYPE VALUES(36, 2,N'Phòng 2 Giường Đôi có ban công', 3, 60,2750000,
+	N'Phòng 2 giường đôi cực lớn này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(36, 3,N'Deluxe Gia Đình', 3, 70,2500000,
+	N'Phòng 2 Giường Đôi này có ban công, ấm đun nước điện và máy điều hòa.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'LARGE_DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(36,1,9);
+INSERT INTO ROOM_FACILITY VALUES(36,1,6);
+INSERT INTO ROOM_FACILITY VALUES(3,1,7);
+
+INSERT INTO ROOM_FACILITY VALUES(36,2,13);
+INSERT INTO ROOM_FACILITY VALUES(36,2,15);
+INSERT INTO ROOM_FACILITY VALUES(3,2,6);
+
+INSERT INTO ROOM_FACILITY VALUES(36,3,14);
+INSERT INTO ROOM_FACILITY VALUES(36,3,4);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(36,1,5);
+INSERT INTO ROOM_SERVICE VALUES(36,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(36,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(36,3,4);
+INSERT INTO ROOM_SERVICE VALUES(36,3,5);
+
+--todo Hoi An Pho Library Hotel
+INSERT INTO ROOM_TYPE VALUES(37, 1,N'Phòng Deluxe Gia Đình', 3, 85,4200000,
+	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'LARGE');
+INSERT INTO ROOM_TYPE VALUES(37, 2,N'Suite Royal Nhìn ra Biển', 3, 60,4400000,
+	N'Phòng 2 giường đôi cực lớn này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng',
+	'DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(37, 3,N'Phòng Senior Deluxe', 3, 70,5100000,
+	N'Phòng 2 Giường Đơn này có ban công, ấm đun nước điện và máy điều hòa.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'SINGLE_OR_TWIN');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(37,1,3);
+INSERT INTO ROOM_FACILITY VALUES(37,1,6);
+INSERT INTO ROOM_FACILITY VALUES(37,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(37,2,3);
+INSERT INTO ROOM_FACILITY VALUES(37,2,12);
+INSERT INTO ROOM_FACILITY VALUES(37,2,11);
+
+INSERT INTO ROOM_FACILITY VALUES(37,3,14);
+INSERT INTO ROOM_FACILITY VALUES(37,3,1);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(37,1,5);
+INSERT INTO ROOM_SERVICE VALUES(37,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(37,2,2);
+
+INSERT INTO ROOM_SERVICE VALUES(37,3,1);
+INSERT INTO ROOM_SERVICE VALUES(37,3,3);
+
+--todo Uptown Hoi An Hotel
+INSERT INTO ROOM_TYPE VALUES(38, 1,N'Phòng Deluxe Giường Đôi Có Bồn Tắm', 3, 85,4270000,
+	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng',
+	'DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(38, 2,N'Phòng 2 Giường Đôi có ban công', 3, 60,3720000,
+	N'Phòng 2 giường đôi cực lớn này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Ban công',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(38, 3,N'Phòng Deluxe Có Giường Cỡ King', 3, 70,4650000,
+	N'Phòng 2 Giường Đơn này có ban công, ấm đun nước điện và máy điều hòa.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra hồ bơi',
+	'LARGE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(38,1,3);
+INSERT INTO ROOM_FACILITY VALUES(38,1,6);
+INSERT INTO ROOM_FACILITY VALUES(38,1,7);
+
+INSERT INTO ROOM_FACILITY VALUES(38,2,3);
+INSERT INTO ROOM_FACILITY VALUES(38,2,15);
+INSERT INTO ROOM_FACILITY VALUES(38,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(38,3,14);
+INSERT INTO ROOM_FACILITY VALUES(38,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(38,1,5);
+INSERT INTO ROOM_SERVICE VALUES(38,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(38,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(38,3,1);
+INSERT INTO ROOM_SERVICE VALUES(38,3,2);
+
+--todo Thanh Binh Central Hotel
+INSERT INTO ROOM_TYPE VALUES(39, 1,N'Phòng Deluxe Giường Đôi Có Bồn Tắm', 3, 85,4150000,
+	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'LARGE');
+INSERT INTO ROOM_TYPE VALUES(39, 2,N'Phòng 2 Giường Đôi Nhìn Ra Biển', 3, 60,2540000,
+	N'Phòng 2 giường đôi cực lớn này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng',
+	'LARGE');
+INSERT INTO ROOM_TYPE VALUES(39, 3,N'Phòng Deluxe Có Giường Cỡ King', 3, 70,3250000,
+	N'Phòng Giường Đôi này có ban công, ấm đun nước điện và máy điều hòa.',
+	N'Ban công,Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(39,1,4);
+INSERT INTO ROOM_FACILITY VALUES(39,1,6);
+INSERT INTO ROOM_FACILITY VALUES(39,1,9);
+
+INSERT INTO ROOM_FACILITY VALUES(39,2,5);
+INSERT INTO ROOM_FACILITY VALUES(39,2,2);
+INSERT INTO ROOM_FACILITY VALUES(39,2,1);
+
+INSERT INTO ROOM_FACILITY VALUES(39,3,14);
+INSERT INTO ROOM_FACILITY VALUES(39,3,15);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(39,1,5);
+INSERT INTO ROOM_SERVICE VALUES(39,1,2);
+
+INSERT INTO ROOM_SERVICE VALUES(39,2,1);
+
+INSERT INTO ROOM_SERVICE VALUES(39,3,1);
+INSERT INTO ROOM_SERVICE VALUES(39,3,2);
+
+--todo Thanh Van 1 Hotel
+INSERT INTO ROOM_TYPE VALUES(40, 1,N'Phòng Deluxe Giường Đôi Có Bồn Tắm', 3, 85,4450000,
+	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
+	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(40, 2,N'Phòng 2 Giường Đôi có ban công', 3, 60,4570000,
+	N'Phòng 2 giường đôi cực lớn này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
+	N'Ban công, Nhìn ra thành phố, Nhìn ra địa danh nổi tiếng',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(40, 3,N'Phòng Deluxe Có Giường Cỡ King', 3, 70,3250000,
+	N'Phòng giường đôi cực lớn này có ban công, ấm đun nước điện và máy điều hòa.',
+	N'Nhìn ra núi,Nhìn ra vườn, Nhìn ra rừng, Nhìn ra thành phố',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(40,1,4);
+INSERT INTO ROOM_FACILITY VALUES(40,1,5);
+INSERT INTO ROOM_FACILITY VALUES(40,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(40,2,13);
+INSERT INTO ROOM_FACILITY VALUES(40,2,15);
+INSERT INTO ROOM_FACILITY VALUES(40,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(40,3,11);
+INSERT INTO ROOM_FACILITY VALUES(40,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(40,1,5);
+INSERT INTO ROOM_SERVICE VALUES(40,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(40,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(40,3,1);
+INSERT INTO ROOM_SERVICE VALUES(40,3,2);
 
 --! add room picture 
 --todo Triple E Hotel Metro Ben Thanh
@@ -1862,6 +2255,137 @@ INSERT INTO ROOM_PICTURE VALUES(30,2,3,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(30,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/TIFFANY%20HOTEL%20%26%20RESTAURANT/334497251.jpg');
 INSERT INTO ROOM_PICTURE VALUES(30,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/TIFFANY%20HOTEL%20%26%20RESTAURANT/334497112.jpg');
 INSERT INTO ROOM_PICTURE VALUES(30,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/TIFFANY%20HOTEL%20%26%20RESTAURANT/334801420.jpg');
+
+--todo Long Life Riverside Hotel
+INSERT INTO ROOM_PICTURE VALUES(31,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/155200125.jpg');
+INSERT INTO ROOM_PICTURE VALUES(31,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/155200191.jpg');
+INSERT INTO ROOM_PICTURE VALUES(31,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/160078659.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(31,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/5520534.jpg');
+INSERT INTO ROOM_PICTURE VALUES(31,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/117079636.jpg');
+INSERT INTO ROOM_PICTURE VALUES(31,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/117079623.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(31,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/155200012.jpg');
+INSERT INTO ROOM_PICTURE VALUES(31,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/117362415.jpg');
+INSERT INTO ROOM_PICTURE VALUES(31,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/117079681.jpg');
+
+--todo Hoi An Dream City Hotel
+INSERT INTO ROOM_PICTURE VALUES(32,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/122022493.jpg');
+INSERT INTO ROOM_PICTURE VALUES(32,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121432858.jpg');
+INSERT INTO ROOM_PICTURE VALUES(32,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121431967.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(32,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121431975.jpg');
+INSERT INTO ROOM_PICTURE VALUES(32,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/120476906.jpg');
+INSERT INTO ROOM_PICTURE VALUES(32,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121431964.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(32,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/120477181.jpg');
+INSERT INTO ROOM_PICTURE VALUES(32,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/120477539.jpg');
+INSERT INTO ROOM_PICTURE VALUES(32,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/120477487.jpg');
+
+--todo Hoa My II Hotel
+INSERT INTO ROOM_PICTURE VALUES(33,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433712.jpg');
+INSERT INTO ROOM_PICTURE VALUES(33,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433699.jpg');
+INSERT INTO ROOM_PICTURE VALUES(33,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433711.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(33,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433675.jpg');
+INSERT INTO ROOM_PICTURE VALUES(33,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433654.jpg');
+INSERT INTO ROOM_PICTURE VALUES(33,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433672.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(33,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433662.jpg');
+INSERT INTO ROOM_PICTURE VALUES(33,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433652.jpg');
+INSERT INTO ROOM_PICTURE VALUES(33,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433658.jpg');
+
+--todo HOI AN HISTORIC HOTEL
+INSERT INTO ROOM_PICTURE VALUES(34,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429303109.jpg');
+INSERT INTO ROOM_PICTURE VALUES(34,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429303086.jpg');
+INSERT INTO ROOM_PICTURE VALUES(34,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429303020.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(34,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302941.jpg');
+INSERT INTO ROOM_PICTURE VALUES(34,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302887.jpg');
+INSERT INTO ROOM_PICTURE VALUES(34,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302902.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(34,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302775.jpg');
+INSERT INTO ROOM_PICTURE VALUES(34,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302869.jpg');
+INSERT INTO ROOM_PICTURE VALUES(34,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302737.jpg');
+
+--todo HY Local Budget Hotel
+INSERT INTO ROOM_PICTURE VALUES(35,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/405764810.jpg');
+INSERT INTO ROOM_PICTURE VALUES(35,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/400958465.jpg');
+INSERT INTO ROOM_PICTURE VALUES(35,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/381307242.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(35,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/381323364.jpg');
+INSERT INTO ROOM_PICTURE VALUES(35,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/336597848.jpg');
+INSERT INTO ROOM_PICTURE VALUES(35,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/336592668.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(35,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/336597270.jpg');
+INSERT INTO ROOM_PICTURE VALUES(35,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/336597272.jpg');
+INSERT INTO ROOM_PICTURE VALUES(35,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/336592669.jpg');
+
+--todo Golden River Hotel
+INSERT INTO ROOM_PICTURE VALUES(36,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239904008.jpg');
+INSERT INTO ROOM_PICTURE VALUES(36,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/244893021.jpg');
+INSERT INTO ROOM_PICTURE VALUES(36,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/242821919.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(36,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239904639.jpg');
+INSERT INTO ROOM_PICTURE VALUES(36,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239901536.jpg');
+INSERT INTO ROOM_PICTURE VALUES(36,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239903570.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(36,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239901364.jpg');
+INSERT INTO ROOM_PICTURE VALUES(36,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239895254.jpg');
+INSERT INTO ROOM_PICTURE VALUES(36,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239870611.jpg');
+
+--todo Hoi An Pho Library Hotel
+INSERT INTO ROOM_PICTURE VALUES(37,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/64559435.jpg');
+INSERT INTO ROOM_PICTURE VALUES(37,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/361461271.jpg');
+INSERT INTO ROOM_PICTURE VALUES(37,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/133769358.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(37,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/218271547.jpg');
+INSERT INTO ROOM_PICTURE VALUES(37,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/218271702.jpg');
+INSERT INTO ROOM_PICTURE VALUES(37,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/218264257.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(37,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/133759042.jpg');
+INSERT INTO ROOM_PICTURE VALUES(37,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/218271693.jpg');
+INSERT INTO ROOM_PICTURE VALUES(37,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/218271548.jpg');
+
+--todo Uptown Hoi An Hotel
+INSERT INTO ROOM_PICTURE VALUES(38,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/211627915.jpg');
+INSERT INTO ROOM_PICTURE VALUES(38,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/209587599.jpg');
+INSERT INTO ROOM_PICTURE VALUES(38,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/218594100.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(38,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/209587596.jpg');
+INSERT INTO ROOM_PICTURE VALUES(38,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/209587201.jpg');
+INSERT INTO ROOM_PICTURE VALUES(38,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/209587378.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(38,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/209587594.jpg');
+INSERT INTO ROOM_PICTURE VALUES(38,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/209587587.jpg');
+INSERT INTO ROOM_PICTURE VALUES(38,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/209587585.jpg');
+
+--todo Thanh Binh Central Hotel
+INSERT INTO ROOM_PICTURE VALUES(39,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/270888964.jpg');
+INSERT INTO ROOM_PICTURE VALUES(39,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/270888961.jpg');
+INSERT INTO ROOM_PICTURE VALUES(39,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/246386249.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(39,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/246386236.jpg');
+INSERT INTO ROOM_PICTURE VALUES(39,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/243079829.jpg');
+INSERT INTO ROOM_PICTURE VALUES(39,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/243071742.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(39,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/243070437.jpg');
+INSERT INTO ROOM_PICTURE VALUES(39,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/243071717.jpg');
+INSERT INTO ROOM_PICTURE VALUES(39,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/243071156.jpg');
+
+--todo Thanh Van 1 Hotel
+INSERT INTO ROOM_PICTURE VALUES(40,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059835.jpg');
+INSERT INTO ROOM_PICTURE VALUES(40,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059864.jpg');
+INSERT INTO ROOM_PICTURE VALUES(40,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059832.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(40,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059827.jpg');
+INSERT INTO ROOM_PICTURE VALUES(40,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059826.jpg');
+INSERT INTO ROOM_PICTURE VALUES(40,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059758.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(40,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059801.jpg');
+INSERT INTO ROOM_PICTURE VALUES(40,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059792.jpg');
+INSERT INTO ROOM_PICTURE VALUES(40,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059761.jpg');
+
 
 INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank) VALUES
 (1, N'Lý Văn Đạt', 'lydat@gmail.com', 'default', '2002-01-01', 'Male', 'https://rialloer.sirv.com/Sunrise-Continent/Users/focalos.png', 'Bronze'),

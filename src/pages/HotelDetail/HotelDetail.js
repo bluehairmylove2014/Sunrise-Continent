@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import { combineAddress } from "../../utils/helpers/Address";
 import { pointToLabel } from "../../utils/helpers/Rating";
@@ -79,11 +79,18 @@ const HotelDetail = () => {
     : null;
   const [roomGallery, setRoomGallery] = useState(null);
   const [reviewPagination, setReviewPagination] = useState({
-    currentPage: defaultReviewStartPage,
-    maxPage: hotelReview
-      ? hotelReview.length / maximumReviewPerPage
-      : defaultReviewStartPage,
+    currentPage: 1,
+    maxPage: 1,
   });
+
+  useEffect(() => {
+    setReviewPagination({
+      currentPage: defaultReviewStartPage,
+      maxPage: hotelReview
+        ? Math.ceil(hotelReview.length / maximumReviewPerPage)
+        : defaultReviewStartPage,
+    });
+  }, [hotelReview]);
 
   const openRoomGallery = (roomPicture) => {
     setRoomGallery(roomPicture);

@@ -27,7 +27,7 @@ import {
   slicePaginationData,
 } from "../../utils/helpers/Pagination";
 
-const itemsPerPage = 5;
+const itemsPerPage = 8;
 const budgetKey = "budget";
 const Search = () => {
   const { onSearch, isLoading: isSearching } = useSearch();
@@ -101,7 +101,6 @@ const Search = () => {
               ? calculateMaxPage(data, itemsPerPage)
               : 1,
           });
-          console.log(data);
         })
         .catch((err) => {
           console.error(err);

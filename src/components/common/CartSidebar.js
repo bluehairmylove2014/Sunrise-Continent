@@ -21,117 +21,6 @@ import { toast } from "react-hot-toast";
 import MultipleOptionPopup from "./Popup/MultipleOptionPopup";
 import OrderDetailPicker from "./OrderDetailPicker";
 
-// const mockData = [
-//   {
-//     hotel: {
-//       id: 4,
-//       inputName: "hotel4",
-//       name: "Musketeers Guest House",
-//       country: "Việt Nam",
-//       hotelType: "HOTEL",
-//       provinceCity: "Hà Nội",
-//       address: "21 Ngõ 67 Tô Ngọc Vân Quảng An, Quận Tây Hồ, Hà Nội, Việt Nam",
-//       image:
-//         "https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Musketeers%20Guest%20House/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i1.jpg",
-//     },
-//     room: [
-//       {
-//         id: 1,
-//         inputName: "hotel4room1",
-//         name: "Phòng 2 Giường Đơn",
-//         price: 2620000,
-//       },
-//       {
-//         id: 2,
-//         inputName: "hotel4room2",
-//         name: "Phòng 2 Giường Đơn",
-//         price: 2620000,
-//       },
-//     ],
-//   },
-//   {
-//     hotel: {
-//       id: 5,
-//       inputName: "hotel5",
-//       name: "Sunrise Paradise Hotel",
-//       country: "Việt Nam",
-//       hotelType: "HOTEL",
-//       provinceCity: "Đà Nẵng",
-//       address: "123 Đường Biển, Quận Sơn Trà, Đà Nẵng, Việt Nam",
-//       image:
-//         "https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Musketeers%20Guest%20House/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i1.jpg",
-//     },
-//     room: [
-//       {
-//         id: 3,
-//         inputName: "hotel5room1",
-//         name: "Phòng 1 Giường Đôi",
-//         price: 3000000,
-//       },
-//     ],
-//   },
-//   {
-//     hotel: {
-//       id: 6,
-//       inputName: "hotel6",
-//       name: "Royal Palace Resort",
-//       country: "Việt Nam",
-//       hotelType: "RESORT",
-//       provinceCity: "Phú Quốc",
-//       address: "456 Đường Biển, Huyện Phú Quốc, Kiên Giang, Việt Nam",
-//       image:
-//         "https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Musketeers%20Guest%20House/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i1.jpg",
-//     },
-//     room: [
-//       {
-//         id: 4,
-//         inputName: "hotel6room1",
-//         name: "Phòng Villa Biển",
-//         price: 4500000,
-//       },
-//       {
-//         id: 5,
-//         inputName: "hotel6room2",
-//         name: "Phòng Deluxe",
-//         price: 3800000,
-//       },
-//     ],
-//   },
-//   {
-//     hotel: {
-//       id: 7,
-//       inputName: "hotel7",
-//       name: "Elegant Riverside Inn",
-//       country: "Việt Nam",
-//       hotelType: "HOTEL",
-//       provinceCity: "Huế",
-//       address: "789 Đường Sông Hương, Thành phố Huế, Việt Nam",
-//       image:
-//         "https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Musketeers%20Guest%20House/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i1.jpg",
-//     },
-//     room: [
-//       {
-//         id: 6,
-//         inputName: "hotel7room1",
-//         name: "Phòng Superior",
-//         price: 1800000,
-//       },
-//       {
-//         id: 7,
-//         inputName: "hotel7room2",
-//         name: "Phòng Deluxe",
-//         price: 2200000,
-//       },
-//       {
-//         id: 8,
-//         inputName: "hotel7room3",
-//         name: "Phòng Suite",
-//         price: 3200000,
-//       },
-//     ],
-//   },
-// ];
-
 const deleteType = {
   ROOM: 1,
   HOTEL: 2,
@@ -259,7 +148,6 @@ const CartSidebar = ({ isActive, callback }) => {
     deleteTarget.current = null;
     toggleClassNoListener(popUpRef.current, "active");
   };
-
   const renderCartItem = (data) => {
     if (!Array.isArray(data)) return <></>;
     return data.map((d) => {

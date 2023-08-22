@@ -17,6 +17,7 @@ import CartSidebar from "../common/CartSidebar";
 import { useGetUser } from "../../libs/business-logic/src/lib/auth/process/hooks";
 import { useWishlist } from "../../libs/business-logic/src/lib/wishlist";
 import { useCartContext } from "../../libs/business-logic/src/lib/cart/process/context";
+import { toast } from "react-hot-toast";
 
 const Header = () => {
   const [isUserSidebarActive, setIsUserSidebarActive] = useState(false);
@@ -139,11 +140,15 @@ const Header = () => {
     }
   };
   const onSearch = (content) => {
-    handleBlurSearchbox();
-    // Handle split keys
-    let query = `/search?location=${content.search}`;
-    navigate(query);
-    reset();
+    if (!content.search || !content.search.trim().length) {
+      toast.error("Nhập gì đó đi!");
+    } else {
+      // Handle split keys
+      handleBlurSearchbox();
+      let query = `/search?location=${content.search}`;
+      navigate(query);
+      reset();
+    }
   };
 
   return (
@@ -213,10 +218,14 @@ const Header = () => {
           <nav className="header__main-nav">
             <ul className="header-main-nav__infor">
               <li>
-                <Link to={partner.href} target="_blank">
+                <a
+                  href={partner.href}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
                   <i className={partner.icon}></i>
                   {partner.category_name}
-                </Link>
+                </a>
               </li>
               <li>
                 <div className="header-main-nav__language">

@@ -10,4 +10,5 @@ export const PAGES = {
   COUNTRY: "/country",
   VOUCHER_SHOP: "/voucher-shop",
   CHECKOUT: "/checkout",
+  ADMIN: "http://www.admin.sunrise-continent.online",
 };

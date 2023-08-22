@@ -28,6 +28,7 @@ export const useGoogleLogin = () => {
       `&scope=${encodeURIComponent(googleConfig.SCOPE)}`,
     []
   );
+  console.log("googleAuthUrl: ", googleAuthUrl);
 
   const [isLoading, setIsLoading] = useState(false);
   const { postMessage } = useAuthBroadcastChannel();

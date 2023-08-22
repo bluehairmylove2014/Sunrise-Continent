@@ -20,13 +20,13 @@ import mountain_day from "../../assets/images/bgs/mountain-day.jpg";
 // Form
 import { Controller, useForm } from "react-hook-form";
 import {
-  useFacebookLogin,
+  // useFacebookLogin,
   useGoogleLogin,
   useLogin,
   useRegister,
 } from "../../libs/business-logic/src/lib/auth";
 import googleIcon from "../../assets/images/icons/google.png";
-import facebookIcon from "../../assets/images/icons/facebook.png";
+// import facebookIcon from "../../assets/images/icons/facebook.png";
 import {
   deleteRedirectUrl,
   getRedirectUrl,
@@ -60,7 +60,7 @@ const Authentication = () => {
 
   const { onLogin, isLoading: isLoginLoading } = useLogin();
   const { onGoogleLogin, isLoading: isGoogleLoginLoading } = useGoogleLogin();
-  const { onFacebookLogin, isLoading: isFBLoginLoading } = useFacebookLogin();
+  // const { onFacebookLogin, isLoading: isFBLoginLoading } = useFacebookLogin();
   const { onRegister, isLoading: isRegisterLoading } = useRegister();
 
   // Hook
@@ -118,16 +118,16 @@ const Authentication = () => {
         toast.error(err.message);
       });
   };
-  const handleFacebookLogin = () => {
-    onFacebookLogin()
-      .then((message) => {
-        toast.success(message);
-        handleNavigate();
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      });
-  };
+  // const handleFacebookLogin = () => {
+  //   onFacebookLogin()
+  //     .then((message) => {
+  //       toast.success(message);
+  //       handleNavigate();
+  //     })
+  //     .catch((err) => {
+  //       toast.error(err.message);
+  //     });
+  // };
   const handleLogin = ({ email, password, isRememberMe }) => {
     onLogin({
       isRememberMe,
@@ -373,9 +373,9 @@ const Authentication = () => {
                       <label htmlFor="login-remember-input">Remember me</label>
                     </div>
 
-                    <div>
+                    {/* <div>
                       <Link>Forget Password</Link>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="button__wrapper">
                     <button
@@ -398,7 +398,7 @@ const Authentication = () => {
                           : `Login with google`}
                       </span>
                     </button>
-                    <button
+                    {/* <button
                       className="authen-form__social-btn facebook"
                       type="button"
                       onClick={handleFacebookLogin}
@@ -410,7 +410,7 @@ const Authentication = () => {
                           ? `In process`
                           : `Login with facebook`}
                       </span>
-                    </button>
+                    </button> */}
                   </div>
 
                   <button

@@ -2,5 +2,6 @@
 import { useGetHotelDetailQuery } from "../../fetching/query";
 
 export const useGetHotelDetail = (hotelID) => {
-    return useGetHotelDetailQuery(hotelID);
+  const { data } = useGetHotelDetailQuery(hotelID);
+  return data;
 };

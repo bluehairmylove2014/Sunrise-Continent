@@ -1,0 +1,431 @@
+@import '../../../styles/partial/mixin';
+
+.room__wrapper {
+    padding: 20px 0 0 0;
+    border: 1px solid var(--quill-grey);
+    margin-bottom: 20px;
+
+    .room__name {
+        margin: 0 0 20px 20px;
+    }
+
+    .edit-room__name {
+        display: none;
+        margin: 0 0 20px 20px;
+
+        input {
+            width: 200px;
+            background-color: transparent;
+            border-radius: 5px;
+            padding: 10px;
+            font-family: Montserrat;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+    }
+
+    .room__content {
+        padding: 20px;
+        background-color: var(--desert-storm);
+        width: calc(100% - 40px);
+        height: fit-content;
+
+        h6 {
+            margin-bottom: 15px;
+        }
+
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, flex-start, flex-start, nowrap);
+
+        .room__main-infor {
+            width: 18%;
+            // direction - justify content - align items - flex wrap
+            @include dflex(column, flex-start, flex-start, nowrap);
+
+            .main-infor__img-wrapper {
+                // columns - row - gap
+                width: 100%;
+                height: 300px;
+                @include dgrid(repeat(2, 1fr), 65% 35%, 5px);
+                overflow: hidden;
+
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+
+                    &:nth-child(1) {
+                        grid-column: 1 /span 2;
+                        grid-row: 1;
+                    }
+
+                    &:nth-child(2) {
+                        grid-column: 1;
+                        grid-row: 2;
+                    }
+
+                    &:nth-child(3) {
+                        grid-column: 2;
+                        grid-row: 2;
+                    }
+                }
+            }
+
+            .main-infor__view-all-img {
+                text-decoration: underline;
+                color: var(--butterfly-bush);
+                font-weight: 600;
+                font-size: 0.6rem;
+                margin: 10px 0 20px 0;
+                width: fit-content;
+                cursor: pointer;
+                transition: color 0.2s ease;
+
+                &:hover {
+                    color: var(--ultramarine-blue);
+                }
+            }
+
+            .main-infor__hightlight {
+                width: 100%;
+                margin-bottom: 10px;
+                // direction - justify content - align items - flex wrap
+                @include dflex(row, flex-start, center, nowrap);
+
+                img {
+                    width: 12%;
+                    height: auto;
+                    opacity: 0.6;
+                }
+
+                span {
+                    font-size: 0.75rem;
+                    margin-left: 10px;
+                    @include limit-line(3)
+                }
+
+                .room-view-wrapper {
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(column, flex-start, flex-start, nowrap);
+                }
+
+                &.edit {
+                    display: none;
+
+                    &>select {
+                        width: 88%;
+                        height: 25px;
+                        margin-left: 10px;
+                    }
+
+                    span input {
+                        width: 30px;
+                        height: 25px;
+                    }
+                }
+            }
+        }
+
+        .room__facilities-services {
+            width: 40%;
+            margin-left: 20px;
+
+            .facilities,
+            .services {
+                background-color: white;
+                padding: 20px;
+
+                small {
+                    font-weight: 600;
+                    margin-bottom: 20px;
+                    width: 100%;
+                }
+            }
+
+            .facilities {
+                margin-bottom: 5px;
+                // columns - row - gap
+                @include dgrid(repeat(4, 1fr), auto, 1rem);
+                gap: 15px;
+
+                small {
+                    grid-column: 1 /span 4;
+                }
+
+                .facilities__item {
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(column, flex-start, center, nowrap);
+                    gap: 8px;
+
+                    img {
+                        width: 40px;
+                        height: 40px;
+                    }
+
+                    p {
+                        font-size: 0.6rem;
+                        font-weight: 600;
+                        text-align: center
+                    }
+
+                    &.button {
+                        cursor: pointer;
+                        display: none;
+                    }
+                }
+            }
+
+            .services {
+                // direction - justify content - align items - flex wrap
+                @include dflex(column, flex-start, flex-start, nowrap);
+                gap: 10px;
+
+                .services__item {
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(row, flex-start, flex-start, nowrap);
+                    gap: 15px;
+                    font-size: 0.75rem;
+
+                    i {
+                        color: var(--dirty-orange);
+                        bottom: -1px;
+                    }
+
+                    &.button {
+                        cursor: pointer;
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        .room__description {
+            width: 25%;
+
+            h6 {
+                margin-left: 20px;
+            }
+
+            .short__description {
+                background-color: white;
+                border-left: 1px solid var(--quill-grey);
+                height: 400px;
+                padding: 20px;
+
+                .vacancy,
+                .edit-vacancy,
+                .description,
+                .edit-description {
+                    font-weight: 500;
+                    opacity: 0.7;
+                    margin-bottom: 15px;
+
+                    i {
+                        margin-right: 8px;
+                        color: var(--butterfly-bush);
+                        bottom: -3px;
+                    }
+                }
+
+                .edit-vacancy {
+                    display: none;
+
+                    input {
+                        text-align: center;
+                        width: 40px;
+                        height: 30px;
+                        background-color: transparent;
+                        border-radius: 5px;
+                        outline: none;
+                        font-family: Montserrat;
+                        font-weight: 700;
+                    }
+                }
+
+                .edit-description {
+                    display: none;
+                    width: calc(100% - 20px);
+                    background-color: transparent;
+                    border-radius: 5px;
+                    padding: 10px;
+                    font-family: Montserrat;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    height: 180px;
+                }
+
+                .no-vacancy {
+                    width: 100%;
+                    margin: 50px 0;
+                    overflow: hidden;
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(column, center, center, nowrap);
+
+                    img {
+                        width: 60%;
+                        height: auto;
+                    }
+                }
+            }
+        }
+
+        .room__price {
+            width: 17%;
+
+            h6 {
+                margin-left: 20px;
+            }
+
+            .price__wrapper {
+                background-color: white;
+                padding: 20px;
+                height: 400px;
+                border-left: 1px solid var(--quill-grey);
+                // direction - justify content - align items - flex wrap
+                @include dflex(column, space-between, center, nowrap);
+
+                .price,
+                .edit-price {
+                    text-align: center;
+                    margin-top: 20px;
+
+                    span {
+                        font-size: 1.25rem;
+                        font-weight: 700;
+                        color: var(--butterfly-bush);
+                    }
+                }
+
+                .edit-price {
+                    display: none;
+                    margin-top: 0;
+
+                    input {
+                        text-align: center;
+                        width: 100%;
+                        height: 30px;
+                        background-color: transparent;
+                        border-radius: 5px;
+                        outline: none;
+                        font-family: Montserrat;
+                        font-weight: 700;
+                    }
+                }
+
+                .btn__wrapper {
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(row, space-between, center, nowrap);
+                    gap: 10px;
+
+                    button:not(.delete) {
+                        // border - border radius - background color - color - padding - font size
+                        @include normal-btn(none, 5px, var(--ultramarine-blue), white, 10px 20px, 0.75rem);
+                        font-weight: 600;
+
+                        &.booking {
+                            background-color: var(var(--ultramarine-blue));
+
+                            &:hover {
+                                background-color: var(--soft-blue);
+                            }
+                        }
+
+                        &.change {
+                            background-color: var(--heavy-white-smoke);
+                            color: black;
+
+                            &:hover {
+                                background-color: var(--quill-grey);
+                            }
+                        }
+
+                        &.confirm {
+                            display: none;
+                            background-color: var(--kelly-green);
+                            color: white;
+
+                            &:hover {
+                                background-color: var(--quill-grey);
+                            }
+                        }
+                    }
+
+                    .delete {
+                        // border - border radius - background color - color - padding - font size
+                        @include normal-btn(1px solid black, 5px, transparent, black, 6px 12px, 1rem);
+
+                        &:hover {
+                            color: red;
+                            border-color: red;
+                        }
+
+                        &:disabled {
+                            cursor: not-allowed;
+                            opacity: 0.6;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &.edit {
+        .room__name {
+            display: none !important;
+        }
+
+        .edit-room__name {
+            display: block !important;
+        }
+
+        .btn__wrapper {
+            button.booking {
+                display: none !important;
+            }
+
+            button.confirm {
+                display: block !important;
+            }
+        }
+
+        .main-infor__hightlight {
+            display: none !important;
+        }
+
+        .main-infor__hightlight.edit {
+            display: flex !important;
+        }
+
+        .facilities__item.button {
+            display: flex !important;
+        }
+
+        .services__item.button {
+            display: flex !important;
+        }
+
+        .short__description {
+
+            .vacancy,
+            .description {
+                display: none !important;
+            }
+
+            .edit-vacancy,
+            .edit-description {
+                display: flex !important;
+            }
+        }
+
+        .price__wrapper {
+            .price {
+                display: none !important;
+            }
+
+            .edit-price {
+                display: block !important;
+            }
+        }
+    }
+}

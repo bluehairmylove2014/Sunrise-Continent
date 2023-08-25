@@ -1,0 +1,16 @@
+@import '../../../styles/partial/mixin';
+
+.not-support {
+    // direction - justify content - align items - flex wrap
+    @include dflex(column, center, center, nowrap);
+
+    img {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-weight: 600;
+    }
+}

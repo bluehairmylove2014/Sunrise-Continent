@@ -50,3 +50,11 @@ export const PAGINATION_MODEL = {
   DETAIL: 1,
   SIMPLE: 2,
 };
+export const totalReportValueType = {
+  money: 1,
+  normal: 0,
+};
+export const chartType = {
+  barChart: 1,
+  lineChart: 2,
+};

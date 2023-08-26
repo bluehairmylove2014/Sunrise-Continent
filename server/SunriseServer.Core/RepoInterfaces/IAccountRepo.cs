@@ -16,6 +16,8 @@ namespace SunriseServerCore.RepoInterfaces
         Task<PersonalDetail> GetAccountDetailsByIdAsync(int accountId);
         Task<PersonalDetail> GetAccountDetailsByEmailAsync(string email);
         Task<int> CreateSocialAsync(CreateSocialDto acc);
-        Task<PersonalDetail> GetAccountDetailSocialAsync(string email, string fullName);
+        Task<PersonalDetail> GetAccountDetailSocialAsync(string email, string fullName); // GetAccountByIdAsync
+        Task<Account> GetAccountByIdAsync(int accountId);
+        Task<int> UpdatePersonalInfoByIdAsync(int accountId, UpdateInfoDto dataDto);
     }
 }

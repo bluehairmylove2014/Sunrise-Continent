@@ -67,14 +67,14 @@ namespace SunriseServerData.Repositories
             return result.FirstOrDefault();
         }
 
-        // public async Task<int> GetAccountIdByEmail(string email)
-        // {
-        //     var result = await _dataContext.Set<MyFuctionReturn>()
-        //         .FromSqlInterpolated($"select dbo.USF_GetAccountId({email}) as value;")
-        //         .ToListAsync();
+        public async Task<Account> GetAccountByIdAsync(int accountId)
+        {
+            var result = await _dataContext.Account
+                .FromSqlInterpolated($"EXEC USP_GetAccountById @Id={accountId};")
+                .ToListAsync();
 
-        //     return (result.FirstOrDefault()).MyValue;
-        // }
+            return result.FirstOrDefault();
+        }
 
         public async Task<int> GetNextAccountIdAsync()
         {
@@ -119,6 +119,22 @@ namespace SunriseServerData.Repositories
             builder.Append($"@RefreshToken = \'{acc.RefreshToken}\', ");
             builder.Append($"@TokenCreated = \'{acc.TokenCreated}\', ");
             builder.Append($"@TokenExpires = \'{acc.TokenExpires}\';");
+
+            // Console.WriteLine(builder.ToString());
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            return result;
+        }
+
+        public async Task<int> UpdatePersonalInfoByIdAsync(int accountId, UpdateInfoDto dataDto)
+        {
+            // USP_UpdateAccountPersonalInfo
+            var builder = new StringBuilder($"EXEC USP_UpdateAccountPersonalInfo ");
+            builder.Append($"@AccountId = \'{accountId}\', ");
+            builder.Append($"@FullName = N\'{dataDto.FullName}\', ");
+            builder.Append($"@PhoneNumber = \'{dataDto.PhoneNumber}\', ");
+            builder.Append($"@DateOfBirth = \'{dataDto.DateOfBirth}\', ");
+            builder.Append($"@Gender = \'{dataDto.Gender}\', ");
+            builder.Append($"@Image = \'{dataDto.Image}\';");
 
             // Console.WriteLine(builder.ToString());
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");

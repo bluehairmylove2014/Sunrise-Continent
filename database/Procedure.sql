@@ -266,8 +266,8 @@ CREATE OR ALTER PROC USP_GetAccountSocial (
 	@Email VARCHAR(50),
 	@FullName NVARCHAR(1000))
 AS
-	SELECT pd.* FROM (SELECT * FROM PERSONAL_DETAILS WHERE EmailAddress = @Email AND FullName = @FullName) pd
-	JOIN ACCOUNT acc ON pd.AccountId = acc.AccountRank AND acc.PasswordHash = 'Social';
+	SELECT pd.*, acc.MemberPoint as Point FROM (SELECT * FROM PERSONAL_DETAILS WHERE EmailAddress = @Email AND FullName = @FullName) pd
+	JOIN ACCOUNT acc ON pd.AccountId = acc.Id AND acc.PasswordHash = 'Social';
 GO
 
 GO
@@ -287,36 +287,18 @@ GO
 CREATE OR ALTER PROC USP_GetAccountByUsername
 	@Email VARCHAR(50)
 AS
-	SELECT ACC.Id,
-		ACC.MemberPoint,
-		ACC.Email,
-		PD.FullName,
-		ACC.PasswordHash,
-		ACC.PasswordSalt,
-		ACC.UserRole,
-		ACC.RefreshToken,
-		ACC.TokenCreated,
-		ACC.TokenExpires
-	FROM (SELECT * FROM ACCOUNT where Email = @Email) ACC
-	JOIN PERSONAL_DETAILS PD ON ACC.Id = PD.AccountId;
+	SELECT acc.*, pd.FullName
+	FROM (SELECT * FROM ACCOUNT where Email = @Email AND PasswordHash != 'Social') acc
+	JOIN PERSONAL_DETAILS pd ON acc.Id = pd.AccountId;
 GO
 
 
 CREATE OR ALTER PROC USP_GetAccountById
 	@Id INT
 AS
-	SELECT ACC.Id,
-		ACC.MemberPoint,
-		ACC.Email,
-		PD.FullName,
-		ACC.PasswordHash,
-		ACC.PasswordSalt,
-		ACC.UserRole,
-		ACC.RefreshToken,
-		ACC.TokenCreated,
-		ACC.TokenExpires
-	FROM (SELECT * FROM ACCOUNT where Id = @Id) ACC
-	JOIN PERSONAL_DETAILS PD ON ACC.Id = PD.AccountId;
+	SELECT acc.*, pd.FullName
+	FROM (SELECT * FROM ACCOUNT where Id = @Id) acc
+	JOIN PERSONAL_DETAILS pd ON acc.Id = pd.AccountId;
 GO
 
 -- /NEW/ // check
@@ -453,7 +435,7 @@ END
 GO
 
 GO
-CREATE OR ALTER PROC USP_UpdateAccountPersonalInfo -- // Check
+CREATE OR ALTER PROC USP_UpdateAccountPersonalInfo -- // Check // newCheck
 	@AccountId INTEGER,
 	@FullName NVARCHAR(1000),
 	@PhoneNumber VARCHAR(20),
@@ -481,7 +463,7 @@ BEGIN
 	END TRY
 
 	BEGIN CATCH
-		RAISERROR(N'Account Id not existed', 11, 1);
+		RAISERROR(N'Lỗi cập nhật thông tin cá nhân.', 11, 1);
 		ROLLBACK;
 		RETURN -1;
 	END CATCH
@@ -1725,11 +1707,6 @@ BEGIN
 END;
 GO
 
-select * from order_detail
-select * from account_order
-select * from booking_account
-
-
 -- //
 GO
 CREATE OR ALTER FUNCTION USF_GetCartItem (@AccountId INT) -- CartItem
@@ -1863,30 +1840,6 @@ BEGIN
 		WHERE SessionId = @SessionId;
 END
 GO
-
--- ++
---GO
---CREATE OR ALTER PROC USP_ConfirmOrderWithTotal
---	@OrderId INT,
---	@AccountId INT,
---	@VoucherId INT,
---	@Total INT
---AS
---BEGIN
---	-- Kiểm tra số tiền thanh toán.
---	DECLARE @Discount INT = 0;
---	DECLARE @Check INT = dbo.USF_GetOrderTotal(@OrderId);
---	SELECT @Discount = Value FROM VOUCHER WHERE VoucherId = @VoucherId;
-
---	IF (@Total + @Discount - @Check < 0)
---	BEGIN
---		RAISERROR(N'Không đủ tiền thanh toán', 11, 1);
---		RETURN -1;
---	END
-
---	EXEC USP_ConfirmOrder @OrderId, @AccountId, @VoucherId;
---END
---GO
 
 
 CREATE OR ALTER FUNCTION USF_GetAccountId (@Email VARCHAR(50))

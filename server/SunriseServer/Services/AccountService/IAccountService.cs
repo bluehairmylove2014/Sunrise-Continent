@@ -17,5 +17,8 @@ namespace SunriseServer.Services.AccountService
         void SaveChanges();
         Task<int> CreateSocial(CreateSocialDto acc);
         Task<PersonalDetail> GetAccountDetailSocial(string email, string fullName);
+        Task<PersonalDetail> GetAccountDetailsById(int accountId);
+        Task<Account> GetAccountById(int accountId);
+        Task<int> UpdatePersonalInfoById(int accountId, UpdateInfoDto dataDto);
     }
 }

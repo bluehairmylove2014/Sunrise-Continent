@@ -87,5 +87,20 @@ namespace SunriseServer.Services.AccountService
         {
             return await _unitOfWork.AccountRepo.CreateSocialAsync(acc);
         }
+
+        public async Task<PersonalDetail> GetAccountDetailsById(int accountId)
+        {
+            return await _unitOfWork.AccountRepo.GetAccountDetailsByIdAsync(accountId);
+        }
+
+        public async Task<Account> GetAccountById(int accountId)
+        {
+            return await _unitOfWork.AccountRepo.GetAccountByIdAsync(accountId);
+        }
+
+        public async Task<int> UpdatePersonalInfoById(int accountId, UpdateInfoDto dataDto)
+        {
+            return await _unitOfWork.AccountRepo.UpdatePersonalInfoByIdAsync(accountId, dataDto);
+        }
     }
 }

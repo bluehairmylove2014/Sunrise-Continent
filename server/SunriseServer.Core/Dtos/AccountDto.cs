@@ -15,4 +15,13 @@
         public DateTime TokenCreated { get; set; }
         public DateTime TokenExpires { get; set; }
     }
+
+    public class UpdateInfoDto
+    {
+        public string FullName { get; set; } = "new name aft update";
+        public string PhoneNumber { get; set; } = "default";
+        public DateTime DateOfBirth { get; set; }
+        public string Gender { get; set; } = "Male";
+        public string Image { get; set; } = "https://rialloer.sirv.com/Sunrise-Continent/Users/focalos.png";
+    }
 }

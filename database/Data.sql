@@ -2,7 +2,6 @@ USE [sunrise-hotel]
 GO
 
 --!add account
---!PASSWORD all 123
 INSERT INTO ACCOUNT (Id, MemberPoint, AccountRank, Email, PasswordHash, PasswordSalt, UserRole, RefreshToken, TokenCreated, TokenExpires)
 VALUES	
 (1, 0, 'Bronze', 'lydat@gmail.com', '00ba0af9630c9eccf44741a603ccbb32b238c0ecd7141200c1641e2756328d4c3f1d94c7af70efd2b0af3c3ef2aff4f519290b2a29d0605a046283be6526c406', '0c7aeca9679f1de913b12d341f1ca586b4defaf7503651003354a5f8c8519265889436a9bb39085eb8df092d6bd2dca144e9a2e57df70d17ecbf1dd1c276576ad425b415d9f09c3cf3f319bacead74282a6b7bf60de2f7d97a2b9fbab5022f65a7d56efc4a3015bcbe31f7ff152ca3ea5ee527516a5a06fff4039d6ac09e9fe6', 'User', 'zJ7lpuRkqAGuiAYgRC+WQIZejkentkhE08e+s2eTOY9fbSto5X6GirvmmLzyQcbAkTXypnVNhYRBCXU8ocEeYw==', '2023-08-09 20:03:58.000', '2023-08-16 20:03:58.000'),
@@ -14,13 +13,13 @@ VALUES
 (7, 0, 'Diamond', 'bluehairmylove2014@gmail.com', '3e1dcac1eddc9f99ee06fe71178e0ad0562c551b9a382cc72ee7c00919f31878a90325fb1b287ec43a9711177c08a43d29b1e42b157f790fa5336b5920ea4f2b', 'b1a5137653964ebd04abe46f552e674ed622992983149cc27f5a2d9a3465ccd5fabdce76fb71b33ea74c3729fd3483acbdc6102738e5e142bc2bbf5f2e4c0b6886705a109ef2fbc79a598acb92b1722e9617fc61323aa1a8197ca3de3620755fe7815b6dc54e4effc71f0f661fbfacbb7f96e0199b6ee7416389a83e95cc4bac', 'User', '+34iPTdqI5mhEhia6qfgp9qMprkg3uVLdwfhcd6Tn8YlgRwiGchjKYsyByhgyBfIC0NLO5cLKDmvuNrc0jCfBw==', '2023-08-14 21:42:55.000', '2023-08-21 21:42:55.000');
 
 ----!add personal information
-INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank) VALUES 
-(1, N'Lý Văn Đạt', 'lydat@gmail.com', 'default', '2002-01-01', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
-(2, N'Phan Phúc Đạt', 'pdat@gmail.com', 'default', '2002-01-01', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
-(3, N'Cường Phạm', 'cuong457@gmail.com', 'default', '2002-01-01', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
-(4, N'Cường Phạm', 'hahaha@gmail.com', 'default', '2002-01-01', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
-(5, N'Lý Văn Đạt', 'lydatadmin@gmail.com', 'default', '2002-01-01', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
-(6, N'Phạm Nguyễn Cao Cường', 'cuong@gmail.com', 'default', '2002-01-01', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze');
+--INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank) VALUES 
+--(1, N'Lý Văn Đạt', 'lydat@gmail.com', 'default', '2002-01-01', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
+--(2, N'Phan Phúc Đạt', 'pdat@gmail.com', 'default', '2002-01-01', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
+--(3, N'Cường Phạm', 'cuong457@gmail.com', 'default', '2002-01-01', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
+--(4, N'Cường Phạm', 'hahaha@gmail.com', 'default', '2002-01-01', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
+--(5, N'Lý Văn Đạt', 'lydatadmin@gmail.com', 'default', '2002-01-01', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze'),
+--(6, N'Phạm Nguyễn Cao Cường', 'cuong@gmail.com', 'default', '2002-01-01', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze');
 
 --!add Rank
 INSERT INTO POINT_RANK (RankName, RankValue) VALUES 
@@ -1570,15 +1569,15 @@ INSERT INTO ROOM_SERVICE VALUES(31,3,1);
 INSERT INTO ROOM_SERVICE VALUES(31,3,2);
 
 --todo Hoi An Dream City Hotel
-INSERT INTO ROOM_TYPE VALUES(32, 1,N'Suite President Nhìn ra Thành Phố', 3, 85,4250000,
+INSERT INTO ROOM_TYPE VALUES(32, 1, N'Suite President Nhìn ra Thành Phố', 3, 85, 4250000,
 	N'Phòng 2 giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
 	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra vườn',
 	'LARGE_DOUBLE');
-INSERT INTO ROOM_TYPE VALUES(32, 2,N'Phòng Deluxe Gia Đình', 3, 60,4590000,
+INSERT INTO ROOM_TYPE VALUES(32, 2, N'Phòng Deluxe Gia Đình', 3, 60, 4590000,
 	N'Phòng giường đôi cực lớn này có ấm đun nước điện, sofa, bàn ghế trang điểm, máy sấy.',
 	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra đường phố',
 	'DOUBLE');
-INSERT INTO ROOM_TYPE VALUES(32, 3,N'Suite Royal Nhìn ra Thành phố', 3, 4950000,
+INSERT INTO ROOM_TYPE VALUES(32, 3, N'Suite Royal Nhìn ra Thành phố', 3, 60, 4950000,
 	N'Phòng 2 Giường Đơn này có ban công, ấm đun nước điện và máy điều hòa.',
 	N'Nhìn ra núi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra hồ bơi',
 	'LARGE');
@@ -1722,11 +1721,11 @@ INSERT INTO ROOM_TYPE VALUES(36, 3,N'Deluxe Gia Đình', 3, 70,2500000,
 --!ADD ROOM FACILITY
 INSERT INTO ROOM_FACILITY VALUES(36,1,9);
 INSERT INTO ROOM_FACILITY VALUES(36,1,6);
-INSERT INTO ROOM_FACILITY VALUES(3,1,7);
+INSERT INTO ROOM_FACILITY VALUES(36,1,7);
 
 INSERT INTO ROOM_FACILITY VALUES(36,2,13);
 INSERT INTO ROOM_FACILITY VALUES(36,2,15);
-INSERT INTO ROOM_FACILITY VALUES(3,2,6);
+INSERT INTO ROOM_FACILITY VALUES(36,2,6);
 
 INSERT INTO ROOM_FACILITY VALUES(36,3,14);
 INSERT INTO ROOM_FACILITY VALUES(36,3,4);
@@ -2257,9 +2256,9 @@ INSERT INTO ROOM_PICTURE VALUES(30,3,2,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(30,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/TIFFANY%20HOTEL%20%26%20RESTAURANT/334801420.jpg');
 
 --todo Long Life Riverside Hotel
-INSERT INTO ROOM_PICTURE VALUES(31,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/155200125.jpg');
-INSERT INTO ROOM_PICTURE VALUES(31,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/155200191.jpg');
-INSERT INTO ROOM_PICTURE VALUES(31,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/160078659.jpg');
+INSERT INTO ROOM_PICTURE VALUES(31,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/155200125.jpg');
+INSERT INTO ROOM_PICTURE VALUES(31,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/155200191.jpg');
+INSERT INTO ROOM_PICTURE VALUES(31,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/160078659.jpg');
 
 INSERT INTO ROOM_PICTURE VALUES(31,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/5520534.jpg');
 INSERT INTO ROOM_PICTURE VALUES(31,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/117079636.jpg');
@@ -2270,9 +2269,9 @@ INSERT INTO ROOM_PICTURE VALUES(31,3,2,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(31,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/117079681.jpg');
 
 --todo Hoi An Dream City Hotel
-INSERT INTO ROOM_PICTURE VALUES(32,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/122022493.jpg');
-INSERT INTO ROOM_PICTURE VALUES(32,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121432858.jpg');
-INSERT INTO ROOM_PICTURE VALUES(32,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121431967.jpg');
+INSERT INTO ROOM_PICTURE VALUES(32,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/122022493.jpg');
+INSERT INTO ROOM_PICTURE VALUES(32,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121432858.jpg');
+INSERT INTO ROOM_PICTURE VALUES(32,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121431967.jpg');
 
 INSERT INTO ROOM_PICTURE VALUES(32,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121431975.jpg');
 INSERT INTO ROOM_PICTURE VALUES(32,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/120476906.jpg');
@@ -2283,9 +2282,9 @@ INSERT INTO ROOM_PICTURE VALUES(32,3,2,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(32,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/120477487.jpg');
 
 --todo Hoa My II Hotel
-INSERT INTO ROOM_PICTURE VALUES(33,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433712.jpg');
-INSERT INTO ROOM_PICTURE VALUES(33,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433699.jpg');
-INSERT INTO ROOM_PICTURE VALUES(33,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433711.jpg');
+INSERT INTO ROOM_PICTURE VALUES(33,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433712.jpg');
+INSERT INTO ROOM_PICTURE VALUES(33,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433699.jpg');
+INSERT INTO ROOM_PICTURE VALUES(33,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433711.jpg');
 
 INSERT INTO ROOM_PICTURE VALUES(33,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433675.jpg');
 INSERT INTO ROOM_PICTURE VALUES(33,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433654.jpg');
@@ -2296,9 +2295,9 @@ INSERT INTO ROOM_PICTURE VALUES(33,3,2,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(33,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433658.jpg');
 
 --todo HOI AN HISTORIC HOTEL
-INSERT INTO ROOM_PICTURE VALUES(34,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429303109.jpg');
-INSERT INTO ROOM_PICTURE VALUES(34,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429303086.jpg');
-INSERT INTO ROOM_PICTURE VALUES(34,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429303020.jpg');
+INSERT INTO ROOM_PICTURE VALUES(34,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429303109.jpg');
+INSERT INTO ROOM_PICTURE VALUES(34,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429303086.jpg');
+INSERT INTO ROOM_PICTURE VALUES(34,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429303020.jpg');
 
 INSERT INTO ROOM_PICTURE VALUES(34,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302941.jpg');
 INSERT INTO ROOM_PICTURE VALUES(34,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302887.jpg');
@@ -2309,9 +2308,9 @@ INSERT INTO ROOM_PICTURE VALUES(34,3,2,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(34,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302737.jpg');
 
 --todo HY Local Budget Hotel
-INSERT INTO ROOM_PICTURE VALUES(35,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/405764810.jpg');
-INSERT INTO ROOM_PICTURE VALUES(35,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/400958465.jpg');
-INSERT INTO ROOM_PICTURE VALUES(35,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/381307242.jpg');
+INSERT INTO ROOM_PICTURE VALUES(35,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/405764810.jpg');
+INSERT INTO ROOM_PICTURE VALUES(35,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/400958465.jpg');
+INSERT INTO ROOM_PICTURE VALUES(35,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/381307242.jpg');
 
 INSERT INTO ROOM_PICTURE VALUES(35,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/381323364.jpg');
 INSERT INTO ROOM_PICTURE VALUES(35,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/336597848.jpg');
@@ -2322,9 +2321,9 @@ INSERT INTO ROOM_PICTURE VALUES(35,3,2,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(35,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/336592669.jpg');
 
 --todo Golden River Hotel
-INSERT INTO ROOM_PICTURE VALUES(36,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239904008.jpg');
-INSERT INTO ROOM_PICTURE VALUES(36,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/244893021.jpg');
-INSERT INTO ROOM_PICTURE VALUES(36,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/242821919.jpg');
+INSERT INTO ROOM_PICTURE VALUES(36,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239904008.jpg');
+INSERT INTO ROOM_PICTURE VALUES(36,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/244893021.jpg');
+INSERT INTO ROOM_PICTURE VALUES(36,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/242821919.jpg');
 
 INSERT INTO ROOM_PICTURE VALUES(36,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239904639.jpg');
 INSERT INTO ROOM_PICTURE VALUES(36,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239901536.jpg');
@@ -2335,9 +2334,9 @@ INSERT INTO ROOM_PICTURE VALUES(36,3,2,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(36,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239870611.jpg');
 
 --todo Hoi An Pho Library Hotel
-INSERT INTO ROOM_PICTURE VALUES(37,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/64559435.jpg');
-INSERT INTO ROOM_PICTURE VALUES(37,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/361461271.jpg');
-INSERT INTO ROOM_PICTURE VALUES(37,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/133769358.jpg');
+INSERT INTO ROOM_PICTURE VALUES(37,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/64559435.jpg');
+INSERT INTO ROOM_PICTURE VALUES(37,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/361461271.jpg');
+INSERT INTO ROOM_PICTURE VALUES(37,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/133769358.jpg');
 
 INSERT INTO ROOM_PICTURE VALUES(37,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/218271547.jpg');
 INSERT INTO ROOM_PICTURE VALUES(37,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/218271702.jpg');
@@ -2348,9 +2347,9 @@ INSERT INTO ROOM_PICTURE VALUES(37,3,2,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(37,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/218271548.jpg');
 
 --todo Uptown Hoi An Hotel
-INSERT INTO ROOM_PICTURE VALUES(38,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/211627915.jpg');
-INSERT INTO ROOM_PICTURE VALUES(38,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/209587599.jpg');
-INSERT INTO ROOM_PICTURE VALUES(38,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/218594100.jpg');
+INSERT INTO ROOM_PICTURE VALUES(38,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/211627915.jpg');
+INSERT INTO ROOM_PICTURE VALUES(38,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/209587599.jpg');
+INSERT INTO ROOM_PICTURE VALUES(38,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/218594100.jpg');
 
 INSERT INTO ROOM_PICTURE VALUES(38,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/209587596.jpg');
 INSERT INTO ROOM_PICTURE VALUES(38,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/209587201.jpg');
@@ -2361,9 +2360,9 @@ INSERT INTO ROOM_PICTURE VALUES(38,3,2,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(38,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/209587585.jpg');
 
 --todo Thanh Binh Central Hotel
-INSERT INTO ROOM_PICTURE VALUES(39,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/270888964.jpg');
-INSERT INTO ROOM_PICTURE VALUES(39,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/270888961.jpg');
-INSERT INTO ROOM_PICTURE VALUES(39,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/246386249.jpg');
+INSERT INTO ROOM_PICTURE VALUES(39,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/270888964.jpg');
+INSERT INTO ROOM_PICTURE VALUES(39,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/270888961.jpg');
+INSERT INTO ROOM_PICTURE VALUES(39,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/246386249.jpg');
 
 INSERT INTO ROOM_PICTURE VALUES(39,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/246386236.jpg');
 INSERT INTO ROOM_PICTURE VALUES(39,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/243079829.jpg');
@@ -2374,9 +2373,9 @@ INSERT INTO ROOM_PICTURE VALUES(39,3,2,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(39,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/243071156.jpg');
 
 --todo Thanh Van 1 Hotel
-INSERT INTO ROOM_PICTURE VALUES(40,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059835.jpg');
-INSERT INTO ROOM_PICTURE VALUES(40,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059864.jpg');
-INSERT INTO ROOM_PICTURE VALUES(40,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059832.jpg');
+INSERT INTO ROOM_PICTURE VALUES(40,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059835.jpg');
+INSERT INTO ROOM_PICTURE VALUES(40,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059864.jpg');
+INSERT INTO ROOM_PICTURE VALUES(40,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059832.jpg');
 
 INSERT INTO ROOM_PICTURE VALUES(40,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059827.jpg');
 INSERT INTO ROOM_PICTURE VALUES(40,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059826.jpg');

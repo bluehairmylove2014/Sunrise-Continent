@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using SunriseServer.Common.Constant;
 using SunriseServer.Services.AccountService;
 using SunriseServer.Services.HotelService;
+using SunriseServerCore.Dtos;
 using System.Data;
+using System.Security.Claims;
+
 
 namespace SunriseServer.Controllers
 {
@@ -21,8 +24,9 @@ namespace SunriseServer.Controllers
         [HttpGet("current-account"), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<PersonalDetail>> GetCurrentAccount()
         {
-            // lấy điểm của user
-            var result = await _accountService.GetAccountDetailsByEmail(User.Identity.Name);
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            var result = await _accountService.GetAccountDetailsById(accountId);
+
             if (result is null)
                 return NotFound("Account not found");
 
@@ -30,7 +34,7 @@ namespace SunriseServer.Controllers
         }
 
         [HttpGet("username"), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<Hotel>> GetAccountByUsername(string username)
+        public async Task<ActionResult<Account>> GetAccountByUsername(string username)
         {
             var result =  await _accountService.GetByUsername(username);
             if (result is null)
@@ -40,7 +44,7 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPut(""), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<List<Hotel>>> UpdateAccount(int id, Account request)
+        public async Task<ActionResult<int>> UpdateAccount(Account request)
         {
             var result = await _accountService.UpdateAccount(request);
             if (result is null)
@@ -50,13 +54,21 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPut("personal-info"), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<List<Hotel>>> UpdateAccountPersonalInfo(int id, Account request)
+        public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateAccountPersonalInfo(UpdateInfoDto request)
         {
-            var result = await _accountService.UpdateAccount(request);
-            if (result is null)
-                return NotFound("Account not found.");
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            int result = 0;
+            
+            try
+            {
+                result = await _accountService.UpdatePersonalInfoById(accountId, request);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(exception.Message);
+            }
 
-            return Ok(result);
+            return Ok(new ResponseMessageDetails<int>("Update account successfully", result));
         }
     }
 }

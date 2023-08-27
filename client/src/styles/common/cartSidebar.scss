@@ -1,0 +1,236 @@
+@import '../partial/mixin';
+
+.common-component__cart {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    width: 0;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 999;
+    background-color: white;
+    box-shadow: -23px 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    // direction - justify content - align items - flex wrap
+    @include dflex(column, flex-start, center, nowrap);
+
+    &.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+        width: 600px;
+    }
+
+    .cart__title {
+        width: calc(100% - 40px);
+        margin-top: 20px;
+        padding: 20px;
+        flex-shrink: 1;
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, space-between, center, nowrap);
+
+        &>div {
+            width: 20px
+        }
+
+        &>p {
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .cart__close-btn {
+            // border - border radius - background color - color - padding - font size
+            @include normal-btn(none, 50%, var(--heavy-white-smoke), var(--hard-pink), 5px 10px, 0.8rem);
+        }
+    }
+
+    .cart__content {
+        width: calc(100% - 30px);
+        flex-grow: 1;
+        padding: 15px;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        .cart-content__hotel {
+            position: relative;
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, space-between, flex-start, nowrap);
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 20px;
+            border: 1px solid var(--heavy-white-smoke);
+            transition: all 0.2s ease;
+            height: 180px;
+
+            .hotel__img-container {
+                position: relative;
+                width: 30%;
+                height: 100%;
+                overflow: hidden;
+
+                img {
+                    @include absolute-center;
+                    height: 100%;
+                    width: 100%;
+                    object-fit: cover;
+                }
+            }
+
+            .hotel__information {
+                // direction - justify content - align items - flex wrap
+                @include dflex(column, flex-start, flex-start, nowrap);
+                height: calc(100% - 30px);
+                margin: 15px 0;
+                width: 70%;
+
+                .information__title {
+                    height: 45px;
+
+                    h6 {
+                        @include limit-line(1);
+                    }
+
+                    p {
+                        @include limit-line(1);
+                        margin: 6px 0;
+                        font-size: 0.5rem;
+                    }
+                }
+
+                .information__room-list {
+                    overflow-y: auto;
+                    overflow-x: hidden;
+                    max-height: 105px;
+                    margin-top: 15px;
+                    width: calc(100% - 15px);
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(column, flex-start, flex-start, nowrap);
+                    gap: 20px;
+                    padding-right: 15px;
+                    padding-bottom: 5px;
+
+                    .room {
+                        width: 100%;
+                        // direction - justify content - align items - flex wrap
+                        @include dflex(row, space-between, center, nowrap);
+                        gap: 20px;
+
+                        .wrapper {
+
+                            .common-component__checkbox {
+
+                                .cc-checkbox__container {
+                                    font-size: 0.6rem;
+                                    overflow-x: hidden;
+                                    @include limit-line(1);
+                                }
+                            }
+
+                            .room__price {
+                                white-space: nowrap;
+                                font-weight: 600;
+                                color: var(--butterfly-bush);
+                                font-size: 0.6rem;
+                                margin-top: 10px;
+                                margin-left: 35px;
+                            }
+                        }
+
+
+                        &>button {
+                            color: red;
+                            cursor: pointer;
+                        }
+                    }
+                }
+
+                .hotel__price {
+                    width: calc(100% - 15px);
+                    margin-right: 15px;
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(row, space-between, center, nowrap);
+
+                    p {
+                        color: var(--butterfly-bush);
+                        font-size: 0.8rem;
+                        font-weight: 700;
+
+                        small {
+                            color: black;
+                            font-size: 0.55rem;
+                            opacity: 0.6;
+                        }
+                    }
+
+                    button {
+                        // border - border radius - background color - color - padding - font size
+                        @include normal-btn(0, 5px, orange, black, 8px 15px, 0.6rem);
+                    }
+                }
+            }
+
+            .close-btn {
+                position: absolute;
+                top: -10px;
+                right: -10px;
+                // border - border radius - background color - color - padding - font size
+                @include normal-btn(0, 50%, red, white, 4px 8px 5px 8px, 0.6rem);
+            }
+        }
+    }
+
+    .cart__interact {
+        // height: 50px;
+        width: 100%;
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, space-evenly, center, nowrap);
+        padding: 20px 0;
+        box-shadow: 0px -12px 15px -3px rgba(0, 0, 0, 0.1);
+
+        button {
+            // border - border radius - background color - color - padding - font size
+            @include normal-btn(none, 5px, var(--gold), black, 12px 20px, 0.6rem);
+
+            &:nth-child(1) {
+                &:hover {
+                    background-color: var(--old-gold);
+                }
+
+                &:disabled {
+                    background-color: var(--heavy-white-smoke);
+                }
+            }
+
+            &:nth-child(2) {
+                background-color: white;
+                border: 1px solid black;
+
+                i {
+                    bottom: -1px;
+                }
+
+                &:hover {
+                    background-color: red;
+                    color: white;
+                }
+
+                &:disabled {
+                    background-color: var(--heavy-white-smoke);
+                    color: black;
+                    border: none;
+                }
+            }
+
+            &:disabled {
+                cursor: not-allowed;
+            }
+        }
+
+        p {
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+    }
+}

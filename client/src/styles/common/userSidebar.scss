@@ -1,0 +1,86 @@
+@import '../partial/mixin';
+
+.common-component__user-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    background-color: white;
+    z-index: 999;
+    box-shadow: 2px 3px 15px -3px rgba(0,0,0,0.5);
+
+    visibility: hidden;
+    width: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.1s ease-in;
+    .cc-user-sidebar-header__rank {
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, flex-start, center, nowrap);
+        gap: 10px;
+        margin-left: 5px;
+        img {
+            width: 25px;
+            height: 25px;
+            object-fit: cover;
+        }
+        span {
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+    }
+    .cc-user-sidebar__header {
+        margin: 1rem calc(10px + 1rem);
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, space-between, center, nowrap);
+        .cc-user-sidebar-header__close-btn {
+            font-weight: 500;
+            // border - border radius - background color - color - padding - font size
+            @include normal-btn(0, 5px, var(--quill-grey), black, 10px 15px, 0.75rem);
+        }
+    }
+    ul {
+        width: 100%;
+        li {
+            width: 100%;
+            height: 40px;
+            margin: 10px 20px;
+            a {
+                padding-left: 1rem;
+                // direction - justify content - align items - flex wrap
+                @include dflex(row, flex-start, center, nowrap);
+                width: 100%;
+                height: 100%;
+                font-size: 0.75rem;
+                font-weight: 500;
+                color: black;
+                border-radius: 5px;
+                transition: all 0.2s ease-in;
+                &:hover {
+                    background-color: var(--quill-grey);
+                }
+            }
+            button {
+                font-weight: 500;
+                width: 100%;
+                height: 100%;
+                // direction - justify content - align items - flex wrap
+                @include dflex(row, flex-start, center, nowrap);
+                // border - border radius - background color - color - padding - font size
+                @include normal-btn(0, 5px, transparent, black, 0 1rem 0 1rem, 0.75rem);
+                &:hover {
+                    background-color: var(--quill-grey);
+                }
+            }
+            i {
+                margin-right: 10px;
+            }
+        }
+    }
+    &.active {
+        visibility: visible;
+        width: 300px;
+        opacity: 1;
+        pointer-events: all;
+    }
+}

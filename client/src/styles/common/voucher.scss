@@ -1,0 +1,242 @@
+@import '../partial/mixin';
+
+.voucher__wrapper {
+    position: relative;
+
+    .voucher {
+        cursor: pointer;
+        position: relative;
+        width: calc(100% - 30px);
+        height: 100px;
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, flex-start, center, nowrap);
+        gap: 15px;
+        padding: 15px;
+        box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+
+        .dot {
+            position: absolute;
+            top: 50%;
+            width: 15px;
+            height: 15px;
+            transform: translateY(-50%);
+            background-color: white;
+            border-radius: 50%;
+
+            &:nth-child(1) {
+                left: -7.5px;
+            }
+
+            &:nth-child(2) {
+                right: -7.5px;
+            }
+        }
+
+        img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .voucher__content {
+            // direction - justify content - align items - flex wrap
+            @include dflex(column, flex-start, flex-start, nowrap);
+            width: 100%;
+
+            h6 {
+                @include limit-line(2);
+            }
+
+            small {
+                font-weight: 600;
+                opacity: 0.6;
+
+
+                &:nth-child(4) {
+                    opacity: 1;
+                }
+            }
+
+
+        }
+
+
+        .rank {
+            padding: 5px 15px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            white-space: nowrap;
+            border-radius: 5px;
+            position: absolute;
+            bottom: 5px;
+            right: 2px;
+        }
+
+
+        &.Silver {
+            background-color: var(--silver);
+            color: black;
+        }
+
+        &.Gold {
+            background-color: var(--gold);
+            color: black;
+        }
+
+        &.Bronze {
+            background-color: var(--bronze);
+            color: white;
+        }
+
+        &.Diamond {
+            background-color: var(--diamond);
+            color: var(--butterfly-bush);
+        }
+
+        &.Vip {
+            background-color: var(--light-dirty-orange);
+            color: var(--ultramarine-blue--ultramarine-blue);
+        }
+    }
+
+    .voucher__checkout {
+        padding: 15px;
+        // direction - justify content - align items - flex wrap
+        @include dflex(column, space-between, space-between, nowrap);
+        width: calc(100% - 30px);
+
+        $line-height: 30px;
+
+        small {
+            font-weight: 600
+        }
+
+        .interact__wrapper {
+            margin-top: 15px;
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, space-between, center, nowrap);
+
+            .checkout__quantity {
+                // direction - justify content - align items - flex wrap
+                @include dflex(row, flex-start, center, nowrap);
+                height: $line-height;
+
+                .quantity__input {
+                    border: 1px solid black;
+                    height: 100%;
+                    overflow: hidden;
+                    border-left: none;
+                    border-right: none;
+
+                    input {
+                        width: 30px;
+                        padding: 0 10px;
+                        border: none;
+                        text-align: center;
+                        outline: none;
+
+                        /* Chrome, Safari, Edge, Opera */
+                        &::-webkit-outer-spin-button,
+                        &::-webkit-inner-spin-button {
+                            -webkit-appearance: none;
+                            margin: 0;
+                        }
+
+                        /* Firefox */
+                        &[type=number] {
+                            -moz-appearance: textfield;
+                        }
+                    }
+
+                }
+
+                button {
+                    height: calc(100% + 2px);
+                    font-weight: 500;
+                    // border - border radius - background color - color - padding - font size
+                    @include normal-btn(1px solid black, 0px, transparent, black, 0 10px, 0.8rem);
+
+                    &:hover {
+                        background-color: var(--linen);
+                    }
+                }
+            }
+
+            &>button {
+                height: $line-height;
+                // border - border radius - background color - color - padding - font size
+                @include normal-btn(none, 5px, var(--kelly-green), white, 0 18px, 0.8rem);
+
+                &:hover {
+                    background-color: var(--toxic-green);
+                }
+
+                &:disabled {
+                    background-color: var(--diamond);
+                }
+            }
+        }
+    }
+
+    .voucher__loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba($color: #ffffff, $alpha: 0.6);
+        z-index: 800;
+        // direction - justify content - align items - flex wrap
+        @include dflex(column, center, center, nowrap);
+        display: none;
+
+
+        .loader {
+            display: block;
+            --height-of-loader: 4px;
+            --loader-color: #0071e2;
+            width: 130px;
+            height: var(--height-of-loader);
+            border-radius: 30px;
+            background-color: rgba(0, 0, 0, 0.2);
+            position: relative;
+
+            &::before {
+                content: "";
+                position: absolute;
+                background: var(--loader-color);
+                top: 0;
+                left: 0;
+                width: 0%;
+                height: 100%;
+                border-radius: 30px;
+                animation: moving 1s ease-in-out infinite;
+                ;
+            }
+        }
+
+        &.active {
+            display: flex;
+        }
+
+        @keyframes moving {
+            50% {
+                width: 100%;
+            }
+
+            100% {
+                width: 0;
+                right: 0;
+                left: unset;
+            }
+        }
+    }
+
+    &.shop {
+        border: 1px solid black;
+
+        .voucher {
+            border-radius: 0;
+        }
+    }
+}

@@ -146,7 +146,7 @@ const Header = () => {
       // Handle split keys
       handleBlurSearchbox();
       let query = `/search?location=${content.search}`;
-      navigate(query);
+      navigate(query, { replace: true });
       reset();
     }
   };

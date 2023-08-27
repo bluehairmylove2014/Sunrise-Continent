@@ -151,7 +151,7 @@
                 }
 
                 button {
-                    height: calc(100% + 1px);
+                    height: calc(100% + 2px);
                     font-weight: 500;
                     // border - border radius - background color - color - padding - font size
                     @include normal-btn(1px solid black, 0px, transparent, black, 0 10px, 0.8rem);

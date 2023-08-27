@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   ACCOMMODATION_FACILITIES,
   BED_TYPES,
@@ -8,12 +8,12 @@ import { icon } from "./Data";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { BANNER_INPUT } from "../../constants/Variables.constants";
 import { toggleClass } from "../../utils/helpers/ToggleClass";
 import { parseSearchParams } from "../../utils/helpers/params";
 import OrderDetailPicker from "../../components/common/OrderDetailPicker";
 import { useAddToCart } from "../../libs/business-logic/src/lib/cart";
 import { toast } from "react-hot-toast";
+import DotSpinner from "../../components/common/Loader/DotSpinner";
 
 const Rooms = ({ hotelData, roomsData, openGallery }) => {
   let room = null;
@@ -21,17 +21,19 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
   const pickerFormDefaultValue = {
     start_date: dateTimeParams["start_date"] ?? "",
     end_date: dateTimeParams["end_date"] ?? "",
-    rooms: BANNER_INPUT.PEOPLE_AND_ROOM.MIN_VALUE[0],
-    adults: BANNER_INPUT.PEOPLE_AND_ROOM.MIN_VALUE[1],
-    childrens: BANNER_INPUT.PEOPLE_AND_ROOM.MIN_VALUE[2],
+    rooms: dateTimeParams["rooms"] ?? "",
+    adults: dateTimeParams["adults"] ?? "",
+    childrens: dateTimeParams["childrens"] ?? "",
   };
   const pickerForm = useForm({
     defaultValues: pickerFormDefaultValue,
   });
+  const [isAddToCartLoading, setIsAddToCartLoading] = useState(false);
   const pickerRef = useRef(null);
-  const { onAddToCart, isLoading: isAddToCartLoading } = useAddToCart();
+  const { onAddToCart } = useAddToCart();
 
   const handleAddToCart = (rdata) => {
+    setIsAddToCartLoading(true);
     onAddToCart({
       hotel: {
         id: hotelData.id,
@@ -56,7 +58,8 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
       })
       .catch((err) => {
         toast.error(err.message);
-      });
+      })
+      .finally(() => setIsAddToCartLoading(false));
   };
 
   if (Array.isArray(roomsData)) {
@@ -202,7 +205,11 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
                     disabled={isAddToCartLoading}
                     onClick={() => handleAddToCart(rd)}
                   >
-                    <i className="fi fi-sr-shopping-cart-add"></i>
+                    {isAddToCartLoading ? (
+                      <DotSpinner />
+                    ) : (
+                      <i className="fi fi-sr-shopping-cart-add"></i>
+                    )}
                   </button>
                 </div>
               </div>

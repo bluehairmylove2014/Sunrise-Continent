@@ -17,7 +17,6 @@ const BannerInput = ({
 }) => {
   const { control, watch, setValue } = form;
   const perRef = useRef(null);
-
   const renderLocationInput = (name, background) => {
     return (
       <div

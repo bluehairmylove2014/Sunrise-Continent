@@ -13,7 +13,7 @@ export const icon = {
 };
 
 export const nationality = [
-  { id: 1, value: "my", label: "Mỹ" },
+  { id: 1, value: "vietnam", label: "Việt Nam" },
   { id: 2, value: "trungquoc", label: "Trung Quốc" },
   { id: 3, value: "india", label: "Ấn Độ" },
   { id: 4, value: "nhatban", label: "Nhật Bản" },
@@ -33,5 +33,5 @@ export const nationality = [
   { id: 18, value: "thuydien", label: "Thụy Điển" },
   { id: 19, value: "thuysy", label: "Thụy Sĩ" },
   { id: 20, value: "ao", label: "Áo" },
-  { id: 21, value: "vietnam", label: "Việt Nam" },
+  { id: 21, value: "my", label: "Mỹ" },
 ];

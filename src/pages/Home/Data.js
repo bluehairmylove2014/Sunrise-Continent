@@ -15,6 +15,23 @@ export const bannerData = [
 
 export const countriesData = [
   {
+    Country: "Viet Nam",
+    Province: [
+      "Ho Chi Minh City",
+      "Hanoi",
+      "Da Nang",
+      "Hai Phong",
+      "Can Tho",
+      "Hai Duong",
+      "Hue",
+      "Nha Trang",
+      "Vung Tau",
+      "Quang Ninh",
+      "Lam Dong",
+      "Binh Thuan",
+    ],
+  },
+  {
     Country: "Korea",
     Province: [
       "Seoul",
@@ -82,23 +99,6 @@ export const countriesData = [
       "Tasmania",
       "Australian Capital Territory",
       "Northern Territory",
-    ],
-  },
-  {
-    Country: "Viet Nam",
-    Province: [
-      "Ho Chi Minh City",
-      "Hanoi",
-      "Da Nang",
-      "Hai Phong",
-      "Can Tho",
-      "Hai Duong",
-      "Hue",
-      "Nha Trang",
-      "Vung Tau",
-      "Quang Ninh",
-      "Lam Dong",
-      "Binh Thuan",
     ],
   },
   {

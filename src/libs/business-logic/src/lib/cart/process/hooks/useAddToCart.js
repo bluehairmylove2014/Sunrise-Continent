@@ -1,9 +1,6 @@
 // Importing necessary modules and functions
 import { debouncePromise } from "../../../..//helper";
-import {
-  useAddToCartMutation,
-  useUpdateCartMutation,
-} from "../../fetching/mutation";
+import { useUpdateCartMutation } from "../../fetching/mutation";
 import { useCartContext } from "../context";
 import { getCartLocalStorage } from "../helper/localStorageHelper";
 import { useGetCart } from "./useGetCart";
@@ -13,7 +10,6 @@ const debounceDelayTime = 1000;
 
 export const useAddToCart = () => {
   const { state } = useCartContext();
-  const addToCartMutation = useAddToCartMutation();
   const { setCart, addToCart } = useLocalCartAction();
   const { onGetCart } = useGetCart();
   const updateCartMutation = useUpdateCartMutation();
@@ -65,6 +61,6 @@ export const useAddToCart = () => {
 
   return {
     onAddToCart,
-    isLoading: addToCartMutation.isLoading,
+    isLoading: updateCartMutation.isLoading,
   };
 };

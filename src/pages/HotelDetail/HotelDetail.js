@@ -177,7 +177,7 @@ const HotelDetail = () => {
               </p>
               <div className="booking-price__interact">
                 <button onClick={(e) => handleAddToWishlist(e, hotelData)}>
-                  <i className="fi fi-rr-heart"></i>
+                  <i className="fi fi-bs-heart"></i>
                   Yêu thích
                 </button>
                 <button

@@ -5,7 +5,10 @@ import { Link } from "react-router-dom";
 import { PAGES } from "../../constants/Link.constants";
 import { BANNER_INPUT } from "../../constants/Variables.constants";
 
-const keys = [...BANNER_INPUT.DATE_TIME_DOUBLE.INPUT_NAME];
+const keys = [
+  ...BANNER_INPUT.DATE_TIME_DOUBLE.INPUT_NAME,
+  ...BANNER_INPUT.PEOPLE_AND_ROOM.INPUT_NAME,
+];
 
 const maxAmenities = 6;
 const maxService = 6;
@@ -49,14 +52,12 @@ const Hotel = ({ data, criteria }) => {
       </>
     );
   };
-
+  const href = keys.reduce((acc, value) => {
+    acc += criteria[value] ? `&${value}=${criteria[value]}` : "";
+    return acc;
+  }, `${PAGES.HOTEL_DETAIL}?id=${data.id}`);
   return (
-    <Link
-      className="hotel"
-      to={`${PAGES.HOTEL_DETAIL}?id=${data.id}${
-        criteria[keys[0]] ? `&${keys[0]}=${criteria[keys[0]]}` : ""
-      }${criteria[keys[1]] ? `&${keys[1]}=${criteria[keys[1]]}` : ""}`}
-    >
+    <Link className="hotel" to={href}>
       <div className="hotel__images">
         <img src={data.image} alt="hotel" />
       </div>

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../../styles/component/search.scss";
 import TravelImg from "../../assets/images/graphics/travel.png";
 import Filterboard from "./Filterboard";
@@ -19,7 +19,6 @@ import Hotel from "./Hotel";
 import { toggleClass } from "../../utils/helpers/ToggleClass";
 import { useSearch } from "../../libs/business-logic/src/lib/hotel";
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
-import { FILTER_CHECKBOX_KEY } from "../../constants/filter.constants";
 import Pagination from "../../components/common/Pagination";
 import Empty from "../../components/common/Empty";
 import {
@@ -29,6 +28,24 @@ import {
 
 const itemsPerPage = 8;
 const budgetKey = "budget";
+function createCheckboxDefaultValue(inputObject) {
+  const {
+    location,
+    budget,
+    rooms,
+    adults,
+    childrens,
+    end_date,
+    start_date,
+    ...rest
+  } = inputObject;
+
+  const checkboxNames = Object.values(rest)
+    .flat()
+    .map((value) => value.toLowerCase());
+
+  return checkboxNames;
+}
 const Search = () => {
   const { onSearch, isLoading: isSearching } = useSearch();
   const sortDropdownRef = useRef(null);
@@ -52,7 +69,6 @@ const Search = () => {
       return values;
     }
   }, {});
-
   defaultFormValue["adults"] === undefined && (defaultFormValue["adults"] = 1);
   defaultFormValue["childrens"] === undefined &&
     (defaultFormValue["childrens"] = 0);
@@ -60,27 +76,21 @@ const Search = () => {
   const searchBoardForm = useForm({
     defaultValues: defaultFormValue,
   });
-  let filterTrueList = [];
-  FILTER_CHECKBOX_KEY.forEach((fc) => {
-    const trueList = criteria[fc.checkboxGroupKey];
-    if (trueList) {
-      filterTrueList = [...filterTrueList, ...trueList];
-    }
-  });
+  const filterTrueList = createCheckboxDefaultValue(criteria);
   const filterBoardForm = useForm({
     defaultValues: FILTER_INPUT.reduce((values, key) => {
       values[key] = filterTrueList.includes(key);
       return values;
     }, {}),
   });
-
   useEffect(() => {
-    setCriteria(parseSearchParams(location.search));
-  }, [location]);
-
-  useEffect(() => {
+    const newCriteria = parseSearchParams(location.search);
+    setCriteria(newCriteria);
+    if (searchBoardForm.getValues().location !== newCriteria.location) {
+      searchBoardForm.setValue("location", newCriteria.location);
+    }
     handleSearch(criteria);
-  }, []);
+  }, [location]);
 
   const scrollToTop = () => {
     const element = document.querySelector(`.search__results`);
@@ -90,6 +100,7 @@ const Search = () => {
   };
 
   const handleSearch = (criteria) => {
+    console.log("SEARCH");
     if (typeof criteria.budget === "string") return;
     if (Object.keys(criteria).length) {
       onSearch({ ...criteria, page_number: pagination.currentPage })
@@ -117,7 +128,7 @@ const Search = () => {
     };
   };
 
-  const onResearch = (data) => {
+  const onMoreOptionPreSearch = (data) => {
     let newCriteria = {
       ...criteria,
       ...data,
@@ -147,14 +158,16 @@ const Search = () => {
     });
   };
 
-  const onFilter = useCallback(({ key, value, status }) => {
+  const onFilter = ({ key, value, status }) => {
     let newCriteria = {
       ...criteria,
     };
     const newBudget = key === budgetKey ? value : criteria.budget;
     if (status !== undefined) {
       if (status) {
-        if (key in newCriteria) {
+        if (Object.keys(newCriteria).includes(key)) {
+          !Array.isArray(newCriteria[key]) &&
+            (newCriteria[key] = [newCriteria[key]]);
           newCriteria[key].push(value);
         } else {
           newCriteria = {
@@ -165,7 +178,11 @@ const Search = () => {
           };
         }
       } else {
-        delete newCriteria[value];
+        if (Array.isArray(newCriteria[key])) {
+          newCriteria[key] = newCriteria[key].filter((v) => v !== value);
+        } else {
+          delete newCriteria[key];
+        }
       }
     }
 
@@ -180,7 +197,6 @@ const Search = () => {
         budget: JSON.stringify(budgetToObject(newBudget)),
       };
     }
-
     setCriteria(newCriteria);
     window.history.pushState(
       null,
@@ -188,7 +204,7 @@ const Search = () => {
       `/search${stringifySearchParams(paramsCriteria)}`
     );
     handleSearch(newCriteria);
-  }, []);
+  };
 
   const renderHotels = (hotelList) => {
     if (!Array.isArray(hotelList))
@@ -208,7 +224,7 @@ const Search = () => {
   };
 
   return (
-    <main className="search">
+    <main className="search" key={location}>
       <div className="search__banner">
         <img src={TravelImg} alt="travel" />
         <h5>Bạn muốn du lịch tới Vương Quốc Anh?</h5>
@@ -219,7 +235,7 @@ const Search = () => {
       </div>
       <form
         className="search__criteria-board"
-        onSubmit={searchBoardForm.handleSubmit(onResearch)}
+        onSubmit={searchBoardForm.handleSubmit(onMoreOptionPreSearch)}
       >
         <BannerInput
           name={BANNER_INPUT.LOCATION.INPUT_NAME}

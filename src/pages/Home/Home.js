@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { stringifySearchParams } from "../../utils/helpers/params";
 import { useGetHotHotelQuery } from "../../libs/business-logic/src/lib/hotel/fetching/query";
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
-import { bannerData, countriesData, roomTypesData } from "./Data";
+import { bannerData, countriesData } from "./Data";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { PAGES } from "../../constants/Link.constants";
 import {
@@ -29,6 +29,7 @@ import {
 } from "../../utils/helpers/Pagination";
 import Pagination from "../../components/common/Pagination";
 import { PAGINATION_MODEL } from "../../constants/Variables.constants";
+import { LOCATION_TYPES } from "../../constants/filter.constants";
 
 const geoUrl =
   "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
@@ -43,7 +44,7 @@ const selectedAreas = [
 ];
 const defaultSearchInputVal = {
   location: "Bạn muốn đi đâu?",
-  roomType: "Bạn mong muốn gì từ khách sạn?",
+  roomType: "Bạn muốn kiểu khách sạn nào?",
   start_date: "Khi nào thì bạn khởi hành?",
   end_date: "Bạn muốn rời đi khi nào?",
   budget: "Ngân sách của bạn thế nào?",
@@ -51,16 +52,26 @@ const defaultSearchInputVal = {
 
 const maximumHotHotelPerPage = 3;
 const defaultReviewStartPage = 1;
+function getLocationLabels() {
+  return Object.values(LOCATION_TYPES).map((type) => type.LABEL);
+}
+function getLocationKeyFromLabel(locationLabel) {
+  const foundKey = Object.keys(LOCATION_TYPES).find(
+    (key) => LOCATION_TYPES[key].LABEL === locationLabel
+  );
+
+  return foundKey || null;
+}
 
 const Home = () => {
   // Define
   const [banners, setBanner] = useState([]);
   const [countries, setCountries] = useState([]);
-  const [roomType, setRoomType] = useState([]);
   const [searchInputVal, setSearchInputVal] = useState(defaultSearchInputVal);
   const navigate = useNavigate();
   const { data: hotHotelData } = useGetHotHotelQuery();
   const mapRef = useRef(null);
+  const roomType = getLocationLabels();
   const [hotHotelPagination, setHotHotelPagination] = useState({
     currentPage: defaultReviewStartPage,
     maxPage: calculateMaxPage(hotHotelData, maximumHotHotelPerPage),
@@ -87,17 +98,13 @@ const Home = () => {
       return null;
     }
 
-    // Update the regex pattern to match numbers with or without a separator
-    const regexPattern = /(\d+(\.\d+)?)/g;
-    const matches = rangeString.match(regexPattern);
-
-    if (matches && matches.length >= 2) {
-      const minStr = matches[0];
-      const maxStr = matches[2];
-
-      const min = parseInt(minStr.replace(/\./g, "")) / 100;
-      const max = parseInt(maxStr.replace(/\./g, "")) / 100;
-
+    ["₫", " ", "\u00A0", "."].forEach(
+      (k) => (rangeString = rangeString.replaceAll(k, ""))
+    );
+    rangeString = rangeString.split("đến");
+    if (rangeString && rangeString.length === 2) {
+      const min = Number(rangeString[0].trim());
+      const max = Number(rangeString[1].trim());
       return { min, max };
     } else {
       console.error("Invalid input format.");
@@ -112,8 +119,8 @@ const Home = () => {
     let params = {};
     defaultSearchInputVal.location !== location &&
       (params = { ...params, location });
-    defaultSearchInputVal.roomType !== roomType &&
-      (params = { ...params, roomType });
+    defaultSearchInputVal.hotelType !== roomType &&
+      (params = { ...params, hotelType: getLocationKeyFromLabel(roomType) });
     defaultSearchInputVal.start_date !== start_date &&
       (params = { ...params, start_date });
     defaultSearchInputVal.end_date !== end_date &&
@@ -123,8 +130,8 @@ const Home = () => {
         ...params,
         budget: JSON.stringify(extractMinAndMax(searchInputVal.budget)),
       });
-    if (Object.keys(params).length === 0) {
-      toast.error("Please fill all criteria!");
+    if (!Object.keys(params).includes("location")) {
+      toast.error("Ít nhất hãy chọn vị trí mong muốn nhé!");
     } else {
       navigate(`/search${stringifySearchParams(params)}`);
     }
@@ -155,7 +162,6 @@ const Home = () => {
     // Get banners here
     setBanner(bannerData);
     setCountries(countriesData);
-    setRoomType(roomTypesData);
   }, []);
 
   return (

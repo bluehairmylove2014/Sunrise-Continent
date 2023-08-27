@@ -79,7 +79,6 @@ const OrderDetailPicker = React.forwardRef(
             toast.error("Hãy chọn ngày bắt đầu và ngày kết thúc");
             return;
           }
-          console.log(data);
           checkRoomsAvailability(rd, data.start_date, data.end_date, data.rooms)
             .then((results) => {
               const allAvailable = results.every((isAvailable) => isAvailable);

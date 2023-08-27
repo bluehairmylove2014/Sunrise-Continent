@@ -14,7 +14,7 @@ const Checkbox = ({ form, name, label, callbackOnChange, checkboxSize }) => {
             <input
               {...field}
               type="checkbox"
-              defaultChecked={form.getValues()[name]}
+              checked={field.value}
               onChange={(e) => {
                 field.onChange(e);
                 callbackOnChange && callbackOnChange(name);

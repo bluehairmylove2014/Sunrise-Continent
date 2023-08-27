@@ -9,7 +9,6 @@ import BudgetRange from "./BudgetRange";
 // Helpers
 import { toggleClass } from "../../utils/helpers/ToggleClass";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
-import { CONVERSION_FACTOR } from "../../constants/Variables.constants";
 
 const ModernInput = ({
   options = [],
@@ -83,11 +82,8 @@ const ModernInput = ({
         input_name,
         `${convertNumberToCurrency(
           "vietnamdong",
-          price[0] * CONVERSION_FACTOR.ALL_TRIP
-        )} đến ${convertNumberToCurrency(
-          "vietnamdong",
-          price[1] * CONVERSION_FACTOR.ALL_TRIP
-        )}`
+          price[0]
+        )} đến ${convertNumberToCurrency("vietnamdong", price[1])}`
       );
     }, 1000);
     debouncedSetInputVal();

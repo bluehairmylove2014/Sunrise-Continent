@@ -20,7 +20,6 @@ import { toggleClass } from "../../utils/helpers/ToggleClass";
 import OrderDetailPicker from "../../components/common/OrderDetailPicker";
 import { PAGES } from "../../constants/Link.constants";
 import SelectVoucer from "./SelectVoucer";
-import { CONVERSION_FACTOR } from "../../constants/Variables.constants";
 import { useNavigate } from "react-router-dom";
 import { useInitOrder } from "../../libs/business-logic/src/lib/order/process/hooks";
 import { getOrderLocalStorage } from "../../libs/business-logic/src/lib/order/process/helpers/localStorageOrder";
@@ -95,9 +94,7 @@ const PreCheckout = () => {
     return acc;
   }, 0);
 
-  total -= sunriseVoucher
-    ? sunriseVoucher.value * CONVERSION_FACTOR.VOUCHER
-    : 0;
+  total -= sunriseVoucher ? sunriseVoucher.value : 0;
 
   const today = new Date();
   const minDate = new Date(today);
@@ -526,9 +523,7 @@ const PreCheckout = () => {
                     //   roomData.price * night,
                     //   sunriseVoucher.value
                     // ).discountedPrice
-                    sunriseVoucher
-                      ? sunriseVoucher.value * CONVERSION_FACTOR.VOUCHER
-                      : 0
+                    sunriseVoucher ? sunriseVoucher.value : 0
                   )}
                 </p>
               ) : (

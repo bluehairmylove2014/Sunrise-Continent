@@ -1,3 +1,4 @@
+import { GUEST_RATINGS } from "./Rating.constant";
 import {
   ACCOMMODATION_FACILITIES,
   BED_TYPES,
@@ -26,16 +27,11 @@ export const FILTER_INPUT = [
   ...Object.keys(LOCATION_TYPES).map((lt) => LOCATION_TYPES[lt].INPUT_NAME),
   ...Object.keys(BED_TYPES).map((lt) => BED_TYPES[lt].INPUT_NAME),
   ...Object.keys(ROOM_OPTIONS).map((lt) => ROOM_OPTIONS[lt].INPUT_NAME),
+  ...Object.keys(GUEST_RATINGS).map((lt) => GUEST_RATINGS[lt].INPUT_NAME),
   ...Object.keys(ACCOMMODATION_FACILITIES).map(
     (lt) => ACCOMMODATION_FACILITIES[lt].INPUT_NAME
   ),
 ];
-
-export const CONVERSION_FACTOR = {
-  ALL_TRIP: 100000,
-  PER_ONE: 100000,
-  VOUCHER: 1000,
-};
 
 export const HOTEL_TYPE = {
   VERTICAL: 1,

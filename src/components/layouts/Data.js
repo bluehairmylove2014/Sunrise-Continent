@@ -15,7 +15,7 @@ export const categories = [
 export const partner = {
   category_name: "Kênh đối tác",
   icon: "fi fi-sr-chart-user",
-  href: PAGES.ADMIN,
+  href: PAGES.PARTNER,
 };
 export const languages = [
   {

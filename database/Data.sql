@@ -267,6 +267,67 @@ INSERT INTO HOTEL VALUES(40, N'Thanh Van 1 Hotel', N'Việt Nam', 'HOTEL', N'Qu�
 	N'Thanh Van 1 Hotel ở Phố Cổ Hội An, cách Bãi biển An Bàng một đoạn tản bộ. Wi-Fi được cung cấp miễn phí trong toàn bộ khuôn viên nơi này.Các phòng máy lạnh tại Thanh Van 1 Hotel cung cấp tầm nhìn tuyệt vời hướng ra khu vườn. Trong phòng có các tiện nghi phòng tắm riêng, không gian tiếp khách rộng rãi và bàn làm việc.',
 	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059761.jpg');
 
+INSERT INTO HOTEL VALUES(41, N'Đà Lạt Thanh Xuân Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'126 Đường Tô Hiến Thành, Đà Lạt',
+ 	5, 0,
+	N'Tọa lạc tại thành phố Đà Lạt, cách Công viên Yersin 1,6 km, Đà Lạt Thanh Xuân Hotel cung cấp chỗ nghỉ với sân hiên, chỗ đỗ xe riêng miễn phí và nhà hàng. Khách sạn 4 sao này có dịch vụ tiền sảnh, bàn đặt tour, dịch vụ phòng, lễ tân 24 giờ và dịch vụ thu đổi ngoại tệ cho khách.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/479066255.jpg');
+
+INSERT INTO HOTEL VALUES(42, N'Minh Phú 2 Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'25 Đường Trần Khánh Dư, Đà Lạt,',
+ 	2, 0,
+	N'Minh Phú 2 Hotel tọa lạc tại thành phố Đà Lạt, cách Câu lạc bộ Golf Dalat Palace 1,1 km và Vườn hoa Đà Lạt 1,9 km. Với Wi-Fi miễn phí, khách sạn 1 sao này có quầy lễ tân 24 giờ và dịch vụ trợ giúp đặc biệt. Tại đây có bãi đậu xe riêng miễn phí và chỗ nghỉ cung cấp dịch vụ đưa đón sân bay có tính phí.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/487331477.jpg');
+
+INSERT INTO HOTEL VALUES(43, N'Torino Hotel Dalat', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'45 Đường Thủ Khoa Huân, Đà Lạt,',
+ 	5, 0,
+	N'Nằm ở thành phố Đà Lạt, Torino Hotel Dalat có sảnh khách chung, sân hiên, nhà hàng và quầy bar. Khách sạn 2 sao này cung cấp dịch vụ phòng, dịch vụ tiền sảnh, dịch vụ lễ tân 24 giờ, dịch vụ đưa đón sân bay, khu vực bếp chung và WiFi miễn phí.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/471041099.jpg');
+
+INSERT INTO HOTEL VALUES(44, N'HouseChill Dalat Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'Đường Hà Huy Tập 6 Tầng, Đà Lạt',
+ 	5, 0,
+	N'Nằm ở Đà Lạt, cách Quảng trường Lâm Viên 1,2 km, HouseChill Dalat Hotel cung cấp chỗ nghỉ với nhà hàng, chỗ đỗ xe riêng miễn phí và quán bar. Khách sạn 2 sao này có dịch vụ trợ giúp đặc biệt và bàn đặt tour. Chỗ nghỉ có quầy lễ tân 24 giờ, dịch vụ đưa đón sân bay, dịch vụ phòng và WiFi miễn phí trong toàn bộ khuôn viên.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481510906.jpg');
+
+INSERT INTO HOTEL VALUES(45, N'Dalat Wind Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'Lô R2 03-04. Thung lũng Golf, Phường 2, Đà Lạt',
+ 	3, 0,
+	N'Tọa lạc tại thành phố Đà Lạt, cách Hồ Xuân Hương 500 m, Dalat Wind Hotel là khách sạn 2 sao có lễ tân 24 giờ, sảnh khách chung, Wi-Fi và chỗ đỗ xe riêng miễn phí.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402605354.jpg');
+
+INSERT INTO HOTEL VALUES(46, N'Vuon Xuan Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'40 Đường Tô Hiến Thành, Đà Lạt',
+ 	5, 0,
+	N'Tọa lạc tại thành phố Đà Lạt, cách Công viên Yersin 1,6 km, Vuon Xuan Hotel cung cấp chỗ nghỉ với vườn, chỗ đỗ xe riêng miễn phí và sân hiên. Khách sạn 3 sao này có bếp chung, dịch vụ phòng, lễ tân 24 giờ, dịch vụ tiền sảnh và tổ chức các tour du lịch cho khách.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976426.jpg');
+
+INSERT INTO HOTEL VALUES(47, N'Sunset Hill Dalat', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'5/24 Nguyễn Hữu Cảnh, Phường 8, Đà Lạt',
+ 	5, 0,
+	N'Tọa lạc tại thành phố Đà Lạt, cách Câu lạc bộ Golf Dalat Palace 2,1 km, Sunset Hill Dalat cung cấp chỗ nghỉ với vườn, chỗ đỗ xe riêng miễn phí, sảnh khách chung và sân hiên. Khách sạn 3 sao này có dịch vụ trợ giúp đặc biệt và bàn bán tour. Chỗ nghỉ có quầy lễ tân 24 giờ, dịch vụ đưa đón sân bay, dịch vụ phòng và WiFi miễn phí trong toàn bộ khuôn viên.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/480342705.jpg');
+
+INSERT INTO HOTEL VALUES(48, N'AN Boutique Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'138 Bùi Thị Xuân, phường 2, thành phố Đà Lạt',
+ 	4, 0,
+	N'Tọa lạc tại thành phố Đà Lạt, cách sân golf Dalat Palace Golf Club 1,5 km, AN Boutique Hotel có dịch vụ tiền sảnh, phòng nghỉ không hút thuốc, khu vườn, WiFi miễn phí, sảnh khách chung và sân hiên. Khách sạn 3 sao này cung cấp dịch vụ phòng, dịch vụ lễ tân 24 giờ và dịch vụ thu đổi ngoại tệ cho khách.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429887656.jpg');
+
+INSERT INTO HOTEL VALUES(49, N'Đảo Hoa Dalat Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'56 Đường Phạm Ngũ Lão, Đà Lạt',
+ 	4, 0,
+	N'Đảo Hoa Đà Lạt Hotel tọa lạc tại thành phố Đà Lạt, cách Hồ Xuân Hương 1,6 km và Công viên Yersin Đà Lạt 1,8 km. Khách sạn 2 sao này cung cấp dịch vụ phòng và lễ tân 24 giờ. Chỗ nghỉ cấm hút thuốc và cách Quảng trường Lâm Viên 1,4 km.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487047698.jpg');
+
+INSERT INTO HOTEL VALUES(50, N'Hạ Na Hotel Đà Lạt', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'Hẻm 163 Ba Tháng Hai, Đà Lạt',
+ 	5, 0,
+	N'Nằm ở thành phố Đà Lạt, cách Quảng trường Lâm Viên 1,9 km, Hạ Na Hotel Đà Lạt cung cấp chỗ nghỉ với sảnh khách chung, chỗ đỗ xe riêng miễn phí và sân hiên. Chỗ nghỉ này nằm trong bán kính 2,1 km từ Hồ Xuân Hương, 2,2 km từ Công viên Yersin và 3,1 km từ Vườn hoa Đà Lạt. Nơi đây cung cấp dịch vụ lễ tân 24 giờ, dịch vụ đưa đón sân bay, khu bếp chung và WiFi miễn phí trong toàn bộ khuôn viên.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/346439681.jpg');
+
+
 
 --!add room Facility
 INSERT INTO FACILITY_CONST VALUES(1,'SWIMMING_POOL');
@@ -1874,6 +1935,347 @@ INSERT INTO ROOM_SERVICE VALUES(40,2,4);
 INSERT INTO ROOM_SERVICE VALUES(40,3,1);
 INSERT INTO ROOM_SERVICE VALUES(40,3,2);
 
+--todo Đà Lạt Thanh Xuân Hotel
+INSERT INTO ROOM_TYPE VALUES(41, 1,N'', 3, 85,4450000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(41, 2,N'', 3, 60,4570000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(41, 3,N'', 3, 70,3250000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(41,1,4);
+INSERT INTO ROOM_FACILITY VALUES(41,1,5);
+INSERT INTO ROOM_FACILITY VALUES(41,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(41,2,13);
+INSERT INTO ROOM_FACILITY VALUES(41,2,15);
+INSERT INTO ROOM_FACILITY VALUES(41,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(41,3,11);
+INSERT INTO ROOM_FACILITY VALUES(41,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(41,1,5);
+INSERT INTO ROOM_SERVICE VALUES(41,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(41,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(41,3,1);
+INSERT INTO ROOM_SERVICE VALUES(41,3,2);
+
+--todo Minh Phú 2 Hotel
+INSERT INTO ROOM_TYPE VALUES(42, 1,N'', 3, 85,3450000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(42, 2,N'', 3, 60,2640000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(42, 3,N'', 3, 70,1950000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(42,1,4);
+INSERT INTO ROOM_FACILITY VALUES(42,1,5);
+INSERT INTO ROOM_FACILITY VALUES(42,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(42,2,13);
+INSERT INTO ROOM_FACILITY VALUES(42,2,15);
+INSERT INTO ROOM_FACILITY VALUES(42,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(42,3,11);
+INSERT INTO ROOM_FACILITY VALUES(4,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(42,1,5);
+INSERT INTO ROOM_SERVICE VALUES(42,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(42,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(42,3,1);
+INSERT INTO ROOM_SERVICE VALUES(42,3,2);
+
+--todo Torino Hotel Dalat
+INSERT INTO ROOM_TYPE VALUES(43, 1,N'', 3, 85,2960000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(43, 2,N'', 3, 60,2360000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(43, 3,N'', 3, 70,1500000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(43,1,4);
+INSERT INTO ROOM_FACILITY VALUES(43,1,5);
+INSERT INTO ROOM_FACILITY VALUES(43,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(43,2,13);
+INSERT INTO ROOM_FACILITY VALUES(43,2,15);
+INSERT INTO ROOM_FACILITY VALUES(43,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(43,3,11);
+INSERT INTO ROOM_FACILITY VALUES(43,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(43,1,5);
+INSERT INTO ROOM_SERVICE VALUES(43,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(43,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(43,3,1);
+INSERT INTO ROOM_SERVICE VALUES(43,3,2);
+
+--todo HouseChill Dalat Hotel
+INSERT INTO ROOM_TYPE VALUES(44, 1,N'', 3, 85,1750000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(44, 2,N'', 3, 60,2570000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(44, 3,N'', 3, 70,3150000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(44,1,4);
+INSERT INTO ROOM_FACILITY VALUES(44,1,5);
+INSERT INTO ROOM_FACILITY VALUES(44,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(44,2,13);
+INSERT INTO ROOM_FACILITY VALUES(44,2,15);
+INSERT INTO ROOM_FACILITY VALUES(44,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(44,3,11);
+INSERT INTO ROOM_FACILITY VALUES(44,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(44,1,5);
+INSERT INTO ROOM_SERVICE VALUES(44,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(44,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(44,3,1);
+INSERT INTO ROOM_SERVICE VALUES(44,3,2);
+
+--todo Dalat Wind Hotel
+INSERT INTO ROOM_TYPE VALUES(45, 1,N'', 3, 85,4250000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(45, 2,N'', 3, 60,4170000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(45, 3,N'', 3, 70,3240000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(45,1,4);
+INSERT INTO ROOM_FACILITY VALUES(45,1,5);
+INSERT INTO ROOM_FACILITY VALUES(45,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(45,2,13);
+INSERT INTO ROOM_FACILITY VALUES(45,2,15);
+INSERT INTO ROOM_FACILITY VALUES(45,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(45,3,11);
+INSERT INTO ROOM_FACILITY VALUES(45,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(45,1,5);
+INSERT INTO ROOM_SERVICE VALUES(45,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(45,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(45,3,1);
+INSERT INTO ROOM_SERVICE VALUES(45,3,2);
+
+--todo Vuon Xuan Hotel
+INSERT INTO ROOM_TYPE VALUES(46, 1,N'', 3, 85,2450000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(46, 2,N'', 3, 66,4570000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(46, 3,N'', 3, 70,2250000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(46,1,4);
+INSERT INTO ROOM_FACILITY VALUES(46,1,5);
+INSERT INTO ROOM_FACILITY VALUES(46,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(46,2,13);
+INSERT INTO ROOM_FACILITY VALUES(46,2,15);
+INSERT INTO ROOM_FACILITY VALUES(46,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(46,3,11);
+INSERT INTO ROOM_FACILITY VALUES(46,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(46,1,5);
+INSERT INTO ROOM_SERVICE VALUES(46,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(46,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(46,3,1);
+INSERT INTO ROOM_SERVICE VALUES(46,3,2);
+
+--todo Sunset Hill Dalat
+INSERT INTO ROOM_TYPE VALUES(47, 1,N'', 3, 81,2970000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(47, 2,N'', 3, 68,2560000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(47, 3,N'', 3, 72,3570000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(47,1,4);
+INSERT INTO ROOM_FACILITY VALUES(47,1,5);
+INSERT INTO ROOM_FACILITY VALUES(47,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(47,2,13);
+INSERT INTO ROOM_FACILITY VALUES(47,2,15);
+INSERT INTO ROOM_FACILITY VALUES(47,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(47,3,11);
+INSERT INTO ROOM_FACILITY VALUES(47,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(47,1,5);
+INSERT INTO ROOM_SERVICE VALUES(47,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(47,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(47,3,1);
+INSERT INTO ROOM_SERVICE VALUES(47,3,2);
+
+--todo AN Boutique Hotel
+INSERT INTO ROOM_TYPE VALUES(48, 1,N'', 3, 85,1970000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(48, 2,N'', 3, 64,1570000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(48, 3,N'', 3, 72,1250000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(48,1,4);
+INSERT INTO ROOM_FACILITY VALUES(48,1,5);
+INSERT INTO ROOM_FACILITY VALUES(48,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(48,2,13);
+INSERT INTO ROOM_FACILITY VALUES(48,2,15);
+INSERT INTO ROOM_FACILITY VALUES(48,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(48,3,11);
+INSERT INTO ROOM_FACILITY VALUES(48,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(48,1,5);
+INSERT INTO ROOM_SERVICE VALUES(48,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(48,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(48,3,1);
+INSERT INTO ROOM_SERVICE VALUES(48,3,2);
+
+--todo Đảo Hoa Dalat Hotel
+INSERT INTO ROOM_TYPE VALUES(49, 1,N'', 3, 65,4850000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(49, 2,N'', 3, 60,2730000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(49, 3,N'', 3, 60,3360000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(49,1,4);
+INSERT INTO ROOM_FACILITY VALUES(49,1,5);
+INSERT INTO ROOM_FACILITY VALUES(49,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(49,2,13);
+INSERT INTO ROOM_FACILITY VALUES(49,2,15);
+INSERT INTO ROOM_FACILITY VALUES(49,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(49,3,11);
+INSERT INTO ROOM_FACILITY VALUES(49,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(49,1,5);
+INSERT INTO ROOM_SERVICE VALUES(49,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(49,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(49,3,1);
+INSERT INTO ROOM_SERVICE VALUES(49,3,2);
+
+--todo Hạ Na Hotel Đà Lạt
+INSERT INTO ROOM_TYPE VALUES(50, 1,N'', 3, 85,3150000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(50, 2,N'', 3, 60,2930000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(50, 3,N'', 3, 70,1340000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(50,1,4);
+INSERT INTO ROOM_FACILITY VALUES(50,1,5);
+INSERT INTO ROOM_FACILITY VALUES(50,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(50,2,13);
+INSERT INTO ROOM_FACILITY VALUES(50,2,15);
+INSERT INTO ROOM_FACILITY VALUES(50,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(50,3,11);
+INSERT INTO ROOM_FACILITY VALUES(50,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(50,1,5);
+INSERT INTO ROOM_SERVICE VALUES(50,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(50,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(50,3,1);
+INSERT INTO ROOM_SERVICE VALUES(50,3,2);
+
+
 --! add room picture 
 --todo Triple E Hotel Metro Ben Thanh
 INSERT INTO ROOM_PICTURE VALUES(1,1,1,'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Triple%20E%20Hotel%20Metro%20Ben%20Thanh/Suite%20Deluxe1.jpg');
@@ -2384,6 +2786,136 @@ INSERT INTO ROOM_PICTURE VALUES(40,2,3,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(40,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059801.jpg');
 INSERT INTO ROOM_PICTURE VALUES(40,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059792.jpg');
 INSERT INTO ROOM_PICTURE VALUES(40,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059761.jpg');
+
+--todo Đà Lạt Thanh Xuân Hotel
+INSERT INTO ROOM_PICTURE VALUES(41,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/479066255.jpg');
+INSERT INTO ROOM_PICTURE VALUES(41,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/463982739.jpg');
+INSERT INTO ROOM_PICTURE VALUES(41,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/456940292.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(41,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/463983476.jpg');
+INSERT INTO ROOM_PICTURE VALUES(41,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/456940288.jpg');
+INSERT INTO ROOM_PICTURE VALUES(41,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/456940290.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(41,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/456940281.jpg');
+INSERT INTO ROOM_PICTURE VALUES(41,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/456940281.jpg');
+INSERT INTO ROOM_PICTURE VALUES(41,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/456940283.jpg');
+
+--todo Minh Phú 2 Hotel		
+INSERT INTO ROOM_PICTURE VALUES(42,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486470565.jpg');
+INSERT INTO ROOM_PICTURE VALUES(42,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486470631.jpg');
+INSERT INTO ROOM_PICTURE VALUES(42,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/487331477.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(42,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486470082.jpg');
+INSERT INTO ROOM_PICTURE VALUES(42,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/483917499.jpg');
+INSERT INTO ROOM_PICTURE VALUES(42,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486272578.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(42,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486470180.jpg');
+INSERT INTO ROOM_PICTURE VALUES(42,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486272574.jpg');
+INSERT INTO ROOM_PICTURE VALUES(42,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486272558.jpg');
+
+--todo Torino Hotel Dalat
+INSERT INTO ROOM_PICTURE VALUES(43,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474307896.jpg');
+INSERT INTO ROOM_PICTURE VALUES(43,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474298677.jpg');
+INSERT INTO ROOM_PICTURE VALUES(43,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474298667.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(43,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474305730.jpg');
+INSERT INTO ROOM_PICTURE VALUES(43,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474296986.jpg');
+INSERT INTO ROOM_PICTURE VALUES(43,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474297037.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(43,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/471041099.jpg');
+INSERT INTO ROOM_PICTURE VALUES(43,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474295523.jpg');
+INSERT INTO ROOM_PICTURE VALUES(43,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/471041030.jpg');
+
+--todo HouseChill Dalat Hotel
+INSERT INTO ROOM_PICTURE VALUES(44,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481511046.jpg');
+INSERT INTO ROOM_PICTURE VALUES(44,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481510906.jpg');
+INSERT INTO ROOM_PICTURE VALUES(44,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481510898.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(44,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481510352.jpg');
+INSERT INTO ROOM_PICTURE VALUES(44,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481509555.jpg');
+INSERT INTO ROOM_PICTURE VALUES(44,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481509558.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(44,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481508792.jpg');
+INSERT INTO ROOM_PICTURE VALUES(44,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481509485.jpg');
+INSERT INTO ROOM_PICTURE VALUES(44,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481509493.jpg');
+
+--todo Dalat Wind Hotel
+INSERT INTO ROOM_PICTURE VALUES(45,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402606970.jpg');
+INSERT INTO ROOM_PICTURE VALUES(45,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/481239795.jpg');
+INSERT INTO ROOM_PICTURE VALUES(45,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/449510419.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(45,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402607942.jpg');
+INSERT INTO ROOM_PICTURE VALUES(45,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402606316.jpg');
+INSERT INTO ROOM_PICTURE VALUES(45,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402605836.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(45,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402605759.jpg');
+INSERT INTO ROOM_PICTURE VALUES(45,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402605354.jpg');
+INSERT INTO ROOM_PICTURE VALUES(45,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402605742.jpg');
+
+--todo Vuon Xuan Hotel
+INSERT INTO ROOM_PICTURE VALUES(46,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408981593.jpg');
+INSERT INTO ROOM_PICTURE VALUES(46,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408981268.jpg');
+INSERT INTO ROOM_PICTURE VALUES(46,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408981600.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(46,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976032.jpg');
+INSERT INTO ROOM_PICTURE VALUES(46,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408981265.jpg');
+INSERT INTO ROOM_PICTURE VALUES(46,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976035.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(46,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976021.jpg');
+INSERT INTO ROOM_PICTURE VALUES(46,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976898.jpg');
+INSERT INTO ROOM_PICTURE VALUES(46,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976426.jpg');
+
+--todo Sunset Hill Dalat
+INSERT INTO ROOM_PICTURE VALUES(47,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/480342705.jpg');
+INSERT INTO ROOM_PICTURE VALUES(47,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157957.jpg');
+INSERT INTO ROOM_PICTURE VALUES(47,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157975.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(47,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157911.jpg');
+INSERT INTO ROOM_PICTURE VALUES(47,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157878.jpg');
+INSERT INTO ROOM_PICTURE VALUES(47,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157910.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(47,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157876.jpg');
+INSERT INTO ROOM_PICTURE VALUES(47,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157783.jpg');
+INSERT INTO ROOM_PICTURE VALUES(47,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157888.jpg');
+
+--todo AN Boutique Hotel
+INSERT INTO ROOM_PICTURE VALUES(48,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/430679432.jpg');
+INSERT INTO ROOM_PICTURE VALUES(48,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/430679813.jpg');
+INSERT INTO ROOM_PICTURE VALUES(48,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/430676760.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(48,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429887683.jpg');
+INSERT INTO ROOM_PICTURE VALUES(48,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429806403.jpg');
+INSERT INTO ROOM_PICTURE VALUES(48,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429887653.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(48,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429806405.jpg');
+INSERT INTO ROOM_PICTURE VALUES(48,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429887656.jpg');
+INSERT INTO ROOM_PICTURE VALUES(48,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/428733700.jpg');
+
+--todo Đảo Hoa Dalat Hotel
+INSERT INTO ROOM_PICTURE VALUES(49,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048142.jpg');
+INSERT INTO ROOM_PICTURE VALUES(49,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048285.jpg');
+INSERT INTO ROOM_PICTURE VALUES(49,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048193.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(49,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048118.jpg');
+INSERT INTO ROOM_PICTURE VALUES(49,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048114.jpg');
+INSERT INTO ROOM_PICTURE VALUES(49,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048097.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(49,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487047698.jpg');
+INSERT INTO ROOM_PICTURE VALUES(49,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048117.jpg');
+INSERT INTO ROOM_PICTURE VALUES(49,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048056.jpg');
+
+--todo Hạ Na Hotel Đà Lạt
+INSERT INTO ROOM_PICTURE VALUES(50,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456112321.jpg');
+INSERT INTO ROOM_PICTURE VALUES(50,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456114903.jpg');
+INSERT INTO ROOM_PICTURE VALUES(50,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456112318.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(50,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456118711.jpg');
+INSERT INTO ROOM_PICTURE VALUES(50,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456103398.jpg');
+INSERT INTO ROOM_PICTURE VALUES(50,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456112273.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(50,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456099174.jpg');
+INSERT INTO ROOM_PICTURE VALUES(50,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/346439681.jpg');
+INSERT INTO ROOM_PICTURE VALUES(50,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456098428.jpg');
 
 
 INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank) VALUES

@@ -26,10 +26,10 @@ namespace SunriseServer.Controllers
             _voucherService = voucherService;
         }
 
-        [HttpGet("")]
+        [HttpGet(""), Authorize(Roles = GlobalConstant.Admin)]
         public async Task<ActionResult<List<Voucher>>> GetAllVoucher()
         {
-            var result = await _voucherService.GetAllVoucher();
+            var result = await _voucherService.GetAllVoucher(); // thêm số lượng cho voucher
 
             if (result == null)
                 return BadRequest("Cannot get voucher.");

@@ -160,7 +160,7 @@ INSERT INTO HOTEL VALUES(21, N'Mandala Cham Bay Mui Ne', N'Việt Nam', 'HOTEL',
 	N'Đường DT 716, phường Mũi Né, Phan Thiết',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi biển Long Sơn 600 m, Mandala Cham Bay Mui Ne cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, trung tâm thể dục và nhà hàng. Mỗi chỗ nghỉ tại khách sạn 5 sao này đều có tầm nhìn ra biển và du khách có thể sử dụng phòng xông hơi khô cũng như bể sục. ',
-	N'');
+	N'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mandala%20Cham%20Bay%20Mui%20Ne/445116348.jpg');
 
 INSERT INTO HOTEL VALUES(22, N'RUBENS BOUTIQUE HOTEL', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'D3 -32A Khu đô thị Phố Biển, Phường Phú Thủy, TP Phan Thiết, Bình Thuận',

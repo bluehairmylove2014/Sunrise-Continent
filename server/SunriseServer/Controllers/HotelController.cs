@@ -201,21 +201,20 @@ namespace SunriseServer.Controllers
             var finalResult = new List<HotelDto>();
             foreach (var item in result)
             {
-                // var hotelInfo = await TransferHotelData(item);
                 finalResult.Add(await TransferHotelData(item));
             }
 
-            var pages = PageList<HotelDto>.ToPageList(finalResult.AsQueryable(), hotelDto.page_number, hotelDto.page_size);
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(new {
-                pages.TotalCount,
-                pages.PageSize,
-                pages.CurrentPage,
-                pages.TotalPages,
-                pages.HasNext,
-                pages.HasPrevious
-            }));
+            var hotelList = PageList<HotelDto>.ToPageList(finalResult.AsQueryable(), hotelDto.page_number, hotelDto.page_size);
 
-            return Ok(pages);
+            return Ok(new {
+                hotelList,
+                totalCount = hotelList.TotalCount,
+                pageSize = hotelList.PageSize,
+                currentPage = hotelList.CurrentPage,
+                totalPages = hotelList.TotalPages,
+                hasNext = hotelList.HasNext,
+                hasPrevious = hotelList.HasPrevious
+            });
         }
 
         [HttpGet("review")]

@@ -75,26 +75,6 @@ BEGIN
 END
 GO
 
-
---CREATE OR ALTER PROC USP_SearchByName 
---	@search_query NVARCHAR(100)
---AS
---	IF NOT EXISTS (select * from HOTEL where Description like (N'%' + @search_query + N'%'))
---	BEGIN
---		RETURN 0
---	END
-
---	SELECT Id, Name, Address, Stars, Image,
---			dbo.USF_GetReviewNum(Id) Reviews, 
---			dbo.USF_GetAvgReview(Id) Points,
---			dbo.USF_GetMinRoomPrice(Id) Price
---	FROM HOTEL
---	WHERE Description like (N'%' + @search_query + N'%')
-
---	RETURN 1
---GO
-
-
 GO
 CREATE OR ALTER PROC USP_GetHotelRoomFacility 
 	@Id INT
@@ -128,7 +108,7 @@ AS
 GO
 
 
--- =================
+
 CREATE OR ALTER PROC USP_GetRoomType 
 	@HotelId INT,
 	@Id INT
@@ -359,10 +339,6 @@ CREATE OR ALTER PROC USP_UpdateAccount
 	@Email VARCHAR(50),
 	@PasswordHash VARCHAR(500),
 	@PasswordSalt VARCHAR(500)
-	--@UserRole VARCHAR(50),
- --   @RefreshToken VARCHAR(200),
- --   @TokenCreated DATETIME,
- --   @TokenExpires DATETIME
 AS
 	BEGIN TRY
 		IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @Id)
@@ -1037,8 +1013,7 @@ END
 GO
 
 
---todo PROC CRUD VOUCHER
---! THÊM
+-- VOUCHER -- // new check
 CREATE OR ALTER PROCEDURE USP_AddVoucher
     @Name NVARCHAR(500),
     @Value FLOAT,
@@ -1488,35 +1463,113 @@ AS
 	WHERE RT.HotelId = @HotelId
 GO
 
+
+
 GO
-CREATE OR ALTER PROC USP_FindHotelByName
-	@Location NVARCHAR(50),
-	@RoomType NVARCHAR(50),
-	@StartDate DATE,
-	@EndDate DATE,
-	@MinBudget float,
-	@MaxBudget float,
-	@Rooms int,
-	@Adult int,
-	@Children int
+CREATE OR ALTER FUNCTION USF_CheckHotelAvailability ( -- //new check
+    @HotelId INTEGER,
+	@NumberOfRoom INTEGER,
+	@CheckIn DATE,
+	@CheckOut DATE)
+RETURNS BIT
+BEGIN
+	IF (1 IN (SELECT dbo.USF_CheckRoomAvailability(@HotelId, Id, @NumberOfRoom, @CheckIn, @CheckOut) val FROM ROOM_TYPE WHERE HotelId = @HotelId))
+		RETURN 1
+	RETURN 0
+END
+GO
+
+GO
+CREATE OR ALTER FUNCTION USF_CheckHotelFacility ( -- //new check
+    @HotelId INTEGER,
+	@CheckValue VARCHAR(1000) = null)
+RETURNS BIT
+BEGIN
+	IF (@CheckValue IS NULL) RETURN 1
+	DECLARE @Count INT;
+	SELECT @Count = COUNT(value) FROM STRING_SPLIT(@CheckValue, ',');
+
+	IF @Count IN (SELECT COUNT(rf.RoomId) FROM ROOM_FACILITY rf
+		JOIN FACILITY_CONST fc ON rf.FacilityId = fc.Id
+		WHERE HotelId = @HotelId
+		AND fc.Value IN (SELECT value FROM STRING_SPLIT(@CheckValue, ','))
+		GROUP BY RoomId)
+		RETURN 1
+	RETURN 0
+END
+GO
+
+
+GO
+CREATE OR ALTER FUNCTION USF_CheckHotelService ( -- //new check
+    @HotelId INTEGER,
+	@CheckValue VARCHAR(1000) = null)
+RETURNS BIT
+BEGIN
+	IF (@CheckValue IS NULL) RETURN 1
+	DECLARE @Count INT;
+	SELECT @Count = COUNT(value) FROM STRING_SPLIT(@CheckValue, ',');
+
+	IF @Count IN (SELECT COUNT(rs.RoomId) FROM ROOM_SERVICE rs
+		JOIN SERVICE_CONST rc ON rs.ServiceId = rc.Id
+		WHERE HotelId = @HotelId
+		AND rc.Value IN (SELECT value FROM STRING_SPLIT(@CheckValue, ','))
+		GROUP BY RoomId)
+		RETURN 1
+	RETURN 0
+END
+GO
+
+
+GO
+CREATE OR ALTER PROC USP_FindHotelByName (-- //new check
+	-- Search
+	@Location NVARCHAR(100) = N'',
+	@RoomType NVARCHAR(100) = N'',
+	@StartDate DATE = '01-01-2022',
+	@EndDate DATE = '01-02-2022',
+	@MinBudget float = 1,
+	@MaxBudget float = 10000000000.0,
+	@Rooms int = 1,
+	@Adult int = 1,
+	@Children int = 0,
+	-- Filter
+	@HotelType VARCHAR(500) = null,
+	@BedType VARCHAR(100) = null,
+	@GuestRating INT = 0,
+	@Facilities VARCHAR(1000) = null,
+	@Service VARCHAR(100) = null,
+	@SortingCol VARCHAR(50) = 'Rating',
+	@SortType VARCHAR(5) = 'DESC')
 AS
-	SELECT h.Id, h.Name, Country, HotelType, ProvinceCity, 
+BEGIN
+	SELECT hoteTable.* from (SELECT distinct h.Id, h.Name, Country, HotelType, ProvinceCity, 
 			Address, Stars,
-			dbo.USF_GetAvgReview(h.Id) Rating,
+			dbo.USF_GetAvgReview(h.Id) as Rating,
 			Description, Image,
-			dbo.USF_GetMinRoomPrice(h.Id) Price
+			dbo.USF_GetMinRoomPrice(h.Id) as Price
 	FROM HOTEL h inner join ROOM_TYPE rt on h.Id = rt.HotelId
 	WHERE (h.ProvinceCity COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI or
 		  h.Country COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI or
 	      h.Name COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI) and
 		  dbo.USF_GetMinRoomPrice(h.Id) <= @MaxBudget and 
 		  dbo.USF_GetMinRoomPrice(h.Id) >= @MinBudget and
-	      dbo.USF_CheckRoomAvailability(rt.HotelId, rt.Id, @Rooms, @StartDate, @EndDate) = 1 and
-		  rt.Name COLLATE SQL_Latin1_General_CP1_CI_AI like '%' + @RoomType + '%' COLLATE SQL_Latin1_General_CP1_CI_AI  
-	GROUP BY h.Id, h.Name, Country, HotelType, ProvinceCity, 
-			Address, Stars,
-			Description, Image
+		  rt.Name COLLATE SQL_Latin1_General_CP1_CI_AI like '%' + @RoomType + '%' COLLATE SQL_Latin1_General_CP1_CI_AI and
+	      dbo.USF_CheckHotelAvailability(h.Id, @Rooms, @StartDate, @EndDate) = 1
+		  AND (h.HotelType IN (SELECT value FROM STRING_SPLIT(@HotelType, ',')) OR @HotelType IS NULL)
+		  AND (rt.BedType IN (SELECT value FROM STRING_SPLIT(@BedType, ',')) OR @BedType IS NULL)
+		  AND dbo.USF_GetAvgReview(h.Id) >= @GuestRating
+		  AND dbo.USF_CheckHotelFacility(h.Id, @Facilities) = 1
+		  AND dbo.USF_CheckHotelService(h.Id, @Service) = 1
+		  ) hoteTable 
+	ORDER BY 
+		CASE WHEN @SortingCol = 'Rating' THEN Rating END DESC,
+		CASE WHEN @SortingCol = 'Price' AND @SortType ='ASC' THEN Price END ,
+		CASE WHEN @SortingCol = 'Price' AND @SortType ='DESC' THEN Price END DESC
+END
 GO
+
+
 
 --! thêm booking //
 CREATE OR ALTER PROCEDURE USP_AddBooking

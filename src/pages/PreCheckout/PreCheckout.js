@@ -25,6 +25,20 @@ import { useInitOrder } from "../../libs/business-logic/src/lib/order/process/ho
 import { getOrderLocalStorage } from "../../libs/business-logic/src/lib/order/process/helpers/localStorageOrder";
 import { useEffect } from "react";
 import { isEqual } from "lodash";
+import { isValidEmail } from "../../utils/validators/email.validator";
+import { isValidPhoneNumber } from "../../utils/validators/phoneNumber.validator";
+
+const calculateTotal = (rooms, voucher, nightCount) => {
+  let total = rooms.reduce((acc, roomData) => {
+    if (roomData && roomData.price) {
+      return acc + roomData.price * nightCount;
+    }
+    return acc;
+  }, 0);
+
+  total -= voucher ? voucher.value : 0;
+  return total;
+};
 
 const PreCheckout = () => {
   const selectedRoomsObject = getOrderLocalStorage();
@@ -92,17 +106,6 @@ const PreCheckout = () => {
     calcNight(bookingFormValue.start_date, bookingFormValue.end_date)
   );
 
-  const calculateTotal = (rooms, voucher, nightCount) => {
-    let total = rooms.reduce((acc, roomData) => {
-      if (roomData && roomData.price) {
-        return acc + roomData.price * nightCount;
-      }
-      return acc;
-    }, 0);
-
-    total -= voucher ? voucher.value : 0;
-    return total;
-  };
   const [total, setTotal] = useState(
     calculateTotal(roomsData, sunriseVoucher, night)
   );
@@ -212,6 +215,7 @@ const PreCheckout = () => {
     });
   };
   const onContactFormError = (error) => {
+    console.log(error);
     toast.error(error[Object.keys(error)[0]].message);
   };
   return hotelData && Array.isArray(roomsData) ? (
@@ -224,6 +228,7 @@ const PreCheckout = () => {
             onContactFormSubmit,
             onContactFormError
           )}
+          noValidate
         >
           <section className="contact">
             <Controller
@@ -307,6 +312,8 @@ const PreCheckout = () => {
               control={contactForm.control}
               rules={{
                 required: "Bạn chưa nhập Email kìa",
+                validate: (value) =>
+                  isValidEmail(value) || "Email không hợp lệ",
               }}
               render={({ field }) => (
                 <div className="contact__input-data">
@@ -326,6 +333,8 @@ const PreCheckout = () => {
               control={contactForm.control}
               rules={{
                 required: "Cho chúng tôi số điện thoại để liên hệ nhé",
+                validate: (value) =>
+                  isValidPhoneNumber(value) || "Số điện thoại không hợp lệ",
               }}
               render={({ field }) => (
                 <div className="contact__input-data">

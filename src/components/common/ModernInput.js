@@ -107,7 +107,7 @@ const ModernInput = ({
         {inputType === "date" && (
           <>
             <input
-              type="date"
+              type="datetime-local"
               ref={startDatePickerRef}
               onChange={(e) => handleDateChange(e.target.value)}
               min={new Date().toISOString().split("T")[0]}

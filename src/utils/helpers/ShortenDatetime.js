@@ -1,19 +1,19 @@
 /**
  * Format the given date and time string to a short version.
- * @param {string} datetime - The date and time string to format.
+ * @param {string} dateTime - The date and time string to format.
  * @returns {string} - The formatted date in a short version.
  */
-export function shortenDatetime(input) {
-  const dateObj = new Date(input);
+export function shortenDateTime(dateTime) {
+  const dateObj = new Date(dateTime);
 
-  const isDatetime = input.includes("T");
+  const isDateTime = dateTime.includes("T");
 
   const options = {
     year: "numeric",
     month: "short",
     day: "numeric",
-    hour: isDatetime ? "numeric" : undefined,
-    minute: isDatetime ? "numeric" : undefined,
+    hour: isDateTime ? "numeric" : undefined,
+    minute: isDateTime ? "numeric" : undefined,
   };
 
   return dateObj.toLocaleDateString(undefined, options);
@@ -21,11 +21,11 @@ export function shortenDatetime(input) {
 
 /**
  * Revert a date string from format "MMM D, YYYY, h:mm A" to "YYYY-MM-DDThh:mm".
- * @param {string} datetime - The date string to convert.
+ * @param {string} dateTime - The date string to convert.
  * @returns {string} - The converted date string.
  */
-export function revertShortenedDatetime(datetime) {
-  const dateObj = new Date(datetime);
+export function revertShortenedDateTime(dateTime) {
+  const dateObj = new Date(dateTime);
   const year = dateObj.getFullYear();
   const month = String(dateObj.getMonth() + 1).padStart(2, "0");
   const day = String(dateObj.getDate()).padStart(2, "0");
@@ -40,8 +40,11 @@ export function formatDate(dateObj) {
     return {
       dateMonthYear: null,
       days: null,
+      time24: null, // Thêm giá trị thời gian 24 giờ
     };
+
   const dateRaw = new Date(dateObj);
+
   let days = [
     "Chủ Nhật",
     "Thứ Hai",
@@ -51,13 +54,22 @@ export function formatDate(dateObj) {
     "Thứ Sáu",
     "Thứ Bảy",
   ];
+
   let dayOfWeek = days[dateRaw.getDay()];
   let date = dateRaw.getDate();
   let month = dateRaw.getMonth() + 1; // Months are zero based
   let year = dateRaw.getFullYear();
 
+  let hours = dateRaw.getHours();
+  let minutes = dateRaw.getMinutes();
+
+  // Định dạng số giờ/phút thành chuỗi có 2 chữ số
+  const formattedHours = hours.toString().padStart(2, "0");
+  const formattedMinutes = minutes.toString().padStart(2, "0");
+
   return {
     dateMonthYear: `${date} tháng ${month} ${year}`,
     days: dayOfWeek,
+    time24: `${formattedHours}:${formattedMinutes}`, // Thời gian 24 giờ
   };
 }

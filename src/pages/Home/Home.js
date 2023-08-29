@@ -30,6 +30,10 @@ import {
 import Pagination from "../../components/common/Pagination";
 import { PAGINATION_MODEL } from "../../constants/Variables.constants";
 import { LOCATION_TYPES } from "../../constants/filter.constants";
+import {
+  shortenDateTime,
+  revertShortenedDateTime,
+} from "../../utils/helpers/ShortenDatetime";
 
 const geoUrl =
   "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
@@ -93,9 +97,12 @@ const Home = () => {
 
   // Methods
   const updateSearchInputVal = (key, value) => {
+    if (key.includes("date")) {
+      value = shortenDateTime(value);
+    }
     setSearchInputVal((prevState) => ({
       ...prevState,
-      [key]: value,
+      [key]: key.includes("date") ? value : value,
     }));
   };
   const extractMinAndMax = (rangeString) => {
@@ -129,14 +136,15 @@ const Home = () => {
     defaultSearchInputVal.hotelType !== roomType &&
       (params = { ...params, hotelType: getLocationKeyFromLabel(roomType) });
     defaultSearchInputVal.start_date !== start_date &&
-      (params = { ...params, start_date });
+      (params = { ...params, start_date: revertShortenedDateTime(start_date) });
     defaultSearchInputVal.end_date !== end_date &&
-      (params = { ...params, end_date });
+      (params = { ...params, end_date: revertShortenedDateTime(end_date) });
     defaultSearchInputVal.budget !== budget &&
       (params = {
         ...params,
         budget: JSON.stringify(extractMinAndMax(searchInputVal.budget)),
       });
+
     if (!Object.keys(params).includes("location")) {
       toast.error("Ít nhất hãy chọn vị trí mong muốn nhé!");
     } else {

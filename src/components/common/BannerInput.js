@@ -48,7 +48,6 @@ const BannerInput = ({
     const endDate = watch(name[1]);
     const startDateMin = new Date().toISOString().substring(0, 10);
     const endDateMin = startDateMin;
-    // const endDateMin = startDate ? (isDateGreaterThan(startDateMin, startDate) ? startDateMin : startDate) : startDateMin;
     return (
       <>
         <button
@@ -67,7 +66,7 @@ const BannerInput = ({
             render={({ field }) => (
               <input
                 {...field}
-                type="date"
+                type="datetime-local"
                 min={startDateMin}
                 onChange={(e) => {
                   setValue(name[0], e.target.value);
@@ -80,7 +79,13 @@ const BannerInput = ({
           />
           <div className="cc-banner-input__multiline-value">
             <p>{formatDate(startDate).dateMonthYear || "Ngày đến"}</p>
-            <small>{formatDate(startDate).days}</small>
+            {startDate ? (
+              <small>
+                {formatDate(startDate).time24} - {formatDate(startDate).days}
+              </small>
+            ) : (
+              <></>
+            )}
           </div>
         </button>
         <button
@@ -100,7 +105,7 @@ const BannerInput = ({
               <>
                 <input
                   {...field}
-                  type="date"
+                  type="datetime-local"
                   min={endDateMin}
                   onChange={(e) => {
                     setValue(name[1], e.target.value);
@@ -114,7 +119,13 @@ const BannerInput = ({
           />
           <div className="cc-banner-input__multiline-value">
             <p>{formatDate(endDate).dateMonthYear || "Ngày đi"}</p>
-            <small>{formatDate(endDate).days}</small>
+            {startDate ? (
+              <small>
+                {formatDate(endDate).time24} - {formatDate(endDate).days}
+              </small>
+            ) : (
+              <></>
+            )}
           </div>
         </button>
       </>

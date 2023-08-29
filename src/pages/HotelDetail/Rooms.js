@@ -21,9 +21,9 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
   const pickerFormDefaultValue = {
     start_date: dateTimeParams["start_date"] ?? "",
     end_date: dateTimeParams["end_date"] ?? "",
-    rooms: dateTimeParams["rooms"] ?? "",
-    adults: dateTimeParams["adults"] ?? "",
-    childrens: dateTimeParams["childrens"] ?? "",
+    rooms: dateTimeParams["rooms"] ?? 1,
+    adults: dateTimeParams["adults"] ?? 1,
+    childrens: dateTimeParams["childrens"] ?? 0,
   };
   const pickerForm = useForm({
     defaultValues: pickerFormDefaultValue,

@@ -87,13 +87,6 @@ namespace SunriseServerData.Repositories
             return (result.FirstOrDefault()).MyValue;
         }
 
-        // public async Task<string> GetAccountEmailByIdAsync(int accountId)
-        // {
-        //     var result = await _dataContext.PersonalDetail
-        //         .FromSqlInterpolated($"EXEC USP_GetAccountDetailById @AccountId={accountId};").ToListAsync();
-        //     return "hh";
-        // }
-
         public async Task<PersonalDetail> GetAccountDetailsByIdAsync(int accountId)
         {
             var result = await _dataContext.PersonalDetail

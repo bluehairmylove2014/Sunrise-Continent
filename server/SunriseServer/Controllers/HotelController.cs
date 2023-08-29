@@ -185,14 +185,15 @@ namespace SunriseServer.Controllers
             [FromQuery] int rooms,
             [FromQuery] int adults,
             [FromQuery] int children,
-            [FromQuery] HotelPagingDto hotelDto
+            [FromQuery] HotelPagingDto hotelDto,
+            [FromQuery] FilterHotelDto filterDto
         )
         {
             // Thêm filter sort
 
             max_budget = max_budget == 0 ? Int32.MaxValue : max_budget;
             var result = await _hotelService.GetSearchHotels(
-                new SearchHotelDto(location, room_type, start_date, end_date, min_budget, max_budget, rooms, adults, children)
+                new SearchHotelDto(location, room_type, start_date, end_date, min_budget, max_budget, rooms, adults, children, filterDto)
             );
 
             if (result is null)

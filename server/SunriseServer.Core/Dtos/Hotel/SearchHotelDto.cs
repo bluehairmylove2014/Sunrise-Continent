@@ -11,8 +11,9 @@
         public int Rooms { get; set;}
         public int Adults { get; set;}
         public int Children { get; set; }
+        public FilterHotelDto FilterHotelDto { get; set; }
 
-        public SearchHotelDto(string location, string roomType, DateTime startDate, DateTime endDate, double minBudget, double maxBudget, int rooms, int adults, int children) {
+        public SearchHotelDto(string location, string roomType, DateTime startDate, DateTime endDate, double minBudget, double maxBudget, int rooms, int adults, int children, FilterHotelDto filter) {
             Location = location;
             RoomType = roomType;
             StartDate = startDate;
@@ -22,6 +23,7 @@
             Rooms = rooms;
             Adults = adults;
             Children = children;
+            FilterHotelDto = filter;
         } 
     }
 }

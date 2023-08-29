@@ -91,7 +91,18 @@ namespace SunriseServerData.Repositories
             builder.Append($"@MaxBudget = {searchHotel.MaxBudget}, ");
             builder.Append($"@Rooms = {searchHotel.Rooms}, ");
             builder.Append($"@Adult = {searchHotel.Adults}, ");
-            builder.Append($"@Children = {searchHotel.Children};\n");
+            builder.Append($"@Children = {searchHotel.Children}, ");
+            if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.hotel_type))
+                builder.Append($"@HotelType = \'{searchHotel.FilterHotelDto.hotel_type}\', ");
+            if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.bed_type))
+                builder.Append($"@BedType = \'{searchHotel.FilterHotelDto.bed_type}\', ");
+            builder.Append($"@GuestRating = {searchHotel.FilterHotelDto.guest_rating}, ");
+            if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.facilities))
+                builder.Append($"@Facilities = \'{searchHotel.FilterHotelDto.facilities}\', ");
+            if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.service))
+                builder.Append($"@Service = \'{searchHotel.FilterHotelDto.service}\', ");
+            builder.Append($"@SortingCol = \'{searchHotel.FilterHotelDto.sorting_col}\', ");
+            builder.Append($"@SortType = \'{searchHotel.FilterHotelDto.sort_type}\';\n");
 
             Console.WriteLine(builder.ToString());
 

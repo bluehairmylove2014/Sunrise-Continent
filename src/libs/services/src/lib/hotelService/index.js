@@ -153,7 +153,7 @@ export class HotelService extends Services {
     } catch (error) {
       if (!this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 6");
+        console.error("Catch error 6: ", error);
         throw error;
       }
     }

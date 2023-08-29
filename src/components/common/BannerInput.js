@@ -46,7 +46,7 @@ const BannerInput = ({
   const renderDatetimeDoubleInput = (name, background) => {
     const startDate = watch(name[0]);
     const endDate = watch(name[1]);
-    const startDateMin = new Date().toISOString().substring(0, 16);
+    const startDateMin = new Date().toISOString().substring(0, 10);
     const endDateMin = startDateMin;
     // const endDateMin = startDate ? (isDateGreaterThan(startDateMin, startDate) ? startDateMin : startDate) : startDateMin;
     return (
@@ -67,7 +67,7 @@ const BannerInput = ({
             render={({ field }) => (
               <input
                 {...field}
-                type="datetime-local"
+                type="date"
                 min={startDateMin}
                 onChange={(e) => {
                   setValue(name[0], e.target.value);
@@ -100,7 +100,7 @@ const BannerInput = ({
               <>
                 <input
                   {...field}
-                  type="datetime-local"
+                  type="date"
                   min={endDateMin}
                   onChange={(e) => {
                     setValue(name[1], e.target.value);

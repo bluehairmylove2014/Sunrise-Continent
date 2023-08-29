@@ -227,9 +227,8 @@ const CartSidebar = ({ isActive, callback }) => {
       onClearCart()
         .then((message) => toast.success(message))
         .catch((err) => toast.error(err.message));
-    } else {
-      toggleClass(clearCartPopUpRef.current, "active");
     }
+    toggleClass(clearCartPopUpRef.current, "active");
   };
 
   const onSuccessSubmit = (data) => {

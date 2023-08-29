@@ -23,9 +23,12 @@ import SelectVoucer from "./SelectVoucer";
 import { useNavigate } from "react-router-dom";
 import { useInitOrder } from "../../libs/business-logic/src/lib/order/process/hooks";
 import { getOrderLocalStorage } from "../../libs/business-logic/src/lib/order/process/helpers/localStorageOrder";
+import { useEffect } from "react";
+import { isEqual } from "lodash";
 
 const PreCheckout = () => {
   const selectedRoomsObject = getOrderLocalStorage();
+  const [oldOrderDetail, setOldOrderDetail] = useState(selectedRoomsObject);
   // Extract common fields from the first order
   const {
     hotelId,
@@ -35,7 +38,6 @@ const PreCheckout = () => {
     checkIn: start_date,
     checkOut: end_date,
   } = selectedRoomsObject.orders[0];
-
   // Map room types to an array of room IDs
   const roomIds = selectedRoomsObject.orders.map((order) => order.roomTypeId);
 
@@ -80,21 +82,57 @@ const PreCheckout = () => {
     defaultValues: bookingFormValue,
   });
 
-  const startDateFormatted = formatDate(bookingFormValue.start_date);
-  const endDateFormatted = formatDate(bookingFormValue.end_date);
-  const night = calcNight(
-    bookingFormValue.start_date,
-    bookingFormValue.end_date
+  const [startDateFormatted, setStartDateFormatted] = useState(
+    formatDate(bookingFormValue.start_date)
+  );
+  const [endDateFormatted, setEndDateFormatted] = useState(
+    formatDate(bookingFormValue.end_date)
+  );
+  const [night, setNight] = useState(
+    calcNight(bookingFormValue.start_date, bookingFormValue.end_date)
   );
 
-  let total = roomsData.reduce((acc, roomData) => {
-    if (roomData && roomData.price) {
-      return acc + roomData.price * night;
-    }
-    return acc;
-  }, 0);
+  const calculateTotal = (rooms, voucher, nightCount) => {
+    let total = rooms.reduce((acc, roomData) => {
+      if (roomData && roomData.price) {
+        return acc + roomData.price * nightCount;
+      }
+      return acc;
+    }, 0);
 
-  total -= sunriseVoucher ? sunriseVoucher.value : 0;
+    total -= voucher ? voucher.value : 0;
+    return total;
+  };
+  const [total, setTotal] = useState(
+    calculateTotal(roomsData, sunriseVoucher, night)
+  );
+
+  useEffect(() => {
+    if (selectedRoomsObject && !isEqual(selectedRoomsObject, oldOrderDetail)) {
+      setOldOrderDetail(selectedRoomsObject);
+    }
+  }, [selectedRoomsObject]);
+
+  useEffect(() => {
+    setBookingFormValue({
+      start_date,
+      end_date,
+      rooms,
+      adults,
+      childrens,
+    });
+    setStartDateFormatted(formatDate(start_date));
+    setEndDateFormatted(formatDate(end_date));
+
+    const nightCount = calcNight(start_date, end_date);
+    const total = calculateTotal(roomsData, sunriseVoucher, nightCount);
+    setNight(nightCount);
+    setTotal(total);
+  }, [oldOrderDetail]);
+
+  useEffect(() => {
+    setTotal(calculateTotal(roomsData, sunriseVoucher, night));
+  }, [roomsData, sunriseVoucher]);
 
   const today = new Date();
   const minDate = new Date(today);

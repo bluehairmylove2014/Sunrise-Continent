@@ -16,7 +16,7 @@ export class OrderService extends Services {
   getShippingUrl = "/order/get-shipping";
   getTaxUrl = "/order/get-tax";
   getCouponUrl = "/order/get-coupon";
-  updateOrderUrl = "/order/get-update-order";
+  updateOrderUrl = "/order";
 
   getShipping = async (params) => {
     this.abortController = new AbortController();

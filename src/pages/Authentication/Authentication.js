@@ -1,32 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import "../../styles/component/authen.scss";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
-// Loader
-import PageLoader from "../../components/common/Loader/PageLoader";
-
-// Notification trigger
 import toast from "react-hot-toast";
-
-// Constant
 import { PAGES } from "../../constants/Link.constants";
 import { REGEX } from "../../constants/Regex";
-
-// Img
 import logo from "../../assets/images/logos/sc-non-white.png";
-import mountain_night from "../../assets/images/bgs/mountain-night.jpg";
-import mountain_day from "../../assets/images/bgs/mountain-day.jpg";
-
-// Form
 import { Controller, useForm } from "react-hook-form";
 import {
-  // useFacebookLogin,
   useGoogleLogin,
+  useIsLogged,
   useLogin,
   useRegister,
 } from "../../libs/business-logic/src/lib/auth";
 import googleIcon from "../../assets/images/icons/google.png";
-// import facebookIcon from "../../assets/images/icons/facebook.png";
 import {
   deleteRedirectUrl,
   getRedirectUrl,
@@ -53,37 +39,27 @@ const Authentication = () => {
   const location = useLocation();
 
   const [page, setPage] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
 
   const registerFormRef = useRef(null);
   const authenRef = useRef(null);
 
   const { onLogin, isLoading: isLoginLoading } = useLogin();
   const { onGoogleLogin, isLoading: isGoogleLoginLoading } = useGoogleLogin();
-  // const { onFacebookLogin, isLoading: isFBLoginLoading } = useFacebookLogin();
   const { onRegister, isLoading: isRegisterLoading } = useRegister();
+  const isLoggin = useIsLogged();
 
   // Hook
   useEffect(() => {
+    console.log(location.pathname);
     setPage(location.pathname);
-
-    const imageSources = [mountain_night, mountain_day];
-
-    // Preloading background image
-    Promise.all(imageSources.map((src) => preloadImage(src)))
-      .then((images) => {
-        // Update background-image of .authen
-        changeBackground(location.pathname);
-      })
-      .catch((error) => {
-        toast.error("Cannot load background image");
-      })
-      .finally(() => {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 500);
-      });
   }, [location]);
+
+  useEffect(() => {
+    if (isLoggin) {
+      navigate(PAGES.HOME);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggin]);
 
   // Methods
   const handleNavigate = () => {
@@ -118,16 +94,6 @@ const Authentication = () => {
         toast.error(err.message);
       });
   };
-  // const handleFacebookLogin = () => {
-  //   onFacebookLogin()
-  //     .then((message) => {
-  //       toast.success(message);
-  //       handleNavigate();
-  //     })
-  //     .catch((err) => {
-  //       toast.error(err.message);
-  //     });
-  // };
   const handleLogin = ({ email, password, isRememberMe }) => {
     onLogin({
       isRememberMe,
@@ -172,41 +138,19 @@ const Authentication = () => {
       }
     }
   };
-
-  const changeBackground = (cur_page) => {
-    if (authenRef && authenRef.current) {
-      if (cur_page === PAGES.LOGIN) {
-        authenRef.current.style.backgroundImage = `url(${mountain_night})`;
-      } else if (cur_page === PAGES.REGISTER) {
-        authenRef.current.style.backgroundImage = `url(${mountain_day})`;
-      } else {
-        toast.error("Cannot load background image");
-      }
-    } else {
-      toast.error("Cannot load background image");
-    }
-  };
-
   const changePage = (pathname) => {
-    setPage(pathname);
-    changeBackground(pathname);
-    window.history.pushState(null, "", pathname);
-  };
-
-  // Methods preloading image
-  const preloadImage = (src) => {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => resolve(img);
-      img.onerror = (error) => reject(error);
-    });
+    navigate(pathname, { replace: true });
   };
 
   return (
     <>
       {
-        <div className={`authen`} ref={authenRef}>
+        <div
+          className={`authen ${page === "/register" ? "register" : ""}`}
+          ref={authenRef}
+        >
+          <div className="authen__register-bg"></div>
+          <div className="authen__login-bg"></div>
           <header className="authen__header">
             <nav>
               <ul>
@@ -398,19 +342,6 @@ const Authentication = () => {
                           : `Login with google`}
                       </span>
                     </button>
-                    {/* <button
-                      className="authen-form__social-btn facebook"
-                      type="button"
-                      onClick={handleFacebookLogin}
-                      disabled={isFBLoginLoading}
-                    >
-                      <img src={facebookIcon} alt="social" />
-                      <span>
-                        {isFBLoginLoading
-                          ? `In process`
-                          : `Login with facebook`}
-                      </span>
-                    </button> */}
                   </div>
 
                   <button
@@ -528,7 +459,6 @@ const Authentication = () => {
           </main>
         </div>
       }
-      {isLoading && <PageLoader />}
     </>
   );
 };

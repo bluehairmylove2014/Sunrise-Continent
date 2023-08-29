@@ -37,6 +37,10 @@
                         margin-bottom: 10px;
                     }
 
+                    input[type='date'] {
+                        pointer-events: none;
+                    }
+
                     input,
                     select,
                     textarea {
@@ -259,7 +263,7 @@
                             font-size: 0.8rem;
                             font-weight: 500;
                             opacity: 0.7;
-                            white-space: nowrap;
+                            white-space: wrap;
                         }
                     }
 

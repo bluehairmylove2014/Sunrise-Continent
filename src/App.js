@@ -119,6 +119,14 @@ function App() {
                 path={PAGES.REGISTER}
                 element={<AuthenticationPage />}
               />
+              <Route
+                path="*"
+                element={
+                  <UserPageLayout>
+                    <HomePage />
+                  </UserPageLayout>
+                }
+              />
             </Routes>
           )}
         </Suspense>

@@ -8,7 +8,7 @@ const unknownErrorMsg = "Social service unknown error";
 
 export class SocialService extends Services {
   abortController;
-  updateAccountUrl = "/auth/register-social";
+  updateAccountUrl = "/auth/login-social";
 
   // GOOGLE LOGIN
   validateToken = async (token) => {

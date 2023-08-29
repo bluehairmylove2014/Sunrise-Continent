@@ -240,7 +240,16 @@ const PreCheckout = () => {
                 required: "Hãy cho tôi biết ngày sinh của bạn",
               }}
               render={({ field }) => (
-                <div className="contact__input-data">
+                <div
+                  className="contact__input-data"
+                  onClick={(e) => {
+                    const dobInput = e.target.querySelector("input");
+                    if (dobInput) {
+                      console.log("SHOW");
+                      dobInput.showPicker();
+                    }
+                  }}
+                >
                   <label htmlFor="dob">Ngày sinh *</label>
                   <input
                     {...field}
@@ -249,6 +258,8 @@ const PreCheckout = () => {
                     onFocus={(e) => handleFocus(e.target)}
                     onBlur={(e) => handleBlur(e.target)}
                     max={formattedMinDate}
+                    onKeyDown={(e) => e.preventDefault()} // Prevent typing
+                    onKeyUp={(e) => e.preventDefault()} // Prevent typing
                   />
                 </div>
               )}
@@ -462,14 +473,6 @@ const PreCheckout = () => {
 
               <p>{bookingFormValue.rooms} phòng</p>
             </div>
-            {/* <div className="detail__row">
-              <div className="row__label">
-                <img src={icon.roomIcon} alt="room" />
-                <span>Loại phòng:</span>
-              </div>
-
-              <p>{roomData.name}</p>
-            </div> */}
             <div className="detail__row">
               <div className="row__label"></div>
 
@@ -519,10 +522,6 @@ const PreCheckout = () => {
                   -{" "}
                   {convertNumberToCurrency(
                     "vietnamdong",
-                    // calculateDiscountedPrice(
-                    //   roomData.price * night,
-                    //   sunriseVoucher.value
-                    // ).discountedPrice
                     sunriseVoucher ? sunriseVoucher.value : 0
                   )}
                 </p>

@@ -12,9 +12,7 @@ const getCouponResponseSchema = z.object({
   coupon: z.number(),
 });
 
-const updateOrderResponseSchema = z.object({
-  message: z.string(),
-});
+const updateOrderResponseSchema = z.string();
 
 export {
   getShippingResponseSchema,

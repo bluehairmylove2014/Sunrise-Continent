@@ -16,7 +16,7 @@ import CityGraphic from "../../assets/images/bgs/360_F_63940372_ghZQzzZEwektiDoO
 
 // img
 import VietnamField from "../../assets/images/bgs/Mountain.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { stringifySearchParams } from "../../utils/helpers/params";
 import { useGetHotHotelQuery } from "../../libs/business-logic/src/lib/hotel/fetching/query";
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
@@ -76,6 +76,7 @@ const Home = () => {
     currentPage: defaultReviewStartPage,
     maxPage: calculateMaxPage(hotHotelData, maximumHotHotelPerPage),
   });
+  const location = useLocation();
 
   useEffect(() => {
     setHotHotelPagination({
@@ -83,6 +84,12 @@ const Home = () => {
       maxPage: calculateMaxPage(hotHotelData, maximumHotHotelPerPage),
     });
   }, [hotHotelData]);
+
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      navigate("/");
+    }
+  }, [location]);
 
   // Methods
   const updateSearchInputVal = (key, value) => {
@@ -182,6 +189,7 @@ const Home = () => {
           />
           <h3>ĐỊA ĐIỂM MONG MUỐN</h3>
         </div>
+        <p>Hãy chọn ít nhất một địa điểm muốn đến nhé!</p>
         {/* Input field */}
         <form
           className="home-destination__form"

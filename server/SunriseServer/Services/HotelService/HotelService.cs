@@ -44,7 +44,7 @@ namespace SunriseServer.Services.HotelService
             _unitOfWork = uof;
         }
 
-        public async Task<int> AddHotel(int accountId, Hotel hotel)
+        public async Task<int> AddHotel(int accountId, InputHotelDto hotel)
         {
             var result = await _unitOfWork.HotelRepo.CreateHotelAsync(accountId, hotel);
             return result;
@@ -116,6 +116,11 @@ namespace SunriseServer.Services.HotelService
         public async Task<List<Hotel>> GetSearchHotels(SearchHotelDto searchHotel)
         {
             return await _unitOfWork.HotelRepo.GetSearchHotels(searchHotel);
+        }
+
+        public async Task<List<YealyRevenue>> GetHotelYealyRevenue(int hotelId, int year)
+        {
+            return await _unitOfWork.HotelRepo.GetHotelYealyRevenueAsync(hotelId, year);
         }
     }
 }

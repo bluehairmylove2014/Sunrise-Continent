@@ -17,6 +17,7 @@ namespace SunriseServerCore.RepoInterfaces
         Task<List<Hotel>> GetRecommendedHotelAsync(int num);
         Task<List<Hotel>> GetSearchHotels(SearchHotelDto searchHotel);
 
-        Task<int> CreateHotelAsync(int accountId, Hotel entity);
+        Task<int> CreateHotelAsync(int accountId, InputHotelDto entity);
+        Task<List<YealyRevenue>> GetHotelYealyRevenueAsync(int hotelId, int year);
     }
 }

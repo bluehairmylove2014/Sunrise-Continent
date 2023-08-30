@@ -217,7 +217,6 @@ CREATE OR ALTER PROC USP_AddHotel
 	@ProvinceCity NVARCHAR(100),  
 	@Address NVARCHAR(100),
 	@Stars INT,
-	@Rating FLOAT,
 	@Description NVARCHAR(1000),
 	@Image NVARCHAR(1000)
 AS
@@ -233,7 +232,7 @@ BEGIN
 		DECLARE @Id INT
 		EXEC @Id = USP_GetNextColumnId 'HOTEL', 'Id';
 		
-		INSERT INTO HOTEL VALUES (@Id, @Name, @Country, @HotelType, @ProvinceCity, @Address, @Stars, @Rating, @Description, @Image);
+		INSERT INTO HOTEL VALUES (@Id, @Name, @Country, @HotelType, @ProvinceCity, @Address, @Stars, 0, @Description, @Image);
 		UPDATE PERSONAL_DETAILS SET HotelId = @Id WHERE AccountId = @AccountId;
 	END TRY
 

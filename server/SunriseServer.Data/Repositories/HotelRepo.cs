@@ -29,7 +29,7 @@ namespace SunriseServerData.Repositories
             return result.FirstOrDefault();
         }
 
-        public async Task<int> CreateHotelAsync(int accountId, Hotel entity)
+        public async Task<int> CreateHotelAsync(int accountId, InputHotelDto entity)
         {           
             var builder = new StringBuilder("EXEC dbo.USP_AddHotel ");
             builder.Append($"@AccountId = {accountId}, ");
@@ -39,7 +39,6 @@ namespace SunriseServerData.Repositories
             builder.Append($"@ProvinceCity = N\'{entity.ProvinceCity}\', ");
             builder.Append($"@Address = N\'{entity.Address}\', ");
             builder.Append($"@Stars = {entity.Stars}, ");
-            builder.Append($"@Rating = {entity.Rating}, ");
             builder.Append($"@Description = N\'{entity.Description}\', ");
             builder.Append($"@Image = N\'{entity.Image}\';");
 
@@ -96,12 +95,17 @@ namespace SunriseServerData.Repositories
             return await _dataContext.Hotel.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
         }
 
-        // CalculateHotelYearlyRevenue
-        public async Task<List<Hotel>> GetHotelYealyRevenueAsync(int num)
+        
+        public async Task<List<YealyRevenue>> GetHotelYealyRevenueAsync(int hotelId, int year)
         {
-            var builder = new StringBuilder($"EXEC USP_CalculateHotelYearlyRevenue @Quantity={num};");
+            var builder = new StringBuilder($"EXEC USP_CalculateHotelYearlyRevenue @HotelId={hotelId}, @Year={year};");
+            if (year == 0) {
+                var index = builder.ToString().LastIndexOf(", @Year=0;");
+                builder.Remove(index, ", @Year=0;".Length);
+                builder.Append(";");
+            }
 
-            var result = await _dataContext.Hotel.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            var result = await _dataContext.Set<YealyRevenue>().FromSqlInterpolated($"{builder.ToString()}").ToListAsync();
             return result;
         }
     }

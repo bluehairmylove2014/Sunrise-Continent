@@ -210,29 +210,42 @@ GO
 
 
 CREATE OR ALTER PROC USP_AddHotel
-	--@Id INT,
+	@AccountId INT,
 	@Name NVARCHAR(100),
 	@Country NVARCHAR(100),
-	@HotelType NVARCHAR(100),
-	@ProvinceCity VARCHAR(100),  
+	@HotelType VARCHAR(100),
+	@ProvinceCity NVARCHAR(100),  
 	@Address NVARCHAR(100),
 	@Stars INT,
 	@Rating FLOAT,
 	@Description NVARCHAR(1000),
 	@Image NVARCHAR(1000)
 AS
+BEGIN
+	IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @AccountId AND UserRole = 'Partner')
+	BEGIN
+		RAISERROR ('Tài khoản không tồn tại hoặc không đủ quyền.', 11, 1);
+		RETURN -2;
+	END
+
+	BEGIN TRAN
 	BEGIN TRY
 		DECLARE @Id INT
 		EXEC @Id = USP_GetNextColumnId 'HOTEL', 'Id';
 		
-		INSERT INTO HOTEL VALUES (@Id, @Name, @Country, @HotelType, @ProvinceCity, @Address, @Stars, @Rating, @Description, @Image)
-		RETURN @Id
+		INSERT INTO HOTEL VALUES (@Id, @Name, @Country, @HotelType, @ProvinceCity, @Address, @Stars, @Rating, @Description, @Image);
+		UPDATE PERSONAL_DETAILS SET HotelId = @Id WHERE AccountId = @AccountId;
 	END TRY
 
 	BEGIN CATCH
-		PRINT N'Hotel insertion error'
-		RETURN -1
+		RAISERROR ('Lỗi trong quá trình thêm khách sạn.', 11, 1);
+		ROLLBACK;
+		RETURN -1;
 	END CATCH
+
+	COMMIT;
+	RETURN @Id
+END
 GO
 
 
@@ -242,11 +255,12 @@ AS
 	SELECT * FROM ACCOUNT
 GO
 
-CREATE OR ALTER PROC USP_GetAccountSocial (
+CREATE OR ALTER PROC USP_GetAccountDetailSocial (
 	@Email VARCHAR(50),
 	@FullName NVARCHAR(1000))
 AS
-	SELECT pd.*, acc.MemberPoint as Point FROM (SELECT * FROM PERSONAL_DETAILS WHERE EmailAddress = @Email AND FullName = @FullName) pd
+	SELECT pd.*, acc.MemberPoint as Point, acc.UserRole as Role FROM 
+	(SELECT * FROM PERSONAL_DETAILS WHERE EmailAddress = @Email AND FullName = @FullName) pd
 	JOIN ACCOUNT acc ON pd.AccountId = acc.Id AND acc.PasswordHash = 'Social';
 GO
 
@@ -257,9 +271,10 @@ CREATE OR ALTER PROC USP_AddAccountSocial (
 	@FullName NVARCHAR(100),
 	@RefreshToken VARCHAR(200),
 	@TokenCreated DATETIME,
-	@TokenExpires DATETIME)
+	@TokenExpires DATETIME,
+	@UserRole VARCHAR(50))
 AS
-	EXEC USP_AddAccount @Id, @Email, @FullName, 'Social', 'Social', 'User', @RefreshToken, @TokenCreated, @TokenExpires;
+	EXEC USP_AddAccount @Id, @Email, @FullName, 'Social', 'Social', @UserRole, @RefreshToken, @TokenCreated, @TokenExpires;
 	RETURN @Id;
 GO
 
@@ -310,12 +325,13 @@ BEGIN
 		INSERT INTO ACCOUNT VALUES (@Id, 0, 'Bronze', @Email, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires)
 
 		IF NOT EXISTS (SELECT AccountId FROM PERSONAL_DETAILS WHERE AccountId = @Id)
-			INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank) 
-				VALUES (@Id, @FullName, @Email, 'default', '01-01-2002', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze');
+			INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank, HotelId) 
+				VALUES (@Id, @FullName, @Email, 'default', '01-01-2002', 'Male', 'https://rialloer.sirv.com/Sunrise-Continent/Users/focalos.png', 'Bronze', 0);
 		ELSE
 			UPDATE PERSONAL_DETAILS SET
 				FullName = @FullName,
-				EmailAddress = @Email
+				EmailAddress = @Email,
+				HotelId = 0
 			WHERE AccountId = @Id;
 	END TRY
 
@@ -1890,7 +1906,7 @@ BEGIN
 	UPDATE ACCOUNT_ORDER
 		SET
 			Paid = 1
-		WHERE SessionId = @SessionId;
+	WHERE SessionId = @SessionId;
 END
 GO
 
@@ -1921,17 +1937,13 @@ AS
 	JOIN (SELECT * FROM ACCOUNT_ORDER WHERE OrderId = @OrderId) AO ON AO.OrderId = OD.OrderId;
 GO
 
-
---! proc lấy danh sách toàn bộ account
---CREATE OR ALTER PROC USP_GetAccountDetailList	
---AS
---	SELECT * FROM PERSONAL_DETAILS
---GO
---! proc lấy thông tin chi tiết tài khoản
+-- 
+GO
 CREATE OR ALTER PROC USP_GetAccountDetailById
 	@AccountId INTEGER
 AS
-	SELECT pd.*, acc.MemberPoint as Point FROM (SELECT * FROM PERSONAL_DETAILS WHERE AccountId = @AccountId) pd
+	SELECT pd.*, acc.MemberPoint as Point, acc.UserRole as Role
+	FROM (SELECT * FROM PERSONAL_DETAILS WHERE AccountId = @AccountId) pd
 	JOIN ACCOUNT acc on pd.AccountId = acc.Id;
 GO
 
@@ -1939,9 +1951,53 @@ GO
 CREATE OR ALTER PROC USP_GetAccountDetailByEmail
 	@Email NVARCHAR(200)
 AS
-	SELECT pd.*, acc.MemberPoint as Point FROM (SELECT * FROM PERSONAL_DETAILS WHERE EmailAddress = @Email) pd
+	SELECT pd.*, acc.MemberPoint as Point, acc.UserRole as Role
+	FROM (SELECT * FROM PERSONAL_DETAILS WHERE EmailAddress = @Email) pd
 	JOIN ACCOUNT acc on pd.AccountId = acc.Id;
 GO
+
+-- // new check
+GO
+CREATE OR ALTER FUNCTION USF_CalculateHotelRevenueByMonth (
+    @HotelId INT,
+    @Year INT,
+    @Month INT)
+RETURNS BIGINT
+BEGIN
+	DECLARE @TotalRevenue BIGINT = 0;
+	DECLARE @Fee INT = 50000;
+
+    DECLARE @StartDate DATE = CAST(STR(@Month) + '-01-' + STR(@Year) as date);
+	DECLARE @EndDate DATE = EOMONTH(@StartDate);
+
+    SELECT @TotalRevenue += (rt.Price - @Fee) * ba.NumberOfRoom
+	FROM ACCOUNT_ORDER ao JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
+	JOIN (SELECT BookingId, NumberOfRoom, RoomTypeId FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba ON ba.BookingId = od.BookingId
+	JOIN (SELECT Id, Price FROM ROOM_TYPE WHERE HotelId = @HotelId) rt ON rt.Id = ba.RoomTypeId
+	WHERE DATEDIFF(DAY, @StartDate, ao.CreatedAt) >= 0 AND DATEDIFF(DAY, ao.CreatedAt, @EndDate) >= 0
+
+	RETURN @TotalRevenue;
+END;
+GO
+
+-- // new check
+GO
+CREATE OR ALTER PROCEDURE USP_CalculateHotelYearlyRevenue (
+    @HotelId INT,
+    @Year INT = null)
+AS
+BEGIN
+	IF (@Year IS NULL) SET @Year = CAST(YEAR(GETDATE()) AS INT);
+
+	DECLARE @table TABLE(Months INT);
+	INSERT INTO @table (Months) VALUES (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12);
+
+	SELECT Months, dbo.USF_CalculateHotelRevenueByMonth(@HotelId, @Year, Months) AS Revenue FROM @table;
+END
+GO
+
+
+-- // check --
 
 --! Func tính điểm input tổng số tiền và số thứ tự của đơn đặt phòng
 CREATE OR ALTER FUNCTION USF_CaculateBonusPoint(@Total INT, @Times INT)
@@ -1973,39 +2029,6 @@ AS
 	
 GO
 
-GO
---! proc tính doanh thu của khách sạn theo tháng
-CREATE OR ALTER  PROCEDURE CalculateHotelRevenueByMonth
-    @Year INT,
-    @Month INT,
-    @HotelId INT,
-    @TotalRevenue INT OUTPUT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    DECLARE @StartDate DATE, @EndDate DATE;
-
-    -- Tính ngày bắt đầu của tháng
-    SET @StartDate = DATEFROMPARTS(@Year, @Month, 1);
-
-    -- Tính số ngày của tháng đó
-    SET @EndDate = DATEADD(DAY, -1, DATEADD(MONTH, 1, @StartDate));
-
-    SELECT @TotalRevenue = COALESCE(SUM(Total), -1)
-    FROM ACCOUNT_ORDER AO
-    JOIN ORDER_DETAIL OD ON AO.OrderId = OD.OrderId
-    JOIN BOOKING_ACCOUNT BA ON OD.BookingId = BA.BookingId
-    WHERE AO.Paid = 1
-        AND BA.CheckIn >= @StartDate
-        AND BA.CheckIn <= @EndDate
-        AND BA.HotelId = @HotelId;
-
-    IF @TotalRevenue IS NULL
-        SET @TotalRevenue = -1;
-    
-    RETURN @TotalRevenue;
-END;
 
 --!proc tính doanh thu khách sạn theo quý
 GO

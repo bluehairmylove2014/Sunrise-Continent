@@ -29,26 +29,24 @@ namespace SunriseServerData.Repositories
             return result.FirstOrDefault();
         }
 
-        public override async Task<Hotel> CreateAsync(Hotel entity)
+        public async Task<int> CreateHotelAsync(int accountId, Hotel entity)
         {           
-            var builder = new StringBuilder("DECLARE @result INT;\n");
-            builder.Append("EXEC @result = dbo.USP_AddHotel ");
-
-            builder.Append($"@Name = \'{entity.Name}\', ");
-            builder.Append($"@Country = \'{entity.Country}\', ");
+            var builder = new StringBuilder("EXEC dbo.USP_AddHotel ");
+            builder.Append($"@AccountId = {accountId}, ");
+            builder.Append($"@Name = N\'{entity.Name}\', ");
+            builder.Append($"@Country = N\'{entity.Country}\', ");
             builder.Append($"@HotelType = \'{entity.HotelType}\', ");
-            builder.Append($"@ProvinceCity = \'{entity.ProvinceCity}\', ");
-            builder.Append($"@Address = \'{entity.Address}\', ");
+            builder.Append($"@ProvinceCity = N\'{entity.ProvinceCity}\', ");
+            builder.Append($"@Address = N\'{entity.Address}\', ");
             builder.Append($"@Stars = {entity.Stars}, ");
             builder.Append($"@Rating = {entity.Rating}, ");
-            builder.Append($"@Description = \'{entity.Description}\', ");
-            builder.Append($"@Image = \'{entity.Image}\';\n");
-            builder.Append($"EXEC USP_GetHotelById @Id = @result;");
+            builder.Append($"@Description = N\'{entity.Description}\', ");
+            builder.Append($"@Image = N\'{entity.Image}\';");
 
             Console.WriteLine(builder.ToString());
 
-            var result = await _dataContext.Hotel.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
-            return result.FirstOrDefault();
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            return result;
         }
 
 
@@ -96,6 +94,15 @@ namespace SunriseServerData.Repositories
             Console.WriteLine(builder.ToString());
 
             return await _dataContext.Hotel.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+        }
+
+        // CalculateHotelYearlyRevenue
+        public async Task<List<Hotel>> GetHotelYealyRevenueAsync(int num)
+        {
+            var builder = new StringBuilder($"EXEC USP_CalculateHotelYearlyRevenue @Quantity={num};");
+
+            var result = await _dataContext.Hotel.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            return result;
         }
     }
 }

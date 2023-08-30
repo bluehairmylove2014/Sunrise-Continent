@@ -16,6 +16,8 @@ using SunriseServerCore.Dtos.Hotel;
 using SunriseServer.Services.CacheService;
 using SunriseServerCore.Common.Helper;
 using Newtonsoft.Json;
+using System.Security.Claims;
+
 
 namespace SunriseServer.Controllers
 {
@@ -142,18 +144,27 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpPost, Authorize(Roles = GlobalConstant.Admin)]
-        public async Task<ActionResult<ResponseMessageDetails<List<Hotel>>>> AddHotel(Hotel hotel)
+        [HttpPost, Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
+        public async Task<ActionResult<ResponseMessageDetails<int>>> AddHotel(Hotel hotel)
         {
-            var result = await _hotelService.AddHotel(hotel);
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            var result = 0;
 
-            if (result is null)
-                return BadRequest("Cannot add hotel.");
+            try
+            {
+                result = await _hotelService.AddHotel(accountId, hotel); 
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message,
+                });
+            }
 
-            return Ok(new ResponseMessageDetails<Hotel>("Add hotel successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Add hotel successfully", result));
         }
 
-        [HttpPut, Authorize(Roles = GlobalConstant.Admin)]
+        [HttpPut, Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<Hotel>>> UpdateHotel(Hotel request)
         {
             var result = await _hotelService.UpdateHotel(request);

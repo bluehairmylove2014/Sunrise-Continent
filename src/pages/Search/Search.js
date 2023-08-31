@@ -21,10 +21,7 @@ import { useSearch } from "../../libs/business-logic/src/lib/hotel";
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import Pagination from "../../components/common/Pagination";
 import Empty from "../../components/common/Empty";
-import {
-  calculateMaxPage,
-  slicePaginationData,
-} from "../../utils/helpers/Pagination";
+import { calculateFromIndex, calculateToIndex } from "../../utils/helpers/Pagination";
 
 const itemsPerPage = 8;
 const budgetKey = "budget";
@@ -102,10 +99,11 @@ const Search = () => {
   const handleSearch = (criteria, isChangePage) => {
     if (typeof criteria.budget === "string") return;
     if (Object.keys(criteria).length) {
+      scrollToTop();
       onSearch({ ...criteria, page_number: isChangePage ? pagination.currentPage : 1 })
         .then((data) => {
           if(data) {
-            console.log("RESULT: ", data)
+            console.log(data)
             setHotels(data.hotelList);
             setPagination({
               currentPage: data.currentPage,
@@ -120,7 +118,6 @@ const Search = () => {
   };
 
   const handleChangePage = () => {
-    scrollToTop();
     handleSearch(criteria, true);
   }
 
@@ -282,7 +279,7 @@ const Search = () => {
                   </span>
                 </h3>
                 <small>
-                  Hiển thị 0 - 14 trong {Number(4102014).toLocaleString("en")}{" "}
+                  Hiển thị {calculateFromIndex(pagination.currentPage, itemsPerPage)} - {pagination.currentPage * itemsPerPage} trong {Number(pagination.maxPage * itemsPerPage).toLocaleString("en")}{" "}
                   kết quả
                 </small>
               </div>
@@ -302,9 +299,9 @@ const Search = () => {
                     <i className="fi fi-ts-angle-small-down"></i>
                   </button>
                   <div className="results-sort__dropdown" ref={sortDropdownRef}>
-                    <button>Phổ biến nhất</button>
-                    <button>Giá tăng dần</button>
-                    <button>Giá giảm dần</button>
+                    <button onClick={() => handleSearch({...criteria, sorting_col: 'Rating', sort_type: 'ASC'})}>Phổ biến nhất</button>
+                    <button onClick={() => handleSearch({...criteria, sorting_col: 'Price', sort_type: 'ASC'})}>Giá tăng dần</button>
+                    <button onClick={() => handleSearch({...criteria, sorting_col: 'Price', sort_type: 'DESC'})}>Giá giảm dần</button>
                   </div>
                 </div>
               </div>

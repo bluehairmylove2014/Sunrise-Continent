@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'sunrise-hotel'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2A3D8A71013A446681B231F65E6615E7 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DF1AEFEA238A467DA73F0C38A68FD8CF }}
           package: .

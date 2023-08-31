@@ -1,21 +1,29 @@
 import z from "zod";
 
-const searchSchema = z.array(
-  z.object({
-    id: z.number(),
-    name: z.string(),
-    country: z.string(),
-    provinceCity: z.string(),
-    address: z.string(),
-    stars: z.number(),
-    rating: z.number(),
-    description: z.string(),
-    image: z.string(),
-    price: z.number(),
-    facilities: z.array(z.string()),
-    services: z.array(z.string()),
-  })
-);
+const searchSchema = z.object({
+  hotelList: z.array(
+    z.object({
+      id: z.number(),
+      name: z.string(),
+      country: z.string(),
+      provinceCity: z.string(),
+      address: z.string(),
+      stars: z.number(),
+      rating: z.number(),
+      description: z.string(),
+      image: z.string(),
+      price: z.number(),
+      facilities: z.array(z.string()),
+      services: z.array(z.string()),
+    })
+  ),
+  pageSize: z.number(),
+  currentPage: z.number(),
+  totalPages: z.number(),
+  hasNext: z.boolean(),
+  hasPrevious: z.boolean()
+})
+
 
 const hotelDetailSchema = z.object({
   id: z.number(),

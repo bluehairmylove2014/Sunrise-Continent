@@ -98,26 +98,31 @@ const Search = () => {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
-
-  const handleSearch = (criteria) => {
-    console.log("SEARCH");
+  
+  const handleSearch = (criteria, isChangePage) => {
     if (typeof criteria.budget === "string") return;
     if (Object.keys(criteria).length) {
-      onSearch({ ...criteria, page_number: pagination.currentPage })
+      onSearch({ ...criteria, page_number: isChangePage ? pagination.currentPage : 1 })
         .then((data) => {
-          setHotels(data);
-          setPagination({
-            ...pagination,
-            maxPage: Array.isArray(data)
-              ? calculateMaxPage(data, itemsPerPage)
-              : 1,
-          });
+          if(data) {
+            console.log("RESULT: ", data)
+            setHotels(data.hotelList);
+            setPagination({
+              currentPage: data.currentPage,
+              maxPage: data.totalPages,
+            });
+          }
         })
         .catch((err) => {
           console.error(err);
         });
     }
   };
+
+  const handleChangePage = () => {
+    scrollToTop();
+    handleSearch(criteria, true);
+  }
 
   const budgetToObject = (arrayBudget) => {
     if (!Array.isArray(arrayBudget) || arrayBudget.length !== 2)
@@ -213,12 +218,7 @@ const Search = () => {
           <Empty label={"Không có khách sạn nào cả"} />
         </div>
       );
-    return slicePaginationData(
-      hotelList,
-      pagination.currentPage,
-      pagination.maxPage,
-      itemsPerPage
-    ).map((hotel) => {
+    return hotelList.map((hotel) => {
       return <Hotel data={hotel} key={hotel.id} criteria={criteria} />;
     });
   };
@@ -319,7 +319,7 @@ const Search = () => {
                     setState: setPagination,
                   }}
                   model={PAGINATION_MODEL.SIMPLE}
-                  callback={scrollToTop}
+                  callback={handleChangePage}
                 />
               </div>
             </div>

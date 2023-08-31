@@ -25,6 +25,23 @@ import { calculateFromIndex, calculateToIndex } from "../../utils/helpers/Pagina
 
 const itemsPerPage = 8;
 const budgetKey = "budget";
+const sortCriteria = {
+  RATING: {
+    sorting_col: 'Rating',
+    sort_type: 'ASC',
+    name: 'Phổ biến nhất'
+  },
+  ASC_PRICE: {
+    sorting_col: 'Price',
+    sort_type: 'ASC',
+    name: 'Giá tăng dần'
+  },
+  DESC_PRICE: {
+    sorting_col: 'Price',
+    sort_type: 'DESC',
+    name: 'Giá giảm dần'
+  },
+}
 function createCheckboxDefaultValue(inputObject) {
   const {
     location,
@@ -44,6 +61,7 @@ function createCheckboxDefaultValue(inputObject) {
   return checkboxNames;
 }
 const Search = () => {
+  const [selectedSort, setSelectedSort] = useState(null);
   const { onSearch, isLoading: isSearching } = useSearch();
   const sortDropdownRef = useRef(null);
   const [pagination, setPagination] = useState({
@@ -90,20 +108,19 @@ const Search = () => {
   }, [location]);
 
   const scrollToTop = () => {
-    const element = document.querySelector(`.search__results`);
+    const element = document.querySelector(`.results__title`);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
-  
+
   const handleSearch = (criteria, isChangePage) => {
     if (typeof criteria.budget === "string") return;
     if (Object.keys(criteria).length) {
       scrollToTop();
       onSearch({ ...criteria, page_number: isChangePage ? pagination.currentPage : 1 })
         .then((data) => {
-          if(data) {
-            console.log(data)
+          if (data) {
             setHotels(data.hotelList);
             setPagination({
               currentPage: data.currentPage,
@@ -182,11 +199,15 @@ const Search = () => {
       } else {
         if (Array.isArray(newCriteria[key])) {
           newCriteria[key] = newCriteria[key].filter((v) => v !== value);
+          if (newCriteria[key].length === 0) {
+            delete newCriteria[key];
+          }
         } else {
           delete newCriteria[key];
         }
       }
     }
+
 
     let paramsCriteria = { ...newCriteria };
     if (newBudget) {
@@ -295,13 +316,18 @@ const Search = () => {
                       toggleClass(sortDropdownRef.current, "active")
                     }
                   >
-                    <span>Sắp xếp theo</span>
+                    {
+                      selectedSort ? <span>{selectedSort}</span> : <span>Sắp xếp theo</span>
+                    }
                     <i className="fi fi-ts-angle-small-down"></i>
                   </button>
                   <div className="results-sort__dropdown" ref={sortDropdownRef}>
-                    <button onClick={() => handleSearch({...criteria, sorting_col: 'Rating', sort_type: 'ASC'})}>Phổ biến nhất</button>
-                    <button onClick={() => handleSearch({...criteria, sorting_col: 'Price', sort_type: 'ASC'})}>Giá tăng dần</button>
-                    <button onClick={() => handleSearch({...criteria, sorting_col: 'Price', sort_type: 'DESC'})}>Giá giảm dần</button>
+                    {
+                      Object.keys(sortCriteria).map(sck => <button key={sck} onClick={() => {
+                        setSelectedSort(sortCriteria[sck].name)
+                        handleSearch({ ...criteria, sorting_col: sortCriteria[sck].sorting_col, sort_type: sortCriteria[sck].sort_type })}
+                      }>{sortCriteria[sck].name}</button>)
+                    }
                   </div>
                 </div>
               </div>

@@ -21,7 +21,7 @@ import { useSearch } from "../../libs/business-logic/src/lib/hotel";
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import Pagination from "../../components/common/Pagination";
 import Empty from "../../components/common/Empty";
-import { calculateFromIndex, calculateToIndex } from "../../utils/helpers/Pagination";
+import { calculateFromIndex } from "../../utils/helpers/Pagination";
 
 const itemsPerPage = 8;
 const budgetKey = "budget";

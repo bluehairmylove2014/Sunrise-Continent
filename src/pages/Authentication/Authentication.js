@@ -19,6 +19,7 @@ import {
 } from "../../utils/helpers/RedirectUrlSaver";
 
 const Authentication = () => {
+  const isLoginProcess = useRef(false);
   const loginForm = useForm({
     defaultValues: {
       email: "",
@@ -55,7 +56,7 @@ const Authentication = () => {
   }, [location]);
 
   useEffect(() => {
-    if (isLoggin) {
+    if (isLoggin && !isLoginProcess.current) {
       navigate(PAGES.HOME);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,9 +66,14 @@ const Authentication = () => {
   const handleNavigate = () => {
     const oldRedirectUrl = getRedirectUrl();
     if (oldRedirectUrl) {
-      deleteRedirectUrl();
       navigate(oldRedirectUrl);
-    } else navigate(PAGES.HOME);
+      deleteRedirectUrl();
+    } else {
+      navigate(PAGES.HOME)
+    };
+    setTimeout(() => {
+      isLoginProcess.current = false;
+    }, 2000);
   };
 
   const handleFocus = (target) => {
@@ -85,6 +91,7 @@ const Authentication = () => {
     }
   };
   const handleGoogleLogin = () => {
+    isLoginProcess.current = true;
     onGoogleLogin()
       .then((message) => {
         toast.success(message);
@@ -95,6 +102,7 @@ const Authentication = () => {
       });
   };
   const handleLogin = ({ email, password, isRememberMe }) => {
+    isLoginProcess.current = true;
     onLogin({
       isRememberMe,
       email,
@@ -118,6 +126,7 @@ const Authentication = () => {
     }
   };
   const handleRegister = ({ email, fullName, password }) => {
+    isLoginProcess.current = true;
     onRegister({ email, fullName, password })
       .then((message) => {
         toast.success(message);

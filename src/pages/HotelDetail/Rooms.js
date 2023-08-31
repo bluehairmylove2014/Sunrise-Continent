@@ -54,7 +54,12 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
       ],
     })
       .then((message) => {
-        toast.success(message);
+        if(message === 'Sản phẩm đã tồn tại') {
+          toast.error(message)
+        }
+        else {
+          toast.success(message);
+        }
       })
       .catch((err) => {
         toast.error(err.message);

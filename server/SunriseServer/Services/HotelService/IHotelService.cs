@@ -8,7 +8,7 @@ namespace SunriseServer.Services.HotelService
     {
         Task<List<Hotel>> GetAllHotels();
         Task<Hotel> GetSingleHotel(int id);
-        Task<Hotel> AddHotel(Hotel hotel);
+        Task<int> AddHotel(int accountId, InputHotelDto hotel);
         Task<Hotel> UpdateHotel(Hotel request);
         Task<Hotel> DeleteHotel(int id);
 
@@ -21,6 +21,9 @@ namespace SunriseServer.Services.HotelService
 
         // search and filter
         Task<List<Hotel>> GetSearchHotels(SearchHotelDto searchHotel);
+
+        // Revenue
+        Task<List<YealyRevenue>> GetHotelYealyRevenue(int hotelId, int year);
     }
 };
 

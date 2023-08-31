@@ -16,6 +16,8 @@ using SunriseServerCore.Dtos.Hotel;
 using SunriseServer.Services.CacheService;
 using SunriseServerCore.Common.Helper;
 using Newtonsoft.Json;
+using System.Security.Claims;
+using SunriseServer.Services.AccountService;
 
 namespace SunriseServer.Controllers
 {
@@ -28,11 +30,13 @@ namespace SunriseServer.Controllers
         readonly IHotelService _hotelService;
         readonly IRoomService _roomService;
         readonly ICacheService _cacheService;
+        readonly IAccountService _accountService;
 
-        public HotelController(IHotelService hotelService, IRoomService roomService, ICacheService cacheService)
+        public HotelController(IHotelService hotelService, IRoomService roomService, ICacheService cacheService, IAccountService accountService)
         {
             _hotelService = hotelService;
             _roomService = roomService;
+            _accountService = accountService;
             _cacheService = cacheService;
         }
 
@@ -142,18 +146,27 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpPost, Authorize(Roles = GlobalConstant.Admin)]
-        public async Task<ActionResult<ResponseMessageDetails<List<Hotel>>>> AddHotel(Hotel hotel)
+        [HttpPost, Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
+        public async Task<ActionResult<ResponseMessageDetails<int>>> AddHotel(InputHotelDto hotel)
         {
-            var result = await _hotelService.AddHotel(hotel);
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            var result = 0;
 
-            if (result is null)
-                return BadRequest("Cannot add hotel.");
+            try
+            {
+                result = await _hotelService.AddHotel(accountId, hotel); 
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message,
+                });
+            }
 
-            return Ok(new ResponseMessageDetails<Hotel>("Add hotel successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Add hotel successfully", result));
         }
 
-        [HttpPut, Authorize(Roles = GlobalConstant.Admin)]
+        [HttpPut, Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<Hotel>>> UpdateHotel(Hotel request)
         {
             var result = await _hotelService.UpdateHotel(request);
@@ -173,6 +186,7 @@ namespace SunriseServer.Controllers
 
             return Ok(new ResponseMessageDetails<Hotel>("Delete hotel successfully", result));
         }
+
         //?{location}{room_type}{start_date}{end_date}{budget}{rooms}{adults}{children}
         [HttpGet("search")]
         public async Task<ActionResult<List<HotelDto>>> GetSearchHotel(
@@ -235,6 +249,33 @@ namespace SunriseServer.Controllers
             _cacheService.SetData<IEnumerable<Review>>($"reviews-hotel{hotelId}", result, expiryTime);
 
             return Ok(result);
+        }
+
+        // GetHotelYealyRevenue
+        [HttpGet("yearly-revenue"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
+        public async Task<ActionResult<List<YealyRevenue>>> GetHotelYearlyRevenue(int? hotelId, int year)
+        {
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            int checkHotelId = hotelId ?? (await _accountService.GetAccountDetailsById(accountId)).HotelId;
+            List<YealyRevenue> result = new();
+
+            if (checkHotelId == 0)
+                return BadRequest(new {
+                    message = "Admin don't have hotel.",
+                });
+
+            try
+            {
+                result = await _hotelService.GetHotelYealyRevenue(checkHotelId , year);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message,
+                });
+            }
+
+            return Ok(new ResponseMessageDetails<List<YealyRevenue>>("Get yearly revenue successfully", result));
         }
     }
 }

@@ -54,6 +54,10 @@ namespace SunriseServerData
 
             modelBuilder.Entity<Review>()
                 .HasKey(x => new { x.Id });
+
+            // YealyRevenue
+            modelBuilder.Entity<YealyRevenue>()
+                .HasNoKey().ToTable("YealyRevenue", t => t.ExcludeFromMigrations());
         }
 
         public DbSet<Hotel> Hotel { get; set; }

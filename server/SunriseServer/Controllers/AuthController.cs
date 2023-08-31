@@ -44,13 +44,16 @@ namespace SunriseServer.Controllers
                 return BadRequest("Username exists");
             }
 
-            acc = new Account();
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            acc.Id = await _accService.GetNextAccountId();
-            acc.Email = request.Email;
-            acc.PasswordHash = Helper.ByteArrayToString(passwordHash);
-            acc.PasswordSalt = Helper.ByteArrayToString(passwordSalt);
-            acc.UserRole = GlobalConstant.Admin;
+
+            acc = new Account ()
+            {
+                Id = await _accService.GetNextAccountId(),
+                Email = request.Email,
+                PasswordHash = Helper.ByteArrayToString(passwordHash),
+                PasswordSalt = Helper.ByteArrayToString(passwordSalt),
+                UserRole = GlobalConstant.Admin
+            };
 
             var token = CreateToken(acc, GlobalConstant.Admin);
             var refreshToken = GenerateRefreshToken();
@@ -65,6 +68,9 @@ namespace SunriseServer.Controllers
             if (request.Password.Length < 6)
                 return BadRequest("Password is too weak, must be greater than 6 characters");
 
+            if (request.Role != GlobalConstant.Partner)
+                request.Role = GlobalConstant.User;
+
             var acc = await _accService.GetByUsername(request.Email);
 
             if (acc != null)
@@ -72,18 +78,22 @@ namespace SunriseServer.Controllers
                 return BadRequest("Email exists");
             }
 
-            acc = new Account();
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            acc.Id = await _accService.GetNextAccountId();
-            acc.Email = request.Email;
-            acc.FullName = request.FullName;
-            acc.PasswordHash = Helper.ByteArrayToString(passwordHash);
-            acc.PasswordSalt = Helper.ByteArrayToString(passwordSalt);
-            acc.UserRole = GlobalConstant.User;
 
-            var token = CreateToken(acc, GlobalConstant.User);
+            acc = new Account ()
+            {
+                Id = await _accService.GetNextAccountId(),
+                Email = request.Email,
+                FullName = request.FullName,
+                PasswordHash = Helper.ByteArrayToString(passwordHash),
+                PasswordSalt = Helper.ByteArrayToString(passwordSalt),
+                UserRole = request.Role
+            };
+
+            var token = CreateToken(acc, request.Role);
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, acc);
+
             await _accService.AddAccount(acc);
             return Ok(new {
                 Message = "Register successfully",
@@ -91,37 +101,43 @@ namespace SunriseServer.Controllers
             });
         }
 
-        [HttpPost("login-social")]
-        public async Task<ActionResult<ResponseMessageDetails<string>>> LoginSocial(LoginSocialDto request)
+        [HttpPost("register-social")]
+        public async Task<ActionResult<ResponseMessageDetails<string>>> RegisterSocial(RegisterSocialDto request)
         {
+            if (request.Role != GlobalConstant.Partner)
+                request.Role = GlobalConstant.User;
+
             var personalDetail = await _accService.GetAccountDetailSocial(request.Email, request.FullName);
             var MyId = personalDetail is null ? await _accService.GetNextAccountId() : personalDetail.AccountId;
+
+            if (personalDetail != null)
+            {
+                return BadRequest(new {
+                    message = "Account exists"
+                });
+            }
 
             var acc = new Account ()
             {
                 Id = MyId,
                 Email = request.Email,
                 FullName = request.FullName,
-                UserRole = GlobalConstant.User
+                UserRole = request.Role
             };
 
-            var token = CreateToken(acc, GlobalConstant.User);
+            var token = CreateToken(acc, request.Role);
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, acc);
 
-            if (personalDetail == null)
-            {
-                var newAcc = new CreateSocialDto ();
-                SetPropValueByReflection.AddYToX(newAcc, acc);
-
-                await _accService.CreateSocial(newAcc);
-            }
+            var newAcc = new CreateSocialDto ();
+            SetPropValueByReflection.AddYToX(newAcc, acc);
+            await _accService.CreateSocial(newAcc);
 
             return Ok(new {
                 Message = "Login successfully",
                 Token = token
             });
-        }
+        }        
 
         [HttpPost("login")]
         public async Task<ActionResult<ResponseMessageDetails<string>>> Login(LoginDto request)
@@ -147,14 +163,39 @@ namespace SunriseServer.Controllers
             return Ok(new
             {
                 Message = "Login successfully",
-                Token = token
+                Token = token,
+                Role = account.UserRole
+            });
+        }
+
+        [HttpPost("login-social")]
+        public async Task<ActionResult<ResponseMessageDetails<string>>> LoginSocial(LoginSocialDto request)
+        {
+            var personalDetail = await _accService.GetAccountDetailSocial(request.Email, request.FullName);
+
+            if (personalDetail == null)
+            {
+                return NotFound(new ResponseMessageDetails<string>("User not found", ResponseStatusCode.NotFound));
+            }
+
+            var acc = await _accService.GetAccountById(personalDetail.AccountId);
+
+            var token = CreateToken(acc, personalDetail.Role);
+            var refreshToken = GenerateRefreshToken();
+            SetRefreshToken(refreshToken, acc);
+
+            return Ok(new {
+                Message = "Login successfully",
+                Token = token,
+                personalDetail.Role
             });
         }
 
         [HttpPost("refresh-token"), Authorize]
         public async Task<ActionResult<ResponseMessageDetails<string>>> RefreshToken()
         {
-            var acc = await _accService.GetByUsername(User.Identity.Name);
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            var acc = await _accService.GetAccountById(accountId);
             var refreshToken = Request.Cookies["refreshToken"];
 
             if (!acc.RefreshToken.Equals(refreshToken))

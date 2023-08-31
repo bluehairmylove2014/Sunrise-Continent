@@ -131,7 +131,9 @@ namespace SunriseServer.Controllers
             }
             catch (Microsoft.Data.SqlClient.SqlException exception)
             {
-                return BadRequest(exception.Message);
+                return BadRequest(new {
+                    message = exception.Message
+                });
             }
 
             return Ok(new ResponseMessageDetails<int>("Redeem voucher successfully", result));

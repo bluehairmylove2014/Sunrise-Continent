@@ -13,4 +13,11 @@ namespace SunriseServerCore.Models
     {  
         public int MyValue { get; set; }
     }
+
+    [NotMapped]
+    public class YealyRevenue : ModelBase
+    {  
+        public int Months { get; set; }
+        public long Revenue { get; set; }
+    }
 }

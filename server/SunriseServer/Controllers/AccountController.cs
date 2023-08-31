@@ -21,7 +21,7 @@ namespace SunriseServer.Controllers
             _accountService = accountService;
         }
 
-        [HttpGet("current-account"), Authorize(Roles = GlobalConstant.User)]
+        [HttpGet("current-account"), Authorize]
         public async Task<ActionResult<PersonalDetail>> GetCurrentAccount()
         {
             Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
@@ -43,7 +43,7 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpPut(""), Authorize(Roles = GlobalConstant.User)]
+        [HttpPut(""), Authorize]
         public async Task<ActionResult<int>> UpdateAccount(Account request)
         {
             var result = await _accountService.UpdateAccount(request);
@@ -53,7 +53,7 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpPut("personal-info"), Authorize(Roles = GlobalConstant.User)]
+        [HttpPut("personal-info"), Authorize]
         public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateAccountPersonalInfo(UpdateInfoDto request)
         {
             Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);

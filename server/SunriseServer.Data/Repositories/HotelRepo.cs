@@ -89,17 +89,17 @@ namespace SunriseServerData.Repositories
             builder.Append($"@Rooms = {searchHotel.Rooms}, ");
             builder.Append($"@Adult = {searchHotel.Adults}, ");
             builder.Append($"@Children = {searchHotel.Children}, ");
-            if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.hotel_type))
-                builder.Append($"@HotelType = \'{searchHotel.FilterHotelDto.hotel_type}\', ");
-            if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.bed_type))
-                builder.Append($"@BedType = \'{searchHotel.FilterHotelDto.bed_type}\', ");
-            builder.Append($"@GuestRating = {searchHotel.FilterHotelDto.guest_rating}, ");
+            if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.hotelType))
+                builder.Append($"@HotelType = \'{searchHotel.FilterHotelDto.hotelType}\', ");
+            if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.bedType))
+                builder.Append($"@BedType = \'{searchHotel.FilterHotelDto.bedType}\', ");
+            builder.Append($"@GuestRating = {searchHotel.FilterHotelDto.guestRating}, ");
             if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.facilities))
                 builder.Append($"@Facilities = \'{searchHotel.FilterHotelDto.facilities}\', ");
             if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.service))
                 builder.Append($"@Service = \'{searchHotel.FilterHotelDto.service}\', ");
-            builder.Append($"@SortingCol = \'{searchHotel.FilterHotelDto.sorting_col}\', ");
-            builder.Append($"@SortType = \'{searchHotel.FilterHotelDto.sort_type}\';\n");
+            builder.Append($"@SortingCol = \'{searchHotel.FilterHotelDto.sortingCol}\', ");
+            builder.Append($"@SortType = \'{searchHotel.FilterHotelDto.sortType}\';\n");
 
             Console.WriteLine(builder.ToString());
 

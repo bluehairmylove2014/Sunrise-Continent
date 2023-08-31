@@ -101,44 +101,6 @@ namespace SunriseServer.Controllers
             });
         }
 
-        [HttpPost("register-social")]
-        public async Task<ActionResult<ResponseMessageDetails<string>>> RegisterSocial(RegisterSocialDto request)
-        {
-            if (request.Role != GlobalConstant.Partner)
-                request.Role = GlobalConstant.User;
-
-            var personalDetail = await _accService.GetAccountDetailSocial(request.Email, request.FullName);
-            var MyId = personalDetail is null ? await _accService.GetNextAccountId() : personalDetail.AccountId;
-
-            if (personalDetail != null)
-            {
-                return BadRequest(new {
-                    message = "Account exists"
-                });
-            }
-
-            var acc = new Account ()
-            {
-                Id = MyId,
-                Email = request.Email,
-                FullName = request.FullName,
-                UserRole = request.Role
-            };
-
-            var token = CreateToken(acc, request.Role);
-            var refreshToken = GenerateRefreshToken();
-            SetRefreshToken(refreshToken, acc);
-
-            var newAcc = new CreateSocialDto ();
-            SetPropValueByReflection.AddYToX(newAcc, acc);
-            await _accService.CreateSocial(newAcc);
-
-            return Ok(new {
-                Message = "Login successfully",
-                Token = token
-            });
-        }        
-
         [HttpPost("login")]
         public async Task<ActionResult<ResponseMessageDetails<string>>> Login(LoginDto request)
         {
@@ -152,7 +114,9 @@ namespace SunriseServer.Controllers
             if (account.Email != request.Email ||
                 !VerifyPasswordHash(request.Password, Helper.StringToByteArray(account.PasswordHash), Helper.StringToByteArray(account.PasswordSalt)))
             {
-                return BadRequest("Wrong credentials");
+                return BadRequest(new {
+                    message = "Wrong credentials",
+                });
             }
 
             string token = CreateToken(account, account.UserRole);
@@ -162,32 +126,41 @@ namespace SunriseServer.Controllers
 
             return Ok(new
             {
-                Message = "Login successfully",
-                Token = token,
-                Role = account.UserRole
+                message = "Login successfully",
+                token,
+                role = account.UserRole
             });
         }
 
         [HttpPost("login-social")]
-        public async Task<ActionResult<ResponseMessageDetails<string>>> LoginSocial(LoginSocialDto request)
+        public async Task<ActionResult<ResponseMessageDetails<string>>> LoginSocial(RegisterSocialDto request)
         {
+            if (request.Role != GlobalConstant.Partner)
+                request.Role = GlobalConstant.User;
+
             var personalDetail = await _accService.GetAccountDetailSocial(request.Email, request.FullName);
-
-            if (personalDetail == null)
+            var MyId = personalDetail is null ? await _accService.GetNextAccountId() : personalDetail.AccountId;
+            Account acc = await _accService.GetAccountById(MyId) ?? new Account ()
             {
-                return NotFound(new ResponseMessageDetails<string>("User not found", ResponseStatusCode.NotFound));
-            }
+                Id = MyId,
+                Email = request.Email,
+                FullName = request.FullName,
+                UserRole = request.Role
+            };
 
-            var acc = await _accService.GetAccountById(personalDetail.AccountId);
-
-            var token = CreateToken(acc, personalDetail.Role);
+            var token = CreateToken(acc, request.Role);
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, acc);
 
+            if (personalDetail is null)
+            {
+                await _accService.CreateSocial(new CreateSocialDto(acc));
+            }
+
             return Ok(new {
-                Message = "Login successfully",
-                Token = token,
-                personalDetail.Role
+                message = "Login successfully",
+                token,
+                role = request.Role
             });
         }
 

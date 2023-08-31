@@ -3519,7 +3519,7 @@ INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, Da
 (598, N'Hoàng Minh Cảnh', 'rachel22@hotmail.com', '0947702520', '2003-06-09', 'Male', N'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', N'Bronze'),
 (599, N'Hồ Võ Thanh Thu', 'stevencombs@gmail.com', '0381390001', '1979-10-01', 'Female', N'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/avt_7.png', N'Bronze'),
 (600, N'Nguyễn Minh Lý', 'justinwaters@gmail.com', '0842756271', '1980-09-27', 'Female', N'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/focalos.png', N'Bronze');
-
+UPDATE PERSONAL_DETAILS SET HotelId = 0;
 
 INSERT INTO REVIEW (ReviewId, AccountId, HotelId, ReviewDate, Points, Content) VALUES
 (1, 299, 7, '2023-03-06', 8, N'Eight light she store quite see serve successful line door.'),

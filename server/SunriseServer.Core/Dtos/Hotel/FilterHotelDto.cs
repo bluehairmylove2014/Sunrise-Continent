@@ -9,12 +9,12 @@ namespace SunriseServerCore.Dtos.Hotel
 {
     public class FilterHotelDto
     {
-        public string hotel_type { get; set; } = null;
-        public string bed_type { get; set; } = null;
-        public int guest_rating { get; set; } = 0;
+        public string hotelType { get; set; } = null;
+        public string bedType { get; set; } = null;
+        public int guestRating { get; set; } = 0;
         public string facilities { get; set; } = null;
         public string service { get; set; } = null;
-        public string sorting_col { get; set; } = "Rating";
-        public string sort_type { get; set; } = "DESC";
+        public string sortingCol { get; set; } = "Rating";
+        public string sortType { get; set; } = "DESC";
     }
 }

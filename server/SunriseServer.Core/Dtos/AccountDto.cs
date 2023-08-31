@@ -1,4 +1,6 @@
-﻿namespace SunriseServerCore.Dtos
+﻿using SunriseServerCore.Models;
+
+namespace SunriseServerCore.Dtos
 {
     public class AccountDto
     {
@@ -15,6 +17,17 @@
         public string RefreshToken { get; set; } = string.Empty;
         public DateTime TokenCreated { get; set; }
         public DateTime TokenExpires { get; set; }
+
+        public CreateSocialDto(Account acc)
+        {
+            Id = acc.Id;
+            Email = acc.Email;
+            FullName = acc.FullName;
+            UserRole = acc.UserRole;
+            RefreshToken = acc.RefreshToken;
+            TokenCreated = acc.TokenCreated;
+            TokenExpires = acc.TokenExpires;
+        }
     }
 
     public class UpdateInfoDto

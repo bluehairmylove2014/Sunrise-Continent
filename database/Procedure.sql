@@ -247,6 +247,49 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROC USP_UpdateHotel -- // new check
+	@Id INT,
+	@Name NVARCHAR(100),
+	@Country NVARCHAR(100),
+	@HotelType VARCHAR(100),
+	@ProvinceCity NVARCHAR(100),  
+	@Address NVARCHAR(100),
+	@Stars INT,
+	@Description NVARCHAR(1000),
+	@Image NVARCHAR(1000)
+AS
+BEGIN
+	IF NOT EXISTS (SELECT Id FROM HOTEL WHERE Id = @Id)
+	BEGIN
+		RAISERROR ('Khách sạn không tồn tại.', 11, 1);
+		RETURN -2;
+	END
+
+	BEGIN TRAN
+	BEGIN TRY
+		UPDATE HOTEL SET
+			Name = @Name,
+			Country = @Country,
+			HotelType = @HotelType,
+			ProvinceCity = @ProvinceCity,  
+			Address = @Address,
+			Stars = @Stars,
+			Description = @Description,
+			Image = @Image
+		WHERE Id = @Id;
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR ('Lỗi trong quá trình thêm khách sạn.', 11, 1);
+		ROLLBACK;
+		RETURN -1;
+	END CATCH
+
+	COMMIT;
+	RETURN 0
+END
+GO
+
 
 
 CREATE OR ALTER PROC USP_GetAllAccount
@@ -1618,6 +1661,32 @@ BEGIN
 END
 GO
 
+
+GO --//new check
+CREATE OR ALTER FUNCTION USF_CheckAccountOrder (
+    @AccountId INT,
+    @CheckAccountId INT,
+	@HotelId INT)
+RETURNS BIT
+BEGIN
+	DECLARE @UserRole VARCHAR(50);
+	SELECT @UserRole = UserRole FROM ACCOUNT WHERE Id = @AccountId;
+
+	IF (@UserRole = 'Admin')
+		RETURN 1;
+	ELSE IF (@UserRole = 'User')
+	BEGIN
+		RETURN CASE WHEN @AccountId = @CheckAccountId THEN 1 ELSE 0 END;
+	END
+
+	DECLARE @AccHotel INT = 0;
+	SELECT @AccHotel = CASE WHEN @HotelId = pd.HotelId THEN 1 ELSE 0 END 
+	FROM PERSONAL_DETAILS pd WHERE AccountId = @AccountId;
+
+	RETURN @AccHotel;
+END;
+GO
+
 -- //
 GO
 CREATE OR ALTER PROC USP_GetAllAccountOrder (
@@ -1633,10 +1702,11 @@ BEGIN
 							LEFT JOIN BOOKING_ACCOUNT BA ON BA.BookingId = OD.BookingId
 							LEFT JOIN HOTEL H ON H.Id = BA.HotelId
 							LEFT JOIN ROOM_TYPE RT ON RT.Id = BA.RoomTypeId and RT.HotelId = BA.HotelId
-	WHERE AO.AccountId = @AccountId;
+	WHERE dbo.USF_CheckAccountOrder(@AccountId, AO.AccountId, BA.HotelId) = 1;
 END
 GO
---exec USP_GetAllAccountOrder 10
+
+
 -- //
 GO
 CREATE OR ALTER PROC USP_GetUnconfirmOrder (

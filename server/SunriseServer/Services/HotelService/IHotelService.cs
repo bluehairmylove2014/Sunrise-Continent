@@ -9,7 +9,7 @@ namespace SunriseServer.Services.HotelService
         Task<List<Hotel>> GetAllHotels();
         Task<Hotel> GetSingleHotel(int id);
         Task<int> AddHotel(int accountId, InputHotelDto hotel);
-        Task<Hotel> UpdateHotel(Hotel request);
+        Task<int> UpdateHotel(Hotel request);
         Task<Hotel> DeleteHotel(int id);
 
         // room services

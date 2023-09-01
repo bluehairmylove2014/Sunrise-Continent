@@ -48,6 +48,25 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
+        public async Task<int> UpdateHotelAsync(Hotel entity)
+        {           
+            var builder = new StringBuilder("EXEC USP_UpdateHotel ");
+            builder.Append($"@Id = {entity.Id}, ");
+            builder.Append($"@Name = N\'{entity.Name}\', ");
+            builder.Append($"@Country = N\'{entity.Country}\', ");
+            builder.Append($"@HotelType = \'{entity.HotelType}\', ");
+            builder.Append($"@ProvinceCity = N\'{entity.ProvinceCity}\', ");
+            builder.Append($"@Address = N\'{entity.Address}\', ");
+            builder.Append($"@Stars = {entity.Stars}, ");
+            builder.Append($"@Description = N\'{entity.Description}\', ");
+            builder.Append($"@Image = N\'{entity.Image}\';");
+
+            Console.WriteLine(builder.ToString());
+
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            return result;
+        }
+
 
         // More info
         public async Task<List<RoomFacilityConstant>> GetHotelFacilityAsync(int id)

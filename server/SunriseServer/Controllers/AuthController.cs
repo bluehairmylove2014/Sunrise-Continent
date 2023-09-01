@@ -59,7 +59,11 @@ namespace SunriseServer.Controllers
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, acc);
             await _accService.AddAccount(acc);
-            return Ok(new ResponseMessageDetails<string>("Register admin successfully", token));
+            return Ok(new {
+                message = "Register Admin successfully.",
+                token,
+                role = GlobalConstant.Admin
+            });
         }
 
         [HttpPost("register")]

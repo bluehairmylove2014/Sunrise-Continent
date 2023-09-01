@@ -26,15 +26,12 @@ namespace SunriseServer.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet, Authorize(Roles = GlobalConstant.User)]
+        [HttpGet, Authorize]
         public async Task<ActionResult<IEnumerable<GetOrderItemsDto>>> GetAccountOrder()
         {
             Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
 
             var rawResult = await _orderService.GetAccountOrder(accountId);
-
-            if (rawResult.Count() == 0)
-                return NotFound("You do not have any order.");
 
             var result = new List<GetOrderItemsDto>();
             
@@ -57,9 +54,6 @@ namespace SunriseServer.Controllers
                 rawResult = rawResult.Except(oneOrderItems).ToList();
                 result.Add(oneOrder);
             }
-
-            if (result is null)
-                return NotFound("You do not have any order.");
 
             return Ok(result);
         }

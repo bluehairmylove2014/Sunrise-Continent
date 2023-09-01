@@ -22,7 +22,10 @@ namespace SunriseServerData.Repositories
 
         public async Task<IEnumerable<Order>> GetAccountOrderAsync(int accountId)
         {
-            return await _dataContext.Order.FromSqlInterpolated($"EXEC USP_GetAllAccountOrder {accountId};").IgnoreQueryFilters().ToListAsync();
+            return await _dataContext.Order
+                .FromSqlInterpolated($"EXEC USP_GetAllAccountOrder {accountId};")
+                .IgnoreQueryFilters()
+                .ToListAsync();
         }
 
         public async Task<int> CreateOrderAsync(ListOrderDto order, int accountId)

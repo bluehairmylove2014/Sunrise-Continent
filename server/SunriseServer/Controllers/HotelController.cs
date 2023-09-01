@@ -167,16 +167,24 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPut, Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
-        public async Task<ActionResult<ResponseMessageDetails<Hotel>>> UpdateHotel(Hotel request)
+        public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateHotel(Hotel request)
         {
-            var result = await _hotelService.UpdateHotel(request);
-            if (result is null)
-                return NotFound("Hotel not found.");
+            int result;
+            try
+            {
+                result = await _hotelService.UpdateHotel(request); 
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message,
+                });
+            }
 
-            return Ok(new ResponseMessageDetails<Hotel>("Update hotel successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Update hotel successfully", result));
         }
 
-        [HttpDelete, Authorize(Roles = GlobalConstant.Admin)]
+        [HttpDelete, Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<Hotel>>> DeleteHotel(int id)
         {
             var result = await _hotelService.DeleteHotel(id);

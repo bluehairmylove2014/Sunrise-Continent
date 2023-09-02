@@ -54,9 +54,9 @@ namespace SunriseServer.Services.RoomService
         }
 
         // POST
-        public async Task<RoomType> AddRoomType(RoomType createDto)
+        public async Task<int> AddRoomType(RoomDto createDto)
         {
-            var result = await _unitOfWork.RoomRepo.CreateAsync(createDto);
+            var result = await _unitOfWork.RoomRepo.CreateRoomAsync(createDto);
             return result;
         }
 

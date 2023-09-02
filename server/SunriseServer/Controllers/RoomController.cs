@@ -110,14 +110,22 @@ namespace SunriseServer.Controllers
         }
 
         // POST
-        [HttpPost(""), Authorize(Roles = GlobalConstant.Admin)]
-        public async Task<ActionResult<ResponseMessageDetails<RoomType>>> CreateRoomType(RoomType request)
+        [HttpPost(""), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
+        public async Task<ActionResult<ResponseMessageDetails<int>>> CreateRoomType(RoomDto request)
         {
-            var result = await _roomService.AddRoomType(request);
-            if (result is null)
-                return BadRequest("Create RoomType failed");
+            int result;
+            try
+            {
+                result = await _roomService.AddRoomType(request);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message,
+                });
+            }
 
-            return Ok(new ResponseMessageDetails<RoomType>("Create RoomType successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Create RoomType successfully", result));
         }
 
         [HttpPost("picture"), Authorize(Roles = GlobalConstant.Admin)]
@@ -131,12 +139,25 @@ namespace SunriseServer.Controllers
         }
 
         // PUT
-        [HttpPut(""), Authorize(Roles = GlobalConstant.Admin)]
-        public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateRoomType(RoomType request)
+        [HttpPut(""), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
+        public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateRoomType(RoomDto request)
         {
-            var result = await _roomService.UpdateRoomType(request);
-            if (result == 0)
-                return NotFound("Room not found.");
+            int result;
+            try
+            {
+                result = await _roomService.DeleteRoomType(new DeleteRoomDto {
+                    HotelId = request.HotelId,
+                    RoomTypeId = request.Id,
+                });
+
+                result = await _roomService.AddRoomType(request);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message,
+                });
+            }
             
             return Ok(new ResponseMessageDetails<int>("Update RoomType successfully", ResponseStatusCode.Ok));
         }

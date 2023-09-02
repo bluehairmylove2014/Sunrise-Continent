@@ -15,7 +15,7 @@ namespace SunriseServer.Services.RoomService
         Task<bool> CheckRoomAvailability(CheckRoomAvailabilityDto checkDto);
 
         // POST
-        Task<RoomType> AddRoomType(RoomType createDto);
+        Task<int> AddRoomType(RoomDto createDto);
         Task<RoomPicture> AddRoomPicture(RoomPictureDto createDto);
 
         // PUT

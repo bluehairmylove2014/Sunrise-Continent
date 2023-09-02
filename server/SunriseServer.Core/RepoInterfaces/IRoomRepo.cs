@@ -19,6 +19,7 @@ namespace SunriseServerCore.RepoInterfaces
         Task<bool> CheckRoomAvailabilityAsync(CheckRoomAvailabilityDto checkDto);
 
         // ========= CREATE =========
+        Task<int> CreateRoomAsync(RoomDto createDto);
         Task<RoomPicture> CreateRoomPictureAsync(RoomPictureDto createDto);
 
         // ========= UPDATE =========

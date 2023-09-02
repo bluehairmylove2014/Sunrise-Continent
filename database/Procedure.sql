@@ -570,12 +570,26 @@ END
 GO
 
 
---TODO PROCEDURE CRUD LOẠI PHÒNG
+--
+GO
+CREATE OR ALTER FUNCTION USF_GetNextRoomId ( -- // new check
+	@HotelId INT)
+RETURNS INT
+BEGIN
+	declare @Result INT;
+	with cte as (select Id id, lead(Id) over (order by Id) nextid from [dbo].[ROOM_TYPE] where HotelId = @HotelId)
+	select @Result = Min(id) from cte where id < nextid - 1;
 
---!Thêm loại phòng // Check
+	if (@Result is null)
+		select @Result = count(Id) from [dbo].[ROOM_TYPE] where HotelId = @HotelId
+
+	return @Result + 1;
+END;
+GO
+
+--// new check
 CREATE OR ALTER PROCEDURE USP_AddRoomType
     @HotelId INT,
-    @Id INT,
     @Name NVARCHAR(100),
     @Vacancy INT,
     @Size FLOAT,
@@ -585,19 +599,29 @@ CREATE OR ALTER PROCEDURE USP_AddRoomType
     @BedType VARCHAR(100)
 AS
 BEGIN
-    --SET NOCOUNT ON;
+	IF NOT EXISTS (SELECT Id FROM HOTEL WHERE Id = @HotelId)
+	BEGIN
+		RAISERROR('Id khách sạn không tồn tại.', 11, 1)
+		RETURN -2
+	END
 
+	BEGIN TRAN
     BEGIN TRY
+		DECLARE @MyId INT = [dbo].USF_GetNextRoomId(@HotelId);
 
         INSERT INTO ROOM_TYPE (HotelId, Id, Name, Vacancy, Size, Price, RoomInfo, RoomView, BedType)
-        VALUES (@HotelId, @Id, @Name, @Vacancy, @Size, dbo.USF_GetServiceFee() + @Price, @RoomInfo, @RoomView, @BedType)
+        VALUES (@HotelId, @MyId, @Name, @Vacancy, @Size, dbo.USF_GetServiceFee() + @Price, @RoomInfo, @RoomView, @BedType)
 
-		RETURN 0
     END TRY
 
     BEGIN CATCH
+		RAISERROR('Lỗi thêm phòng khách sạn.', 11, 1)
+		ROLLBACK;
 		RETURN -1
     END CATCH;
+
+	COMMIT;
+	RETURN @MyId
 END
 GO
 
@@ -608,15 +632,20 @@ CREATE OR ALTER PROCEDURE USP_DeleteRoomType
 AS
 BEGIN
 
+	BEGIN TRAN
     BEGIN TRY
         DELETE FROM ROOM_TYPE
         WHERE HotelId = @HotelId AND Id = @Id
 
-        RETURN 0; -- thành công
     END TRY
     BEGIN CATCH
+		RAISERROR('Lỗi xóa phòng khách sạn.', 11, 1)
+		ROLLBACK;
         RETURN -1; -- thất bại
     END CATCH;
+    
+	COMMIT;
+	RETURN 0; -- thành công
 END
 GO
 
@@ -659,19 +688,23 @@ CREATE OR ALTER PROCEDURE USP_AddRoomPicture
     @PictureLink VARCHAR(1000)
 AS
 BEGIN
-	--SET NOCOUNT ON;
-
+	
+	BEGIN TRAN
     BEGIN TRY
         -- Thêm ảnh phòng mới
         INSERT INTO ROOM_PICTURE (HotelId, RoomTypeId, Id, PictureLink)
         VALUES (@HotelId, @RoomTypeId, @Id, @PictureLink);
-
-		RETURN 0; -- Trả về kết quả 1 khi thêm thành công
+		
     END TRY
 
     BEGIN CATCH
-        RETURN -1; -- Trả về kết quả 0 khi xảy ra lỗi
+		RAISERROR('Lỗi thêm ảnh phòng khách sạn.', 11, 1)
+		ROLLBACK;
+        RETURN -1;
     END CATCH;
+
+	COMMIT;
+	RETURN 0;
 END
 GO
 
@@ -725,6 +758,61 @@ GO
 
 --TODO PROCEDURE CRUD CƠ SỞ VẬT CHẤT PHÒNG
 --! THÊM 
+
+GO
+CREATE OR ALTER PROCEDURE USP_AddRoomFacilityList ( -- // new check
+    @HotelId INT,
+    @RoomId INT,
+    @Facility NVARCHAR(1000))
+AS
+BEGIN
+
+	BEGIN TRAN
+    BEGIN TRY
+        INSERT INTO [dbo].[ROOM_FACILITY] (HotelId, RoomId, FacilityId)
+		SELECT @HotelId, @RoomId, fc.Id  FROM STRING_SPLIT(@Facility, ',') ins
+		JOIN FACILITY_CONST fc ON ins.value = fc.Value
+        
+    END TRY
+
+    BEGIN CATCH
+		RAISERROR('Lỗi thêm nhiều facility vào room_type', 11, 1)
+		ROLLBACK;
+        RETURN -1;
+    END CATCH;
+
+	COMMIT;
+	RETURN 0;
+END
+GO
+
+GO
+CREATE OR ALTER PROCEDURE USP_AddRoomServiceList ( -- // new check
+    @HotelId INT,
+    @RoomId INT,
+    @Service NVARCHAR(1000))
+AS
+BEGIN
+
+	BEGIN TRAN
+    BEGIN TRY
+        INSERT INTO [dbo].[ROOM_SERVICE] (HotelId, RoomId, ServiceId)
+		SELECT @HotelId, @RoomId, sc.Id  FROM STRING_SPLIT(@Service, ',') ins
+		JOIN SERVICE_CONST sc ON ins.value = sc.Value
+        
+    END TRY
+
+    BEGIN CATCH
+		RAISERROR('Lỗi thêm nhiều service vào room_type', 11, 1)
+		ROLLBACK;
+        RETURN -1;
+    END CATCH;
+
+	COMMIT;
+	RETURN 0;
+END
+GO
+
 CREATE OR ALTER PROCEDURE USP_AddRoomFacility
     @HotelId INT,
     @RoomId INT,

@@ -72,18 +72,37 @@ namespace SunriseServerData.Repositories
         }  
 
         // POST
-        public override async Task<RoomType> CreateAsync(RoomType createDto)
+        public async Task<int> CreateRoomAsync(RoomDto createDto)
         {
-            var builder = new StringBuilder("USP_AddRoomType ");
+            var builder = new StringBuilder("DECLARE @MyId INT;\nEXEC @MyId = USP_AddRoomType ");
             builder.Append(SetPropValueByReflection.GetPropProcCallString(createDto));
 
-            var err = await _dataContext.Database
-                .ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
-            if (err == 0) return null;
+            var str = builder.ToString();
+            int start = str.LastIndexOf(", @Picture"), count = str.Length - start - 2;
+            builder.Remove(start, count);
+            builder.Insert(str.IndexOf("@RoomView=") + "@RoomView=".Length, "N");
+            builder.Insert(str.IndexOf("@RoomInfo=") + "@RoomInfo=".Length, "N");
+            builder.Insert(str.IndexOf("@Name=") + "@Name=".Length, "N");
+            builder.Remove(str.LastIndexOf($", @Id={createDto.Id}"), $", @Id={createDto.Id}".Count());
 
-            var result = await _dataContext.RoomType
-                .FromSqlInterpolated($"USP_GetRoomType @HotelId={createDto.HotelId}, @Id={createDto.Id}").ToListAsync();
-            return result.FirstOrDefault();
+            // Picture, Facilities, Services
+            var facility = string.Join(',', createDto.Facility);
+            builder.Append($"EXEC USP_AddRoomFacilityList {createDto.HotelId}, @MyId, \'{facility}\';\n");
+
+            var service = string.Join(',', createDto.Service);
+            builder.Append($"EXEC USP_AddRoomServiceList {createDto.HotelId}, @MyId, \'{service}\';\n");
+
+
+            createDto.Picture.ForEach(p => {
+                builder.Append($"EXEC USP_AddRoomPicture {createDto.HotelId}, @MyId, {p.Id}, N\'{p.Link}\'\n");
+            });
+
+            Console.WriteLine(builder.ToString());
+
+            var result = await _dataContext.Database
+                .ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+
+            return result;
         }
 
         public async Task<RoomPicture> CreateRoomPictureAsync(RoomPictureDto createDto)

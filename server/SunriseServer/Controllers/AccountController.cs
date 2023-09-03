@@ -28,7 +28,9 @@ namespace SunriseServer.Controllers
             var result = await _accountService.GetAccountDetailsById(accountId);
 
             if (result is null)
-                return NotFound("Account not found");
+                return NotFound(new {
+                    message = "Account not found."
+                });
 
             return Ok(result);
         }
@@ -38,7 +40,9 @@ namespace SunriseServer.Controllers
         {
             var result =  await _accountService.GetByUsername(username);
             if (result is null)
-                return NotFound("Account not found");
+                return NotFound(new {
+                    message = "Account not found."
+                });
 
             return Ok(result);
         }
@@ -48,7 +52,9 @@ namespace SunriseServer.Controllers
         {
             var result = await _accountService.UpdateAccount(request);
             if (result is null)
-                return NotFound("Account not found.");
+                return NotFound(new {
+                    message = "Account not found."
+                });
 
             return Ok(result);
         }

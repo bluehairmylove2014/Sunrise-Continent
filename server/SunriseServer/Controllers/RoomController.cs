@@ -72,7 +72,9 @@ namespace SunriseServer.Controllers
         {
             var roomRawInfo = await _roomService.GetSingleRoom(hotelId, id);
             if (roomRawInfo is null)
-                return NotFound("Room not found");
+                return NotFound(new {
+                    message = "Phòng không tồn tại."
+                });
 
             var result = await TransferRoomData(roomRawInfo);
             return Ok(result);
@@ -128,7 +130,7 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<int>("Create RoomType successfully", result));
         }
 
-        [HttpPost("picture"), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpPost("picture"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<RoomPicture>>> CreateRoomPicture(RoomPictureDto request)
         {
             var result = await _roomService.AddRoomPicture(request);
@@ -162,7 +164,7 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<int>("Update RoomType successfully", ResponseStatusCode.Ok));
         }
 
-        [HttpPut("picture"), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpPut("picture"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateRoomPicture(RoomPictureDto updateDto)
         {
             var result = await _roomService.UpdateRoomPicture(updateDto);
@@ -172,41 +174,47 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<int>("Update RoomPicture successfully", ResponseStatusCode.Ok));
         }
 
-        [HttpPut("facility"), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpPut("facility"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateRoomFacility(RoomAmenitiesDto updateDto)
         {
             var result = await _roomService.UpdateRoomFacility(updateDto);
             if (result == 0)
-                return NotFound("Room not found.");
+                return NotFound(new {
+                    message = "Phòng không tồn tại."
+                });
             
             // result ResponseStatusCode.Ok
             return Ok(new ResponseMessageDetails<int>("Update Room's facilities successfully", result));
         }
 
-        [HttpPut("service"), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpPut("service"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateRoomService(RoomAmenitiesDto updateDto)
         {
             var result = await _roomService.UpdateRoomService(updateDto);
             if (result == 0)
-                return NotFound("Room not found.");
+                return NotFound(new {
+                    message = "Phòng không tồn tại."
+                });
             
             // result ResponseStatusCode.Ok
             return Ok(new ResponseMessageDetails<int>("Update Room's services successfully", result));
         }
 
         // DELETE
-        [HttpDelete(""), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpDelete(""), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<int>>> DeleteRoom(DeleteRoomDto request)
         {
             var result = await _roomService.DeleteRoomType(request);
             if (result == 0) {
-                return NotFound("Room not found.");
+                return NotFound(new {
+                    message = "Phòng không tồn tại."
+                });
             }
 
             return Ok(new ResponseMessageDetails<int>("Delete Room successfully", ResponseStatusCode.Ok));
         }
 
-        [HttpDelete("picture"), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpDelete("picture"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<int>>> DeleteRoomPicture(DeleteRoomPictureDto request)
         {
             var result = await _roomService.DeleteRoomPicture(request);

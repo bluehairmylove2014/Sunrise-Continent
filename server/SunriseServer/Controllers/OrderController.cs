@@ -70,20 +70,26 @@ namespace SunriseServer.Controllers
 
                 if (paymentDto is null)
                 {
-                    return BadRequest("Not enough money to pay your order");
+                    return BadRequest(new {
+                        message = "Not enough money to pay your order"
+                    });
                 }
 
                 orderInfo.SessionId = paymentDto.SessionId;
                 var result = await _orderService.CreateOrder(orderInfo, accountId);
 
                 if (result == 0)
-                    return BadRequest("Cannot add booking.");
+                    return BadRequest(new {
+                        message = "Cannot add booking."
+                    });
 
                 return Ok(paymentDto.Url);
             }
             catch (Exception)
             {
-                return BadRequest("An error occurs when checkout");
+                return BadRequest(new {
+                    message = "An error occurs when checkout"
+                });
             }
         }
     }

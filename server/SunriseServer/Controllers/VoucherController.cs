@@ -45,7 +45,9 @@ namespace SunriseServer.Controllers
             var result = await _voucherService.GetAccountVoucher(accountId, rank);
 
             if (result == null)
-                return BadRequest("Cannot get account voucher.");
+                return BadRequest(new {
+                    message = "Cannot get account voucher."
+                });
 
             return Ok(result);
         }
@@ -56,7 +58,9 @@ namespace SunriseServer.Controllers
         public async Task<ActionResult<ResponseMessageDetails<int>>> AddVoucher(AddVoucherDto voucherDto)
         {
             if (voucherDto.Value > 1)
-                return BadRequest("Voucher value incorrect.");
+                return BadRequest(new {
+                    message = "Wrong voucher value."
+                });
             
             int result;
             try
@@ -69,7 +73,9 @@ namespace SunriseServer.Controllers
             }
 
             if (result == -1)
-                return BadRequest("Cannot create voucher.");
+                return BadRequest(new {
+                    message = "Cannot tajo voucher."
+                });
 
             return Ok(new ResponseMessageDetails<int>("Create voucher successfully.", result));
         }
@@ -78,7 +84,9 @@ namespace SunriseServer.Controllers
         public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateVoucher(Voucher voucher)
         {
             if (voucher.Value > 1 || voucher.Value < 0)
-                return BadRequest("Wrong voucher value.");
+                return BadRequest(new {
+                    message = "Wrong voucher value."
+                });
 
             int result;
             try
@@ -99,7 +107,9 @@ namespace SunriseServer.Controllers
             var result = await _voucherService.DeleteVoucher(voucherId);
 
             if (result == 0)
-                return NotFound("Cannot delete voucher.");
+                return NotFound(new {
+                    message = "Cannot delete voucher."
+                });
 
             return Ok(new ResponseMessageDetails<int>("Delete voucher successfully", result));
         }
@@ -111,7 +121,9 @@ namespace SunriseServer.Controllers
             var result = await _voucherService.UpdateAccountRank(accountId);
 
             if (result == 0)
-                return NotFound("Account not found.");
+                return NotFound(new {
+                    message = "Account not found."
+                });
 
             return Ok(new ResponseMessageDetails<int>("Update account rank successfully", result));
         }
@@ -120,7 +132,9 @@ namespace SunriseServer.Controllers
         public async Task<ActionResult<ResponseMessageDetails<int>>> RedeemVoucher(RedeemVoucherDto voucherDto)
         {
             if (voucherDto.Quantity <= 0) 
-                return BadRequest("Number of voucher incorrect");
+                return BadRequest(new {
+                    message = "Số lượng voucher không hợp lệ."
+                });
             
             Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
 

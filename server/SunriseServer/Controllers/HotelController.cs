@@ -100,7 +100,7 @@ namespace SunriseServer.Controllers
         {
             var rawData = await _hotelService.GetRecommendedHotel(10);
             if (rawData is null)
-                return NotFound("No Hotel available.");
+                return NotFound(rawData);
 
             var result = new List<HotelDto>();
             foreach(var item in rawData)
@@ -162,7 +162,9 @@ namespace SunriseServer.Controllers
         {
             var result = await _hotelService.DeleteHotel(id);
             if (result is null)
-                return NotFound("Hotel not found.");
+                return NotFound(new {
+                    message = "Hotel not found."
+                });
 
             return Ok(new ResponseMessageDetails<Hotel>("Delete hotel successfully", result));
         }
@@ -191,7 +193,9 @@ namespace SunriseServer.Controllers
             );
 
             if (result is null)
-                return NotFound("Hotel not found.");
+                return NotFound(new {
+                    message = "Hotel not found."
+                });
             
             var finalResult = new List<HotelDto>();
             foreach (var item in result)
@@ -215,18 +219,7 @@ namespace SunriseServer.Controllers
         [HttpGet("review")]
         public async Task<ActionResult<List<Review>>> GetAllHotelReview(int hotelId)
         {
-            var cacheHotelData = _cacheService.GetData<IEnumerable<Review>>($"reviews-hotel{hotelId}");
-
-            if (cacheHotelData != null && cacheHotelData.Count() > 0)
-                return Ok(cacheHotelData);
-            // end cache
-
             var result = await _hotelService.GetHotelReview(hotelId);
-
-
-            // Set expiry time
-            var expiryTime = DateTimeOffset.Now.AddSeconds(120);
-            _cacheService.SetData<IEnumerable<Review>>($"reviews-hotel{hotelId}", result, expiryTime);
 
             return Ok(result);
         }

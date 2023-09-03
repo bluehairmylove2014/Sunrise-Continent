@@ -8,6 +8,7 @@ using SunriseServerCore.Dtos;
 using SunriseServerCore.Dtos.Order;
 using SunriseServer.Services.PaymentService;
 using AutoMapper;
+using Microsoft.Data.SqlClient;
 
 namespace SunriseServer.Controllers
 {
@@ -84,6 +85,13 @@ namespace SunriseServer.Controllers
                     });
 
                 return Ok(paymentDto.Url);
+            }
+            catch(SqlException sqlEx)
+            {
+                return BadRequest(new
+                {
+                    message = sqlEx.Message,
+                });
             }
             catch (Exception)
             {

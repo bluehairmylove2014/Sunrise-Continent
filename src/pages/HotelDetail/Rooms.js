@@ -14,6 +14,7 @@ import OrderDetailPicker from "../../components/common/OrderDetailPicker";
 import { useAddToCart } from "../../libs/business-logic/src/lib/cart";
 import { toast } from "react-hot-toast";
 import DotSpinner from "../../components/common/Loader/DotSpinner";
+import Empty from "../../components/common/Empty";
 
 const Rooms = ({ hotelData, roomsData, openGallery }) => {
   let room = null;
@@ -127,6 +128,13 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
 
               <div className="facilities">
                 <small>Tiện nghi</small>
+                {Array.isArray(rd.facility) && rd.facility.length === 0 ? (
+                  <div className="empty" style={{ gridColumn: "1 /span 4" }}>
+                    <Empty label={"Không có gì cả"} />
+                  </div>
+                ) : (
+                  <></>
+                )}
                 {rd.facility.map((fa) => {
                   return (
                     <div className="facilities__item" key={fa}>
@@ -138,6 +146,13 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
               </div>
               <div className="services">
                 <small>Dịch vụ</small>
+                {Array.isArray(rd.facility) && rd.facility.length === 0 ? (
+                  <div className="empty" style={{ gridColumn: "1 /span 4" }}>
+                    <Empty label={"Không có gì cả"} />
+                  </div>
+                ) : (
+                  <></>
+                )}
                 {rd.service.map((sv) => {
                   return (
                     <div className="services__item" key={sv}>
@@ -152,7 +167,7 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
               <h6>Mô tả</h6>
 
               <div className="short__description">
-                <p>{rd.roomInfo}</p>
+                <p>{rd.roomInfo === 'null' ? '' : rd.roomInfo}</p>
                 {rd.vacancy ? (
                   <>
                     <p>
@@ -194,7 +209,7 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
                   <span>
                     {convertNumberToCurrency("vietnamdong", rd.price)}
                   </span>{" "}
-                  / đêm
+                  VNĐ / đêm
                 </p>
                 <div className="btn__wrapper">
                   <button

@@ -202,7 +202,7 @@ namespace SunriseServer.Controllers
 
         // DELETE
         [HttpDelete(""), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
-        public async Task<ActionResult<ResponseMessageDetails<int>>> DeleteRoom(DeleteRoomDto request)
+        public async Task<ActionResult<ResponseMessageDetails<int>>> DeleteRoom([FromQuery] DeleteRoomDto request)
         {
             var result = await _roomService.DeleteRoomType(request);
             if (result == 0) {

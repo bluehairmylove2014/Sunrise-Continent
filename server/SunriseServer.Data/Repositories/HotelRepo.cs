@@ -99,8 +99,8 @@ namespace SunriseServerData.Repositories
         {
             var builder = new StringBuilder();
             builder.Append("EXEC dbo.USP_FindHotelByName ");
-            builder.Append($"@Location = \'{searchHotel.Location}\', ");
-            builder.Append($"@RoomType = \'{searchHotel.RoomType}\', ");
+            builder.Append($"@Location = N\'{searchHotel.Location}\', ");
+            builder.Append($"@RoomType = N\'{searchHotel.RoomType}\', ");
             builder.Append($"@StartDate = \'{searchHotel.StartDate}\', ");
             builder.Append($"@EndDate = \'{searchHotel.EndDate}\', ");
             builder.Append($"@MinBudget = {searchHotel.MinBudget}, ");

@@ -202,9 +202,16 @@ namespace SunriseServer.Controllers
 
         // DELETE
         [HttpDelete(""), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
-        public async Task<ActionResult<ResponseMessageDetails<int>>> DeleteRoom([FromQuery] DeleteRoomDto request)
+        public async Task<ActionResult<ResponseMessageDetails<int>>> DeleteRoom(
+            [FromQuery] int hotelId, 
+            [FromQuery] int roomTypeId
+        )
         {
-            var result = await _roomService.DeleteRoomType(request);
+            var result = await _roomService.DeleteRoomType(new DeleteRoomDto {
+                HotelId = hotelId,
+                RoomTypeId = roomTypeId
+            });
+
             if (result == 0) {
                 return NotFound(new {
                     message = "Phòng không tồn tại."

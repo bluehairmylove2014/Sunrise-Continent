@@ -6,6 +6,10 @@ export const authUrls = [
     redirectUrl: "/login",
   },
   {
+    authUrl: "/success-order",
+    redirectUrl: "/login",
+  },
+  {
     authUrl: "/voucher-shop",
     redirectUrl: "/login",
   },

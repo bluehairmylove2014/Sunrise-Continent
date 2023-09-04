@@ -18,6 +18,15 @@ namespace SunriseServerCore.Models
     public class YealyRevenue : ModelBase
     {  
         public int Months { get; set; }
-        public long Revenue { get; set; }
+        public long ThisYear { get; set; }
+        public long LastYear { get; set; }
+    }
+
+    [NotMapped]
+    public class WeeklyRevenue : ModelBase
+    {  
+        public int DayInWeek { get; set; }
+        public long ThisWeek { get; set; }
+        public long LastWeek { get; set; }
     }
 }

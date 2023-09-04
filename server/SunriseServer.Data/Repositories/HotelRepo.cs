@@ -126,16 +126,34 @@ namespace SunriseServerData.Repositories
         }
 
         
-        public async Task<List<YealyRevenue>> GetHotelYealyRevenueAsync(int hotelId, int year)
+        public async Task<List<YealyRevenue>> GetHotelYealyRevenueAsync(int hotelId, int? year)
         {
-            var builder = new StringBuilder($"EXEC USP_CalculateHotelYearlyRevenue @HotelId={hotelId}, @Year={year};");
-            if (year == 0) {
-                var index = builder.ToString().LastIndexOf(", @Year=0;");
-                builder.Remove(index, ", @Year=0;".Length);
-                builder.Append(";");
+            var builder = new StringBuilder($"EXEC USP_CalculateHotelYearlyRevenue @HotelId={hotelId};");
+            if (year is not null && year > 0) {
+                builder.Length--;
+                builder.Append($", @Year={year};");
             }
 
-            var result = await _dataContext.Set<YealyRevenue>().FromSqlInterpolated($"{builder.ToString()}").ToListAsync();
+            Console.WriteLine("\t", builder.ToString());
+            
+            return await _dataContext.Set<YealyRevenue>()
+                .FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+        }
+
+        // USP_CalculateHotelWeeklyRevenue
+        public async Task<List<WeeklyRevenue>> GetHotelWeeklyRevenueAsync(int hotelId, DateTime? date)
+        {
+            var builder = new StringBuilder($"EXEC USP_CalculateHotelWeeklyRevenue @HotelId={hotelId};");
+            if (date is not null) {
+                builder.Length--;
+                builder.Append($", @Date=\'{date?.ToString("MM-dd-yyyy")}\';");
+            }
+
+            Console.WriteLine("\t", builder.ToString());
+            
+            var result = await _dataContext.Set<WeeklyRevenue>()
+                .FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+
             return result;
         }
     }

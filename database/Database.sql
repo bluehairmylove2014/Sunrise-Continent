@@ -232,7 +232,7 @@ CREATE TABLE REVIEW
 	ReviewId BIGINT,
 	AccountId INT,
 	HotelId INT,
-	ReviewDate DATETIME,
+	ReviewDate DATE,
 	Points FLOAT,
 	Content NVARCHAR(1000),
 

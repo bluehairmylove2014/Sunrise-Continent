@@ -1202,7 +1202,7 @@ INSERT INTO ROOM_SERVICE VALUES(19,2,1);
 INSERT INTO ROOM_TYPE VALUES(20, 1, N'Phòng Gia đình nhìn ra Núi', 2, 30,1892500,
 	N'Phòng gia đình này được bố trí phòng tắm riêng với buồng tắm đứng, máy sấy tóc, dép và đồ vệ sinh cá nhân miễn phí. Phòng gia đình có tiện nghi BBQ, TV màn hình phẳng, tầm nhìn ra núi cũng như rượu vang/rượu sâm panh cho khách. Căn này được trang bị 2 giường.',
 	N'Nhìn ra núi',
-	'SINGLE_OR_DOUBLE');
+	'SINGLE_OR_TWIN');
 
 INSERT INTO ROOM_TYPE VALUES(20, 2, N'Phòng Có Giường Cỡ King Với Ban Công', 3, 25,1700000,
 	N'Phòng giường đôi này được bố trí phòng tắm riêng với buồng tắm đứng, máy sấy tóc, dép và đồ vệ sinh cá nhân miễn phí. Phòng giường đôi có tiện nghi BBQ, TV màn hình phẳng, tầm nhìn ra thành phố cũng như rượu vang/rượu sâm panh cho khách. Căn này được trang bị 1 giường.',
@@ -1568,7 +1568,7 @@ INSERT INTO ROOM_TYPE VALUES(30, 1,N'Suite President Nhìn ra Thành Phố', 3, 
 INSERT INTO ROOM_TYPE VALUES(30, 2,N'Phòng 2 giường đơn có ban công', 3, 80,5400000,
 	N'Phòng giường đôi này được bố trí phòng tắm riêng với buồng tắm đứng, máy sấy tóc, dép và đồ vệ sinh cá nhân miễn phí.',
 	N'Nhìn ra hồ bơi, Ban công, Nhìn ra địa danh nổi tiếng',
-	'SINGLE');
+	'SINGLE_OR_TWIN');
 INSERT INTO ROOM_TYPE VALUES(30, 3,N'Phòng Giường Đôi Nhìn Ra Hồ Bơi', 3, 80,4300000,
 	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
 	N'Nhìn ra hồ bơi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',

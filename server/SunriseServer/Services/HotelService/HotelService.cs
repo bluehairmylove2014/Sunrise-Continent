@@ -117,9 +117,24 @@ namespace SunriseServer.Services.HotelService
             return await _unitOfWork.HotelRepo.GetSearchHotels(searchHotel);
         }
 
-        public async Task<List<YealyRevenue>> GetHotelYealyRevenue(int hotelId, int year)
+        public async Task<List<YealyRevenue>> GetHotelYealyRevenue(int hotelId, int? year)
         {
             return await _unitOfWork.HotelRepo.GetHotelYealyRevenueAsync(hotelId, year);
+        }
+
+        public async Task<List<WeeklyRevenue>> GetHotelWeeklyRevenue(int hotelId, DateTime? date)
+        {
+            return await _unitOfWork.HotelRepo.GetHotelWeeklyRevenueAsync(hotelId, date);
+        }
+
+        public async Task<int> GetHotelWeeklyTotalReview(int hotelId, DateTime? date)
+        {
+            return await _unitOfWork.ReviewRepo.GetHotelWeeklyTotalReviewAsync(hotelId, date);
+        }
+
+        public async Task<int> GetHotelWeeklyTotalOrder(int hotelId, DateTime? date)
+        {
+            return await _unitOfWork.OrderRepo.GetTotalOrderWeeklyAsync(hotelId, date);
         }
     }
 }

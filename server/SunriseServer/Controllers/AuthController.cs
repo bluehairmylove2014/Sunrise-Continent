@@ -38,8 +38,7 @@ namespace SunriseServer.Controllers
         public async Task<ActionResult<ResponseMessageDetails<string>>> RegisterAdmin(RegisterAdminDto request)
         {
             if (request.Password.Length < 6)
-                return BadRequest(new
-                {
+                return BadRequest(new {
                     message = "Mật khẩu phải nhiều hơn 6 kí tự"
                 });
 
@@ -47,8 +46,7 @@ namespace SunriseServer.Controllers
 
             if (acc != null)
             {
-                return BadRequest(new
-                {
+                return BadRequest(new {
                     message = "Tài khoản đã tồn tại"
                 });
             }
@@ -81,8 +79,7 @@ namespace SunriseServer.Controllers
         public async Task<ActionResult<ResponseMessageDetails<string>>> Register(RegisterDto request)
         {
             if (request.Password.Length < 6)
-                return BadRequest(new
-                {
+                return BadRequest(new {
                     message = "Mật khẩu phải nhiều hơn 6 kí tự"
                 });
 
@@ -93,8 +90,7 @@ namespace SunriseServer.Controllers
 
             if (acc != null)
             {
-                return BadRequest(new
-                {
+                return BadRequest(new {
                     message = "Tài khoản email đã tồn tại"
                 });
             }

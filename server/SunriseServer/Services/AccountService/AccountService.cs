@@ -105,7 +105,7 @@ namespace SunriseServer.Services.AccountService
 
         public async Task<int> BanAccount(Account acc)
         {
-            return await _unitOfWork.AccountRepo.BandAccount(acc);
+            return await _unitOfWork.AccountRepo.BanAccount(acc);
         }
     }
 }

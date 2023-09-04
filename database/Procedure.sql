@@ -1193,11 +1193,12 @@ CREATE OR ALTER PROCEDURE USP_AddVoucher
     @Name NVARCHAR(500),
     @Value FLOAT,
     @Point INT,
-	@AccountRank VARCHAR(20)
+	@AccountRank VARCHAR(20),
+	@Quantity INT
 AS
 BEGIN
 
-	IF (@Point < 1) OR (@Value > 1 OR @Value <= 0)
+	IF (@Point < 1) OR (@Value > 1 OR @Value <= 0 OR @Quantity <= 0)
 	OR (@AccountRank not in (select RankName from POINT_RANK))
 	BEGIN
 		RAISERROR('Sai dữ liệu hạng hoặc giá trị voucher', 11, 1);
@@ -1210,8 +1211,8 @@ BEGIN
 		DECLARE @Id INT;
 		EXEC @Id = USP_GetNextColumnId 'VOUCHER', 'VoucherId'
 
-		INSERT INTO VOUCHER (VoucherId, Name, Value, Point, AccountRank)
-		VALUES (@Id, @Name, @Value, @Point, @AccountRank)
+		INSERT INTO VOUCHER (VoucherId, Name, Value, Point, AccountRank, Quantity)
+		VALUES (@Id, @Name, @Value, @Point, @AccountRank, @Quantity)
 	END TRY
 
 	BEGIN CATCH
@@ -1254,7 +1255,8 @@ CREATE OR ALTER PROCEDURE USP_UpdateVoucher
     @Name NVARCHAR(500),
     @Value FLOAT,
 	@Point INT,
-	@AccountRank VARCHAR(20)
+	@AccountRank VARCHAR(20),
+	@Quantity INT
 AS
 BEGIN
 	BEGIN TRAN
@@ -1264,7 +1266,8 @@ BEGIN
 		SET Name = @Name,
 			Value = @Value,
 			Point = @Point,
-			AccountRank = @AccountRank
+			AccountRank = @AccountRank,
+			Quantity = @Quantity
 		WHERE VoucherId = @VoucherId
 	END TRY
 
@@ -1361,7 +1364,7 @@ GO
 CREATE OR ALTER PROCEDURE USP_GetAllVoucher
 AS
 BEGIN
-	SELECT * FROM VOUCHER;
+	SELECT 0 as AccountId, vc.* FROM VOUCHER vc;
 END
 GO
 
@@ -1393,13 +1396,14 @@ AS
 BEGIN
 	IF (@Rank IS NULL)
 	BEGIN
-		SELECT vb.AccountId, vc.*, vb.Quantity FROM (SELECT * FROM VOUCHER_BAG WHERE AccountId = @AccountId) vb
+		SELECT vb.AccountId, vc.VoucherId, vc.Name, vc.Value, vc.Point, vc.AccountRank, vb.Quantity 
+		FROM (SELECT * FROM VOUCHER_BAG WHERE AccountId = @AccountId) vb
 		JOIN VOUCHER vc ON vb.VoucherId = vc.VoucherId;
 	END
 	ELSE
 	BEGIN
 		SELECT ISNULL(VB.AccountId, 0) as AccountId, VC.*, ISNULL(VB.Quantity, 0) as Quantity 
-		FROM (SELECT * FROM VOUCHER WHERE AccountRank like @Rank) VC
+		FROM (SELECT VoucherId, Name, Value, Point, AccountRank FROM VOUCHER WHERE AccountRank like @Rank) VC
 		LEFT JOIN (SELECT * FROM VOUCHER_BAG WHERE AccountId = @AccountId) VB ON VC.VoucherId = VB.VoucherId;
 	END
 END
@@ -1499,11 +1503,17 @@ BEGIN
 
 	IF (@DateRecorded IS NULL) SET @DateRecorded = FORMAT(GETDATE(), 'yyyy-MM-dd HH:mm:ss.fffffff');
 
+	IF NOT EXISTS (SELECT * FROM VOUCHER WHERE VoucherId=@VoucherId AND Quantity > @Number)
+	BEGIN
+		RAISERROR(N'Số lượng voucher còn lại không đủ.', 11, 1)
+		RETURN -4;
+	END
+
 	-- Kiểm tra xem tài khoản có đủ điểm để đổi voucher không
 	IF (@CurrentPoints < (@VoucherValue * @Number))
 	BEGIN
 		RAISERROR(N'Tài khoản không đủ điểm để đổi voucher này', 11, 1)
-		RETURN -4; -- Trả về giá trị -3 nếu tài khoản không đủ điểm để đổi voucher
+		RETURN -5; -- Trả về giá trị -4 nếu tài khoản không đủ điểm để đổi voucher
 	END
 	ELSE
 	BEGIN
@@ -1521,6 +1531,7 @@ BEGIN
 
 			-- Cập nhật điểm của tài khoản
 			UPDATE ACCOUNT SET MemberPoint = @CurrentPoints - (@VoucherValue * @Number) WHERE Id = @AccountId;
+			UPDATE VOUCHER SET Quantity = Quantity - @Number WHERE VoucherId = @VoucherId;
 
 			-- Lưu lịch sử sử dụng điểm vào bảng POINT_HISTORY
 			INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime) VALUES (@AccountId, -(@VoucherValue * @Number), @DateRecorded);

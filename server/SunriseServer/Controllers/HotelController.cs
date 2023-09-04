@@ -184,14 +184,34 @@ namespace SunriseServer.Controllers
             [FromQuery] int adults,
             [FromQuery] int children,
             [FromQuery] HotelPagingDto hotelDto,
-            [FromQuery] FilterHotelDto filterDto
+            [FromQuery] string hotelType,
+            [FromQuery] string bedType,
+            [FromQuery] string guestRating,
+            [FromQuery] string facilities,
+            [FromQuery] string service,
+            [FromQuery] string sortingCol,
+            [FromQuery] string sortType
         )
         {
             // Thêm filter sort
+            int ratingVal = 0;
+            if (guestRating is not null)
+            {
+                Enum.TryParse(guestRating, out HotelFilterEnum userPoint);
+                ratingVal = (int)userPoint;
+            }
 
             max_budget = max_budget == 0 ? Int32.MaxValue : max_budget;
             var result = await _hotelService.GetSearchHotels(
-                new SearchHotelDto(location, room_type, start_date, end_date, min_budget, max_budget, rooms, adults, children, filterDto)
+                new SearchHotelDto(location, room_type, start_date, end_date, min_budget, max_budget, rooms, adults, children, new FilterHotelDto() {
+                    hotelType = hotelType,
+                    bedType = bedType,
+                    guestRating = ratingVal,
+                    facilities = facilities,
+                    service = service,
+                    sortingCol = sortingCol,
+                    sortType = sortType,
+                })
             );
 
             if (result is null)

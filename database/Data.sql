@@ -2,15 +2,15 @@ USE [sunrise-hotel]
 GO
 
 --!add account
-INSERT INTO ACCOUNT (Id, MemberPoint, AccountRank, Email, PasswordHash, PasswordSalt, UserRole, RefreshToken, TokenCreated, TokenExpires)
+INSERT INTO ACCOUNT (Id, MemberPoint, AccountRank, Email, PasswordHash, PasswordSalt, UserRole, RefreshToken, TokenCreated, TokenExpires, Active)
 VALUES	
-(1, 0, 'Bronze', 'lydat@gmail.com', '00ba0af9630c9eccf44741a603ccbb32b238c0ecd7141200c1641e2756328d4c3f1d94c7af70efd2b0af3c3ef2aff4f519290b2a29d0605a046283be6526c406', '0c7aeca9679f1de913b12d341f1ca586b4defaf7503651003354a5f8c8519265889436a9bb39085eb8df092d6bd2dca144e9a2e57df70d17ecbf1dd1c276576ad425b415d9f09c3cf3f319bacead74282a6b7bf60de2f7d97a2b9fbab5022f65a7d56efc4a3015bcbe31f7ff152ca3ea5ee527516a5a06fff4039d6ac09e9fe6', 'User', 'zJ7lpuRkqAGuiAYgRC+WQIZejkentkhE08e+s2eTOY9fbSto5X6GirvmmLzyQcbAkTXypnVNhYRBCXU8ocEeYw==', '2023-08-09 20:03:58.000', '2023-08-16 20:03:58.000'),
-(2, 0, 'Bronze', 'pdat@gmail.com', '1b9c6d61d183e699774df08fee179b5751fd1c1241407f7a0914669c0907393ce9f49b6cbf41bb4bd7d134f9b285bc804f1741360a19543535bae867b7c750fb', '1432927fae5e4b8e421b97be56fabe0854c081cf1ac5fdaa719fcefbec6a14f7d919fc6e9eabb143f4895714e76413ec606e7e4c0774578ef3d70f6cc9e210bcaaf4cfc8590fa85158e338b572a1ea167783d4cc03e894e3995b7ed91c32e2a18537e01d905a41d89dcc8aafe9cc341985a25f0719cb1ee9e150a96db6e7ee56', 'User', 'nk/TmDwMY7JByDIXK+W6GhGPXfhbchlqZ2gne4DdsWHn6QqCHgRxIJ8j4V4nTfsdyZGtZ3vpHsEI82NY41zEAA==', '2023-08-09 20:06:42.000', '2023-08-16 20:06:42.000'),
-(3, 0, 'Bronze', 'cuong457@gmail.com', 'ceae4c3043f6c58da07969a59afd02c3564250fae49ef5efc98158ef65c1ceca5f2ede0728044a6a23148fc8abfa0b252c81e92e71f080092a9d8e541bddde92', 'fdf3c9599cf9d981c2df2629557cebfb952c14fb66753a07e6d81706787d4c54f1e08958968a69ee5de89b0c5373010902b08776a69c86996d3fbda6d12aa54af1cf470960c6e3313c7c0c69fe5249c272fea9d958a859ea63158bb81e9d1439f3a4860860494caf8e569069d64d26acf3a162480e7b31c21249a9d0a2c7d874', 'User', 'ZqpZt9FF7o1JqL4Pyqm+xqb5ld4o/r05Un3RbyXVtDM2Q+X2v1R/94OEWrofC9fVwkcPDyapIqJPsj08afrhYw==', '2023-08-09 20:07:51.000', '2023-08-16 20:07:51.000'),
-(4, 0, 'Bronze', 'hahaha@gmail.com', 'd9f32996fe0dfa426245c93e7b4fb51fcddbfccc8813ff8d014d97b81727505dfb7522442bdde8bbfc8b6db5bfdb132d610cdeb2ce4271f187d9c66dd1ec41cd', '966e8aa101ab756bcbd472761a2328f86282234bb31378c3d6f32b7d3ed42141e90f93dabedce0ce8882dccac6e2273db18eb245dc4d83a679be074992472665697f19ca5cbc53639bddfc2695e78ef0b2602ff5724be676c6c00dd7b28cf5394114b1c18efe7823b64e8154c783eb1cc2b24b77e541455e9f01a0ff5cd275a7', 'User', 'yxxXPrTmh/L981F23IBHrXUsLfgFjCCDbtMlwYo9ixj3DYT/sikgkXgfKNvOGJ5WXcdJ+sNXopbEdZG3FJbHCw==', '2023-08-09 20:08:41.000', '2023-08-16 20:08:41.000'),
-(5, 0, 'Bronze', 'lydatadmin@gmail.com', 'b4c676c2a3ad96d16eb1c23070fc12b4a3478aa7c03e68900de8e128d74d33a85833452082a303dd62724e40d26671211171916da878a28406dffe30970f1bc6', '78e6ec95334ccafc5f24401f1bafda9630dea41464453ad6e8d8a36798096b0ffdf37aa4ed0593d10c60e852c9ad4790c8a963cd1adc50627fab1614c4c51209fadc3f774c9e9a8580169dbf67a5ca4171244ffc2183caaef114557dd3c54aa2ff733d2c5aebf366e3df083bf30471c984460469c78b45dac16da61b8f01d835', 'User', 'GyqcQo1/q7SVt6UScAIcE3JvLyZ9qRUplvpP0b/ois/AOLgQHMfN4N8HKe5OqsjdYE9C15u11WUaRTqOgUB2eA==', '2023-08-09 20:09:05.000', '2023-08-16 20:09:05.000'),
-(6, 0, 'Bronze', 'cuong@gmail.com', '63927922e816797646afdb67a26598edc3d8e6a7b4eafb8ac0b36ddadd69a88843f7b8f1fc1a2ee6f15ac5ba0de867e3389d0ff13ebda5642437dcc4f5c27dfe', 'cc97f6039c4ccc0cf944c9facab11a534f8152b300de76f70dd307e9479e080febe982ff831a7df759ae81c8e03f8307e33de5e1420e94ef56eadde1d8e2f49267b19b56d6a5d0fc5152c94441da96427fc131232abd7470062b389c0905836361d7df0fa54e7721aa9ea8dada7c9964d0585d55ac94c4da26491c014f271c0f', 'User', 'W0Q20ryEsowpc2Zb51yStSA3I37I84srULomm+e0qgiZfOwDWEipfF0hP2bb96UW6JfHauKfX33uFYjjJAAnBA==', '2023-08-09 20:09:59.000', '2023-08-16 20:09:59.000'),
-(7, 0, 'Diamond', 'bluehairmylove2014@gmail.com', '3e1dcac1eddc9f99ee06fe71178e0ad0562c551b9a382cc72ee7c00919f31878a90325fb1b287ec43a9711177c08a43d29b1e42b157f790fa5336b5920ea4f2b', 'b1a5137653964ebd04abe46f552e674ed622992983149cc27f5a2d9a3465ccd5fabdce76fb71b33ea74c3729fd3483acbdc6102738e5e142bc2bbf5f2e4c0b6886705a109ef2fbc79a598acb92b1722e9617fc61323aa1a8197ca3de3620755fe7815b6dc54e4effc71f0f661fbfacbb7f96e0199b6ee7416389a83e95cc4bac', 'User', '+34iPTdqI5mhEhia6qfgp9qMprkg3uVLdwfhcd6Tn8YlgRwiGchjKYsyByhgyBfIC0NLO5cLKDmvuNrc0jCfBw==', '2023-08-14 21:42:55.000', '2023-08-21 21:42:55.000');
+(1, 0, 'Bronze', 'lydat@gmail.com', '00ba0af9630c9eccf44741a603ccbb32b238c0ecd7141200c1641e2756328d4c3f1d94c7af70efd2b0af3c3ef2aff4f519290b2a29d0605a046283be6526c406', '0c7aeca9679f1de913b12d341f1ca586b4defaf7503651003354a5f8c8519265889436a9bb39085eb8df092d6bd2dca144e9a2e57df70d17ecbf1dd1c276576ad425b415d9f09c3cf3f319bacead74282a6b7bf60de2f7d97a2b9fbab5022f65a7d56efc4a3015bcbe31f7ff152ca3ea5ee527516a5a06fff4039d6ac09e9fe6', 'User', 'zJ7lpuRkqAGuiAYgRC+WQIZejkentkhE08e+s2eTOY9fbSto5X6GirvmmLzyQcbAkTXypnVNhYRBCXU8ocEeYw==', '2023-08-09 20:03:58.000', '2023-08-16 20:03:58.000', 1),
+(2, 0, 'Bronze', 'pdat@gmail.com', '1b9c6d61d183e699774df08fee179b5751fd1c1241407f7a0914669c0907393ce9f49b6cbf41bb4bd7d134f9b285bc804f1741360a19543535bae867b7c750fb', '1432927fae5e4b8e421b97be56fabe0854c081cf1ac5fdaa719fcefbec6a14f7d919fc6e9eabb143f4895714e76413ec606e7e4c0774578ef3d70f6cc9e210bcaaf4cfc8590fa85158e338b572a1ea167783d4cc03e894e3995b7ed91c32e2a18537e01d905a41d89dcc8aafe9cc341985a25f0719cb1ee9e150a96db6e7ee56', 'User', 'nk/TmDwMY7JByDIXK+W6GhGPXfhbchlqZ2gne4DdsWHn6QqCHgRxIJ8j4V4nTfsdyZGtZ3vpHsEI82NY41zEAA==', '2023-08-09 20:06:42.000', '2023-08-16 20:06:42.000', 1),
+(3, 0, 'Bronze', 'cuong457@gmail.com', 'ceae4c3043f6c58da07969a59afd02c3564250fae49ef5efc98158ef65c1ceca5f2ede0728044a6a23148fc8abfa0b252c81e92e71f080092a9d8e541bddde92', 'fdf3c9599cf9d981c2df2629557cebfb952c14fb66753a07e6d81706787d4c54f1e08958968a69ee5de89b0c5373010902b08776a69c86996d3fbda6d12aa54af1cf470960c6e3313c7c0c69fe5249c272fea9d958a859ea63158bb81e9d1439f3a4860860494caf8e569069d64d26acf3a162480e7b31c21249a9d0a2c7d874', 'User', 'ZqpZt9FF7o1JqL4Pyqm+xqb5ld4o/r05Un3RbyXVtDM2Q+X2v1R/94OEWrofC9fVwkcPDyapIqJPsj08afrhYw==', '2023-08-09 20:07:51.000', '2023-08-16 20:07:51.000', 1),
+(4, 0, 'Bronze', 'hahaha@gmail.com', 'd9f32996fe0dfa426245c93e7b4fb51fcddbfccc8813ff8d014d97b81727505dfb7522442bdde8bbfc8b6db5bfdb132d610cdeb2ce4271f187d9c66dd1ec41cd', '966e8aa101ab756bcbd472761a2328f86282234bb31378c3d6f32b7d3ed42141e90f93dabedce0ce8882dccac6e2273db18eb245dc4d83a679be074992472665697f19ca5cbc53639bddfc2695e78ef0b2602ff5724be676c6c00dd7b28cf5394114b1c18efe7823b64e8154c783eb1cc2b24b77e541455e9f01a0ff5cd275a7', 'User', 'yxxXPrTmh/L981F23IBHrXUsLfgFjCCDbtMlwYo9ixj3DYT/sikgkXgfKNvOGJ5WXcdJ+sNXopbEdZG3FJbHCw==', '2023-08-09 20:08:41.000', '2023-08-16 20:08:41.000', 1),
+(5, 0, 'Bronze', 'lydatadmin@gmail.com', 'b4c676c2a3ad96d16eb1c23070fc12b4a3478aa7c03e68900de8e128d74d33a85833452082a303dd62724e40d26671211171916da878a28406dffe30970f1bc6', '78e6ec95334ccafc5f24401f1bafda9630dea41464453ad6e8d8a36798096b0ffdf37aa4ed0593d10c60e852c9ad4790c8a963cd1adc50627fab1614c4c51209fadc3f774c9e9a8580169dbf67a5ca4171244ffc2183caaef114557dd3c54aa2ff733d2c5aebf366e3df083bf30471c984460469c78b45dac16da61b8f01d835', 'User', 'GyqcQo1/q7SVt6UScAIcE3JvLyZ9qRUplvpP0b/ois/AOLgQHMfN4N8HKe5OqsjdYE9C15u11WUaRTqOgUB2eA==', '2023-08-09 20:09:05.000', '2023-08-16 20:09:05.000', 1),
+(6, 0, 'Bronze', 'cuong@gmail.com', '63927922e816797646afdb67a26598edc3d8e6a7b4eafb8ac0b36ddadd69a88843f7b8f1fc1a2ee6f15ac5ba0de867e3389d0ff13ebda5642437dcc4f5c27dfe', 'cc97f6039c4ccc0cf944c9facab11a534f8152b300de76f70dd307e9479e080febe982ff831a7df759ae81c8e03f8307e33de5e1420e94ef56eadde1d8e2f49267b19b56d6a5d0fc5152c94441da96427fc131232abd7470062b389c0905836361d7df0fa54e7721aa9ea8dada7c9964d0585d55ac94c4da26491c014f271c0f', 'User', 'W0Q20ryEsowpc2Zb51yStSA3I37I84srULomm+e0qgiZfOwDWEipfF0hP2bb96UW6JfHauKfX33uFYjjJAAnBA==', '2023-08-09 20:09:59.000', '2023-08-16 20:09:59.000', 1),
+(7, 0, 'Diamond', 'bluehairmylove2014@gmail.com', '3e1dcac1eddc9f99ee06fe71178e0ad0562c551b9a382cc72ee7c00919f31878a90325fb1b287ec43a9711177c08a43d29b1e42b157f790fa5336b5920ea4f2b', 'b1a5137653964ebd04abe46f552e674ed622992983149cc27f5a2d9a3465ccd5fabdce76fb71b33ea74c3729fd3483acbdc6102738e5e142bc2bbf5f2e4c0b6886705a109ef2fbc79a598acb92b1722e9617fc61323aa1a8197ca3de3620755fe7815b6dc54e4effc71f0f661fbfacbb7f96e0199b6ee7416389a83e95cc4bac', 'User', '+34iPTdqI5mhEhia6qfgp9qMprkg3uVLdwfhcd6Tn8YlgRwiGchjKYsyByhgyBfIC0NLO5cLKDmvuNrc0jCfBw==', '2023-08-14 21:42:55.000', '2023-08-21 21:42:55.000', 1);
 
 ----!add personal information
 --INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank) VALUES 
@@ -28,12 +28,33 @@ INSERT INTO POINT_RANK (RankName, RankValue) VALUES
 	('Silver', 4000),
 	('Bronze', 100);
 
-INSERT INTO VOUCHER (VoucherId, Name, Value, Point, AccountRank) VALUES 
-	(1, 'Voucher 2%', 0.02, 50, 'Bronze'), --> 2% -> 6%
-	(2, 'Voucher 5%', 0.05, 150, 'Silver'), --> 6% -> 12%
-	(3, 'Voucher 10%', 0.1, 300, 'Gold'), --> 6% -> 12%
-	(4, 'Voucher 15%', 0.15, 450, 'Gold'), --> 12% -> 15%
-	(5, 'Voucher 20%', 0.2, 600, 'Diamond'); --> 15% -> 20%
+INSERT INTO VOUCHER (VoucherId, Name, Value, Point, AccountRank, Quantity) VALUES 
+	(1, 'Voucher 2%', 0.02, 50, 'Bronze', 100), --> 2% -> 6%
+	(2, 'Voucher 5%', 0.05, 150, 'Silver', 50), --> 6% -> 12%
+	(3, 'Voucher 10%', 0.1, 300, 'Gold', 100), --> 6% -> 12%
+	(4, 'Voucher 15%', 0.15, 450, 'Gold', 500), --> 12% -> 15%
+	(5, 'Voucher 20%', 0.2, 600, 'Diamond', 100), --> 15% -> 20%
+	(6, 'SUMMER25OFF', 0.25, 400, 'Bronze', 100),
+  	(7, 'LUXURY50', 0.5, 1000, 'Diamond', 100),
+  	(8, 'COZYGETAWAY', 0.25, 300, 'Bronze', 100),
+  	(9, 'HOTELBLISS10', 0.1, 500, 'Silver', 100),
+  	(10, 'SWEETRETREAT15', 0.15, 800, 'Gold', 100),
+  	(11, 'DREAMY50', 0.5, 600, 'Gold', 100),
+  	(12, 'RELAXNOW', 0.1, 300, 'Silver', 100),
+  	(13, 'STAYCATION2023', 0.2, 700, 'Gold', 100),
+  	(14, 'HOLIDAYHIDEAWAY', 0.3, 400, 'Bronze', 100),
+  	(15, 'VIPTRAVEL25', 0.25, 1000, 'Diamond', 100),
+  	(16, 'ROOMWITHVIEW', 0.15, 600, 'Gold', 100),
+  	(17, 'FAMILYFUN20', 0.2, 500, 'Silver', 100),
+  	(18, 'BEACHPARADISE', 0.15, 800, 'Gold', 100),
+  	(19, 'URBANESCAPE', 0.2, 700, 'Gold', 100),
+  	(20, 'MOUNTAINMAGIC', 0.15, 600, 'Gold', 100),
+  	(21, 'CITYBREAK10', 0.1, 300, 'Silver', 100),
+  	(22, 'OCEANFRONT25', 0.25, 1000, 'Diamond', 100),
+  	(23, 'HONEYMOON50', 0.5, 400, 'Bronze', 100),
+  	(24, 'WANDERLUST15', 0.15, 500, 'Silver', 100),
+  	(25, 'ADVENTURE30', 0.3, 800, 'Gold', 100);
+
 
 --!add hotel 
 INSERT INTO HOTEL VALUES(1, N'Triple E Hotel Metro Ben Thanh',N'Việt Nam','HOTEL',N'TP Hồ Chí Minh',
@@ -267,11 +288,6 @@ INSERT INTO HOTEL VALUES(40, N'Thanh Van 1 Hotel', N'Việt Nam', 'HOTEL', N'Qu�
 	N'Thanh Van 1 Hotel ở Phố Cổ Hội An, cách Bãi biển An Bàng một đoạn tản bộ. Wi-Fi được cung cấp miễn phí trong toàn bộ khuôn viên nơi này.Các phòng máy lạnh tại Thanh Van 1 Hotel cung cấp tầm nhìn tuyệt vời hướng ra khu vườn. Trong phòng có các tiện nghi phòng tắm riêng, không gian tiếp khách rộng rãi và bàn làm việc.',
 	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059761.jpg');
 
-INSERT INTO HOTEL VALUES(41, N'Đà Lạt Thanh Xuân Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
-	N'126 Đường Tô Hiến Thành, Đà Lạt',
- 	5, 0,
-	N'Tọa lạc tại thành phố Đà Lạt, cách Công viên Yersin 1,6 km, Đà Lạt Thanh Xuân Hotel cung cấp chỗ nghỉ với sân hiên, chỗ đỗ xe riêng miễn phí và nhà hàng. Khách sạn 4 sao này có dịch vụ tiền sảnh, bàn đặt tour, dịch vụ phòng, lễ tân 24 giờ và dịch vụ thu đổi ngoại tệ cho khách.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/479066255.jpg');
 
 INSERT INTO HOTEL VALUES(42, N'Minh Phú 2 Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
 	N'25 Đường Trần Khánh Dư, Đà Lạt,',
@@ -1935,39 +1951,6 @@ INSERT INTO ROOM_SERVICE VALUES(40,2,4);
 INSERT INTO ROOM_SERVICE VALUES(40,3,1);
 INSERT INTO ROOM_SERVICE VALUES(40,3,2);
 
---todo Đà Lạt Thanh Xuân Hotel
-INSERT INTO ROOM_TYPE VALUES(41, 1,N'', 3, 85,4450000,
-	N'',
-	N'',
-	'LARGE_DOUBLE');
-INSERT INTO ROOM_TYPE VALUES(41, 2,N'', 3, 60,4570000,
-	N'.',
-	N'',
-	'LARGE_DOUBLE');
-INSERT INTO ROOM_TYPE VALUES(41, 3,N'', 3, 70,3250000,
-	N'.',
-	N'',
-	'DOUBLE');
-
---!ADD ROOM FACILITY
-INSERT INTO ROOM_FACILITY VALUES(41,1,4);
-INSERT INTO ROOM_FACILITY VALUES(41,1,5);
-INSERT INTO ROOM_FACILITY VALUES(41,1,8);
-
-INSERT INTO ROOM_FACILITY VALUES(41,2,13);
-INSERT INTO ROOM_FACILITY VALUES(41,2,15);
-INSERT INTO ROOM_FACILITY VALUES(41,2,16);
-
-INSERT INTO ROOM_FACILITY VALUES(41,3,11);
-INSERT INTO ROOM_FACILITY VALUES(41,3,12);
---! ADD ROOM SERVICE
-INSERT INTO ROOM_SERVICE VALUES(41,1,5);
-INSERT INTO ROOM_SERVICE VALUES(41,1,3);
-
-INSERT INTO ROOM_SERVICE VALUES(41,2,4);
-
-INSERT INTO ROOM_SERVICE VALUES(41,3,1);
-INSERT INTO ROOM_SERVICE VALUES(41,3,2);
 
 --todo Minh Phú 2 Hotel
 INSERT INTO ROOM_TYPE VALUES(42, 1,N'', 3, 85,3450000,
@@ -2787,18 +2770,6 @@ INSERT INTO ROOM_PICTURE VALUES(40,3,1,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(40,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059792.jpg');
 INSERT INTO ROOM_PICTURE VALUES(40,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059761.jpg');
 
---todo Đà Lạt Thanh Xuân Hotel
-INSERT INTO ROOM_PICTURE VALUES(41,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/479066255.jpg');
-INSERT INTO ROOM_PICTURE VALUES(41,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/463982739.jpg');
-INSERT INTO ROOM_PICTURE VALUES(41,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/456940292.jpg');
-
-INSERT INTO ROOM_PICTURE VALUES(41,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/463983476.jpg');
-INSERT INTO ROOM_PICTURE VALUES(41,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/456940288.jpg');
-INSERT INTO ROOM_PICTURE VALUES(41,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/456940290.jpg');
-
-INSERT INTO ROOM_PICTURE VALUES(41,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/456940281.jpg');
-INSERT INTO ROOM_PICTURE VALUES(41,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/456940281.jpg');
-INSERT INTO ROOM_PICTURE VALUES(41,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/456940283.jpg');
 
 --todo Minh Phú 2 Hotel		
 INSERT INTO ROOM_PICTURE VALUES(42,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486470565.jpg');

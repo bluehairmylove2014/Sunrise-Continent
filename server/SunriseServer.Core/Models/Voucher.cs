@@ -8,5 +8,6 @@ namespace SunriseServerCore.Models
         public double Value { get; set; }
         public int Point { get; set; }
         public string AccountRank { get; set; } = string.Empty;
+        public int Quantity { get; set; }
     }
 }

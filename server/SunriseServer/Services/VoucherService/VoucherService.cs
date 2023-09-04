@@ -14,9 +14,9 @@ namespace SunriseServer.Services.VoucherService
             _unitOfWork = uof;
         }
 
-        public async Task<IEnumerable<Voucher>> GetAllVoucher()
+        public async Task<List<VoucherBag>> GetAllVoucher()
         {
-            var result = await _unitOfWork.VoucherRepo.GetAllAsync();
+            var result = await _unitOfWork.VoucherRepo.GetAllVoucherAsync();
             return result;
         }
 

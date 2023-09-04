@@ -38,13 +38,19 @@ namespace SunriseServer.Controllers
         public async Task<ActionResult<ResponseMessageDetails<string>>> RegisterAdmin(LoginDto request)
         {
             if (request.Password.Length < 6)
-                return BadRequest("Mật khẩu phải nhiều hơn 6 kí tự");
+                return BadRequest(new
+                {
+                    message = "Mật khẩu phải nhiều hơn 6 kí tự"
+                });
 
             var acc = await _accService.GetByUsername(request.Email);
 
             if (acc != null)
             {
-                return BadRequest("Tài khoản đã tồn tại");
+                return BadRequest(new
+                {
+                    message = "Tài khoản đã tồn tại"
+                });
             }
 
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);

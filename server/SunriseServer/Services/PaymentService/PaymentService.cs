@@ -11,7 +11,7 @@ namespace SunriseServer.Services.PaymentService
     {
         readonly StripeSettings _stripeSettings;
         // call api to confirm order (update paid column in Account_Order table)
-        public const string SUCCESS_URL = "http://www.sunrise-continent.online";
+        public const string SUCCESS_URL = "http://www.sunrise-continent.online/success-order";
         const string FAIL_URL = "http://www.sunrise-continent.online";
         const string CURRENCY = "vnd";
         public string SessionId { get; set; }

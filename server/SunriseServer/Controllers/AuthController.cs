@@ -71,6 +71,7 @@ namespace SunriseServer.Controllers
             return Ok(new {
                 message = "Đăng ký tài khoản quản trị thành công",
                 token,
+                refreshToken,
                 role = GlobalConstant.Admin
             });
         }
@@ -113,8 +114,9 @@ namespace SunriseServer.Controllers
 
             await _accService.AddAccount(acc);
             return Ok(new {
-                Message = "Đăng ký thành công",
-                Token = token
+                message = "Đăng ký thành công",
+                token,
+                refreshToken
             });
         }
 
@@ -150,6 +152,7 @@ namespace SunriseServer.Controllers
             {
                 message = "Đăng nhập thành công",
                 token,
+                refreshToken,
                 role = account.UserRole
             });
         }
@@ -187,6 +190,7 @@ namespace SunriseServer.Controllers
             return Ok(new {
                 message = "Đăng nhập thành công",
                 token,
+                refreshToken,
                 role = request.Role
             });
         }

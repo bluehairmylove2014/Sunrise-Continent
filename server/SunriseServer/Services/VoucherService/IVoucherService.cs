@@ -7,7 +7,7 @@ namespace SunriseServer.Services.VoucherService
 {
     public interface IVoucherService
     {
-        Task<IEnumerable<Voucher>> GetAllVoucher();
+        Task<List<VoucherBag>> GetAllVoucher();
         Task<Voucher> GetVoucherById(int VoucherId);
 
         #nullable enable

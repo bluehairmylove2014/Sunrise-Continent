@@ -106,6 +106,7 @@ CREATE TABLE VOUCHER
 	Value FLOAT, --!% giam
 	Point INT,
 	AccountRank VARCHAR(20),
+	Quantity INT,
 	
 	PRIMARY KEY (VoucherId)
 )

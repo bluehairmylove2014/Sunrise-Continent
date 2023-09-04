@@ -27,7 +27,7 @@ namespace SunriseServer.Controllers
         }
 
         [HttpGet(""), Authorize(Roles = GlobalConstant.Admin)]
-        public async Task<ActionResult<List<Voucher>>> GetAllVoucher()
+        public async Task<ActionResult<List<VoucherBag>>> GetAllVoucher()
         {
             var result = await _voucherService.GetAllVoucher(); // thêm số lượng cho voucher
 
@@ -157,8 +157,7 @@ namespace SunriseServer.Controllers
             }
             catch (Exception)
             {
-                return BadRequest(new
-                {
+                return BadRequest(new {
                     message = "Đã xảy ra lỗi trong quá trình đổi mã khuyến mãi, vui lòng thử lại sau"
                 });
             }

@@ -35,7 +35,7 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPost("register-admin")]
-        public async Task<ActionResult<ResponseMessageDetails<string>>> RegisterAdmin(LoginDto request)
+        public async Task<ActionResult<ResponseMessageDetails<string>>> RegisterAdmin(RegisterAdminDto request)
         {
             if (request.Password.Length < 6)
                 return BadRequest(new
@@ -59,6 +59,7 @@ namespace SunriseServer.Controllers
             {
                 Id = await _accService.GetNextAccountId(),
                 Email = request.Email,
+                FullName = request.FullName,
                 PasswordHash = Helper.ByteArrayToString(passwordHash),
                 PasswordSalt = Helper.ByteArrayToString(passwordSalt),
                 UserRole = GlobalConstant.Admin,

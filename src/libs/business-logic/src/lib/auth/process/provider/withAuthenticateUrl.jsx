@@ -44,8 +44,7 @@ export const withAuthenticateUrl = (WrappedComponent) => {
         (!canSuccessOrder || canSuccessOrder === false)
       ) {
         redirectMethods("");
-      }
-      if (!currentPathname || isLoggedIn) {
+      } else if (!currentPathname || isLoggedIn) {
         setIsLoaderActive(false);
       } else {
         const target = authUrls.find((u) =>

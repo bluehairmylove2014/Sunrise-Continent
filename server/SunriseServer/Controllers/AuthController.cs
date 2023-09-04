@@ -114,14 +114,14 @@ namespace SunriseServer.Controllers
         {
             var account = await _accService.GetByUsername(request.Email);
 
-            if (!account.Active)
-            {
-                return BadRequest(new ResponseDetails(ResponseStatusCode.BadRequest, "Tài khoản đã bị cấm"));
-            }
-
             if (account == null)
             {
                 return NotFound(new ResponseMessageDetails<string>("Không tìm thấy tài khoản", ResponseStatusCode.NotFound));
+            }
+
+            if (!account.Active)
+            {
+                return BadRequest(new ResponseDetails(ResponseStatusCode.BadRequest, "Tài khoản đã bị cấm"));
             }
 
             if (account.Email != request.Email ||

@@ -74,7 +74,10 @@ namespace SunriseServer.Controllers
         public async Task<ActionResult<ResponseMessageDetails<string>>> Register(RegisterDto request)
         {
             if (request.Password.Length < 6)
-                return BadRequest("Mật khẩu phải nhiều hơn 6 kí tự");
+                return BadRequest(new
+                {
+                    message = "Mật khẩu phải nhiều hơn 6 kí tự"
+                });
 
             if (request.Role != GlobalConstant.Partner)
                 request.Role = GlobalConstant.User;
@@ -83,7 +86,10 @@ namespace SunriseServer.Controllers
 
             if (acc != null)
             {
-                return BadRequest("Tài khoản email đã tồn tại");
+                return BadRequest(new
+                {
+                    message = "Tài khoản email đã tồn tại"
+                });
             }
 
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);

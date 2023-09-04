@@ -5,6 +5,7 @@ import { useAuthContext } from "../context";
 import { getWindowInstance } from "../helper/windowHelper";
 import { useAccessToken } from "../hooks/useAccessToken";
 import { useLocation, useNavigate } from "react-router";
+import { LOCAL_STORAGE_KEYS } from "../../../../configs/constants";
 
 export const withAuthenticateUrl = (WrappedComponent) => {
   const EnhancedComponent = (props) => {
@@ -34,6 +35,16 @@ export const withAuthenticateUrl = (WrappedComponent) => {
     const isLoggedIn = Boolean(state.token || getToken());
 
     useEffect(() => {
+      const canSuccessOrder = JSON.parse(
+        window.localStorage.getItem(LOCAL_STORAGE_KEYS.CAN_SUCCESS_ORDER)
+      );
+      if (
+        currentPathname &&
+        currentPathname.includes("/success-order") &&
+        (!canSuccessOrder || canSuccessOrder === false)
+      ) {
+        redirectMethods("");
+      }
       if (!currentPathname || isLoggedIn) {
         setIsLoaderActive(false);
       } else {

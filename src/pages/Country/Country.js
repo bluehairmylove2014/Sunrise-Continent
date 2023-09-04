@@ -25,7 +25,7 @@ const Country = () => {
     provinceSelected &&
       onSearch({ location: provinceSelected })
         .then((data) => {
-          setProvinceHotel(data);
+          setProvinceHotel(data.hotelList);
         })
         .catch((error) => {
           console.error(error);

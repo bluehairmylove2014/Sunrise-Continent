@@ -36,7 +36,7 @@ const calculateTotal = (rooms, voucher, nightCount) => {
     return acc;
   }, 0);
 
-  total -= voucher ? voucher.value : 0;
+  // total -= voucher ? voucher.value * total : 0;
   return total;
 };
 
@@ -68,7 +68,7 @@ const PreCheckout = () => {
       : [];
   const [sunriseVoucher, setSunriseVoucher] = useState(null);
   const [isChoosingVoucher, setIsChoosingVoucher] = useState(false);
-
+  console.log(sunriseVoucher);
   const contactForm = useForm({
     defaultValues: {
       fullName: "",
@@ -203,7 +203,7 @@ const PreCheckout = () => {
       specialNeeds: getSelectedOptions(contactForm.getValues()).join(", "),
       notes: data.otherRequirements,
       voucherId: sunriseVoucher ? sunriseVoucher.voucherId : 0,
-      total,
+      total: total - (sunriseVoucher ? sunriseVoucher.value * total : 0),
       orders: roomsData.map((rdata) => ({
         hotelId: hotelId,
         roomTypeId: rdata.id,
@@ -212,8 +212,8 @@ const PreCheckout = () => {
         numberOfRoom: bookingFormValue.rooms,
       })),
     });
-    // navigate(PAGES.CHECKOUT);
-    navigate(PAGES.SUCCESS_ORDER);
+    navigate(PAGES.CHECKOUT);
+    // navigate(PAGES.SUCCESS_ORDER);
   };
   const onContactFormError = (error) => {
     toast.error(error[Object.keys(error)[0]].message);
@@ -568,7 +568,7 @@ const PreCheckout = () => {
                   -{" "}
                   {convertNumberToCurrency(
                     "vietnamdong",
-                    sunriseVoucher ? sunriseVoucher.value : 0
+                    sunriseVoucher ? sunriseVoucher.value * total : 0
                   )}
                 </p>
               ) : (
@@ -585,7 +585,10 @@ const PreCheckout = () => {
               </div>
 
               <p className="price total">
-                {convertNumberToCurrency("vietnamdong", total)}
+                {convertNumberToCurrency(
+                  "vietnamdong",
+                  total - (sunriseVoucher ? sunriseVoucher.value * total : 0)
+                )}
               </p>
             </div>
           </div>

@@ -13,6 +13,8 @@ import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import { formatDate } from "../../utils/helpers/ShortenDatetime";
 import { calcNight } from "../../utils/helpers/Datetime";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { PAGES } from "../../constants/Link.constants";
 
 const calculateTotal = (rooms, voucher, nightCount) => {
   let total = rooms.reduce((acc, roomData) => {
@@ -28,6 +30,7 @@ const calculateTotal = (rooms, voucher, nightCount) => {
 
 const SuccessOrder = () => {
   const selectedRoomsObject = useGetOrder();
+  const navigate = useNavigate();
   // Extract common fields from the first order
   const {
     hotelId,
@@ -47,6 +50,8 @@ const SuccessOrder = () => {
   const endDateFormatted = formatDate(end_date);
   const night = calcNight(start_date, end_date);
   const [total, setTotal] = useState(0);
+
+  console.log(selectedRoomsObject);
 
   useEffect(() => {
     setTotal(calculateTotal(roomsData, 0, night));
@@ -107,7 +112,11 @@ const SuccessOrder = () => {
             </h5>
           </section>
           <section className="submit">
-            <button id="checkout" type="submit">
+            <button
+              id="checkout"
+              type="button"
+              onClick={() => navigate(PAGES.HOME)}
+            >
               VỀ TRANG CHỦ
             </button>
           </section>

@@ -1,4 +1,5 @@
 // Import necessary modules and functions
+import { LOCAL_STORAGE_KEYS } from "../../../../configs/constants";
 import { useUpdateOrderMutation } from "../../fetching/mutation";
 import { useOrderContext } from "../context";
 
@@ -13,6 +14,10 @@ export const useCreateOrder = () => {
       if (!accessToken) reject(new Error("Authorization token is not valid"));
       else if (!needUpdateOrder) reject(new Error("Order is not valid"));
       else {
+        window.localStorage.setItem(
+          LOCAL_STORAGE_KEYS.CAN_SUCCESS_ORDER,
+          JSON.stringify(true)
+        );
         updateOrderMutation
           .mutateAsync({
             accessToken,

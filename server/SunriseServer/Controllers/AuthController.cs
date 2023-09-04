@@ -71,7 +71,7 @@ namespace SunriseServer.Controllers
             return Ok(new {
                 message = "Đăng ký tài khoản quản trị thành công",
                 token,
-                refreshToken,
+                refreshToken = refreshToken.Token,
                 role = GlobalConstant.Admin
             });
         }
@@ -116,7 +116,7 @@ namespace SunriseServer.Controllers
             return Ok(new {
                 message = "Đăng ký thành công",
                 token,
-                refreshToken
+                refreshToken = refreshToken.Token
             });
         }
 
@@ -152,7 +152,7 @@ namespace SunriseServer.Controllers
             {
                 message = "Đăng nhập thành công",
                 token,
-                refreshToken,
+                refreshToken = refreshToken.Token,
                 role = account.UserRole
             });
         }
@@ -190,7 +190,7 @@ namespace SunriseServer.Controllers
             return Ok(new {
                 message = "Đăng nhập thành công",
                 token,
-                refreshToken,
+                refreshToken = refreshToken.Token,
                 role = request.Role
             });
         }

@@ -82,7 +82,10 @@ namespace SunriseServer.Controllers
         {
             var rawData = await _hotelService.GetSingleHotel(id);
             if (rawData is null)
-                return NotFound("Hotel not found.");
+                return NotFound(new
+                {
+                    message = "Không tìm thấy khách sạn"
+                });
 
             var result = await TransferHotelData(rawData);
 
@@ -136,7 +139,7 @@ namespace SunriseServer.Controllers
                 });
             }
 
-            return Ok(new ResponseMessageDetails<int>("Add hotel successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Tạo khách sạn thành công", result));
         }
 
         [HttpPut, Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
@@ -154,7 +157,7 @@ namespace SunriseServer.Controllers
                 });
             }
 
-            return Ok(new ResponseMessageDetails<int>("Update hotel successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Cập nhật khách sạn thành công", result));
         }
 
         [HttpDelete, Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
@@ -163,7 +166,7 @@ namespace SunriseServer.Controllers
             var result = await _hotelService.DeleteHotel(id);
             if (result is null)
                 return NotFound(new {
-                    message = "Hotel not found."
+                    message = "Không tìm thấy khách sạn"
                 });
 
             return Ok(new ResponseMessageDetails<Hotel>("Delete hotel successfully", result));
@@ -194,7 +197,7 @@ namespace SunriseServer.Controllers
 
             if (result is null)
                 return NotFound(new {
-                    message = "Hotel not found."
+                    message = "Không tìm thấy khách sạn"
                 });
             
             var finalResult = new List<HotelDto>();
@@ -234,7 +237,7 @@ namespace SunriseServer.Controllers
 
             if (checkHotelId == 0)
                 return BadRequest(new {
-                    message = "Admin don't have hotel.",
+                    message = "Tài khoản quản trị không có khách sạn",
                 });
 
             try
@@ -248,7 +251,7 @@ namespace SunriseServer.Controllers
                 });
             }
 
-            return Ok(new ResponseMessageDetails<List<YealyRevenue>>("Get yearly revenue successfully", result));
+            return Ok(new ResponseMessageDetails<List<YealyRevenue>>("Lấy doanh thu năm thành công", result));
         }
     }
 }

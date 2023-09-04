@@ -134,6 +134,7 @@ CREATE TABLE ACCOUNT
     RefreshToken VARCHAR(200),
     TokenCreated DATETIME,
     TokenExpires DATETIME,
+	Active BIT,
 
     PRIMARY KEY (Id)
 )

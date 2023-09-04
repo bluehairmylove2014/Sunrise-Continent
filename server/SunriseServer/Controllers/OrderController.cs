@@ -72,7 +72,7 @@ namespace SunriseServer.Controllers
                 if (paymentDto is null)
                 {
                     return BadRequest(new {
-                        message = "Not enough money to pay your order"
+                        message = "Tài khoản không đủ số dư để thực hiện giao dịch"
                     });
                 }
 
@@ -81,7 +81,7 @@ namespace SunriseServer.Controllers
 
                 if (result == 0)
                     return BadRequest(new {
-                        message = "Cannot add booking."
+                        message = "Không thể đặt phòng, vui lòng thử lại"
                     });
 
                 return Ok(paymentDto.Url);
@@ -96,7 +96,7 @@ namespace SunriseServer.Controllers
             catch (Exception)
             {
                 return BadRequest(new {
-                    message = "An error occurs when checkout"
+                    message = "Không thể đặt phòng, vui lòng thử lại"
                 });
             }
         }

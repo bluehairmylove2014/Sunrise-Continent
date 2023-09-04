@@ -102,5 +102,10 @@ namespace SunriseServer.Services.AccountService
         {
             return await _unitOfWork.AccountRepo.UpdatePersonalInfoByIdAsync(accountId, dataDto);
         }
+
+        public async Task<int> BandAccount(Account acc)
+        {
+            return await _unitOfWork.AccountRepo.BandAccount(acc);
+        }
     }
 }

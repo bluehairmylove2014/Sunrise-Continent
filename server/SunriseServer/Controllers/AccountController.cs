@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SunriseServer.Common.Constant;
 using SunriseServer.Services.AccountService;
-using SunriseServer.Services.HotelService;
 using SunriseServerCore.Dtos;
-using System.Data;
 using System.Security.Claims;
 
 
@@ -29,7 +27,7 @@ namespace SunriseServer.Controllers
 
             if (result is null)
                 return NotFound(new {
-                    message = "Account not found."
+                    message = "Không tìm thấy tài khoản"
                 });
 
             return Ok(result);
@@ -41,7 +39,7 @@ namespace SunriseServer.Controllers
             var result =  await _accountService.GetByUsername(username);
             if (result is null)
                 return NotFound(new {
-                    message = "Account not found."
+                    message = "Không tìm thấy tài khoản"
                 });
 
             return Ok(result);
@@ -53,7 +51,7 @@ namespace SunriseServer.Controllers
             var result = await _accountService.UpdateAccount(request);
             if (result is null)
                 return NotFound(new {
-                    message = "Account not found."
+                    message = "Không tìm thấy tài khoản"
                 });
 
             return Ok(result);
@@ -71,10 +69,39 @@ namespace SunriseServer.Controllers
             }
             catch (Microsoft.Data.SqlClient.SqlException exception)
             {
-                return BadRequest(exception.Message);
+                return BadRequest(new
+                {
+                    message = exception.Message
+                });
             }
 
-            return Ok(new ResponseMessageDetails<int>("Update account successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Cập nhật tài khoản thành công", result));
+        }
+
+        [HttpPut("ban"), Authorize(Roles = GlobalConstant.Admin)]
+        public async Task<ActionResult<ResponseMessageDetails<int>>> BanAccount(Account acc)
+        {
+            int result = 0;
+            try
+            {
+                result = await _accountService.BanAccount(acc);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new
+                {
+                    message = exception.Message
+                });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new
+                {
+                    message = "Có lỗi xảy ra trong quá trình cấm tài khoản"
+                });
+            }
+
+            return Ok(new ResponseMessageDetails<int>("Cấm tài khoản thành công", result));
         }
     }
 }

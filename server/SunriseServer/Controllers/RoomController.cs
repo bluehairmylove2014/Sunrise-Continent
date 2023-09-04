@@ -85,7 +85,10 @@ namespace SunriseServer.Controllers
         {
             var result = await _roomService.GetRoomPicture(hotelId, id);
             if (result is null)
-                return NotFound("RoomPicture not found");
+                return NotFound(new
+                {
+                    message = "không tìm thấy ảnh phòng"
+                });
             
             return Ok(result);
         }
@@ -127,7 +130,7 @@ namespace SunriseServer.Controllers
                 });
             }
 
-            return Ok(new ResponseMessageDetails<int>("Create RoomType successfully", result));
+            return Ok(new ResponseMessageDetails<int>("tạo phòng thành công", result));
         }
 
         [HttpPost("picture"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
@@ -135,9 +138,12 @@ namespace SunriseServer.Controllers
         {
             var result = await _roomService.AddRoomPicture(request);
             if (result is null)
-                return BadRequest("Create RoomPicture failed");
+                return BadRequest(new
+                {
+                    message = "không thể thêm ảnh cho phòng"
+                });
 
-            return Ok(new ResponseMessageDetails<RoomPicture>("Create RoomPicture successfully", result));
+            return Ok(new ResponseMessageDetails<RoomPicture>("thêm ảnh phòng thành công", result));
         }
 
         // PUT
@@ -161,7 +167,7 @@ namespace SunriseServer.Controllers
                 });
             }
             
-            return Ok(new ResponseMessageDetails<int>("Update RoomType successfully", ResponseStatusCode.Ok));
+            return Ok(new ResponseMessageDetails<int>("cập nhật loại phòng thành công", ResponseStatusCode.Ok));
         }
 
         [HttpPut("picture"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
@@ -171,7 +177,7 @@ namespace SunriseServer.Controllers
             if (result == 0)
                 return NotFound("RoomPicture not found.");
             
-            return Ok(new ResponseMessageDetails<int>("Update RoomPicture successfully", ResponseStatusCode.Ok));
+            return Ok(new ResponseMessageDetails<int>("cập nhật ảnh phòng thành công", ResponseStatusCode.Ok));
         }
 
         [HttpPut("facility"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
@@ -184,7 +190,7 @@ namespace SunriseServer.Controllers
                 });
             
             // result ResponseStatusCode.Ok
-            return Ok(new ResponseMessageDetails<int>("Update Room's facilities successfully", result));
+            return Ok(new ResponseMessageDetails<int>("cập nhật cơ sở vật chất cho phòng thành công", result));
         }
 
         [HttpPut("service"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
@@ -197,7 +203,7 @@ namespace SunriseServer.Controllers
                 });
             
             // result ResponseStatusCode.Ok
-            return Ok(new ResponseMessageDetails<int>("Update Room's services successfully", result));
+            return Ok(new ResponseMessageDetails<int>("cập nhật dịch vụ cho phòng thành công", result));
         }
 
         // DELETE
@@ -218,7 +224,7 @@ namespace SunriseServer.Controllers
                 });
             }
 
-            return Ok(new ResponseMessageDetails<int>("Delete Room successfully", ResponseStatusCode.Ok));
+            return Ok(new ResponseMessageDetails<int>("Xóa loại phòng thành công", ResponseStatusCode.Ok));
         }
 
         [HttpDelete("picture"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
@@ -226,10 +232,13 @@ namespace SunriseServer.Controllers
         {
             var result = await _roomService.DeleteRoomPicture(request);
             if (result == 0) {
-                return NotFound("RoomPicture not found.");
+                return NotFound(new
+                {
+                    message = "Không tìm thấy ảnh phòng"
+                });
             }
 
-            return Ok(new ResponseMessageDetails<int>("Delete RoomPicture successfully", ResponseStatusCode.Ok));
+            return Ok(new ResponseMessageDetails<int>("Xóa ảnh phòng thành công", ResponseStatusCode.Ok));
         }
     }
 }

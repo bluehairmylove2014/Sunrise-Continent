@@ -37,11 +37,14 @@ namespace SunriseServer.Controllers
         [HttpPost("register-admin")]
         public async Task<ActionResult<ResponseMessageDetails<string>>> RegisterAdmin(LoginDto request)
         {
+            if (request.Password.Length < 6)
+                return BadRequest("Mật khẩu phải nhiều hơn 6 kí tự");
+
             var acc = await _accService.GetByUsername(request.Email);
 
             if (acc != null)
             {
-                return BadRequest("Username exists");
+                return BadRequest("Tài khoản đã tồn tại");
             }
 
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -52,7 +55,8 @@ namespace SunriseServer.Controllers
                 Email = request.Email,
                 PasswordHash = Helper.ByteArrayToString(passwordHash),
                 PasswordSalt = Helper.ByteArrayToString(passwordSalt),
-                UserRole = GlobalConstant.Admin
+                UserRole = GlobalConstant.Admin,
+                Active = true
             };
 
             var token = CreateToken(acc, GlobalConstant.Admin);
@@ -60,7 +64,7 @@ namespace SunriseServer.Controllers
             SetRefreshToken(refreshToken, acc);
             await _accService.AddAccount(acc);
             return Ok(new {
-                message = "Register Admin successfully.",
+                message = "Đăng ký tài khoản quản trị thành công",
                 token,
                 role = GlobalConstant.Admin
             });
@@ -70,7 +74,7 @@ namespace SunriseServer.Controllers
         public async Task<ActionResult<ResponseMessageDetails<string>>> Register(RegisterDto request)
         {
             if (request.Password.Length < 6)
-                return BadRequest("Password is too weak, must be greater than 6 characters");
+                return BadRequest("Mật khẩu phải nhiều hơn 6 kí tự");
 
             if (request.Role != GlobalConstant.Partner)
                 request.Role = GlobalConstant.User;
@@ -79,7 +83,7 @@ namespace SunriseServer.Controllers
 
             if (acc != null)
             {
-                return BadRequest("Email exists");
+                return BadRequest("Tài khoản email đã tồn tại");
             }
 
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -100,7 +104,7 @@ namespace SunriseServer.Controllers
 
             await _accService.AddAccount(acc);
             return Ok(new {
-                Message = "Register successfully",
+                Message = "Đăng ký thành công",
                 Token = token
             });
         }
@@ -110,16 +114,21 @@ namespace SunriseServer.Controllers
         {
             var account = await _accService.GetByUsername(request.Email);
 
+            if (!account.Active)
+            {
+                return BadRequest(new ResponseDetails(ResponseStatusCode.BadRequest, "Tài khoản đã bị cấm"));
+            }
+
             if (account == null)
             {
-                return NotFound(new ResponseMessageDetails<string>("User not found", ResponseStatusCode.NotFound));
+                return NotFound(new ResponseMessageDetails<string>("Không tìm thấy tài khoản", ResponseStatusCode.NotFound));
             }
 
             if (account.Email != request.Email ||
                 !VerifyPasswordHash(request.Password, Helper.StringToByteArray(account.PasswordHash), Helper.StringToByteArray(account.PasswordSalt)))
             {
                 return BadRequest(new {
-                    message = "Wrong credentials",
+                    message = "Sai thông tin đăng nhập",
                 });
             }
 
@@ -130,7 +139,7 @@ namespace SunriseServer.Controllers
 
             return Ok(new
             {
-                message = "Login successfully",
+                message = "Đăng nhập thành công",
                 token,
                 role = account.UserRole
             });
@@ -152,6 +161,11 @@ namespace SunriseServer.Controllers
                 UserRole = request.Role
             };
 
+            if (!acc.Active)
+            {
+                return BadRequest(new ResponseDetails(ResponseStatusCode.BadRequest, "Tài khoản đã bị cấm"));
+            }
+
             var token = CreateToken(acc, request.Role);
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, acc);
@@ -162,7 +176,7 @@ namespace SunriseServer.Controllers
             }
 
             return Ok(new {
-                message = "Login successfully",
+                message = "Đăng nhập thành công",
                 token,
                 role = request.Role
             });

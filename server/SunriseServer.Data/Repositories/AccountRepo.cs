@@ -134,5 +134,15 @@ namespace SunriseServerData.Repositories
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
             return result;
         }
+
+        public async Task<int> BandAccount(Account acc)
+        {
+            var builder = new StringBuilder($"EXEC USP_BandAccount ");
+            builder.Append($"@AccountId = {acc.Id};");
+
+            Console.WriteLine(builder.ToString());
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            return result;
+        }
     }
 }

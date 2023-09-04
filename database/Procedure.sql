@@ -364,7 +364,7 @@ BEGIN
 	BEGIN TRAN
 
 	BEGIN TRY
-		INSERT INTO ACCOUNT VALUES (@Id, 0, 'Bronze', @Email, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires)
+		INSERT INTO ACCOUNT VALUES (@Id, 0, 'Bronze', @Email, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires, 1)
 
 		IF NOT EXISTS (SELECT AccountId FROM PERSONAL_DETAILS WHERE AccountId = @Id)
 			INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank, HotelId) 
@@ -401,7 +401,7 @@ AS
 	BEGIN TRY
 		IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @Id)
 		BEGIN
-			PRINT N'Account Id not existed'
+			PRINT N'Tài khoản không tồn tại'
 			RETURN 1
 		END
 
@@ -440,13 +440,13 @@ AS
 BEGIN
 	IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @AccountId)
 	BEGIN
-		RAISERROR(N'Account Id not existed', 11, 1);
+		RAISERROR(N'Tài khoản không tồn tại', 11, 1);
 		RETURN -2;
 	END
 
 	IF EXISTS (SELECT Id FROM ACCOUNT WHERE Email = @Email AND Id != @AccountId)
 	BEGIN
-		RAISERROR(N'Account Email existed', 11, 1);
+		RAISERROR(N'Email đã tồn tại', 11, 1);
 		RETURN -3;
 	END
 	
@@ -458,7 +458,7 @@ BEGIN
 	END TRY
 
 	BEGIN CATCH
-		RAISERROR(N'Account Id not existed', 11, 1);
+		RAISERROR(N'Tài khoản không tồn tại', 11, 1);
 		ROLLBACK;
 		RETURN -1;
 	END CATCH
@@ -480,7 +480,7 @@ AS
 BEGIN
 	IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @AccountId)
 	BEGIN
-		RAISERROR(N'Account Id not existed', 11, 1);
+		RAISERROR(N'Tài khoản không tồn tại', 11, 1);
 		RETURN -2;
 	END
 	
@@ -507,6 +507,35 @@ BEGIN
 END
 GO
 
+GO
+CREATE OR ALTER PROC USP_BandAccount -- // Check // newCheck
+	@AccountId INTEGER
+AS
+BEGIN
+	IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @AccountId)
+	BEGIN
+		RAISERROR(N'Tài khoản không tồn tại', 11, 1);
+		RETURN -2;
+	END
+	
+	BEGIN TRAN
+
+	BEGIN TRY
+		UPDATE ACCOUNT SET 
+			Active = 0
+		WHERE Id = @AccountId;
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR(N'Đã có lỗi trong quá trình khóa tài khoản, vui lòng thử lại sau.', 11, 1);
+		ROLLBACK;
+		RETURN -1;
+	END CATCH
+
+	COMMIT;
+	RETURN 0;
+END
+GO
 
 GO
 CREATE OR ALTER PROC USP_DeleteAccount

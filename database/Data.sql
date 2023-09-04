@@ -33,7 +33,28 @@ INSERT INTO VOUCHER (VoucherId, Name, Value, Point, AccountRank) VALUES
 	(2, 'Voucher 5%', 0.05, 150, 'Silver'), --> 6% -> 12%
 	(3, 'Voucher 10%', 0.1, 300, 'Gold'), --> 6% -> 12%
 	(4, 'Voucher 15%', 0.15, 450, 'Gold'), --> 12% -> 15%
-	(5, 'Voucher 20%', 0.2, 600, 'Diamond'); --> 15% -> 20%
+	(5, 'Voucher 20%', 0.2, 600, 'Diamond'), --> 15% -> 20%
+	(6, 'SUMMER25OFF', 0.25, 400, 'Bronze'),
+  	(7, 'LUXURY50', 0.5, 1000, 'Diamond'),
+  	(8, 'COZYGETAWAY', 0.25, 300, 'Bronze'),
+  	(9, 'HOTELBLISS10', 0.1, 500, 'Silver'),
+  	(10, 'SWEETRETREAT15', 0.15, 800, 'Gold'),
+  	(11, 'DREAMY50', 0.5, 600, 'Gold'),
+  	(12, 'RELAXNOW', 0.1, 300, 'Silver'),
+  	(13, 'STAYCATION2023', 0.2, 700, 'Gold'),
+  	(14, 'HOLIDAYHIDEAWAY', 0.3, 400, 'Bronze'),
+  	(15, 'VIPTRAVEL25', 0.25, 1000, 'Diamond'),
+  	(16, 'ROOMWITHVIEW', 0.15, 600, 'Gold'),
+  	(17, 'FAMILYFUN20', 0.2, 500, 'Silver'),
+  	(18, 'BEACHPARADISE', 0.15, 800, 'Gold'),
+  	(19, 'URBANESCAPE', 0.2, 700, 'Gold'),
+  	(20, 'MOUNTAINMAGIC', 0.15, 600, 'Gold'),
+  	(21, 'CITYBREAK10', 0.1, 300, 'Silver'),
+  	(22, 'OCEANFRONT25', 0.25, 1000, 'Diamond'),
+  	(23, 'HONEYMOON50', 0.5, 400, 'Bronze'),
+  	(24, 'WANDERLUST15', 0.15, 500, 'Silver'),
+  	(25, 'ADVENTURE30', 0.3, 800, 'Gold');
+
 
 --!add hotel 
 INSERT INTO HOTEL VALUES(1, N'Triple E Hotel Metro Ben Thanh',N'Việt Nam','HOTEL',N'TP Hồ Chí Minh',

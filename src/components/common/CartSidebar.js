@@ -226,7 +226,7 @@ const CartSidebar = ({ isActive, callback }) => {
     if (value) {
       onClearCart()
         .then((message) => toast.success(message))
-        .catch((err) => toast.error(err.message));
+        .catch((err) => toast.error(err.response.data.message || err.message));
     }
     toggleClass(clearCartPopUpRef.current, "active");
   };

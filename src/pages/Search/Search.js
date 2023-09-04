@@ -27,21 +27,21 @@ const itemsPerPage = 8;
 const budgetKey = "budget";
 const sortCriteria = {
   RATING: {
-    sorting_col: 'Rating',
-    sort_type: 'ASC',
-    name: 'Phổ biến nhất'
+    sortingCol: "Rating",
+    sortType: "ASC",
+    name: "Phổ biến nhất",
   },
   ASC_PRICE: {
-    sorting_col: 'Price',
-    sort_type: 'ASC',
-    name: 'Giá tăng dần'
+    sortingCol: "Price",
+    sortType: "ASC",
+    name: "Giá tăng dần",
   },
   DESC_PRICE: {
-    sorting_col: 'Price',
-    sort_type: 'DESC',
-    name: 'Giá giảm dần'
+    sortingCol: "Price",
+    sortType: "DESC",
+    name: "Giá giảm dần",
   },
-}
+};
 function createCheckboxDefaultValue(inputObject) {
   const {
     location,
@@ -118,7 +118,10 @@ const Search = () => {
     if (typeof criteria.budget === "string") return;
     if (Object.keys(criteria).length) {
       scrollToTop();
-      onSearch({ ...criteria, page_number: isChangePage ? pagination.currentPage : 1 })
+      onSearch({
+        ...criteria,
+        page_number: isChangePage ? pagination.currentPage : 1,
+      })
         .then((data) => {
           if (data) {
             setHotels(data.hotelList);
@@ -136,7 +139,7 @@ const Search = () => {
 
   const handleChangePage = () => {
     handleSearch(criteria, true);
-  }
+  };
 
   const budgetToObject = (arrayBudget) => {
     if (!Array.isArray(arrayBudget) || arrayBudget.length !== 2)
@@ -208,7 +211,6 @@ const Search = () => {
       }
     }
 
-
     let paramsCriteria = { ...newCriteria };
     if (newBudget) {
       newCriteria = {
@@ -245,11 +247,17 @@ const Search = () => {
     <main className="search" key={location}>
       <div className="search__banner">
         <img src={TravelImg} alt="travel" />
-        <h5>Bạn muốn du lịch tới Vương Quốc Anh?</h5>
+        <h5>Đây là bản thử nhiệm!</h5>
         <small>
-          Hãy đọc tất cả các yêu cầu thủ tục nhập cảnh trước khi đặt chỗ nhé.
+          Phục vụ mục đích học tập, không đặt được phòng trong thực tế.
         </small>
-        <button>Tìm hiểu thêm</button>
+        <button
+          onClick={() =>
+            window.open("https://www.facebook.com/MinMinPD2211/", "_blank")
+          }
+        >
+          Tìm hiểu thêm
+        </button>
       </div>
       <form
         className="search__criteria-board"
@@ -300,7 +308,12 @@ const Search = () => {
                   </span>
                 </h3>
                 <small>
-                  Hiển thị {calculateFromIndex(pagination.currentPage, itemsPerPage)} - {pagination.currentPage * itemsPerPage} trong {Number(pagination.maxPage * itemsPerPage).toLocaleString("en")}{" "}
+                  Hiển thị{" "}
+                  {calculateFromIndex(pagination.currentPage, itemsPerPage)} -{" "}
+                  {pagination.currentPage * itemsPerPage} trong{" "}
+                  {Number(pagination.maxPage * itemsPerPage).toLocaleString(
+                    "en"
+                  )}{" "}
                   kết quả
                 </small>
               </div>
@@ -316,18 +329,31 @@ const Search = () => {
                       toggleClass(sortDropdownRef.current, "active")
                     }
                   >
-                    {
-                      selectedSort ? <span>{selectedSort}</span> : <span>Sắp xếp theo</span>
-                    }
+                    {selectedSort ? (
+                      <span>{selectedSort}</span>
+                    ) : (
+                      <span>Sắp xếp theo</span>
+                    )}
                     <i className="fi fi-ts-angle-small-down"></i>
                   </button>
                   <div className="results-sort__dropdown" ref={sortDropdownRef}>
-                    {
-                      Object.keys(sortCriteria).map(sck => <button key={sck} onClick={() => {
-                        setSelectedSort(sortCriteria[sck].name)
-                        handleSearch({ ...criteria, sorting_col: sortCriteria[sck].sorting_col, sort_type: sortCriteria[sck].sort_type })}
-                      }>{sortCriteria[sck].name}</button>)
-                    }
+                    {Object.keys(sortCriteria).map((sck) => (
+                      <button
+                        key={sck}
+                        onClick={() => {
+                          setSelectedSort(sortCriteria[sck].name);
+                          const newCriteria = {
+                            ...criteria,
+                            sortingCol: sortCriteria[sck].sortingCol,
+                            sortType: sortCriteria[sck].sortType,
+                          };
+                          setCriteria(newCriteria);
+                          handleSearch(newCriteria);
+                        }}
+                      >
+                        {sortCriteria[sck].name}
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>

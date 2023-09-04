@@ -6,7 +6,7 @@ import { useAccessToken } from "../hooks/useAccessToken";
 import { useRefreshToken } from "../hooks/useRefreshToken";
 import { BroadcastProvider } from "./BroadcastProvider";
 import { AuthContextProvider } from "./ContextProvider";
-import { useFacebookLogin, useGoogleLogin } from "../hooks";
+import { useFacebookLogin, useGoogleLogin, useLogout } from "../hooks";
 import { withAuthenticateUrl } from "./withAuthenticateUrl";
 
 const EnhancedContextProvider = withAuthenticateUrl(AuthContextProvider);
@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
   const { onRefreshToken } = useRefreshToken();
   const { onFacebookLogin } = useFacebookLogin();
   const { onGoogleLogin } = useGoogleLogin();
+  const { onLogout } = useLogout();
 
   // Use axios interceptor to handle response
   axios.interceptors.response.use(
@@ -32,6 +33,7 @@ export const AuthProvider = ({ children }) => {
         error.response.data?.message === "Invalid credential" &&
         authConfig.isNeedRefreshToken
       ) {
+        console.log("refresh error: ", error);
         // Get the token
         const token = getToken();
         if (token) {
@@ -45,6 +47,9 @@ export const AuthProvider = ({ children }) => {
 
               // Update the new token for the request
               error.config.headers["Authorization"] = "Bearer " + res.token;
+            })
+            .catch((err) => {
+              onLogout();
             })
             .finally(() => {
               // Resend the request with the new token

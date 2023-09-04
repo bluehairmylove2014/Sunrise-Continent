@@ -194,7 +194,6 @@ const PreCheckout = () => {
       toast.error("Hãy đồng ý với điều khoản và chính sách nhé!");
       return;
     }
-    navigate(PAGES.CHECKOUT);
     onInitOrder({
       fullName: data.fullName,
       nation: data.nationality,
@@ -213,9 +212,10 @@ const PreCheckout = () => {
         numberOfRoom: bookingFormValue.rooms,
       })),
     });
+    // navigate(PAGES.CHECKOUT);
+    navigate(PAGES.SUCCESS_ORDER);
   };
   const onContactFormError = (error) => {
-    console.log(error);
     toast.error(error[Object.keys(error)[0]].message);
   };
   return hotelData && Array.isArray(roomsData) ? (
@@ -288,7 +288,6 @@ const PreCheckout = () => {
                   onClick={(e) => {
                     const dobInput = e.target.querySelector("input");
                     if (dobInput) {
-                      console.log("SHOW");
                       dobInput.showPicker();
                     }
                   }}

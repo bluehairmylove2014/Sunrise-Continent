@@ -51,7 +51,6 @@ const Authentication = () => {
 
   // Hook
   useEffect(() => {
-    console.log(location.pathname);
     setPage(location.pathname);
   }, [location]);
 
@@ -69,8 +68,8 @@ const Authentication = () => {
       navigate(oldRedirectUrl);
       deleteRedirectUrl();
     } else {
-      navigate(PAGES.HOME)
-    };
+      navigate(PAGES.HOME);
+    }
     setTimeout(() => {
       isLoginProcess.current = false;
     }, 2000);
@@ -98,7 +97,7 @@ const Authentication = () => {
         handleNavigate();
       })
       .catch((err) => {
-        toast.error(err.message);
+        toast.error(err.response.data.message || err.message);
       });
   };
   const handleLogin = ({ email, password, isRememberMe }) => {
@@ -113,7 +112,7 @@ const Authentication = () => {
         handleNavigate();
       })
       .catch((err) => {
-        toast.error(err.message);
+        toast.error(err.response.data.message || err.message);
       });
   };
   const handleLoginError = (errors) => {
@@ -133,7 +132,7 @@ const Authentication = () => {
         handleNavigate();
       })
       .catch((err) => {
-        toast.error(err.message);
+        toast.error(err.response.data.message || err.message);
       });
   };
   const handleRegisterError = (errors) => {

@@ -43,7 +43,6 @@ export const calculateFromIndex = (currentPage, elementPerPage) => {
   return (currentPage - 1) * elementPerPage + 1;
 };
 export const calculateToIndex = (data, currentPage, elementPerPage) => {
-  console.log({data, currentPage, elementPerPage})
   if (!currentPage) return 0;
   if (!Array.isArray(data)) return null;
   const testMaxElement =

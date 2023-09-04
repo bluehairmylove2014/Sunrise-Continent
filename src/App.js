@@ -23,6 +23,7 @@ const PreCheckout = lazy(() => import("./pages/PreCheckout/PreCheckout"));
 const CountryPage = lazy(() => import("./pages/Country/Country"));
 const VoucherShop = lazy(() => import("./pages/VoucherShop/VoucherShop"));
 const Checkout = lazy(() => import("./pages/Checkout/Checkout"));
+const SuccessOrder = lazy(() => import("./pages/SuccessOrder/SuccessOrder"));
 const AuthenticationPage = lazy(() =>
   import("./pages/Authentication/Authentication")
 );
@@ -106,6 +107,14 @@ function App() {
                 element={
                   <UserPageLayout>
                     <Checkout />
+                  </UserPageLayout>
+                }
+              />
+              <Route
+                path={PAGES.SUCCESS_ORDER}
+                element={
+                  <UserPageLayout>
+                    <SuccessOrder />
                   </UserPageLayout>
                 }
               />

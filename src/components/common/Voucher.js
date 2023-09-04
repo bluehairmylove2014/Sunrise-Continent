@@ -59,7 +59,7 @@ const Voucher = ({ voucherData, chooseVoucherCallback, type }) => {
             toast.success(res.message);
           })
           .catch((err) => {
-            toast.error(err.message);
+            toast.error(err.response.data.message || err.message);
           });
       } else {
         toast.error("Voucher invalid");

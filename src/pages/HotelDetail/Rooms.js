@@ -55,15 +55,14 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
       ],
     })
       .then((message) => {
-        if(message === 'Sản phẩm đã tồn tại') {
-          toast.error(message)
-        }
-        else {
+        if (message === "Sản phẩm đã tồn tại") {
+          toast.error(message);
+        } else {
           toast.success(message);
         }
       })
       .catch((err) => {
-        toast.error(err.message);
+        toast.error(err.response.data.message || err.message);
       })
       .finally(() => setIsAddToCartLoading(false));
   };
@@ -167,7 +166,7 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
               <h6>Mô tả</h6>
 
               <div className="short__description">
-                <p>{rd.roomInfo === 'null' ? '' : rd.roomInfo}</p>
+                <p>{rd.roomInfo === "null" ? "" : rd.roomInfo}</p>
                 {rd.vacancy ? (
                   <>
                     <p>

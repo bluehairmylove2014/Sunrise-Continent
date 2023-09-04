@@ -11,7 +11,7 @@ export class AuthService extends Services {
 
   registerUrl = "/auth/register";
   loginUrl = "/auth/login";
-  refreshTokenUrl = "/auth/refreshToken";
+  refreshTokenUrl = "/auth/refresh-token";
   getUserUrl = "/account/current-account";
 
   register = async (data) => {
@@ -51,6 +51,7 @@ export class AuthService extends Services {
         transformResponse: (res) => res,
         isProduction: true,
       });
+      // console.log(response)
       return response;
     } catch (error) {
       if (this.isCancel(error)) {

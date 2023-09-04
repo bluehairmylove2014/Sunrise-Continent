@@ -144,5 +144,17 @@ namespace SunriseServerData.Repositories
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
             return result;
         }
+
+        // AccountInfoDto
+        public async Task<int> GetAllAccountInfoAsync(FilterAccountDto searchAccount)
+        {
+            var builder = new StringBuilder($"EXEC USP_BanAccount ");
+            if (!string.IsNullOrEmpty(searchAccount.Name))
+                builder.Append($"@Name = {searchAccount.Name};");
+
+            Console.WriteLine(builder.ToString());
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            return result;
+        }
     }
 }

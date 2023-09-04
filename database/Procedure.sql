@@ -1756,6 +1756,34 @@ END
 GO
 
 
+GO
+CREATE OR ALTER PROC USP_FindAccountByName (-- //new check
+	-- Search
+	@Name NVARCHAR(200) = N'',
+	-- Filter
+	@Role NVARCHAR(500) = NULL,
+	@Gender NVARCHAR(200) = NULL,
+	-- sort
+	@SortingCol VARCHAR(50) = 'FullName',
+	@SortType VARCHAR(5) = 'ASC')
+AS
+BEGIN
+	SELECT * 
+	FROM ACCOUNT acc JOIN PERSONAL_DETAILS pd ON acc.Id = pd.AccountId
+	JOIN POINT_RANK pr ON pd.Rank = pr.RankName
+	WHERE (pd.FullName COLLATE Latin1_General_CI_AI like '%' + @Name + '%' COLLATE Latin1_General_CI_AI OR
+		  pd.EmailAddress COLLATE Latin1_General_CI_AI like '%' + @Name + '%' COLLATE Latin1_General_CI_AI) 
+		  AND (acc.UserRole IN (SELECT value FROM STRING_SPLIT(@Role, ',')) OR @Role IS NULL)
+		  AND (pd.Gender IN (SELECT value FROM STRING_SPLIT(@Gender, ',')) OR @Gender IS NULL)
+	ORDER BY 
+		CASE WHEN @SortingCol = 'FullName' AND @SortType ='ASC' THEN pd.FullName END,
+		CASE WHEN @SortingCol = 'FullName' AND @SortType ='DESC' THEN pd.FullName END DESC,
+		CASE WHEN @SortingCol = 'DateOfBirth' AND @SortType ='ASC' THEN pd.DateOfBirth END,
+		CASE WHEN @SortingCol = 'DateOfBirth' AND @SortType ='DESC' THEN pd.DateOfBirth END DESC,
+		CASE WHEN @SortingCol = 'Rank' AND @SortType ='ASC' THEN pr.RankValue END,
+		CASE WHEN @SortingCol = 'Rank' AND @SortType ='DESC' THEN pr.RankValue END DESC
+END
+GO
 
 --! thêm booking //
 CREATE OR ALTER PROCEDURE USP_AddBooking

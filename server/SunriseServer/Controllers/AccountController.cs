@@ -33,10 +33,11 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpGet("username"), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<Account>> GetAccountByUsername(string username)
+        [HttpGet(""), Authorize]
+        public async Task<ActionResult<Account>> GetCurrentAccountById()
         {
-            var result =  await _accountService.GetByUsername(username);
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            var result =  await _accountService.GetAccountById(accountId);
             if (result is null)
                 return NotFound(new {
                     message = "Không tìm thấy tài khoản"

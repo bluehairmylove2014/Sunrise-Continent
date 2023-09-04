@@ -8,6 +8,7 @@ namespace SunriseServerCore.RepoInterfaces
     {
         Task<IEnumerable<Order>> GetAccountOrderAsync(int accountId);
         Task<int> CreateOrderAsync(ListOrderDto order, int accountId);
-        Task<int> ConfirmOrderAsync(string sessionId);        
+        Task<int> ConfirmOrderAsync(string sessionId);
+        Task<int> GetTotalOrderWeeklyAsync(int hotelId, DateTime? date);
     }
 }

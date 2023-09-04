@@ -76,5 +76,22 @@ namespace SunriseServerData.Repositories
             return await _dataContext.Database
                 .ExecuteSqlInterpolatedAsync($"EXEC USP_ConfirmPaid @SessionId={sessionId};");
         }
+
+        public async Task<int> GetTotalOrderWeeklyAsync(int hotelId, DateTime? date)
+        {
+            var builder = new StringBuilder($"DECLARE @Result INT = 0;\nEXEC @Result = USP_GetHotelWeeklyOrder @HotelId={hotelId};");
+            if (date is not null) {
+                builder.Length--;
+                builder.Append($", @Date=\'{date?.ToString("MM-dd-yyyy")}\';");
+            }
+            builder.Append("\nSELECT @Result;");
+
+            Console.WriteLine("\t", builder.ToString());
+            
+            var result = (await _dataContext.Set<MyFuctionReturn>()
+                .FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync()).FirstOrDefault();
+
+            return result.MyValue;
+        }
     }
 }

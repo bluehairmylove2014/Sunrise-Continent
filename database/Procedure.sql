@@ -508,7 +508,7 @@ END
 GO
 
 GO
-CREATE OR ALTER PROC USP_BandAccount -- // Check // newCheck
+CREATE OR ALTER PROC USP_BanAccount -- // Check // newCheck
 	@AccountId INTEGER
 AS
 BEGIN
@@ -2157,10 +2157,12 @@ BEGIN
 	DECLARE @EndDate DATE = EOMONTH(@StartDate);
 
     SELECT @TotalRevenue += (rt.Price - @Fee) * ba.NumberOfRoom
-	FROM ACCOUNT_ORDER ao JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
+	FROM (SELECT * FROM ACCOUNT_ORDER WHERE 
+		DATEDIFF(DAY, @StartDate, CreatedAt) >= 0 AND 
+		DATEDIFF(DAY, CreatedAt, @EndDate) >= 0) ao 
+	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
 	JOIN (SELECT BookingId, NumberOfRoom, RoomTypeId FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba ON ba.BookingId = od.BookingId
 	JOIN (SELECT Id, Price FROM ROOM_TYPE WHERE HotelId = @HotelId) rt ON rt.Id = ba.RoomTypeId
-	WHERE DATEDIFF(DAY, @StartDate, ao.CreatedAt) >= 0 AND DATEDIFF(DAY, ao.CreatedAt, @EndDate) >= 0
 
 	RETURN @TotalRevenue;
 END;
@@ -2178,10 +2180,92 @@ BEGIN
 	DECLARE @table TABLE(Months INT);
 	INSERT INTO @table (Months) VALUES (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12);
 
-	SELECT Months, dbo.USF_CalculateHotelRevenueByMonth(@HotelId, @Year, Months) AS Revenue FROM @table;
+	SELECT Months, 
+		dbo.USF_CalculateHotelRevenueByMonth(@HotelId, @Year, Months) AS ThisYear,
+		dbo.USF_CalculateHotelRevenueByMonth(@HotelId, @Year - 1, Months) AS LastYear
+	FROM @table;
 END
 GO
 
+
+GO -- // new check 2
+CREATE OR ALTER FUNCTION USP_CalculateHotelOneDayRevenue (
+    @HotelId INT,
+    @Date DATE = NULL)
+RETURNS BIGINT
+BEGIN
+	IF (@Date IS NULL) SET @Date = GETDATE();
+
+	DECLARE @TotalRevenue BIGINT = 0;
+	DECLARE @Fee INT = 50000;
+
+	SELECT @TotalRevenue += (rt.Price - @Fee) * ba.NumberOfRoom
+	FROM (SELECT * FROM ACCOUNT_ORDER WHERE DATEDIFF(DAY, @Date, CreatedAt) = 0) ao 
+	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
+	JOIN (SELECT BookingId, NumberOfRoom, RoomTypeId FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba ON ba.BookingId = od.BookingId
+	JOIN (SELECT Id, Price FROM ROOM_TYPE WHERE HotelId = @HotelId) rt ON rt.Id = ba.RoomTypeId;
+
+	RETURN @TotalRevenue;
+END
+GO
+
+
+GO -- // new check 2
+CREATE OR ALTER PROCEDURE USP_CalculateHotelWeeklyRevenue (
+    @HotelId INT,
+    @Date DATE = NULL)
+AS
+BEGIN
+	DECLARE @Table TABLE (dayInWeek INT)
+	INSERT INTO @Table VALUES (1),(2),(3),(4),(5),(6),(7);
+
+	IF (@Date IS NULL) SET @Date = GETDATE();
+	DECLARE @StartDate DATE = DATEADD(DAY, 1 - DATEPART(WEEKDAY, @Date), @Date); -- Sunday the week before
+
+	select DayInWeek,
+		dbo.USP_CalculateHotelOneDayRevenue(@HotelId, DATEADD(DAY, DayInWeek, @StartDate)) as ThisWeek,
+		dbo.USP_CalculateHotelOneDayRevenue(@HotelId, DATEADD(DAY, DayInWeek - 7, @StartDate)) as LastWeek
+	from @Table
+END
+GO
+
+
+GO -- // new check 2
+CREATE OR ALTER PROCEDURE USP_GetHotelWeeklyReview (
+    @HotelId INT,
+    @Date DATE = NULL)
+AS
+BEGIN
+	IF (@Date IS NULL) SET @Date = GETDATE();
+	DECLARE @StartDate DATE = DATEADD(DAY, 2 - DATEPART(WEEKDAY, @Date), @Date); -- Sunday the week before
+	DECLARE @EndDate DATE = DATEADD(DAY, 6, @StartDate); -- Sunday this week
+
+	SELECT COUNT(ReviewId) FROM REVIEW WHERE 
+	HotelId = @HotelId AND
+	DATEDIFF(DAY, @StartDate, ReviewDate) >= 0 AND
+	DATEDIFF(DAY, ReviewDate, @EndDate) >= 0;
+END
+GO
+
+
+GO -- // new check 2
+CREATE OR ALTER PROCEDURE USP_GetHotelWeeklyOrder (
+    @HotelId INT,
+    @Date DATE = NULL)
+AS
+BEGIN
+	IF (@Date IS NULL) SET @Date = GETDATE();
+	DECLARE @StartDate DATE = DATEADD(DAY, 2 - DATEPART(WEEKDAY, @Date), @Date); -- Sunday the week before
+	DECLARE @EndDate DATE = DATEADD(DAY, 6, @StartDate); -- Sunday this week
+
+	SELECT COUNT(ao.OrderId) FROM (SELECT * FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba
+	JOIN ORDER_DETAIL od ON od.BookingId = ba.BookingId
+	JOIN ACCOUNT_ORDER ao ON od.OrderId = ao.OrderId
+	WHERE DATEDIFF(DAY, @StartDate, ao.CreatedAt) >= 0 AND DATEDIFF(DAY, ao.CreatedAt, @EndDate) >= 0;
+
+	SELECT @StartDate, @EndDate;
+END
+GO
 
 -- // check --
 
@@ -2251,41 +2335,6 @@ BEGIN
 END;
 GO
 
---!proc tính doanh thu khách sạn trong năm
-GO
-CREATE OR ALTER PROCEDURE CalculateHotelRevenueByYear
-    @Year INT,
-    @HotelId INT,
-    @TotalRevenue INT OUTPUT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    DECLARE @StartDate DATE, @EndDate DATE;
-
-    -- Tính ngày bắt đầu của năm
-    SET @StartDate = DATEFROMPARTS(@Year, 1, 1);
-
-    -- Tính ngày cuối cùng của năm
-    SET @EndDate = DATEADD(DAY, -1, DATEADD(YEAR, 1, @StartDate));
-
-    -- Tính doanh thu
-    SELECT @TotalRevenue = SUM(Total)
-    FROM ACCOUNT_ORDER AO
-    JOIN ORDER_DETAIL OD ON AO.OrderId = OD.OrderId
-    JOIN BOOKING_ACCOUNT BA ON OD.BookingId = BA.BookingId
-    WHERE AO.Paid = 1
-        AND BA.CheckIn >= @StartDate
-        AND BA.CheckIn <= @EndDate
-        AND BA.HotelId = @HotelId;
-
-    IF @TotalRevenue IS NULL
-        SET @TotalRevenue = -1;
-
-    -- Trả về kết quả
-    RETURN @TotalRevenue;
-END;
-GO
 
 --!proc tính diểm thành viên dựa trên số ngày cư trú 
 GO

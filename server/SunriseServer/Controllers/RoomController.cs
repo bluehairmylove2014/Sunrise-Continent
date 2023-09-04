@@ -138,8 +138,7 @@ namespace SunriseServer.Controllers
         {
             var result = await _roomService.AddRoomPicture(request);
             if (result is null)
-                return BadRequest(new
-                {
+                return BadRequest(new {
                     message = "không thể thêm ảnh cho phòng"
                 });
 

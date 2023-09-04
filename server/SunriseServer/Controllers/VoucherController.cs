@@ -32,8 +32,7 @@ namespace SunriseServer.Controllers
             var result = await _voucherService.GetAllVoucher(); // thêm số lượng cho voucher
 
             if (result == null)
-                return BadRequest(new
-                {
+                return BadRequest(new {
                     message = "Không thể lấy danh sách mã khuyến mãi"
                 });
 
@@ -72,7 +71,9 @@ namespace SunriseServer.Controllers
             }
             catch (Microsoft.Data.SqlClient.SqlException exception)
             {
-                return BadRequest(exception.Message);
+                return BadRequest(new {
+                   message = exception.Message
+                });
             }
 
             if (result == -1)
@@ -98,7 +99,9 @@ namespace SunriseServer.Controllers
             }
             catch (Microsoft.Data.SqlClient.SqlException exception)
             {
-                return BadRequest(exception.Message);
+                return BadRequest(new {
+                   message = exception.Message
+                });
             }
 
             return Ok(new ResponseMessageDetails<int>("Cập nhật mã khuyến mãi thành công", result));

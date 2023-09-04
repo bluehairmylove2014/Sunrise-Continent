@@ -88,15 +88,13 @@ namespace SunriseServer.Controllers
             }
             catch (Microsoft.Data.SqlClient.SqlException exception)
             {
-                return BadRequest(new
-                {
+                return BadRequest(new {
                     message = exception.Message
                 });
             }
             catch (Exception)
             {
-                return BadRequest(new
-                {
+                return BadRequest(new {
                     message = "Có lỗi xảy ra trong quá trình cấm tài khoản"
                 });
             }

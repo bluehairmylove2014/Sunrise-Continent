@@ -10,5 +10,6 @@ namespace SunriseServerCore.RepoInterfaces
     public interface IReviewRepo : IRepository<Review>
     {
         Task<List<Review>> GetHotelReviewAsync(int id);
+        Task<int> GetHotelWeeklyTotalReviewAsync(int hotelId, DateTime? date);
     }
 }

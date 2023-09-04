@@ -22,8 +22,11 @@ namespace SunriseServer.Services.HotelService
         // search and filter
         Task<List<Hotel>> GetSearchHotels(SearchHotelDto searchHotel);
 
-        // Revenue
-        Task<List<YealyRevenue>> GetHotelYealyRevenue(int hotelId, int year);
+        // Revenue - statistic
+        Task<List<YealyRevenue>> GetHotelYealyRevenue(int hotelId, int? year);
+        Task<List<WeeklyRevenue>> GetHotelWeeklyRevenue(int hotelId, DateTime? date);
+        Task<int> GetHotelWeeklyTotalReview(int hotelId, DateTime? date);
+        Task<int> GetHotelWeeklyTotalOrder(int hotelId, DateTime? date);
     }
 };
 

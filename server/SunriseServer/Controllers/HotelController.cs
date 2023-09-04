@@ -82,9 +82,8 @@ namespace SunriseServer.Controllers
         {
             var rawData = await _hotelService.GetSingleHotel(id);
             if (rawData is null)
-                return NotFound(new
-                {
-                    message = "Không tìm thấy khách sạn"
+                return NotFound(new {
+                    message = "Không tìm được khách sạn."
                 });
 
             var result = await TransferHotelData(rawData);
@@ -227,9 +226,9 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        // GetHotelYealyRevenue
+        
         [HttpGet("yearly-revenue"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
-        public async Task<ActionResult<List<YealyRevenue>>> GetHotelYearlyRevenue(int? hotelId, int year)
+        public async Task<ActionResult<List<YealyRevenue>>> GetHotelYearlyRevenue(int? hotelId, int? year)
         {
             Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
             int checkHotelId = hotelId ?? (await _accountService.GetAccountDetailsById(accountId)).HotelId;
@@ -251,7 +250,40 @@ namespace SunriseServer.Controllers
                 });
             }
 
-            return Ok(new ResponseMessageDetails<List<YealyRevenue>>("Lấy doanh thu năm thành công", result));
+            return Ok(result);
+        }
+
+        [HttpGet("weekly-revenue"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
+        public async Task<ActionResult<StatisticsHotelDto>> GetHotelWeeklyRevenue(int? hotelId, DateTime? date)
+        {
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            int checkHotelId = hotelId ?? (await _accountService.GetAccountDetailsById(accountId)).HotelId;
+            StatisticsHotelDto result;
+
+            if (checkHotelId == 0)
+                return BadRequest(new {
+                    message = "Admin không sỡ hữu khách sạn.",
+                });
+
+            try
+            {
+                result = new StatisticsHotelDto{
+                    Revenue = await _hotelService.GetHotelWeeklyRevenue(checkHotelId , date),
+                    TotalOrder = await _hotelService.GetHotelWeeklyTotalOrder(checkHotelId, date),
+                    TotalReview = await _hotelService.GetHotelWeeklyTotalReview(checkHotelId, date)
+                };
+                result.Revenue.ForEach(p => {
+                    result.TotalRevenue += p.ThisWeek;
+                });
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message,
+                });
+            }
+
+            return Ok(result);
         }
     }
 }

@@ -22,15 +22,27 @@ namespace SunriseServerData.Repositories
             _dataContext = dbContext;
         }
 
-        // public override async Task<List<Review>> GetAllAsync()
-        // {
-            
-        // }
-
         public async Task<List<Review>> GetHotelReviewAsync(int id)
         {
             var result = await _dataContext.Review.FromSqlInterpolated($"USP_GetHotelReviews @Id={id};").ToListAsync();
             return result;
+        }
+
+        public async Task<int> GetHotelWeeklyTotalReviewAsync(int hotelId, DateTime? date)
+        {
+            var builder = new StringBuilder($"DECLARE @Result INT = 0;\nEXEC @Result = USP_GetHotelWeeklyReview @HotelId={hotelId};");
+            if (date is not null) {
+                builder.Length--;
+                builder.Append($", @Date=\'{date?.ToString("MM-dd-yyyy")}\';");
+            }
+            builder.Append("\nSELECT @Result;");
+
+            Console.WriteLine("\t", builder.ToString());
+            
+            var result = (await _dataContext.Set<MyFuctionReturn>()
+                .FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync()).FirstOrDefault();
+
+            return result.MyValue;
         }
     }
 }

@@ -135,9 +135,9 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
-        public async Task<int> BandAccount(Account acc)
+        public async Task<int> BanAccount(Account acc)
         {
-            var builder = new StringBuilder($"EXEC USP_BandAccount ");
+            var builder = new StringBuilder($"EXEC USP_BanAccount ");
             builder.Append($"@AccountId = {acc.Id};");
 
             Console.WriteLine(builder.ToString());

@@ -11,7 +11,9 @@ export const LOCAL_STORAGE_KEYS = {
 };
 export const SESSION_STORAGE_KEY = {
   ACCESS_TOKEN: generateSecureHash("SESSION_ACCESS_TOKEN"),
+  REFRESH_TOKEN: generateSecureHash("SESSION_REFRESH_TOKEN"),
 };
 export const COOKIE_KEY = {
   ACCESS_TOKEN: generateSecureHash("COOKIE_ACCESS_TOKEN"),
+  REFRESH_TOKEN: generateSecureHash("COOKIE_REFRESH_TOKEN"),
 };

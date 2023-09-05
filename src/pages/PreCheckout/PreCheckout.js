@@ -68,7 +68,6 @@ const PreCheckout = () => {
       : [];
   const [sunriseVoucher, setSunriseVoucher] = useState(null);
   const [isChoosingVoucher, setIsChoosingVoucher] = useState(false);
-  console.log(sunriseVoucher);
   const contactForm = useForm({
     defaultValues: {
       fullName: "",

@@ -1,5 +1,8 @@
 import React from "react";
-import { ROOM_OPTIONS } from "../../constants/filter.constants";
+import {
+  ACCOMMODATION_FACILITIES,
+  ROOM_OPTIONS,
+} from "../../constants/filter.constants";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 import { Link } from "react-router-dom";
 import { PAGES } from "../../constants/Link.constants";
@@ -19,7 +22,7 @@ const Hotel = ({ data, criteria }) => {
     const result = facilities.slice(0, maxAmenities).map((am) => {
       return (
         <div className="infor__amenity" key={`amenity@${am}`}>
-          {am}
+          {ACCOMMODATION_FACILITIES[am].LABEL}
         </div>
       );
     });

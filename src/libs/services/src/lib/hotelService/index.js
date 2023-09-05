@@ -25,7 +25,6 @@ export class HotelService extends Services {
   search = async (keys) => {
     this.abortController = new AbortController();
     try {
-      console.log(keys);
       const response = await this.fetchApi({
         method: "GET",
         url: this.searchUrl,
@@ -35,7 +34,6 @@ export class HotelService extends Services {
         transformResponse: (res) => res,
         isProduction: true,
       });
-      console.log(response);
       return response;
     } catch (error) {
       if (!this.isCancel(error)) {

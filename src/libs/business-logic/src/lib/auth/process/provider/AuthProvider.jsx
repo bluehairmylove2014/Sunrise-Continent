@@ -2,18 +2,18 @@
 import { axios } from "../../../../../../services/src";
 import React from "react";
 import { authConfig } from "../../../../configs";
-import { useAccessToken } from "../hooks/useAccessToken";
 import { useRefreshToken } from "../hooks/useRefreshToken";
 import { BroadcastProvider } from "./BroadcastProvider";
 import { AuthContextProvider } from "./ContextProvider";
 import { useFacebookLogin, useGoogleLogin, useLogout } from "../hooks";
 import { withAuthenticateUrl } from "./withAuthenticateUrl";
+import { useHandleRefreshToken } from "../hooks/useHandleRefreshToken";
 
 const EnhancedContextProvider = withAuthenticateUrl(AuthContextProvider);
 // This is the AuthProvider for the entire app
 export const AuthProvider = ({ children }) => {
   // Get the resetToken and getToken functions from useAccessToken
-  const { getToken } = useAccessToken();
+  const { getRefreshToken } = useHandleRefreshToken();
   const { onRefreshToken } = useRefreshToken();
   const { onFacebookLogin } = useFacebookLogin();
   const { onGoogleLogin } = useGoogleLogin();
@@ -30,15 +30,14 @@ export const AuthProvider = ({ children }) => {
       // It means token is expired now! Need to refresh
       if (
         error.response?.status === 401 &&
-        error.response.data?.message === "Invalid credential" &&
+        // error.response.data?.message === "Invalid credential" &&
         authConfig.isNeedRefreshToken
       ) {
-        console.log("refresh error: ", error);
         // Get the token
-        const token = getToken();
-        if (token) {
+        const refreshToken = getRefreshToken();
+        if (refreshToken) {
           // If token exists, refresh the token
-          onRefreshToken(token)
+          onRefreshToken(refreshToken)
             .then((res) => {
               // Check if res.token is undefined
               if (!res.token) {
@@ -55,6 +54,8 @@ export const AuthProvider = ({ children }) => {
               // Resend the request with the new token
               return axios(error.config);
             });
+        } else {
+          onLogout();
         }
       }
       // If any other error, reject the promise

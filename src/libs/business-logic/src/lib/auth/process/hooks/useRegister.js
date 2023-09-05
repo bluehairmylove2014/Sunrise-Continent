@@ -3,11 +3,13 @@ import { BROADCAST_MESSAGE } from "../../constants";
 import { useRegisterMutation } from "../../fetching/mutation";
 import { useAccessToken } from "./useAccessToken";
 import { useAuthBroadcastChannel } from "./useAuthBroadcastChannel";
+import { useHandleRefreshToken } from "./useHandleRefreshToken";
 
 const isRememberMeDefault = false;
 export const useRegister = () => {
   const { postMessage } = useAuthBroadcastChannel();
   const { setToken } = useAccessToken();
+  const { setRefreshToken } = useHandleRefreshToken();
   // Define mutation for register function with retry and success/error handlers
   const registerMutation = useRegisterMutation();
 
@@ -21,9 +23,11 @@ export const useRegister = () => {
 
           if (response.token) {
             setToken(response.token, isRememberMeDefault);
+            setRefreshToken(response.refreshToken, isRememberMeDefault);
             postMessage({
               message: BROADCAST_MESSAGE.SEND_TOKEN,
               token: response.token,
+              refreshToken: response.refreshToken,
               isRemember: isRememberMeDefault,
             });
             resolve(response.message);

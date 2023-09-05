@@ -3,7 +3,8 @@ import AxiosMockAdapter from "axios-mock-adapter";
 import { authServiceConfig } from "./config";
 
 export function isDevelopment() {
-  return !process.env["NODE_ENV"] || process.env["NODE_ENV"] === "development";
+  return false;
+  // return !process.env["NODE_ENV"] || process.env["NODE_ENV"] === "development";
 }
 
 const MOCK_API = {
@@ -15,6 +16,7 @@ const axiosMockAdapterInstance = new AxiosMockAdapter(axiosMockInstance, {
   delayResponse: MOCK_API.DELAY_RESPONSE_MOCK_API,
 });
 
+console.log(authServiceConfig.isMockApi && isDevelopment());
 const axios =
   authServiceConfig.isMockApi && isDevelopment()
     ? axiosMockInstance

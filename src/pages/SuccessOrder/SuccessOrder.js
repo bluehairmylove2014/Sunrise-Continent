@@ -51,8 +51,6 @@ const SuccessOrder = () => {
   const night = calcNight(start_date, end_date);
   const [total, setTotal] = useState(0);
 
-  console.log(selectedRoomsObject);
-
   useEffect(() => {
     setTotal(calculateTotal(roomsData, 0, night));
     // eslint-disable-next-line react-hooks/exhaustive-deps

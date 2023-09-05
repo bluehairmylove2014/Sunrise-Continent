@@ -6,11 +6,14 @@ import { BROADCAST_CHANNEL, BROADCAST_MESSAGE } from "../../constants";
 import { useAuthContext } from "../context";
 import { getIsRememberMeLocalStorage } from "../helper/localStorageHelper";
 import { useAccessToken } from "./useAccessToken";
+import { useHandleRefreshToken } from "./useHandleRefreshToken";
 
 let bc = null;
 
 export const useAuthBroadcastChannel = () => {
   const tokenController = useAccessToken();
+  const { setRefreshToken, deleteRefreshToken, getRefreshToken } =
+    useHandleRefreshToken();
   const { state } = useAuthContext();
 
   // Method to post messages
@@ -28,17 +31,24 @@ export const useAuthBroadcastChannel = () => {
         switch (event.data.message) {
           case BROADCAST_MESSAGE.SEND_TOKEN:
             // If the token is present and different from the current one, update it
-            if (event.data.token && state.token !== event.data.token) {
+            if (
+              event.data.token &&
+              event.data.refreshToken &&
+              state.token !== event.data.token
+            ) {
               tokenController.setToken(event.data.token, event.data.isRemember);
+              setRefreshToken(event.data.refreshToken, event.data.isRemember);
             }
             break;
           case BROADCAST_MESSAGE.NEED_TOKEN: {
             const rememberMeOption = getIsRememberMeLocalStorage();
             const token = tokenController.getToken();
+            const refreshToken = getRefreshToken();
             if (token) {
               postMessage({
                 message: BROADCAST_MESSAGE.SEND_TOKEN,
-                token: token,
+                token,
+                refreshToken,
                 isRemember: rememberMeOption,
               });
             }
@@ -46,6 +56,7 @@ export const useAuthBroadcastChannel = () => {
           }
           case BROADCAST_MESSAGE.NEED_LOGOUT:
             tokenController.deleteToken();
+            deleteRefreshToken();
             break;
           default:
             break;

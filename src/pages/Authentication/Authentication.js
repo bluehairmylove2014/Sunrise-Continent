@@ -97,7 +97,7 @@ const Authentication = () => {
         handleNavigate();
       })
       .catch((err) => {
-        toast.error(err.response.data.message || err.message);
+        toast.error(err.response?.data?.message || err.message);
       });
   };
   const handleLogin = ({ email, password, isRememberMe }) => {
@@ -112,7 +112,7 @@ const Authentication = () => {
         handleNavigate();
       })
       .catch((err) => {
-        toast.error(err.response.data.message || err.message);
+        toast.error(err.response?.data?.message || err.message);
       });
   };
   const handleLoginError = (errors) => {
@@ -132,7 +132,7 @@ const Authentication = () => {
         handleNavigate();
       })
       .catch((err) => {
-        toast.error(err.response.data.message || err.message);
+        toast.error(err.response?.data?.message || err.message);
       });
   };
   const handleRegisterError = (errors) => {

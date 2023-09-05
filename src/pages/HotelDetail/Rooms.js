@@ -62,7 +62,7 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
         }
       })
       .catch((err) => {
-        toast.error(err.response.data.message || err.message);
+        toast.error(err.response?.data?.message || err.message);
       })
       .finally(() => setIsAddToCartLoading(false));
   };

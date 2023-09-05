@@ -1,4 +1,4 @@
-﻿USE [sunrise-hotel]
+﻿USE [sunrise-hotel];
 GO
 
 
@@ -1475,9 +1475,7 @@ CREATE OR ALTER PROCEDURE USP_RedeemVoucher
 	@DateRecorded VARCHAR(30)
 AS
 BEGIN
-	DECLARE @VoucherValue INT;
-	DECLARE @CurrentPoints INT;
-	DECLARE @Quantity INT;
+	DECLARE @VoucherValue INT, @CurrentPoints INT, @Quantity INT;
 	
 	-- Kiểm tra xem tài khoản và voucher có tồn tại không
 	IF NOT EXISTS (SELECT TOP(1) Id FROM ACCOUNT WHERE Id = @AccountId)
@@ -1534,7 +1532,8 @@ BEGIN
 			UPDATE VOUCHER SET Quantity = Quantity - @Number WHERE VoucherId = @VoucherId;
 
 			-- Lưu lịch sử sử dụng điểm vào bảng POINT_HISTORY
-			INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime) VALUES (@AccountId, -(@VoucherValue * @Number), @DateRecorded);
+			INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime, Content) 
+				VALUES (@AccountId, -(@VoucherValue * @Number), @DateRecorded, CONCAT(N'REDEEM - Id=', CAST(@VoucherId as nvarchar(10))));
 		END TRY
 
 		BEGIN CATCH
@@ -1570,7 +1569,8 @@ BEGIN
 		UPDATE ACCOUNT SET MemberPoint = MemberPoint + CAST(@EarnedPoints as INT) WHERE Id = @AccountId;
 
 		-- Ghi lại lịch sử điểm vào bảng POINT_HISTORY
-		INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime) VALUES (@AccountId, @EarnedPoints, @DateRecorded);
+		INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime, Content) 
+			VALUES (@AccountId, @EarnedPoints, @DateRecorded, N'Cộng điểm dựa vào chi tiêu.');
 	END TRY
 
 	BEGIN CATCH
@@ -2050,7 +2050,6 @@ CREATE OR ALTER PROC USP_UpdateVoucherAndTotal
 	@OrderId INT,
 	@AccountId INT,
 	@VoucherId INTEGER,
-	@MultipleConfirm BIT = 0,
 	@DateRecorded VARCHAR(30)
 AS
 BEGIN
@@ -2093,24 +2092,12 @@ BEGIN
 		SELECT @Discount = Value FROM VOUCHER WHERE VoucherId = @VoucherId;
 		DECLARE @Total INT = dbo.USF_GetOrderTotal(@OrderId);
 
-		IF ((@VoucherId IS NOT NULL OR @MultipleConfirm = 0) AND @VoucherId > 0)
-		BEGIN
-			-- Giảm số lượng voucher trong túi.
-			IF (@Quantity = 1)
-				DELETE FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
-			ELSE
-				UPDATE VOUCHER_BAG SET Quantity = @Quantity - 1 WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
-		END
-
 		UPDATE ACCOUNT_ORDER
 		SET
 			VoucherId = @VoucherId,
 			Total = @Total - CAST(@Total * @Discount AS FLOAT),
 			Paid = 0
 		WHERE OrderId = @OrderId;
-
-		-- Cập nhật điểm thành viên.
-		EXEC USP_UpdateMemberPoints @AccountId, @Total, @DateRecorded;
 	END TRY
 
 	BEGIN CATCH
@@ -2125,17 +2112,81 @@ END;
 GO
 
 GO
-CREATE OR ALTER PROCEDURE USP_ConfirmPaid (@SessionId VARCHAR(200))
+CREATE OR ALTER PROC USP_ConfirmOrder (
+	@OrderId INT,
+	@MultipleConfirm BIT = 1)
 AS
 BEGIN
-	UPDATE ACCOUNT_ORDER
-		SET
-			Paid = 1
-	WHERE SessionId = @SessionId;
+	BEGIN TRAN
+
+	BEGIN TRY
+		DECLARE @AccountId INT, @Quantity INT, @VoucherId INT;
+		DECLARE @DateRecorded VARCHAR(30) = CAST(FORMAT(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss.fffffff') as VARCHAR(30));
+
+		SELECT 
+			@VoucherId = VoucherId, 
+			@AccountId = AccountId
+		FROM ACCOUNT_ORDER WHERE OrderId = @OrderId;
+
+		SELECT @Quantity = Quantity FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
+
+		DECLARE @Total INT = dbo.USF_GetOrderTotal(@OrderId);
+
+		IF ((@VoucherId IS NOT NULL AND @MultipleConfirm = 0) AND @VoucherId > 0)
+		BEGIN
+			-- Giảm số lượng voucher trong túi.
+			IF (@Quantity = 1)
+				DELETE FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
+			ELSE
+				UPDATE VOUCHER_BAG SET Quantity = @Quantity - 1 WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
+		END
+
+		-- Cập nhật điểm thành viên.
+		EXEC USP_UpdateMemberPoints @AccountId, @Total, @DateRecorded;
+	END TRY
+
+	BEGIN CATCH
+		ROLLBACK;
+		RAISERROR(N'Lỗi xác nhận đơn', 11, 1)
+		RETURN -1;
+	END CATCH
+
+	COMMIT;
+	RETURN 0;
 END
 GO
 
 
+GO
+CREATE OR ALTER PROCEDURE USP_ConfirmPaid (
+	@SessionId VARCHAR(200)
+)
+AS
+BEGIN
+	BEGIN TRAN
+	
+	BEGIN TRY
+		DECLARE @Sql NVARCHAR(MAX) = '';
+		SELECT @Sql += 'EXEC USP_ConfirmOrder @OrderId=' + CAST(OrderId as NVARCHAR(10))  + ';' + CHAR(13)
+		FROM ACCOUNT_ORDER WHERE SessionId = @SessionId;
+		DECLARE @NewSql NVARCHAR(MAX) = SUBSTRING(@Sql, 1, LEN(@Sql) - 2) + ', @MultipleConfirm=0;';
+		EXECUTE(@NewSql);
+
+		UPDATE ACCOUNT_ORDER SET Paid = 1
+		WHERE SessionId = @SessionId;
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR('', 11, 1);
+		ROLLBACK TRAN;
+	END CATCH
+
+	COMMIT TRAN;
+	RETURN 0;
+END
+GO
+
+GO
 CREATE OR ALTER FUNCTION USF_GetAccountId (@Email VARCHAR(50))
 RETURNS INT
 BEGIN
@@ -2196,7 +2247,7 @@ BEGIN
 	DECLARE @EndDate DATE = EOMONTH(@StartDate);
 
     SELECT @TotalRevenue += (rt.Price - @Fee) * ba.NumberOfRoom
-	FROM (SELECT * FROM ACCOUNT_ORDER WHERE 
+	FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1 AND
 		DATEDIFF(DAY, @StartDate, CreatedAt) >= 0 AND 
 		DATEDIFF(DAY, CreatedAt, @EndDate) >= 0) ao 
 	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
@@ -2239,7 +2290,7 @@ BEGIN
 	DECLARE @Fee INT = 50000;
 
 	SELECT @TotalRevenue += (rt.Price - @Fee) * ba.NumberOfRoom
-	FROM (SELECT * FROM ACCOUNT_ORDER WHERE DATEDIFF(DAY, @Date, CreatedAt) = 0) ao 
+	FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1 AND DATEDIFF(DAY, @Date, CreatedAt) = 0) ao 
 	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
 	JOIN (SELECT BookingId, NumberOfRoom, RoomTypeId FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba ON ba.BookingId = od.BookingId
 	JOIN (SELECT Id, Price FROM ROOM_TYPE WHERE HotelId = @HotelId) rt ON rt.Id = ba.RoomTypeId;

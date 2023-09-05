@@ -195,7 +195,7 @@ namespace SunriseServer.Controllers
             });
         }
 
-        [HttpPost("refresh-token"), Authorize]
+        [HttpPost("refresh-token")]
         public async Task<ActionResult<ResponseMessageDetails<string>>> RefreshToken()
         {
             Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
@@ -215,7 +215,9 @@ namespace SunriseServer.Controllers
             var newRefreshToken = GenerateRefreshToken();
             SetRefreshToken(newRefreshToken, acc);
             _accService.SaveChanges();
-            return Ok(new ResponseMessageDetails<string>("Refresh token successfully", token));
+            return Ok(new {
+                token
+            });
         }
 
         private RefreshToken GenerateRefreshToken()

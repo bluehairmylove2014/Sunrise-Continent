@@ -125,7 +125,9 @@ namespace SunriseServer.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                return BadRequest(new {
+                    message = ex.Message
+                });
             }
 
             return Ok(result);

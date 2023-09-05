@@ -93,12 +93,13 @@ namespace SunriseServer.Controllers
                     message = sqlEx.Message,
                 });
             }
-            catch (Exception)
-            {
-                return BadRequest(new {
-                    message = "Không thể đặt phòng, vui lòng thử lại"
-                });
-            }
+            // catch (Exception ex)
+            // {
+            //     // Console.WriteLine(ex.Message, "\n", ex.StackTrace);
+            //     // return BadRequest(new {
+            //     //     message = "Không thể đặt phòng, vui lòng thử lại"
+            //     // });
+            // }
         }
     }
 }

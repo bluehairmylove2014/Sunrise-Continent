@@ -104,7 +104,7 @@ const Search = () => {
     if (searchBoardForm.getValues().location !== newCriteria.location) {
       searchBoardForm.setValue("location", newCriteria.location);
     }
-    handleSearch(criteria);
+    handleSearch(newCriteria);
   }, [location]);
 
   const scrollToTop = () => {

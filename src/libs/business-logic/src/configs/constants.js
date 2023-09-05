@@ -7,6 +7,7 @@ export const LOCAL_STORAGE_KEYS = {
   CART_ADDRESS: generateSecureHash("LOCAL_STORAGE_KEY_CART_ADDRESS"),
   ORDER: generateSecureHash("LOCAL_STORAGE_KEY_ORDER"),
   CAN_SUCCESS_ORDER: generateSecureHash("CAN_SUCCESS_ORDER"),
+  SEARCH_HISTORY: generateSecureHash("SEARCH_HISTORY"),
 };
 export const SESSION_STORAGE_KEY = {
   ACCESS_TOKEN: generateSecureHash("SESSION_ACCESS_TOKEN"),

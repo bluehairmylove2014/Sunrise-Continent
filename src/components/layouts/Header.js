@@ -4,12 +4,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../../styles/component/header.scss";
 import logoVerticalImg from "../../assets/images/logos/sc-vertical.png";
 import logoHorizontalImg from "../../assets/images/logos/sc-horizontal.png";
-import worker_gif from "../../assets/images/graphics/worker.gif";
 import cartIcon from "../../assets/images/icons/shopping-bag (1).png";
 import { PAGES } from "../../constants/Link.constants";
 import NavDropdown from "../common/NavDropdown";
 import UserSidebar from "./UserSidebar";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useIsLogged } from "../../libs/business-logic/src/lib/auth";
 import { categories, languages, partner } from "./Data";
 import WistList from "../common/WistList";
@@ -18,6 +17,11 @@ import { useGetUser } from "../../libs/business-logic/src/lib/auth/process/hooks
 import { useWishlist } from "../../libs/business-logic/src/lib/wishlist";
 import { useCartContext } from "../../libs/business-logic/src/lib/cart/process/context";
 import { toast } from "react-hot-toast";
+import Empty from "../common/Empty";
+import { useGetRecommendProduct } from "./../../libs/business-logic/src/lib/search/process/hooks/useGetRecommendProduct";
+import { useGetSearchHistory } from "./../../libs/business-logic/src/lib/search/process/hooks/useGetSearchHistory";
+import { useSearchRecommend } from "../../libs/business-logic/src/lib/search/process/hooks/useSearchRecommend";
+import { useHandleKeyWord } from "./../../libs/business-logic/src/lib/search/process/hooks/useHandleKeyWord";
 
 const Header = () => {
   const [isUserSidebarActive, setIsUserSidebarActive] = useState(false);
@@ -27,7 +31,10 @@ const Header = () => {
   const [isSimplyHeader, setIsSimplyHeader] = useState(false);
   const timeskipScroll = useRef(false);
   const location = useLocation();
-
+  const recommendProducts = useGetRecommendProduct();
+  const searchHistories = useGetSearchHistory();
+  const { onSearchRecommend } = useSearchRecommend();
+  const { onSaveKeyWord, onDeleteKeyWord } = useHandleKeyWord();
   const isLogin = useIsLogged();
 
   const userData = useGetUser();
@@ -39,7 +46,11 @@ const Header = () => {
 
   const navigate = useNavigate();
 
-  const { handleSubmit, register, reset } = useForm();
+  const { handleSubmit, reset, control } = useForm({
+    defaultValues: {
+      search: "",
+    },
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -140,13 +151,15 @@ const Header = () => {
     }
   };
   const onSearch = (content) => {
-    if (!content.search || !content.search.trim().length) {
+    const realKeyWords = typeof content === "string" ? content : content.search;
+    if (!realKeyWords || !realKeyWords.trim().length) {
       toast.error("Nhập gì đó đi!");
     } else {
       // Handle split keys
       handleBlurSearchbox();
-      let query = `/search?location=${content.search}`;
+      let query = `/search?location=${realKeyWords}`;
       navigate(query, { replace: true });
+      onSaveKeyWord(realKeyWords);
       reset();
     }
   };
@@ -173,20 +186,26 @@ const Header = () => {
                 <button type="submit" className="search-box__submit">
                   <i className="fi fi-rr-search"></i>
                 </button>
-                <input
+                <Controller
                   name="search"
-                  defaultValue=""
-                  type="text"
-                  placeholder="Bạn muốn đặt chân đến nơi nào?"
-                  onFocus={handleFocusSearchbox}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleSubmit(onSearch);
-                    }
-                  }}
-                  {...register("search", {
+                  control={control}
+                  rules={{
                     required: true,
-                  })}
+                  }}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      type="text"
+                      autoComplete="off"
+                      placeholder="Bạn muốn đặt chân đến nơi nào?"
+                      onFocus={handleFocusSearchbox}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleSubmit(onSearch);
+                        }
+                      }}
+                    />
+                  )}
                 />
               </form>
             ) : (
@@ -197,20 +216,31 @@ const Header = () => {
                 <button type="submit" className="search-box__submit">
                   <i className="fi fi-rr-search"></i>
                 </button>
-                <input
+                <Controller
                   name="search"
-                  defaultValue=""
-                  type="text"
-                  placeholder="Bạn muốn đặt chân đến nơi nào?"
-                  onFocus={handleFocusSearchbox}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleSubmit(onSearch);
-                    }
-                  }}
-                  {...register("search", {
+                  control={control}
+                  rules={{
                     required: true,
-                  })}
+                  }}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      type="text"
+                      autoComplete="off"
+                      placeholder="Bạn muốn đặt chân đến nơi nào?"
+                      onFocus={handleFocusSearchbox}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleSubmit(onSearch);
+                        }
+                      }}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        const searchKeyWords = e.target.value.trim();
+                        onSearchRecommend(searchKeyWords);
+                      }}
+                    />
+                  )}
                 />
               </form>
             )}
@@ -266,14 +296,13 @@ const Header = () => {
                 isLogin && "active"
               }`}
             >
-              <li className="header-main-nav__user-avatar">
+              <li
+                className="header-main-nav__user-avatar"
+                onClick={() => setIsUserSidebarActive(!isUserSidebarActive)}
+              >
                 {userData ? (
                   <>
-                    <button
-                      onClick={() =>
-                        setIsUserSidebarActive(!isUserSidebarActive)
-                      }
-                    >
+                    <button>
                       <img src={userData.image} alt="user-avatar" />
                     </button>
                   </>
@@ -364,14 +393,13 @@ const Header = () => {
                   isLogin && "active"
                 }`}
               >
-                <li className="header-main-nav__user-avatar">
+                <li
+                  className="header-main-nav__user-avatar"
+                  onClick={() => setIsUserSidebarActive(!isUserSidebarActive)}
+                >
                   {userData ? (
                     <>
-                      <button
-                        onClick={() =>
-                          setIsUserSidebarActive(!isUserSidebarActive)
-                        }
-                      >
+                      <button>
                         <img src={userData.image} alt="user-avatar" />
                       </button>
                     </>
@@ -385,15 +413,47 @@ const Header = () => {
             <></>
           )}
         </nav>
-        <div className="search-box__introduction">
-          <img src={worker_gif} alt="worker_gif" />
-          <div>
-            <h3>Tính năng tự phân tích bằng AI chưa được hỗ trợ!</h3>
-            <p>
-              Bạn chỉ có thể tìm kiếm theo vị trí như quốc gia, tỉnh thành, địa
-              chỉ, ...v.v...
-            </p>
-            <small>Ví dụ: Thành phố Hồ Chí Minh </small>
+        <div className={`search-box__introduction`}>
+          <div className="search-histories">
+            <h6>Lịch sử tìm kiếm</h6>
+            {Array.isArray(searchHistories) && searchHistories.length > 0 ? (
+              searchHistories.map((sh, index) => (
+                <div className="history" key={`search-history@${index}`}>
+                  <p onClick={() => onSearch(sh)}>
+                    <i className="fi fi-bs-search"></i>
+                    {sh}
+                  </p>
+                  <button onClick={() => onDeleteKeyWord(sh)}>
+                    <i className="fi fi-ss-trash-xmark"></i>
+                  </button>
+                </div>
+              ))
+            ) : (
+              <Empty label={""} />
+            )}
+          </div>
+          <div className="recommend-locations">
+            <h6>Đề xuất</h6>
+            <div className="locations-wrapper">
+              {Array.isArray(recommendProducts) &&
+              recommendProducts.length > 0 ? (
+                recommendProducts.map((lo) => (
+                  <button
+                    className="location"
+                    key={lo.id}
+                    onClick={() => onSearch(lo.name)}
+                  >
+                    <img src={lo.picture} alt="" />
+                    <div className="location__overlay"></div>
+                    <p>{lo.name}</p>
+                  </button>
+                ))
+              ) : (
+                <div className="empty">
+                  <Empty label={""} />
+                </div>
+              )}
+            </div>
           </div>
           {/* <div>
             <h3>Hãy thoải mái yêu cầu những gì bạn muốn!</h3>

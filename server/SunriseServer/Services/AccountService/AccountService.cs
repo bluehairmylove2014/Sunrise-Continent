@@ -107,5 +107,10 @@ namespace SunriseServer.Services.AccountService
         {
             return await _unitOfWork.AccountRepo.BanAccount(acc);
         }
+
+        public async Task<List<AccountInfoDto>> GetAllAccountInfo(FilterAccountDto searchAccount)
+        {
+            return await _unitOfWork.AccountRepo.GetAllAccountInfoAsync(searchAccount);
+        }
     }
 }

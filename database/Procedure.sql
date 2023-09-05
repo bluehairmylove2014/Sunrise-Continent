@@ -1768,7 +1768,7 @@ CREATE OR ALTER PROC USP_FindAccountByName (-- //new check
 	@SortType VARCHAR(5) = 'ASC')
 AS
 BEGIN
-	SELECT * 
+	SELECT *, acc.MemberPoint as Point, acc.UserRole as Role
 	FROM ACCOUNT acc JOIN PERSONAL_DETAILS pd ON acc.Id = pd.AccountId
 	JOIN POINT_RANK pr ON pd.Rank = pr.RankName
 	WHERE (pd.FullName COLLATE Latin1_General_CI_AI like '%' + @Name + '%' COLLATE Latin1_General_CI_AI OR

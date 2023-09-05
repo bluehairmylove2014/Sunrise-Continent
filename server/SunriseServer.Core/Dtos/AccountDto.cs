@@ -64,14 +64,14 @@ namespace SunriseServerCore.Dtos
         public string SortType { get; set; } = string.Empty;
 
         public FilterAccountDto(
-            string name, string role, string gender, string sortingCol, string sortTypeme
+            string name, string role, string gender, string sortingCol, string sortType
         )
         {
             Name = name;
             Role = role;
             Gender = gender;
             SortingCol = sortingCol;
-            SortType = sortTypeme;
+            SortType = sortType;
         }
     }
 }

@@ -20,5 +20,6 @@ namespace SunriseServerCore.RepoInterfaces
         Task<Account> GetAccountByIdAsync(int accountId);
         Task<int> UpdatePersonalInfoByIdAsync(int accountId, UpdateInfoDto dataDto);
         Task<int> BanAccount(Account ban);
+        Task<List<AccountInfoDto>> GetAllAccountInfoAsync(FilterAccountDto searchAccount);
     }
 }

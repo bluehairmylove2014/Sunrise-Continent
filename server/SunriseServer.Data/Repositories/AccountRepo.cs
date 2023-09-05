@@ -146,14 +146,25 @@ namespace SunriseServerData.Repositories
         }
 
         // AccountInfoDto
-        public async Task<int> GetAllAccountInfoAsync(FilterAccountDto searchAccount)
+        public async Task<List<AccountInfoDto>> GetAllAccountInfoAsync(FilterAccountDto searchAccount)
         {
-            var builder = new StringBuilder($"EXEC USP_BanAccount ");
-            if (!string.IsNullOrEmpty(searchAccount.Name))
-                builder.Append($"@Name = {searchAccount.Name};");
+            var builder = new StringBuilder($"EXEC USP_FindAccountByName ");
+            builder.Append($"@Name = N\'{searchAccount.Name}\'");
+            if (!string.IsNullOrEmpty(searchAccount.Role))
+                builder.Append($", @Role = \'{searchAccount.Role}\'");
+            if (!string.IsNullOrEmpty(searchAccount.Gender))
+                builder.Append($", @Gender = N\'{searchAccount.Gender}\'");
+            if (!string.IsNullOrEmpty(searchAccount.SortingCol))
+                builder.Append($", @SortingCol = \'{searchAccount.SortingCol}\'");
+            if (!string.IsNullOrEmpty(searchAccount.SortType))
+                builder.Append($", @SortType = \'{searchAccount.SortType}\'");
+            builder.Append(";");
 
             Console.WriteLine(builder.ToString());
-            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            var result = await _dataContext.Set<AccountInfoDto>()
+                .FromSqlInterpolated($"EXECUTE({builder.ToString()})")
+                .IgnoreQueryFilters()
+                .ToListAsync();
             return result;
         }
     }

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Numerics;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using SunriseServerCore.Dtos;
 
 namespace SunriseServerData
 {
@@ -62,6 +63,10 @@ namespace SunriseServerData
             // WeeklyRevenue
             modelBuilder.Entity<WeeklyRevenue>()
                 .HasNoKey().ToTable("WeeklyRevenue", t => t.ExcludeFromMigrations());
+
+            // AccountInfoDto
+            modelBuilder.Entity<AccountInfoDto>()
+                .HasKey(x => new { x.AccountId });
         }
 
         public DbSet<Hotel> Hotel { get; set; }

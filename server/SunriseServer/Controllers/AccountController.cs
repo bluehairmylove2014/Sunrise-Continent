@@ -102,5 +102,33 @@ namespace SunriseServer.Controllers
 
             return Ok(new ResponseMessageDetails<int>("Cấm tài khoản thành công", result));
         }
+
+        [HttpGet("search")] // , Authorize(Roles = GlobalConstant.Admin)
+        public async Task<ActionResult<ResponseMessageDetails<int>>> SearchAccount(
+            [FromQuery] string name,
+            [FromQuery] string role,
+            [FromQuery] string gender,
+            [FromQuery] string sortingCol,
+            [FromQuery] string sortType
+        )
+        {
+            List<AccountInfoDto> result;
+            try
+            {
+                result = await _accountService.GetAllAccountInfo(new FilterAccountDto(name, role, gender, sortingCol, sortType));
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return Ok(result);
+        }
     }
 }

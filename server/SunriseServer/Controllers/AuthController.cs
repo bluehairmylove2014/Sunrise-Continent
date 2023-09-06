@@ -69,6 +69,7 @@ namespace SunriseServer.Controllers
             SetRefreshToken(refreshToken, acc);
             await _accService.AddAccount(acc);
             return Ok(new {
+                accountId = acc.Id,
                 message = "Đăng ký tài khoản quản trị thành công",
                 token,
                 refreshToken = refreshToken.Token,
@@ -114,6 +115,7 @@ namespace SunriseServer.Controllers
 
             await _accService.AddAccount(acc);
             return Ok(new {
+                accountId = acc.Id,
                 message = "Đăng ký thành công",
                 token,
                 refreshToken = refreshToken.Token
@@ -150,6 +152,7 @@ namespace SunriseServer.Controllers
 
             return Ok(new
             {
+                accountId = account.Id,
                 message = "Đăng nhập thành công",
                 token,
                 refreshToken = refreshToken.Token,
@@ -188,6 +191,7 @@ namespace SunriseServer.Controllers
             }
 
             return Ok(new {
+                accountId = MyId,
                 message = "Đăng nhập thành công",
                 token,
                 refreshToken = refreshToken.Token,
@@ -196,19 +200,31 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<ResponseMessageDetails<string>>> RefreshToken()
+        public async Task<ActionResult<ResponseMessageDetails<string>>> RefreshToken(int accountId)
         {
-            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
             var acc = await _accService.GetAccountById(accountId);
+
+            if (acc == null)
+            {
+                return BadRequest(new
+                {
+                    message = "Không tìm thấy tài khoản"
+                });
+            }
+
             var refreshToken = Request.Cookies["refreshToken"];
 
             if (!acc.RefreshToken.Equals(refreshToken))
             {
-                return Unauthorized("Invalid Refresh Token.");
+                return Unauthorized(new {
+                    message = "Refresh Token không hợp lệ"
+                });
             }
             else if (acc.TokenExpires < DateTime.Now)
             {
-                return Unauthorized("Token expired.");
+                return Unauthorized(new {
+                    message = "Refresh Token đã hết hạn"
+                });
             }
 
             string token = CreateToken(acc, acc.UserRole);
@@ -216,7 +232,9 @@ namespace SunriseServer.Controllers
             SetRefreshToken(newRefreshToken, acc);
             _accService.SaveChanges();
             return Ok(new {
-                token
+                message = "Refresh token thành công",
+                token,
+                refreshToken = newRefreshToken.Token,
             });
         }
 
@@ -262,7 +280,7 @@ namespace SunriseServer.Controllers
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddSeconds(20),
                 signingCredentials: creds);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);

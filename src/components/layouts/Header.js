@@ -10,7 +10,7 @@ import NavDropdown from "../common/NavDropdown";
 import UserSidebar from "./UserSidebar";
 import { Controller, useForm } from "react-hook-form";
 import { useIsLogged } from "../../libs/business-logic/src/lib/auth";
-import { categories, languages, partner } from "./Data";
+import { categories, partner } from "./Data";
 import WistList from "../common/WistList";
 import CartSidebar from "../common/CartSidebar";
 import { useGetUser } from "../../libs/business-logic/src/lib/auth/process/hooks";

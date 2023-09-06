@@ -45,6 +45,7 @@ const Authentication = () => {
   const authenRef = useRef(null);
 
   const { onLogin, isLoading: isLoginLoading } = useLogin();
+  // eslint-disable-next-line no-unused-vars
   const { onGoogleLogin, isLoading: isGoogleLoginLoading } = useGoogleLogin();
   const { onRegister, isLoading: isRegisterLoading } = useRegister();
   const isLoggin = useIsLogged();

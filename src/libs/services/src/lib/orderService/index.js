@@ -18,7 +18,7 @@ export class OrderService extends Services {
   getTaxUrl = "/order/get-tax";
   getCouponUrl = "/order/get-coupon";
   updateOrderUrl = "/order";
-  getOrderUrl = "/order";
+  getOrderListUrl = "/order";
 
   getShipping = async (params) => {
     this.abortController = new AbortController();
@@ -137,20 +137,19 @@ export class OrderService extends Services {
   getOrders = async (token) => {
     this.abortController = new AbortController();
     try {
-      if(!token) {
-        return null
-      }
-      else {
+      if (!token) {
+        return null;
+      } else {
         const response = await this.fetchApi({
           method: "GET",
-          url: this.getOrderUrl,
+          url: this.getOrderListUrl,
           schema: getOrdersSchema,
           headers: {
             Authorization: `Bearer ${token}`,
           },
           signal: this.abortController.signal,
           transformResponse: (res) => res,
-          isProduction: true
+          isProduction: true,
         });
         return response;
       }

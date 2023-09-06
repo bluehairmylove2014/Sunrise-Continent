@@ -1,5 +1,5 @@
 import React from "react";
-import "../../../styles/common/pageLoader.scss";
+import "./pageLoader.scss";
 
 const TypingLoader = () => {
   return (

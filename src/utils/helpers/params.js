@@ -1,6 +1,7 @@
 export const parseSearchParams = (params) => {
   // Ex: "?location=London&start_date=2023-07-12T14%3A31&end_date=2023-07-28T14%3A31&rooms=2&adults=3&childrens=1"
   const paramObject = {};
+  if (params === "") return {};
   const paramArray = params.slice(1).split("&");
   paramArray.forEach((param) => {
     const [key, value] = param.split("=");

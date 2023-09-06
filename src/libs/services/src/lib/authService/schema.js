@@ -10,6 +10,7 @@ const getUserResponseSchema = z.object({
   image: z.string(),
   rank: z.string(),
   point: z.number(),
+  hotelId: z.union([z.number(), z.nullable()]).optional(),
 });
 
 const authenticationResponseSchema = z.object({

@@ -1,11 +1,19 @@
+import { isAxiosError } from "axios";
 import { Services } from "../../service";
 import {
   bookingSchema,
+  createHotelSchema,
+  createRoomSchema,
+  deleteRoomSchema,
+  editHotelSchema,
+  editRoomSchema,
   getHotHotelSchema,
   getPictureSchema,
   getReviewSchema,
   getRoomsSchema,
   getSpecificRoomSchema,
+  getWeeklyRevenueSchema,
+  getYearlyRevenueSchema,
   hotelDetailSchema,
   searchSchema,
 } from "./schema";
@@ -21,11 +29,18 @@ export class HotelService extends Services {
   checkRoomAvailableUrl = `/room/available`;
   getPictureUrl = `/hotel/picture`;
   getReviewUrl = `/hotel/review`;
+  createHotelUrl = `/hotel`;
+  editHotelUrl = `/hotel`;
+  createRoomUrl = `/room`;
+  editRoomUrl = `/room`;
+  deleteRoomUrl = `/room`;
+  banHotelUrl = `/account/ban`;
+  getYearlyRevenueUrl = `/hotel/yearly-revenue`;
+  getWeeklyRevenueUrl = `/hotel/weekly-revenue`;
 
   search = async (keys) => {
     this.abortController = new AbortController();
     try {
-      console.log(keys);
       const response = await this.fetchApi({
         method: "GET",
         url: this.searchUrl,
@@ -33,15 +48,19 @@ export class HotelService extends Services {
         params: keys,
         signal: this.abortController.signal,
         transformResponse: (res) => res,
-        // isProduction: true,
+        isProduction: true,
       });
       return response;
     } catch (error) {
-      if (!this.isCancel(error)) {
+      if (this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 1 ", error);
         throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
       }
+      throw new Error("Unknown Error");
     }
   };
   getHotelDetail = async (hotelID) => {
@@ -61,11 +80,15 @@ export class HotelService extends Services {
       });
       return response;
     } catch (error) {
-      if (!this.isCancel(error)) {
+      if (this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 2 ", error);
         throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
       }
+      throw new Error("Unknown Error");
     }
   };
   getRooms = async (hotelID) => {
@@ -84,11 +107,15 @@ export class HotelService extends Services {
       });
       return response;
     } catch (error) {
-      if (!this.isCancel(error)) {
+      if (this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 3 ", error);
         throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
       }
+      throw new Error("Unknown Error");
     }
   };
   getSpecificRoom = async (hotelID, roomID) => {
@@ -109,11 +136,15 @@ export class HotelService extends Services {
       });
       return response;
     } catch (error) {
-      if (!this.isCancel(error)) {
+      if (this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 4 ", error);
         throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
       }
+      throw new Error("Unknown Error");
     }
   };
   getHotHotel = async () => {
@@ -129,11 +160,15 @@ export class HotelService extends Services {
       });
       return response;
     } catch (error) {
-      if (!this.isCancel(error)) {
+      if (this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 5: ", error);
         throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
       }
+      throw new Error("Unknown Error");
     }
   };
   checkRoomAvailable = async (params) => {
@@ -150,11 +185,15 @@ export class HotelService extends Services {
       });
       return response;
     } catch (error) {
-      if (!this.isCancel(error)) {
+      if (this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 6");
         throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
       }
+      throw new Error("Unknown Error");
     }
   };
   getPictures = async (params) => {
@@ -171,11 +210,15 @@ export class HotelService extends Services {
       });
       return response;
     } catch (error) {
-      if (!this.isCancel(error)) {
+      if (this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error 7");
         throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
       }
+      throw new Error("Unknown Error");
     }
   };
   getReview = async (params) => {
@@ -192,9 +235,223 @@ export class HotelService extends Services {
       });
       return response;
     } catch (error) {
+      if (this.isCancel(error)) {
+        // Handle other errors
+        throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
+      }
+      throw new Error("Unknown Error");
+    }
+  };
+  createHotel = async ({ data, token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "POST",
+        url: this.createHotelUrl,
+        schema: createHotelSchema,
+        data,
+        headers: { Authorization: `Bearer ${token}` },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res.message,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      if (this.isCancel(error)) {
+        // Handle other errors
+        throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
+      }
+      throw new Error("Unknown Error");
+    }
+  };
+  editHotel = async ({ data, token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "PUT",
+        url: this.editHotelUrl,
+        schema: editHotelSchema,
+        data,
+        headers: { Authorization: `Bearer ${token}` },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res.message,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      if (this.isCancel(error)) {
+        // Handle other errors
+        throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
+      }
+      throw new Error("Unknown Error");
+    }
+  };
+  createRoom = async ({ data, token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "POST",
+        url: this.createRoomUrl,
+        schema: createRoomSchema,
+        data,
+        headers: { Authorization: `Bearer ${token}` },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res.message,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      if (this.isCancel(error)) {
+        // Handle other errors
+        throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
+      }
+      throw new Error("Unknown Error");
+    }
+  };
+  editRoom = async ({ data, token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "PUT",
+        url: this.editRoomUrl,
+        schema: editRoomSchema,
+        data,
+        headers: { Authorization: `Bearer ${token}` },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res.message,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      if (this.isCancel(error)) {
+        // Handle other errors
+        throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
+      }
+      throw new Error("Unknown Error");
+    }
+  };
+  deleteRoom = async ({ data, token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "DELETE",
+        url: this.deleteRoomUrl,
+        schema: deleteRoomSchema,
+        params: data,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res.message,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      if (this.isCancel(error)) {
+        // Handle other errors
+        throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
+      }
+      throw new Error("Unknown Error");
+    }
+  };
+  banHotel = async ({ hotelId, token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "PUT",
+        url: this.banHotelUrl,
+        schema: deleteRoomSchema,
+        data: {
+          accountId: hotelId,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res.message,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      if (this.isCancel(error)) {
+        // Handle other errors
+        throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
+      }
+      throw new Error("Unknown Error");
+    }
+  };
+  getYearlyRevenue = async ({ token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "GET",
+        url: this.getYearlyRevenueUrl,
+        schema: getYearlyRevenueSchema,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      console.log(error);
       if (!this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error review");
+        console.error("Catch error getYearlyRevenue");
+        throw error;
+      }
+    }
+  };
+  getWeeklyRevenue = async ({ token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "GET",
+        url: this.getWeeklyRevenueUrl,
+        schema: getWeeklyRevenueSchema,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      console.log(error);
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error getWeeklyRevenue");
         throw error;
       }
     }

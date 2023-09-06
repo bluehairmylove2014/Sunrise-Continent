@@ -1,10 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useVoucherContext } from "../context";
-import { useGetVoucherQuery } from "../../fetching/query";
+import { useGetVoucherMutation } from "../../fetching/mutation";
 
 export const useGetVoucher = (rank) => {
-  const { state } = useVoucherContext();
-  const { data } = useGetVoucherQuery(state.accessToken, rank);
+  const { state, dispatch } = useVoucherContext();
+  const getVoucherMutation = useGetVoucherMutation();
 
-  return data;
+  const onGetVoucher = (token) => {
+    return new Promise((resolve, reject) => {
+      if (!state.accessToken && !token) {
+        reject(new Error("Unauthorized!"));
+      } else {
+        // Handle keys here
+        getVoucherMutation
+          .mutateAsync(token ? token : state.accessToken)
+          .then((res) => {
+            dispatch({
+              type: "SET_VOUCHER",
+              payload: res,
+            });
+            resolve(res);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      }
+    });
+  };
+  return { onGetVoucher, isLoading: getVoucherMutation.isLoading };
 };

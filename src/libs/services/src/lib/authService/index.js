@@ -1,12 +1,10 @@
 import { isAxiosError } from "../../config/axios";
-import { getApiUrl } from "../../config/url";
 import { Services } from "../../service";
 import { authenticationResponseSchema, getUserResponseSchema } from "./schema";
 
 const unknownError = "Unexpected error occurred";
 
 export class AuthService extends Services {
-  url = getApiUrl() + "/auth";
   abortController;
 
   registerUrl = "/auth/register";
@@ -33,7 +31,7 @@ export class AuthService extends Services {
         throw error;
       } else if (isAxiosError(error)) {
         throw new Error(
-          error.response ? error.response.data.message : unknownError
+          error.response ? error.response.data?.message : unknownError
         );
       }
       throw new Error(unknownError);
@@ -58,7 +56,7 @@ export class AuthService extends Services {
         throw error;
       } else if (isAxiosError(error)) {
         throw new Error(
-          error.response ? error.response.data.message : unknownError
+          error.response ? error.response.data?.message : unknownError
         );
       }
       throw new Error(unknownError);
@@ -87,7 +85,7 @@ export class AuthService extends Services {
         throw error;
       } else if (isAxiosError(error)) {
         throw new Error(
-          error.response ? error.response.data.message : unknownError
+          error.response ? error.response.data?.message : unknownError
         );
       }
       throw new Error(unknownError);
@@ -97,6 +95,7 @@ export class AuthService extends Services {
     this.abortController = new AbortController();
     try {
       if (!token) return null;
+
       const response = await this.fetchApi({
         method: "GET",
         url: this.getUserUrl,
@@ -108,17 +107,15 @@ export class AuthService extends Services {
       });
       return response;
     } catch (error) {
-      if (!this.isCancel(error)) {
-        // Check if it's cannot refresh error?
-        if (isAxiosError(error)) {
-          throw new Error(
-            error.response ? error.response.data.message : unknownError
-          );
-        }
-        throw new Error(unknownError);
+      if (this.isCancel(error)) {
+        // Handle other errors
+        throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : unknownError
+        );
       }
-      console.error(error);
-      return { message: unknownError };
+      throw new Error(unknownError);
     }
   };
 }

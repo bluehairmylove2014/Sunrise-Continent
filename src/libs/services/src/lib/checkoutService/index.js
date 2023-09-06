@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios";
 import { Services } from "../../service";
 import { getCheckoutUrlSchema } from "./schema";
 
@@ -25,11 +26,15 @@ export class CheckoutService extends Services {
       });
       return response;
     } catch (error) {
-      if (!this.isCancel(error)) {
+      if (this.isCancel(error)) {
         // Handle other errors
-        console.error("Catch error checkout url ", error);
         throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data?.message : "Unknown Error"
+        );
       }
+      throw new Error("Unknown Error");
     }
   };
 }

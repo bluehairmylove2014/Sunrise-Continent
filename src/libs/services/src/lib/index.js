@@ -6,3 +6,4 @@ export * from "./searchService";
 export * from "./cartService";
 export * from "./voucherService";
 export * from "./checkoutService";
+export * from "./accountService";

@@ -19,4 +19,16 @@ export const RankList = {
     image: "https://rialloer.sirv.com/Sunrise-Continent/rank/vip-card.png",
     label: "VIP",
   },
+  Top1Partner: {
+    image: "https://rialloer.sirv.com/Sunrise-Continent/rank/first.png",
+    label: "Quán quân",
+  },
+  Top2Partner: {
+    image: "https://rialloer.sirv.com/Sunrise-Continent/rank/second.png",
+    label: "Á Quân",
+  },
+  Top3Partner: {
+    image: "https://rialloer.sirv.com/Sunrise-Continent/rank/third.png",
+    label: "Xuất sắc",
+  },
 };

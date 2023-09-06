@@ -1,0 +1,158 @@
+@import '../../../styles/partial/mixin';
+
+
+.filter-board {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: calc(100vh - 60px);
+    background-color: white;
+    z-index: 999;
+    box-shadow: 2px 3px 15px -3px rgba(0, 0, 0, 0.5);
+    // direction - justify content - align items - flex wrap
+    @include dflex(column, space-between, normal, nowrap);
+
+    visibility: hidden;
+    width: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.1s ease-in;
+    padding: 30px;
+
+    .filter-board__header {
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, space-between, center, nowrap);
+        flex-shrink: 1;
+
+        div {
+            width: 24px;
+        }
+
+        button {
+            // border - border radius - background color - color - padding - font size
+            @include normal-btn(none, 50%, var(--quill-grey), black, 8px 12px, 0.8rem);
+            opacity: 0.5;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+
+    .filter-board__body {
+        margin: 30px 0;
+        // direction - justify content - align items - flex wrap
+        @include dflex(column, center, flex-start, nowrap);
+        gap: 2rem;
+        flex-grow: 1;
+        padding-bottom: 100px;
+
+        strong {
+            margin: 0 20px 20px 0;
+        }
+
+        .filter {
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, flex-start, flex-start, wrap);
+            gap: 15px;
+            width: 100%;
+
+            strong {
+                width: 100%;
+            }
+
+
+            .filter__item {
+                border-radius: 15px;
+                border: 1px solid black;
+                color: black;
+                cursor: pointer;
+                background-color: white;
+                font-size: 0.6rem;
+                font-weight: 600;
+                // direction - justify content - align items - flex wrap
+                @include dflex(row, center, center, nowrap);
+                gap: 5px;
+                padding: 6px 18px;
+
+                &.active {
+                    border-color: var(--dirty-orange);
+                    color: var(--dirty-orange);
+                }
+            }
+        }
+
+        .sort {
+            width: 100%;
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, flex-start, center, nowrap);
+
+            strong {
+                margin-bottom: 0;
+            }
+
+            .sort-select {
+                width: 200px;
+                height: 30px;
+                border-radius: 5px;
+                border: 1px solid black;
+
+                select {
+                    border: none;
+                    width: 100%;
+                    height: 100%;
+                    text-align: center;
+                    background-color: transparent;
+                    outline: none;
+                    font-family: Montserrat, sans-serif;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+
+                    option {
+                        font-family: Montserrat, sans-serif;
+                        font-size: 0.8rem;
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+    }
+
+    .filter-board__footer {
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, space-evenly, center, nowrap);
+        flex-shrink: 1;
+
+        button[type='submit'] {
+            // border - border radius - background color - color - padding - font size
+            @include normal-btn(1px solid var(--kelly-green), 5px, var(--kelly-green), white, 12px 28px, 0.8rem);
+
+            &:hover {
+                background-color: green;
+                color: white;
+            }
+        }
+
+        button[type='button'] {
+            // border - border radius - background color - color - padding - font size
+            @include normal-btn(1px solid black, 5px, white, black, 12px 28px, 0.8rem);
+
+            i {
+                margin-right: 7px;
+            }
+
+            &:hover {
+                background-color: red;
+                border-color: red;
+                color: white;
+            }
+        }
+    }
+
+    &.active {
+        visibility: visible;
+        width: 400px;
+        opacity: 1;
+        pointer-events: all;
+    }
+}

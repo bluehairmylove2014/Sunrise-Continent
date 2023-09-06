@@ -7,8 +7,6 @@ import {
   updateOrderResponseSchema,
 } from "./schema";
 
-const unknownErrorMsg = "Order service unknown error";
-
 export class OrderService extends Services {
   abortController;
 
@@ -41,10 +39,10 @@ export class OrderService extends Services {
         throw error;
       } else if (isAxiosError(error)) {
         throw new Error(
-          error.response ? error.response.data.message : unknownErrorMsg
+          error.response ? error.response.data?.message : "Unknown Error"
         );
       }
-      throw new Error(unknownErrorMsg);
+      throw new Error("Unknown Error");
     }
   };
   getTax = async (params) => {
@@ -70,10 +68,10 @@ export class OrderService extends Services {
         throw error;
       } else if (isAxiosError(error)) {
         throw new Error(
-          error.response ? error.response.data.message : unknownErrorMsg
+          error.response ? error.response.data?.message : "Unknown Error"
         );
       }
-      throw new Error(unknownErrorMsg);
+      throw new Error("Unknown Error");
     }
   };
   getCoupon = async (params) => {
@@ -95,13 +93,14 @@ export class OrderService extends Services {
       return response;
     } catch (error) {
       if (this.isCancel(error)) {
+        // Handle other errors
         throw error;
       } else if (isAxiosError(error)) {
         throw new Error(
-          error.response ? error.response.data.message : unknownErrorMsg
+          error.response ? error.response.data?.message : "Unknown Error"
         );
       }
-      throw new Error(unknownErrorMsg);
+      throw new Error("Unknown Error");
     }
   };
   createOrder = async (params) => {
@@ -126,10 +125,10 @@ export class OrderService extends Services {
         throw error;
       } else if (isAxiosError(error)) {
         throw new Error(
-          error.response ? error.response.data.message : unknownErrorMsg
+          error.response ? error.response.data?.message : "Unknown Error"
         );
       }
-      throw new Error(unknownErrorMsg);
+      throw new Error("Unknown Error");
     }
   };
 }

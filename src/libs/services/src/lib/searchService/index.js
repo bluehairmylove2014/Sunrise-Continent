@@ -3,8 +3,6 @@ import { getApiUrl } from "../../config/url";
 import { Services } from "../../service";
 import { searchProductSchema } from "./schema";
 
-const unknownErrorMsg = "Order service unknown error";
-
 export class SearchService extends Services {
   url = getApiUrl();
   abortController;
@@ -31,10 +29,10 @@ export class SearchService extends Services {
         throw error;
       } else if (isAxiosError(error)) {
         throw new Error(
-          error.response ? error.response.data.message : unknownErrorMsg
+          error.response ? error.response.data?.message : "Unknown Error"
         );
       }
-      throw new Error(unknownErrorMsg);
+      throw new Error("Unknown Error");
     }
   };
 }

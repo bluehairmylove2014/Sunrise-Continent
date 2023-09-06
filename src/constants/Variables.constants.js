@@ -44,9 +44,18 @@ export const HOTEL_TYPE = {
 
 export const VOUCHER_DISPLAY_TYPE = {
   SHOP: 1,
-  STORAGE: 0,
+  STORAGE: 2,
+  NO_ACTION: 3,
 };
 export const PAGINATION_MODEL = {
   DETAIL: 1,
   SIMPLE: 2,
+};
+export const totalReportValueType = {
+  money: 1,
+  normal: 0,
+};
+export const chartType = {
+  barChart: 1,
+  lineChart: 2,
 };

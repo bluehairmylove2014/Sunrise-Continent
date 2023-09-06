@@ -1,14 +1,27 @@
-import DefaultLoader from "../../../configs/components/defaultLoader";
+// import DefaultLoader from "../../../configs/components/defaultLoader";
+import CustomLoader from "../../../../../../components/common/Loader/PageLoader";
 
 export const authUrls = [
   {
-    authUrl: "/provide-information",
-    redirectUrl: "/login",
+    authUrl: "/dashboard",
+    redirectUrl: "/auth",
   },
   {
-    authUrl: "/voucher-shop",
-    redirectUrl: "/login",
+    authUrl: "/revenue",
+    redirectUrl: "/auth",
+  },
+  {
+    authUrl: "/users",
+    redirectUrl: "/auth",
+  },
+  {
+    authUrl: "/hotel",
+    redirectUrl: "/auth",
+  },
+  {
+    authUrl: "/voucher",
+    redirectUrl: "/auth",
   },
 ];
 
-export const Loader = DefaultLoader;
+export const Loader = CustomLoader;

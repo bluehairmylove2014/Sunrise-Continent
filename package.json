@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.7",
+    "@mui/material": "^5.14.7",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-query-devtools": "^4.32.6",
     "@testing-library/jest-dom": "^5.17.0",
@@ -10,6 +14,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
     "axios-mock-adapter": "^1.21.5",
+    "crypto-js": "^4.1.1",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -18,6 +23,7 @@
     "react-query": "^3.39.3",
     "react-router-dom": "^6.15.0",
     "react-scripts": "5.0.1",
+    "recharts": "^2.7.3",
     "sass": "^1.65.1",
     "web-vitals": "^2.1.4",
     "zod": "^3.22.0"

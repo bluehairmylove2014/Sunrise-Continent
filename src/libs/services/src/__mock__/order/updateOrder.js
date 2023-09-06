@@ -12,7 +12,6 @@ axiosMockAdapterInstance
 
     if (token) {
       orderData.push(data);
-      console.log("UPDATE SUCCESS: ", orderData);
       return [
         200,
         {

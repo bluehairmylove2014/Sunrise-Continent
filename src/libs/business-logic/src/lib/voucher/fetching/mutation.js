@@ -14,3 +14,13 @@ export const useRedeemVoucherMutation = () => {
     retry: mutationConfig.RETRY,
   });
 };
+export const useDeleteVoucherMutation = () => {
+  return useMutation(voucherService.deleteVoucher, {
+    retry: mutationConfig.RETRY,
+  });
+};
+export const useCreateVoucherMutation = () => {
+  return useMutation(voucherService.createVoucher, {
+    retry: mutationConfig.RETRY,
+  });
+};

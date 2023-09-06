@@ -3,7 +3,7 @@ import { useContext } from "react";
 
 export const VoucherContext = React.createContext({
   state: {
-    voucher: null,
+    voucher: undefined,
     accessToken: null,
   },
   dispatch: () => undefined,

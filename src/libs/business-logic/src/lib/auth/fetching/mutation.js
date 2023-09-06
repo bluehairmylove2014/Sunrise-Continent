@@ -59,3 +59,9 @@ export const useGetFBUserInforMutation = () => {
     retry: mutationConfig.RETRY,
   });
 };
+
+export const useGetPartnerMutation = () => {
+  return useMutation(authService.getUser, {
+    retry: mutationConfig.RETRY,
+  });
+};

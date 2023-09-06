@@ -22,5 +22,6 @@ namespace SunriseServer.Services.AccountService
         Task<int> UpdatePersonalInfoById(int accountId, UpdateInfoDto dataDto);
         Task<int> BanAccount(BanAccountDto acc);
         Task<List<AccountInfoDto>> GetAllAccountInfo(FilterAccountDto searchAccount);
+        Task<Account> FindMatchingRefreshToken(string refreshToken);
     }
 }

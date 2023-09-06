@@ -112,5 +112,10 @@ namespace SunriseServer.Services.AccountService
         {
             return await _unitOfWork.AccountRepo.GetAllAccountInfoAsync(searchAccount);
         }
+
+        public async Task<Account> FindMatchingRefreshToken(string refreshToken)
+        {
+            return await _unitOfWork.AccountRepo.GetMatchingRefreshToken(refreshToken);
+        }
     }
 }

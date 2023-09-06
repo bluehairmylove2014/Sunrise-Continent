@@ -149,7 +149,7 @@ namespace SunriseServer.Controllers
 
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, account);
-
+            _accService.SaveChanges();
             return Ok(new
             {
                 accountId = account.Id,
@@ -184,7 +184,7 @@ namespace SunriseServer.Controllers
             var token = CreateToken(acc, request.Role);
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, acc);
-
+            _accService.SaveChanges();
             if (personalDetail is null)
             {
                 await _accService.CreateSocial(new CreateSocialDto(acc));
@@ -200,9 +200,16 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<ResponseMessageDetails<string>>> RefreshToken(int accountId)
+        public async Task<ActionResult<ResponseMessageDetails<string>>> RefreshToken(string refreshToken)
         {
-            var acc = await _accService.GetAccountById(accountId);
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return BadRequest(new
+                {
+                    message = "Refresh token không hợp lệ"
+                });
+            }
+            var acc = await _accService.FindMatchingRefreshToken(refreshToken);
 
             if (acc == null)
             {
@@ -211,8 +218,6 @@ namespace SunriseServer.Controllers
                     message = "Không tìm thấy tài khoản"
                 });
             }
-
-            var refreshToken = Request.Cookies["refreshToken"];
 
             if (!acc.RefreshToken.Equals(refreshToken))
             {
@@ -223,7 +228,7 @@ namespace SunriseServer.Controllers
             else if (acc.TokenExpires < DateTime.Now)
             {
                 return Unauthorized(new {
-                    message = "Refresh Token đã hết hạn"
+                    message = "Refresh Token đã hết hạn, vui lòng đăng nhập lại"
                 });
             }
 
@@ -280,7 +285,7 @@ namespace SunriseServer.Controllers
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddSeconds(20),
+                expires: DateTime.Now.AddDays(1),
                 signingCredentials: creds);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);

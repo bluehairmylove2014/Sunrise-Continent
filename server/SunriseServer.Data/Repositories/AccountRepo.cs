@@ -164,5 +164,14 @@ namespace SunriseServerData.Repositories
                 .ToListAsync();
             return result;
         }
+
+        public async Task<Account> GetMatchingRefreshToken(string refreshToken)
+        {
+            var builder = new StringBuilder($"dbo.USP_GetMatchingRefreshToken @RefreshToken = \'{refreshToken}\';");
+
+            Console.WriteLine(builder.ToString());
+            var result = await _dataContext.Account.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            return result.FirstOrDefault();
+        }
     }
 }

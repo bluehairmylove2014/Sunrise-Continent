@@ -538,6 +538,20 @@ END
 GO
 
 GO
+CREATE OR ALTER PROC USP_GetMatchingRefreshToken
+	@RefreshToken VARCHAR(200)
+AS
+BEGIN
+	SELECT acc.*, pd.FullName
+	FROM (SELECT TOP 1 * FROM ACCOUNT where RefreshToken = @RefreshToken) acc
+	JOIN PERSONAL_DETAILS pd ON acc.Id = pd.AccountId;
+END
+GO
+
+exec USP_GetMatchingRefreshToken @RefreshToken='pOgjtyxB01rvEUgIPc89Q17oF9dsSsNXVSAUapZosh9w0QEdOCjHlwzJVN1jmEADv58E57pEnhFMUfDvMvVeHQ=='
+select * from account
+
+GO
 CREATE OR ALTER PROC USP_DeleteAccount
 	@Id INTEGER
 AS

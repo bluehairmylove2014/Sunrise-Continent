@@ -156,5 +156,18 @@ namespace SunriseServerData.Repositories
 
             return result;
         }
+
+        public async Task<List<TopAccountInfoDto>> GetHotelTopUserAsync(int hotelId)
+        {
+            var builder = new StringBuilder($"EXEC USP_GetHotelTopUser @HotelId={hotelId};");
+
+            Console.WriteLine(builder.ToString());
+            
+            var result = await _dataContext.Set<TopAccountInfoDto>()
+                .FromSqlInterpolated($"EXECUTE({builder.ToString()})")
+                .IgnoreQueryFilters().ToListAsync();
+
+            return result;
+        }
     }
 }

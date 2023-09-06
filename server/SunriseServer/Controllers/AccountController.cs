@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using SunriseServer.Common.Constant;
 using SunriseServer.Services.AccountService;
+using SunriseServerCore.Common.Helper;
 using SunriseServerCore.Dtos;
+using SunriseServerCore.Dtos.Hotel;
 using System.Security.Claims;
 
 
@@ -80,7 +82,7 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPut("ban"), Authorize(Roles = GlobalConstant.Admin)]
-        public async Task<ActionResult<ResponseMessageDetails<int>>> BanAccount(Account acc)
+        public async Task<ActionResult<ResponseMessageDetails<int>>> BanAccount(BanAccountDto acc)
         {
             int result = 0;
             try
@@ -96,18 +98,19 @@ namespace SunriseServer.Controllers
             catch (Exception)
             {
                 return BadRequest(new {
-                    message = "Có lỗi xảy ra trong quá trình cấm tài khoản"
+                    message = "Có lỗi xảy ra trong quá trình cấm/mở cấm tài khoản"
                 });
             }
 
-            return Ok(new ResponseMessageDetails<int>("Cấm tài khoản thành công", result));
+            return Ok(new ResponseMessageDetails<int>("Cấm/Mở cấm tài khoản thành công", result));
         }
 
-        [HttpGet("search")] // , Authorize(Roles = GlobalConstant.Admin)
+        [HttpGet("search"), Authorize(Roles = GlobalConstant.Admin)]
         public async Task<ActionResult<ResponseMessageDetails<int>>> SearchAccount(
             [FromQuery] string name,
             [FromQuery] string role,
             [FromQuery] string gender,
+            [FromQuery] PagingDto pageDto,
             [FromQuery] string sortingCol,
             [FromQuery] string sortType
         )
@@ -130,7 +133,17 @@ namespace SunriseServer.Controllers
                 });
             }
 
-            return Ok(result);
+            var Accounts = PageList<AccountInfoDto>.ToPageList(result.AsQueryable(), pageDto.page_number, pageDto.page_size);
+
+            return Ok(new {
+                Accounts,
+                totalCount = Accounts.TotalCount,
+                pageSize = Accounts.PageSize,
+                currentPage = Accounts.CurrentPage,
+                totalPages = Accounts.TotalPages,
+                hasNext = Accounts.HasNext,
+                hasPrevious = Accounts.HasPrevious
+            });
         }
     }
 }

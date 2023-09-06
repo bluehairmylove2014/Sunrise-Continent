@@ -1,6 +1,6 @@
 namespace SunriseServerCore.Dtos.Hotel
 {
-    public class HotelPagingDto
+    public class PagingDto
     {
         const int maxPageSize = 20;
 

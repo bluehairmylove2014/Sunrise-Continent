@@ -103,9 +103,9 @@ namespace SunriseServer.Services.AccountService
             return await _unitOfWork.AccountRepo.UpdatePersonalInfoByIdAsync(accountId, dataDto);
         }
 
-        public async Task<int> BanAccount(Account acc)
+        public async Task<int> BanAccount(BanAccountDto acc)
         {
-            return await _unitOfWork.AccountRepo.BanAccount(acc);
+            return await _unitOfWork.AccountRepo.BanAccountAsync(acc);
         }
 
         public async Task<List<AccountInfoDto>> GetAllAccountInfo(FilterAccountDto searchAccount)

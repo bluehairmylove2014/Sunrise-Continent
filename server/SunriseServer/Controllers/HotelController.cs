@@ -183,7 +183,7 @@ namespace SunriseServer.Controllers
             [FromQuery] int rooms,
             [FromQuery] int adults,
             [FromQuery] int children,
-            [FromQuery] HotelPagingDto hotelDto,
+            [FromQuery] PagingDto hotelDto,
             [FromQuery] string hotelType,
             [FromQuery] string bedType,
             [FromQuery] string guestRating,
@@ -287,14 +287,23 @@ namespace SunriseServer.Controllers
 
             try
             {
+                date ??= DateTime.Now;
+                var rawReview = await _hotelService.GetHotelWeeklyTotalReview(checkHotelId, date);
+                var rawOrder = await _hotelService.GetHotelWeeklyTotalOrder(checkHotelId, date);
+
                 result = new StatisticsHotelDto{
                     Revenue = await _hotelService.GetHotelWeeklyRevenue(checkHotelId , date),
-                    TotalOrder = await _hotelService.GetHotelWeeklyTotalOrder(checkHotelId, date),
-                    TotalReview = await _hotelService.GetHotelWeeklyTotalReview(checkHotelId, date)
+                    TotalOrder = rawOrder.ThisWeek,
+                    LastOrder = rawOrder.LastWeek,
+                    TotalReview = rawReview.ThisWeek,
+                    LastReview = rawReview.LastWeek,
                 };
                 result.Revenue.ForEach(p => {
                     result.TotalRevenue += p.ThisWeek;
+                    result.LastRevenue += p.LastWeek;
                 });
+
+                result.Accounts = await _hotelService.GetHotelTopUser(checkHotelId);
             }
             catch (Microsoft.Data.SqlClient.SqlException exception)
             {

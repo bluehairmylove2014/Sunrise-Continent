@@ -22,9 +22,7 @@ namespace SunriseServerData.Repositories
 
         public override async Task<Account> CreateAsync(Account acc)
         {
-            var builder = new StringBuilder(@"
-                DECLARE @result INT
-                EXEC @result = dbo.USP_AddAccount ");
+            var builder = new StringBuilder("DECLARE @result INT;\nEXEC @result = dbo.USP_AddAccount ");
             builder.Append($"@Id = {acc.Id}, ");
             builder.Append($"@Email = \'{acc.Email}\', ");
             builder.Append($"@FullName = N\'{acc.FullName}\', ");
@@ -135,10 +133,9 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
-        public async Task<int> BanAccount(Account acc)
+        public async Task<int> BanAccountAsync(BanAccountDto acc)
         {
-            var builder = new StringBuilder($"EXEC USP_BanAccount ");
-            builder.Append($"@AccountId = {acc.Id};");
+            var builder = new StringBuilder($"EXEC USP_BanAccount @AccountId={acc.AccountId};");
 
             Console.WriteLine(builder.ToString());
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");

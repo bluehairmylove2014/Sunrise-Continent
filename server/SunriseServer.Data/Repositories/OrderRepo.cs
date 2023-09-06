@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SunriseServer.Common.Helper;
+using SunriseServerCore.Dtos;
 
 namespace SunriseServerData.Repositories
 {
@@ -71,21 +72,20 @@ namespace SunriseServerData.Repositories
                 .ExecuteSqlInterpolatedAsync($"EXEC USP_ConfirmPaid @SessionId={sessionId};");
         }
 
-        public async Task<int> GetTotalOrderWeeklyAsync(int hotelId, DateTime? date)
+        public async Task<WeeklyStatistics> GetTotalOrderWeeklyAsync(int hotelId, DateTime? date)
         {
-            var builder = new StringBuilder($"DECLARE @Result INT = 0;\nEXEC @Result = USP_GetHotelWeeklyOrder @HotelId={hotelId};");
+            var builder = new StringBuilder($"EXEC USP_GetWeeklyOrder @HotelId={hotelId};");
             if (date is not null) {
                 builder.Length--;
                 builder.Append($", @Date=\'{date?.ToString("MM-dd-yyyy")}\';");
             }
-            builder.Append("\nSELECT @Result;");
 
-            Console.WriteLine("\t", builder.ToString());
+            Console.WriteLine(builder.ToString());
             
-            var result = (await _dataContext.Set<MyFuctionReturn>()
+            var result = (await _dataContext.Set<WeeklyStatistics>()
                 .FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync()).FirstOrDefault();
 
-            return result.MyValue;
+            return result;
         }
     }
 }

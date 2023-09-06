@@ -25,8 +25,9 @@ namespace SunriseServer.Services.HotelService
         // Revenue - statistic
         Task<List<YealyRevenue>> GetHotelYealyRevenue(int hotelId, int? year);
         Task<List<WeeklyRevenue>> GetHotelWeeklyRevenue(int hotelId, DateTime? date);
-        Task<int> GetHotelWeeklyTotalReview(int hotelId, DateTime? date);
-        Task<int> GetHotelWeeklyTotalOrder(int hotelId, DateTime? date);
+        Task<WeeklyStatistics> GetHotelWeeklyTotalReview(int hotelId, DateTime? date);
+        Task<WeeklyStatistics> GetHotelWeeklyTotalOrder(int hotelId, DateTime? date);
+        Task<List<TopAccountInfoDto>> GetHotelTopUser(int hotelId);
     }
 };
 

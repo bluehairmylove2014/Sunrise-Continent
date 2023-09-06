@@ -28,21 +28,20 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
-        public async Task<int> GetHotelWeeklyTotalReviewAsync(int hotelId, DateTime? date)
+        public async Task<WeeklyStatistics> GetHotelWeeklyTotalReviewAsync(int hotelId, DateTime? date)
         {
-            var builder = new StringBuilder($"DECLARE @Result INT = 0;\nEXEC @Result = USP_GetHotelWeeklyReview @HotelId={hotelId};");
+            var builder = new StringBuilder($"EXEC USP_GetWeeklyReview @HotelId={hotelId};");
             if (date is not null) {
                 builder.Length--;
                 builder.Append($", @Date=\'{date?.ToString("MM-dd-yyyy")}\';");
             }
-            builder.Append("\nSELECT @Result;");
 
-            Console.WriteLine("\t", builder.ToString());
+            Console.WriteLine(builder.ToString());
             
-            var result = (await _dataContext.Set<MyFuctionReturn>()
+            var result = (await _dataContext.Set<WeeklyStatistics>()
                 .FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync()).FirstOrDefault();
 
-            return result.MyValue;
+            return result;
         }
     }
 }

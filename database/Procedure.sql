@@ -509,7 +509,7 @@ GO
 
 GO
 CREATE OR ALTER PROC USP_BanAccount -- // Check // newCheck
-	@AccountId INTEGER
+	@AccountId INT
 AS
 BEGIN
 	IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @AccountId)
@@ -522,12 +522,12 @@ BEGIN
 
 	BEGIN TRY
 		UPDATE ACCOUNT SET 
-			Active = 0
+			Active = ABS(Active - 1)
 		WHERE Id = @AccountId;
 	END TRY
 
 	BEGIN CATCH
-		RAISERROR(N'Đã có lỗi trong quá trình khóa tài khoản, vui lòng thử lại sau.', 11, 1);
+		RAISERROR(N'Đã có lỗi trong quá trình khóa/mở khóa tài khoản, vui lòng thử lại sau.', 11, 1);
 		ROLLBACK;
 		RETURN -1;
 	END CATCH
@@ -1017,31 +1017,34 @@ END
 GO
 
 --TODO PROC CRUD REVIEW
---!THÊM
+--! Thêm review
 CREATE OR ALTER PROCEDURE USP_AddReview
     @AccountId INT,
     @HotelId INT,
     @Points FLOAT,
     @Content NVARCHAR(1000),
-    @Result INT OUTPUT
+	@ReviewDate DATE = NULL
 AS
 BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRANSACTION;
+    BEGIN TRAN;
 
     BEGIN TRY
-        -- Thêm review mới
-        INSERT INTO REVIEW (AccountId, HotelId, Points, Content)
-        VALUES (@AccountId, @HotelId, @Points, @Content);
+		DECLARE @Id INT;
+		EXEC @Id = USP_GetNextColumnId 'REVIEW', 'ReviewId';
+		IF (@ReviewDate IS NULL) SET @ReviewDate = CURRENT_TIMESTAMP;
 
-        COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi thêm thành công
+        INSERT INTO REVIEW (ReviewId, AccountId, HotelId, ReviewDate, Points, Content)
+        VALUES (@Id, @AccountId, @HotelId, @ReviewDate, @Points, @Content);
     END TRY
+
     BEGIN CATCH
+		RAISERROR('Lỗi thêm review.', 11, 1);
         ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+        RETURN -1;
     END CATCH;
+
+	COMMIT;
+    RETURN 0;
 END;
 GO
 
@@ -2168,12 +2171,16 @@ BEGIN
 	BEGIN TRY
 		DECLARE @Sql NVARCHAR(MAX) = '';
 		SELECT @Sql += 'EXEC USP_ConfirmOrder @OrderId=' + CAST(OrderId as NVARCHAR(10))  + ';' + CHAR(13)
-		FROM ACCOUNT_ORDER WHERE SessionId = @SessionId;
-		DECLARE @NewSql NVARCHAR(MAX) = SUBSTRING(@Sql, 1, LEN(@Sql) - 2) + ', @MultipleConfirm=0;';
-		EXECUTE(@NewSql);
+		FROM ACCOUNT_ORDER WHERE SessionId = @SessionId AND Paid = 0;
 
-		UPDATE ACCOUNT_ORDER SET Paid = 1
-		WHERE SessionId = @SessionId;
+		IF (LEN(@Sql) != 0)
+		BEGIN
+			DECLARE @NewSql NVARCHAR(MAX) = SUBSTRING(@Sql, 1, LEN(@Sql) - 2) + ', @MultipleConfirm=0;';
+			EXECUTE(@NewSql);
+
+			UPDATE ACCOUNT_ORDER SET Paid = 1
+			WHERE SessionId = @SessionId;
+		END
 	END TRY
 
 	BEGIN CATCH
@@ -2327,13 +2334,33 @@ CREATE OR ALTER PROCEDURE USP_GetHotelWeeklyReview (
 AS
 BEGIN
 	IF (@Date IS NULL) SET @Date = GETDATE();
-	DECLARE @StartDate DATE = DATEADD(DAY, 2 - DATEPART(WEEKDAY, @Date), @Date); -- Sunday the week before
-	DECLARE @EndDate DATE = DATEADD(DAY, 6, @StartDate); -- Sunday this week
+	DECLARE @StartDate DATE = DATEADD(DAY, 2 - DATEPART(WEEKDAY, @Date), @Date); -- Monday
+	DECLARE @EndDate DATE = DATEADD(DAY, 6, @StartDate); -- Sunday
+	DECLARE @Result INT;
 
-	SELECT COUNT(ReviewId) FROM REVIEW WHERE 
+	SELECT @Result = COUNT(ReviewId) FROM REVIEW WHERE 
 	HotelId = @HotelId AND
 	DATEDIFF(DAY, @StartDate, ReviewDate) >= 0 AND
 	DATEDIFF(DAY, ReviewDate, @EndDate) >= 0;
+
+	RETURN @Result;
+END
+GO
+
+GO -- // new check 2
+CREATE OR ALTER PROCEDURE USP_GetWeeklyReview (
+    @HotelId INT,
+    @Date DATE = NULL)
+AS
+BEGIN
+	IF (@Date IS NULL) SET @Date = GETDATE();
+	DECLARE @LastWeekDate DATE = DATEADD(DAY, -7, @Date);
+
+	DECLARE @ThisWeek INT = 0, @LastWeek INT = 0;
+	EXEC @ThisWeek = USP_GetHotelWeeklyReview @HotelId, @Date;
+	EXEC @LastWeek = USP_GetHotelWeeklyReview @HotelId, @LastWeekDate;
+
+	SELECT @ThisWeek as ThisWeek, @LastWeek as LastWeek;
 END
 GO
 
@@ -2345,21 +2372,79 @@ CREATE OR ALTER PROCEDURE USP_GetHotelWeeklyOrder (
 AS
 BEGIN
 	IF (@Date IS NULL) SET @Date = GETDATE();
-	DECLARE @StartDate DATE = DATEADD(DAY, 2 - DATEPART(WEEKDAY, @Date), @Date); -- Sunday the week before
-	DECLARE @EndDate DATE = DATEADD(DAY, 6, @StartDate); -- Sunday this week
+	DECLARE @StartDate DATE = DATEADD(DAY, 2 - DATEPART(WEEKDAY, @Date), @Date); -- Monday
+	DECLARE @EndDate DATE = DATEADD(DAY, 6, @StartDate); -- Sunday
+	DECLARE @Result INT;
 
-	SELECT COUNT(ao.OrderId) FROM (SELECT * FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba
+	SELECT @Result = COUNT(ao.OrderId) FROM (SELECT * FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba
 	JOIN ORDER_DETAIL od ON od.BookingId = ba.BookingId
 	JOIN ACCOUNT_ORDER ao ON od.OrderId = ao.OrderId
 	WHERE DATEDIFF(DAY, @StartDate, ao.CreatedAt) >= 0 AND DATEDIFF(DAY, ao.CreatedAt, @EndDate) >= 0;
 
-	SELECT @StartDate, @EndDate;
+	RETURN @Result;
 END
 GO
+
+GO -- // new check 2
+CREATE OR ALTER PROCEDURE USP_GetWeeklyOrder (
+    @HotelId INT,
+    @Date DATE = NULL)
+AS
+BEGIN
+	IF (@Date IS NULL) SET @Date = GETDATE();
+	DECLARE @LastWeekDate DATE = DATEADD(DAY, -7, @Date);
+
+	DECLARE @ThisWeek INT = 0, @LastWeek INT = 0;
+	EXEC @ThisWeek = USP_GetHotelWeeklyOrder @HotelId, @Date;
+	EXEC @LastWeek = USP_GetHotelWeeklyOrder @HotelId, @LastWeekDate;
+
+	SELECT @ThisWeek as ThisWeek, @LastWeek as LastWeek;
+END
+GO
+
+
+GO -- // new check 4
+CREATE OR ALTER FUNCTION USF_GetTopAccount (
+    @HotelId INT)
+RETURNS @Result TABLE (AccountId INT, TotalSpent BIGINT)
+BEGIN
+	DECLARE @Fee INT = 50000;
+
+	INSERT INTO @Result (AccountId, TotalSpent)
+		SELECT * FROM (SELECT ao.AccountId, CAST(SUM((rt.Price - @Fee) * ba.NumberOfRoom) as BIGINT) as TotalSpent 
+			FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1) ao
+			JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
+			JOIN (SELECT BookingId, NumberOfRoom, RoomTypeId FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba ON ba.BookingId = od.BookingId
+			JOIN (SELECT Id, Price FROM ROOM_TYPE WHERE HotelId = @HotelId) rt ON rt.Id = ba.RoomTypeId
+			GROUP BY ao.AccountId) cal;
+	RETURN;
+END;
+GO
+
+
+GO -- // new check 3
+CREATE OR ALTER PROCEDURE USP_GetHotelTopUser (
+    @HotelId INT)
+AS
+BEGIN
+	DECLARE @HotelStatistics TABLE (AccountId INT, TotalSpent BIGINT);
+
+	INSERT INTO @HotelStatistics (AccountId, TotalSpent)
+		SELECT * FROM (SELECT TOP(7) * FROM dbo.USF_GetTopAccount(@HotelId)
+			ORDER BY TotalSpent DESC) cal;
+
+	SELECT pd.*, acc.Active, acc.MemberPoint as Point, acc.UserRole as Role, res.TotalSpent FROM @HotelStatistics res
+	JOIN ACCOUNT acc ON res.AccountId = acc.Id
+	JOIN PERSONAL_DETAILS pd ON acc.Id = pd.AccountId WHERE acc.UserRole = 'User';
+END
+GO
+
+
 
 -- // check --
 
 --! Func tính điểm input tổng số tiền và số thứ tự của đơn đặt phòng
+GO
 CREATE OR ALTER FUNCTION USF_CaculateBonusPoint(@Total INT, @Times INT)
 RETURNS INT
 BEGIN

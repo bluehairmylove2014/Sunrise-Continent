@@ -64,8 +64,16 @@ namespace SunriseServerData
             modelBuilder.Entity<WeeklyRevenue>()
                 .HasNoKey().ToTable("WeeklyRevenue", t => t.ExcludeFromMigrations());
 
+            // WeeklyRevenue
+            modelBuilder.Entity<WeeklyStatistics>()
+                .HasNoKey().ToTable("WeeklyStatistics", t => t.ExcludeFromMigrations());
+
             // AccountInfoDto
             modelBuilder.Entity<AccountInfoDto>()
+                .HasKey(x => new { x.AccountId });
+
+            // TopAccountInfoDto
+            modelBuilder.Entity<TopAccountInfoDto>()
                 .HasKey(x => new { x.AccountId });
         }
 

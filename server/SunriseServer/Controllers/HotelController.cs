@@ -171,7 +171,7 @@ namespace SunriseServer.Controllers
             return Ok(new ResponseMessageDetails<Hotel>("Delete hotel successfully", result));
         }
 
-        //?{location}{room_type}{start_date}{end_date}{budget}{rooms}{adults}{children}
+        
         [HttpGet("search")]
         public async Task<ActionResult<List<HotelDto>>> GetSearchHotel(
             [FromQuery] string location,
@@ -227,15 +227,7 @@ namespace SunriseServer.Controllers
 
             var hotelList = PageList<HotelDto>.ToPageList(finalResult.AsQueryable(), hotelDto.page_number, hotelDto.page_size);
 
-            return Ok(new {
-                hotelList,
-                totalCount = hotelList.TotalCount,
-                pageSize = hotelList.PageSize,
-                currentPage = hotelList.CurrentPage,
-                totalPages = hotelList.TotalPages,
-                hasNext = hotelList.HasNext,
-                hasPrevious = hotelList.HasPrevious
-            });
+            return Ok(result);
         }
 
         [HttpGet("review")]

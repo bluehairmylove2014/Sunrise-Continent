@@ -14,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using SunriseServer.Services.CacheService;
 using SunriseServer.Services.PaymentService;
 using SunriseServerCore;
+using SunriseServerCore.RepoInterfaces;
+using SunriseServerData.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +33,7 @@ builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IAdminRepo, AdminRepo>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(options =>
 {

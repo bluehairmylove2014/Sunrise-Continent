@@ -14,9 +14,19 @@ namespace SunriseServer.Services.VoucherService
             _unitOfWork = uof;
         }
 
-        public async Task<List<VoucherBag>> GetAllVoucher()
+        public async Task<List<VoucherDto>> GetAllVoucher()
         {
-            var result = await _unitOfWork.VoucherRepo.GetAllVoucherAsync();
+            var rawVoucher = await _unitOfWork.VoucherRepo.GetAllVoucherAsync();
+            var result = new List<VoucherDto>();
+
+            rawVoucher.ForEach(v => {
+                VoucherDto voucher = new() {
+                    RequiredRank = v.AccountRank
+                };
+                SetPropValueByReflection.AddYToX(voucher, v);
+                result.Add(voucher);
+            });
+
             return result;
         }
 

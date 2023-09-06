@@ -105,7 +105,7 @@ CREATE TABLE VOUCHER
 	Name NVARCHAR(500),
 	Value FLOAT, --!% giam
 	Point INT,
-	AccountRank VARCHAR(20),
+	RequiredRank VARCHAR(20),
 	Quantity INT,
 	
 	PRIMARY KEY (VoucherId)
@@ -126,7 +126,7 @@ CREATE TABLE ACCOUNT
 (
 	Id INTEGER,
     MemberPoint INTEGER,
-	AccountRank VARCHAR(20),
+	RequiredRank VARCHAR(20),
         
     Email VARCHAR(50),
     PasswordHash VARCHAR(500),
@@ -355,7 +355,7 @@ ADD
 --ALTER TABLE ACCOUNT
 --ADD
 --	CONSTRAINT FK_ACCOUNT_POINT_RANK
---	FOREIGN KEY(AccountRank)
+--	FOREIGN KEY(RequiredRank)
 --	REFERENCES POINT_RANK
 --	ON DELETE SET NULL
 

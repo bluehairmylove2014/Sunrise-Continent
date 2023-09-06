@@ -393,7 +393,7 @@ GO
 CREATE OR ALTER PROC USP_UpdateAccount
 	@Id INTEGER,
 	@MemberPoint INTEGER,
-	@AccountRank VARCHAR(20),
+	@RequiredRank VARCHAR(20),
 	@Email VARCHAR(50),
 	@PasswordHash VARCHAR(500),
 	@PasswordSalt VARCHAR(500)
@@ -409,7 +409,7 @@ AS
 		SET
 			MemberPoint = @MemberPoint,
 			Email = @Email,
-			AccountRank = @AccountRank,
+			RequiredRank = @RequiredRank,
 			PasswordHash = @PasswordHash,
 			PasswordSalt = @PasswordSalt
 		WHERE Id = @Id
@@ -1193,13 +1193,13 @@ CREATE OR ALTER PROCEDURE USP_AddVoucher
     @Name NVARCHAR(500),
     @Value FLOAT,
     @Point INT,
-	@AccountRank VARCHAR(20),
+	@RequiredRank VARCHAR(20),
 	@Quantity INT
 AS
 BEGIN
 
 	IF (@Point < 1) OR (@Value > 1 OR @Value <= 0 OR @Quantity <= 0)
-	OR (@AccountRank not in (select RankName from POINT_RANK))
+	OR (@RequiredRank not in (select RankName from POINT_RANK))
 	BEGIN
 		RAISERROR('Sai dữ liệu hạng hoặc giá trị voucher', 11, 1);
 		RETURN -2;
@@ -1211,8 +1211,8 @@ BEGIN
 		DECLARE @Id INT;
 		EXEC @Id = USP_GetNextColumnId 'VOUCHER', 'VoucherId'
 
-		INSERT INTO VOUCHER (VoucherId, Name, Value, Point, AccountRank, Quantity)
-		VALUES (@Id, @Name, @Value, @Point, @AccountRank, @Quantity)
+		INSERT INTO VOUCHER (VoucherId, Name, Value, Point, RequiredRank, Quantity)
+		VALUES (@Id, @Name, @Value, @Point, @RequiredRank, @Quantity)
 	END TRY
 
 	BEGIN CATCH
@@ -1255,7 +1255,7 @@ CREATE OR ALTER PROCEDURE USP_UpdateVoucher
     @Name NVARCHAR(500),
     @Value FLOAT,
 	@Point INT,
-	@AccountRank VARCHAR(20),
+	@RequiredRank VARCHAR(20),
 	@Quantity INT
 AS
 BEGIN
@@ -1266,7 +1266,7 @@ BEGIN
 		SET Name = @Name,
 			Value = @Value,
 			Point = @Point,
-			AccountRank = @AccountRank,
+			RequiredRank = @RequiredRank,
 			Quantity = @Quantity
 		WHERE VoucherId = @VoucherId
 	END TRY
@@ -1383,7 +1383,7 @@ CREATE OR ALTER FUNCTION USF_GetVoucherByRank (@Rank VARCHAR(20))
 RETURNS TABLE
 AS
 	RETURN SELECT * FROM VOUCHER 
-		WHERE AccountRank IN (SELECT p2.RankName FROM POINT_RANK p1
+		WHERE RequiredRank IN (SELECT p2.RankName FROM POINT_RANK p1
 						JOIN POINT_RANK p2 ON p1.RankValue >= p2.RankValue
 						WHERE p1.RankName like (@Rank))
 GO
@@ -1396,14 +1396,14 @@ AS
 BEGIN
 	IF (@Rank IS NULL)
 	BEGIN
-		SELECT vb.AccountId, vc.VoucherId, vc.Name, vc.Value, vc.Point, vc.AccountRank, vb.Quantity 
+		SELECT vb.AccountId, vc.VoucherId, vc.Name, vc.Value, vc.Point, vc.RequiredRank, vb.Quantity 
 		FROM (SELECT * FROM VOUCHER_BAG WHERE AccountId = @AccountId) vb
 		JOIN VOUCHER vc ON vb.VoucherId = vc.VoucherId;
 	END
 	ELSE
 	BEGIN
 		SELECT ISNULL(VB.AccountId, 0) as AccountId, VC.*, ISNULL(VB.Quantity, 0) as Quantity 
-		FROM (SELECT VoucherId, Name, Value, Point, AccountRank FROM VOUCHER WHERE AccountRank like @Rank) VC
+		FROM (SELECT VoucherId, Name, Value, Point, RequiredRank FROM VOUCHER WHERE RequiredRank like @Rank) VC
 		LEFT JOIN (SELECT * FROM VOUCHER_BAG WHERE AccountId = @AccountId) VB ON VC.VoucherId = VB.VoucherId;
 	END
 END
@@ -1429,7 +1429,7 @@ END
 GO
 
 GO
-CREATE OR ALTER FUNCTION USF_GetAccountRank (@AccountId INT)
+CREATE OR ALTER FUNCTION USF_GetRequiredRank (@AccountId INT)
 RETURNS VARCHAR(20)
 BEGIN
 	DECLARE @Rank VARCHAR(20) = 'Bronze';
@@ -1443,16 +1443,16 @@ END
 GO
 
 GO
-CREATE OR ALTER PROC USP_UpdateAccountRank (
+CREATE OR ALTER PROC USP_UpdateRequiredRank (
 	@AccountId INT)
 AS
 BEGIN
-	DECLARE @Rank VARCHAR(20) = dbo.USF_GetAccountRank (@AccountId);
+	DECLARE @Rank VARCHAR(20) = dbo.USF_GetRequiredRank (@AccountId);
 	
 	BEGIN TRAN
 
 	BEGIN TRY
-		UPDATE ACCOUNT SET AccountRank = @Rank WHERE Id = @AccountId;
+		UPDATE ACCOUNT SET RequiredRank = @Rank WHERE Id = @AccountId;
 		UPDATE PERSONAL_DETAILS SET Rank = @Rank WHERE AccountId = @AccountId;
 	END TRY
 
@@ -1486,10 +1486,10 @@ BEGIN
 	END
 
 	DECLARE @RankName VARCHAR(20);
-	SELECT @RankName = AccountRank FROM VOUCHER WHERE VoucherId = @VoucherId;
+	SELECT @RankName = RequiredRank FROM VOUCHER WHERE VoucherId = @VoucherId;
 	IF NOT (@RankName IN (SELECT p2.RankName FROM POINT_RANK p1
 						JOIN POINT_RANK p2 ON p1.RankValue >= p2.RankValue
-						WHERE p1.RankName like (SELECT TOP(1) AccountRank FROM ACCOUNT WHERE Id = @AccountId)))
+						WHERE p1.RankName like (SELECT TOP(1) RequiredRank FROM ACCOUNT WHERE Id = @AccountId)))
 	BEGIN
 		RAISERROR(N'Tài khoản không đủ quyền đổi voucher này', 11, 1)
 		RETURN -3;

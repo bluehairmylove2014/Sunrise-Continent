@@ -2,7 +2,7 @@ USE [sunrise-hotel]
 GO
 
 --!add account
--- INSERT INTO ACCOUNT (Id, MemberPoint, AccountRank, Email, PasswordHash, PasswordSalt, UserRole, RefreshToken, TokenCreated, TokenExpires, Active) VALUES	
+-- INSERT INTO ACCOUNT (Id, MemberPoint, RequiredRank, Email, PasswordHash, PasswordSalt, UserRole, RefreshToken, TokenCreated, TokenExpires, Active) VALUES	
 -- (1, 0, 'Bronze', 'lydat@gmail.com', '00ba0af9630c9eccf44741a603ccbb32b238c0ecd7141200c1641e2756328d4c3f1d94c7af70efd2b0af3c3ef2aff4f519290b2a29d0605a046283be6526c406', '0c7aeca9679f1de913b12d341f1ca586b4defaf7503651003354a5f8c8519265889436a9bb39085eb8df092d6bd2dca144e9a2e57df70d17ecbf1dd1c276576ad425b415d9f09c3cf3f319bacead74282a6b7bf60de2f7d97a2b9fbab5022f65a7d56efc4a3015bcbe31f7ff152ca3ea5ee527516a5a06fff4039d6ac09e9fe6', 'User', 'zJ7lpuRkqAGuiAYgRC+WQIZejkentkhE08e+s2eTOY9fbSto5X6GirvmmLzyQcbAkTXypnVNhYRBCXU8ocEeYw==', '2023-08-09 20:03:58.000', '2023-08-16 20:03:58.000', 1),
 -- (2, 0, 'Bronze', 'pdat@gmail.com', '1b9c6d61d183e699774df08fee179b5751fd1c1241407f7a0914669c0907393ce9f49b6cbf41bb4bd7d134f9b285bc804f1741360a19543535bae867b7c750fb', '1432927fae5e4b8e421b97be56fabe0854c081cf1ac5fdaa719fcefbec6a14f7d919fc6e9eabb143f4895714e76413ec606e7e4c0774578ef3d70f6cc9e210bcaaf4cfc8590fa85158e338b572a1ea167783d4cc03e894e3995b7ed91c32e2a18537e01d905a41d89dcc8aafe9cc341985a25f0719cb1ee9e150a96db6e7ee56', 'User', 'nk/TmDwMY7JByDIXK+W6GhGPXfhbchlqZ2gne4DdsWHn6QqCHgRxIJ8j4V4nTfsdyZGtZ3vpHsEI82NY41zEAA==', '2023-08-09 20:06:42.000', '2023-08-16 20:06:42.000', 1),
 -- (3, 0, 'Bronze', 'cuong457@gmail.com', 'ceae4c3043f6c58da07969a59afd02c3564250fae49ef5efc98158ef65c1ceca5f2ede0728044a6a23148fc8abfa0b252c81e92e71f080092a9d8e541bddde92', 'fdf3c9599cf9d981c2df2629557cebfb952c14fb66753a07e6d81706787d4c54f1e08958968a69ee5de89b0c5373010902b08776a69c86996d3fbda6d12aa54af1cf470960c6e3313c7c0c69fe5249c272fea9d958a859ea63158bb81e9d1439f3a4860860494caf8e569069d64d26acf3a162480e7b31c21249a9d0a2c7d874', 'User', 'ZqpZt9FF7o1JqL4Pyqm+xqb5ld4o/r05Un3RbyXVtDM2Q+X2v1R/94OEWrofC9fVwkcPDyapIqJPsj08afrhYw==', '2023-08-09 20:07:51.000', '2023-08-16 20:07:51.000', 1),
@@ -27,7 +27,7 @@ INSERT INTO POINT_RANK (RankName, RankValue) VALUES
 	('Silver', 4000),
 	('Bronze', 100);
 
-INSERT INTO VOUCHER (VoucherId, Name, Value, Point, AccountRank, Quantity) VALUES 
+INSERT INTO VOUCHER (VoucherId, Name, Value, Point, RequiredRank, Quantity) VALUES 
 	(1, 'Voucher 2%', 0.02, 50, 'Bronze', 100), --> 2% -> 6%
 	(2, 'Voucher 5%', 0.05, 150, 'Silver', 50), --> 6% -> 12%
 	(3, 'Voucher 10%', 0.1, 300, 'Gold', 100), --> 6% -> 12%

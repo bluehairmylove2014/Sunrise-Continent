@@ -121,10 +121,10 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPut("account-rank"), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateAccountRank()
+        public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateRequiredRank()
         {
             Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
-            var result = await _voucherService.UpdateAccountRank(accountId);
+            var result = await _voucherService.UpdateRequiredRank(accountId);
 
             if (result == 0)
                 return NotFound(new {

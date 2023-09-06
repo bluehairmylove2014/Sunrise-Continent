@@ -174,7 +174,8 @@ AS
 			Address, Stars,
 			dbo.USF_GetAvgReview(Id) Rating,
 			Description, Image,
-			dbo.USF_GetMinRoomPrice(Id) Price
+			dbo.USF_GetMinRoomPrice(Id) Price,
+			AccountId
 	FROM HOTEL
 GO
 
@@ -191,7 +192,8 @@ AS
 			Address, Stars,
 			dbo.USF_GetAvgReview(Id) Rating,
 			Description, Image,
-			dbo.USF_GetMinRoomPrice(Id) Price
+			dbo.USF_GetMinRoomPrice(Id) Price, 
+			AccountId
 	FROM HOTEL WHERE Id = @Id
 GO
 
@@ -203,7 +205,8 @@ AS
 			Address, Stars,
 			dbo.USF_GetAvgReview(Id) Rating,
 			Description, Image,
-			dbo.USF_GetMinRoomPrice(Id) Price
+			dbo.USF_GetMinRoomPrice(Id) Price, 
+			AccountId
 	FROM HOTEL
 	ORDER BY Rating DESC;
 GO
@@ -232,7 +235,7 @@ BEGIN
 		DECLARE @Id INT
 		EXEC @Id = USP_GetNextColumnId 'HOTEL', 'Id';
 		
-		INSERT INTO HOTEL VALUES (@Id, @Name, @Country, @HotelType, @ProvinceCity, @Address, @Stars, 0, @Description, @Image);
+		INSERT INTO HOTEL VALUES (@Id, @Name, @Country, @HotelType, @ProvinceCity, @Address, @Stars, 0, @Description, @Image, @AccountId);
 		UPDATE PERSONAL_DETAILS SET HotelId = @Id WHERE AccountId = @AccountId;
 	END TRY
 
@@ -517,10 +520,14 @@ BEGIN
 		RAISERROR(N'Tài khoản không tồn tại', 11, 1);
 		RETURN -2;
 	END
+	DECLARE @Id INT = 0;
 	
 	BEGIN TRAN
 
 	BEGIN TRY
+		SELECT @Id = Id FROM HOTEL WHERE AccountId = @AccountId;
+		IF (@Id > 0) DELETE FROM HOTEL WHERE Id = @Id;
+
 		UPDATE ACCOUNT SET 
 			Active = ABS(Active - 1)
 		WHERE Id = @AccountId;
@@ -548,8 +555,6 @@ BEGIN
 END
 GO
 
-exec USP_GetMatchingRefreshToken @RefreshToken='pOgjtyxB01rvEUgIPc89Q17oF9dsSsNXVSAUapZosh9w0QEdOCjHlwzJVN1jmEADv58E57pEnhFMUfDvMvVeHQ=='
-select * from account
 
 GO
 CREATE OR ALTER PROC USP_DeleteAccount
@@ -1705,7 +1710,7 @@ GO
 
 GO
 CREATE OR ALTER FUNCTION USF_CheckHotelService ( -- //new check
-    @HotelId INTEGER,
+    @HotelId INT,
 	@CheckValue VARCHAR(1000) = null)
 RETURNS BIT
 BEGIN
@@ -1723,15 +1728,33 @@ BEGIN
 END
 GO
 
+GO
+CREATE OR ALTER FUNCTION USF_FindHotelRoom ( -- //new check
+    @HotelId INT,
+	@RoomType NVARCHAR(200) = N'',
+	@BedType VARCHAR(100) = null)
+RETURNS BIT
+BEGIN
+	IF (SELECT COUNT(Id) FROM ROOM_TYPE WHERE HotelId = @HotelId) = 0
+		RETURN 1;
+	ELSE IF EXISTS (SELECT * FROM ROOM_TYPE WHERE HotelId = @HotelId
+		AND Name COLLATE SQL_Latin1_General_CP1_CI_AI like '%' + @RoomType + '%' COLLATE SQL_Latin1_General_CP1_CI_AI
+		AND (BedType IN (SELECT value FROM STRING_SPLIT(@BedType, ',')) OR @BedType IS NULL))
+	BEGIN
+		RETURN 1;
+	END;
+
+	RETURN 0;
+END
 
 GO
 CREATE OR ALTER PROC USP_FindHotelByName (-- //new check
 	-- Search
-	@Location NVARCHAR(100) = N'',
-	@RoomType NVARCHAR(100) = N'',
+	@Location NVARCHAR(200) = N'',
+	@RoomType NVARCHAR(200) = N'',
 	@StartDate DATE = '01-01-2022',
 	@EndDate DATE = '01-02-2022',
-	@MinBudget float = 1,
+	@MinBudget float = 0,
 	@MaxBudget float = 10000000000.0,
 	@Rooms int = 1,
 	@Adult int = 1,
@@ -1746,25 +1769,26 @@ CREATE OR ALTER PROC USP_FindHotelByName (-- //new check
 	@SortType VARCHAR(5) = 'DESC')
 AS
 BEGIN
-	SELECT hoteTable.* from (SELECT distinct h.Id, h.Name, Country, HotelType, ProvinceCity, 
+	SELECT hoteTable.* FROM 
+	(SELECT h.Id, h.Name, Country, HotelType, ProvinceCity, 
 			Address, Stars,
 			dbo.USF_GetAvgReview(h.Id) as Rating,
 			Description, Image,
-			dbo.USF_GetMinRoomPrice(h.Id) as Price
-	FROM HOTEL h inner join ROOM_TYPE rt on h.Id = rt.HotelId
+			dbo.USF_GetMinRoomPrice(h.Id) as Price,
+			AccountId
+	FROM HOTEL h
 	WHERE (h.ProvinceCity COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI or
 		  h.Country COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI or
-	      h.Name COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI) and
-		  dbo.USF_GetMinRoomPrice(h.Id) <= @MaxBudget and 
-		  dbo.USF_GetMinRoomPrice(h.Id) >= @MinBudget and
-		  rt.Name COLLATE SQL_Latin1_General_CP1_CI_AI like '%' + @RoomType + '%' COLLATE SQL_Latin1_General_CP1_CI_AI and
-	      dbo.USF_CheckHotelAvailability(h.Id, @Rooms, @StartDate, @EndDate) = 1
+	      h.Name COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI)
+		  AND dbo.USF_FindHotelRoom(h.Id, @RoomType, @BedType) = 1
+		  AND dbo.USF_GetMinRoomPrice(h.Id) <= @MaxBudget 
+		  AND dbo.USF_GetMinRoomPrice(h.Id) >= @MinBudget
+	      AND dbo.USF_CheckHotelAvailability(h.Id, @Rooms, @StartDate, @EndDate) = 1
 		  AND (h.HotelType IN (SELECT value FROM STRING_SPLIT(@HotelType, ',')) OR @HotelType IS NULL)
-		  AND (rt.BedType IN (SELECT value FROM STRING_SPLIT(@BedType, ',')) OR @BedType IS NULL)
 		  AND dbo.USF_GetAvgReview(h.Id) >= @GuestRating
 		  AND dbo.USF_CheckHotelFacility(h.Id, @Facilities) = 1
 		  AND dbo.USF_CheckHotelService(h.Id, @Service) = 1
-		  ) hoteTable 
+		  ) hoteTable
 	ORDER BY 
 		CASE WHEN @SortingCol = 'Rating' THEN Rating END DESC,
 		CASE WHEN @SortingCol = 'Price' AND @SortType ='ASC' THEN Price END ,
@@ -2452,6 +2476,89 @@ BEGIN
 	JOIN PERSONAL_DETAILS pd ON acc.Id = pd.AccountId WHERE acc.UserRole = 'User';
 END
 GO
+
+-- // Admin
+GO
+CREATE OR ALTER FUNCTION USF_CalculateAdminRevenueByMonth (
+    @Year INT,
+    @Month INT)
+RETURNS BIGINT
+BEGIN
+	DECLARE @TotalRevenue BIGINT = 0;
+	DECLARE @Fee INT = 50000;
+
+	-- mỗi phòng đc doanh thu 50k, nhân cho số phòng của booking lấy doanh thu theo tuần và theo năm
+    DECLARE @StartDate DATE = CAST(STR(@Month) + '-01-' + STR(@Year) as date);
+	DECLARE @EndDate DATE = EOMONTH(@StartDate);
+
+    SELECT @TotalRevenue += @Fee * ba.NumberOfRoom
+	FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1 AND
+		DATEDIFF(DAY, @StartDate, CreatedAt) >= 0 AND 
+		DATEDIFF(DAY, CreatedAt, @EndDate) >= 0) ao 
+	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
+	JOIN (SELECT BookingId, NumberOfRoom FROM BOOKING_ACCOUNT) ba ON ba.BookingId = od.BookingId
+
+	RETURN @TotalRevenue;
+END;
+GO
+
+
+-- // new check
+GO
+CREATE OR ALTER PROCEDURE USP_CalculateAdminYearlyRevenue (
+    @Year INT = null)
+AS
+BEGIN
+	IF (@Year IS NULL) SET @Year = CAST(YEAR(GETDATE()) AS INT);
+
+	DECLARE @table TABLE(Months INT);
+	INSERT INTO @table (Months) VALUES (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12);
+
+	SELECT Months, 
+		dbo.USF_CalculateAdminRevenueByMonth(@Year, Months) AS ThisYear,
+		dbo.USF_CalculateAdminRevenueByMonth(@Year - 1, Months) AS LastYear
+	FROM @table;
+END
+GO
+
+GO -- // new check 2
+CREATE OR ALTER FUNCTION USP_CalculateAdminOneDayRevenue (
+    @Date DATE = NULL)
+RETURNS BIGINT
+BEGIN
+	IF (@Date IS NULL) SET @Date = GETDATE();
+
+	DECLARE @TotalRevenue BIGINT = 0;
+	DECLARE @Fee INT = 50000;
+
+	SELECT @TotalRevenue += @Fee * ba.NumberOfRoom
+	FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1 AND DATEDIFF(DAY, @Date, CreatedAt) = 0) ao 
+	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
+	JOIN (SELECT BookingId, NumberOfRoom FROM BOOKING_ACCOUNT) ba ON ba.BookingId = od.BookingId;
+
+	RETURN @TotalRevenue;
+END
+GO
+
+
+GO -- // new check 2
+CREATE OR ALTER PROCEDURE USP_CalculateAdminWeeklyRevenue (
+    @Date DATE = NULL)
+AS
+BEGIN
+	DECLARE @Table TABLE (dayInWeek INT)
+	INSERT INTO @Table VALUES (1),(2),(3),(4),(5),(6),(7);
+
+	IF (@Date IS NULL) SET @Date = GETDATE();
+	DECLARE @StartDate DATE = DATEADD(DAY, 1 - DATEPART(WEEKDAY, @Date), @Date); -- Sunday the week before
+
+	select DayInWeek,
+		dbo.USP_CalculateAdminOneDayRevenue(DATEADD(DAY, DayInWeek, @StartDate)) as ThisWeek,
+		dbo.USP_CalculateAdminOneDayRevenue(DATEADD(DAY, DayInWeek - 7, @StartDate)) as LastWeek
+	from @Table
+END
+GO
+
 
 
 

@@ -56,293 +56,294 @@ INSERT INTO VOUCHER (VoucherId, Name, Value, Point, RequiredRank, Quantity) VALU
 
 
 --!add hotel 
-INSERT INTO HOTEL VALUES(1, N'Triple E Hotel Metro Ben Thanh',N'Việt Nam','HOTEL',N'TP Hồ Chí Minh',
+INSERT INTO HOTEL (Id, Name, Country, HotelType, ProvinceCity, Address, Stars, Rating, Description, Image) VALUES
+(1, N'Triple E Hotel Metro Ben Thanh',N'Việt Nam','HOTEL',N'TP Hồ Chí Minh',
 	 N'146- 148 Đường Ký Con, Phường Nguyễn Thái Bình, Quận 1, Thành phố Hồ Chí Minh, Việt Nam',
 	 3, 8.8, 
 	 N'Tọa lạc ở Thành phố Hồ Chí Minh, cách Bảo tàng Mỹ thuật 300 m, Triple E Hotel Metro Ben Thanh cung cấp chỗ nghỉ 3 sao với trung tâm thể dục.Khách sạn 3 sao này cung cấp WiFi miễn phí, dịch vụ phòng và dịch vụ lễ tân 24 giờ. Nhân viên tại đây có thể thu xếp dịch vụ đưa đón cho khách.',
-	 N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Triple%20E%20Hotel%20Metro%20Ben%20Thanh/Triple%20E%20Hotel%20Metro%20Ben%20Thanh.jpg');
+	 N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Triple%20E%20Hotel%20Metro%20Ben%20Thanh/Triple%20E%20Hotel%20Metro%20Ben%20Thanh.jpg'),
 
-INSERT INTO HOTEL VALUES(2, N'Nexus House Thao Dien',N'Việt Nam','HOMESTAY',N'Hồ Chí Minh City',
+(2, N'Nexus House Thao Dien',N'Việt Nam','HOMESTAY',N'Hồ Chí Minh City',
 	N'8/9 Võ Trường Toản, An Phú, Quận 2, TP. Hồ Chí Minh, Việt Nam',
  	0, 9.5,
 	N'Nằm cách Bảo tàng Lịch sử Việt Nam 6,3 km, Nexus House Thao Dien có khu vườn, sân hiên và chỗ nghỉ gắn máy điều hòa với ban công cùng WiFi miễn phí.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Nexus%20House%20Thao%20Dien/Studio%20Nh%C3%ACn%20Ra%20V%C6%B0%E1%BB%9Dn1.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Nexus%20House%20Thao%20Dien/Studio%20Nh%C3%ACn%20Ra%20V%C6%B0%E1%BB%9Dn1.jpg'),
 
-INSERT INTO HOTEL VALUES(3, N'Landmark Plus Luxury - Vinhomes Central Park',N'Việt Nam','SINGLE_APARTMENT',N'TP Hồ Chí Minh', 
+(3, N'Landmark Plus Luxury - Vinhomes Central Park',N'Việt Nam','SINGLE_APARTMENT',N'TP Hồ Chí Minh', 
 	N'146- 148 Đường Ký Con, Phường Nguyễn Thái Bình, Quận 1,Thành phố Hồ Chí Minh , Việt Nam',
 	0, 8.1, 
 	N'Tọa lạc tại Thành phố Hồ Chí Minh, Landmark Plus Luxury - Vinhomes Central Park cung cấp chỗ nghỉ với hồ bơi ngoài trời, khu vườn, sảnh khách chung, sân hiên, quầy bar và tầm nhìn ra thành phố.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Landmark%20Plus%20Luxury%20-%20Vinhomes%20Central%20Park/landmark.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Landmark%20Plus%20Luxury%20-%20Vinhomes%20Central%20Park/landmark.jpg'),
 
-INSERT INTO HOTEL VALUES(4, N'Musketeers Guest House',N'Việt Nam','HOTEL',N'Hà Nội', 
+(4, N'Musketeers Guest House',N'Việt Nam','HOTEL',N'Hà Nội', 
 	N'21 Ngõ 67 Tô Ngọc Vân Quảng An, Quận Tây Hồ, Hà Nội, Việt Nam',
 	0, 9.7, 
 	N'Tọa lạc tại thành phố Hà Nội, cách Hồ Tây 3,2 km, Musketeers Guest House cung cấp chỗ nghỉ với sảnh khách chung, chỗ đỗ xe riêng miễn phí, sân hiên và quầy bar. Trong số các tiện nghi tại chỗ nghỉ này có quầy lễ tân 24 giờ, dịch vụ trợ giúp đặc biệt và Wi-Fi miễn phí trong toàn bộ khuôn viên. Du khách có thể ngắm nhìn quang cảnh khu vườn.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Musketeers%20Guest%20House/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i1.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Musketeers%20Guest%20House/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i1.jpg'),
 
-INSERT INTO HOTEL VALUES(5, N'Cristina Boutique Hotel',N'Việt Nam','HOTEL',N'Hà Nội', 
+(5, N'Cristina Boutique Hotel',N'Việt Nam','HOTEL',N'Hà Nội', 
 	N'4A Ngõ Phất Lộc, Quận Hoàn Kiếm, Hà Nội, Việt Nam',
 	3, 9.1, 
 	N'Tọa lạc tại một vị trí thuận tiện ở trung tâm thành phố Hà Nội, Cristina Boutique Hotel cung cấp chỗ nghỉ 3 sao gần Ô Quan Chưởng Hà Nội và Nhà hát múa rối nước Thăng Long. Khách sạn 3 sao này cung cấp các phòng máy lạnh với phòng tắm riêng. Chỗ nghỉ có lễ tân 24 giờ, dịch vụ đưa đón sân bay, dịch vụ phòng và WiFi miễn phí.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Cristina%20Boutique%20Hotel/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i2%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C6%A1n%20C%C3%B3%20Ban%20C%C3%B4ng1.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Cristina%20Boutique%20Hotel/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i2%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C6%A1n%20C%C3%B3%20Ban%20C%C3%B4ng1.jpg'),
 
-INSERT INTO HOTEL VALUES(6, N'SMARANA Hanoi HERITAGE',N'Việt Nam','HOTEL',N'Hà Nội', 
+(6, N'SMARANA Hanoi HERITAGE',N'Việt Nam','HOTEL',N'Hà Nội', 
 	N'Phường Dịch Vọng Hầu, Quận Cầu Giấy Số 5, Ngõ 82/1 Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội, Việt Nam',
 	5, 9.7, 
 	N'Tọa lạc tại thành phố Hà Nội, cách Bảo tàng Dân tộc học Việt Nam 2,4 km, SMARANA Hanoi HERITAGE có dịch vụ tiền sảnh, phòng nghỉ không hút thuốc, sân hiên, WiFi miễn phí trong toàn bộ khuôn viên và nhà hàng. Khách sạn 5 sao này cung cấp dịch vụ phòng, dịch vụ lễ tân 24 giờ, dịch vụ đưa đón sân bay và dịch vụ cho thuê xe đạp.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/SMARANA%20Hanoi%20HERITAGE/smarana-hanoi-heritage.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/SMARANA%20Hanoi%20HERITAGE/smarana-hanoi-heritage.jpg'),
 
-INSERT INTO HOTEL VALUES(7, N'An Hiên Homestay Hội An',N'Việt Nam','HOMESTAY',N'Hội An', 
+(7, N'An Hiên Homestay Hội An',N'Việt Nam','HOMESTAY',N'Hội An', 
 	N'164 Lý Thái Tổ, phường Cẩm Châu, Cẩm Châu, Hội An, Việt Nam',
 	0, 9.6, 
 	N'Tọa lạc tại thành phố Hội An, cách Bảo tàng Lịch sử Hội An 1,2 km và Hội quán Triều Châu Trung Quốc 1,6 km, An Hiên Homestay Hội An cung cấp chỗ nghỉ với WiFi miễn phí, máy điều hòa, xe đạp miễn phí và khu vườn.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/An%20Hi%C3%AAn%20Homestay%20H%E1%BB%99i%20An/An%20Hi%C3%AAn%20Homestay%20H%E1%BB%99i%20An.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/An%20Hi%C3%AAn%20Homestay%20H%E1%BB%99i%20An/An%20Hi%C3%AAn%20Homestay%20H%E1%BB%99i%20An.jpg'),
 
-INSERT INTO HOTEL VALUES(8, N'iHome Hoi An',N'Việt Nam','HOTEL',N'Hội An', 
+(8, N'iHome Hoi An',N'Việt Nam','HOTEL',N'Hội An', 
 	N'54 Nguyễn Tri Phương, Cẩm Nam, Hội An, Việt Nam',
 	3, 9.2, 
 	N'Tọa lạc tại thành phố Hội An, cách Hội quán Triều Châu 600 m, iHome Hoi An cung cấp chỗ nghỉ với trung tâm thể dục, chỗ đỗ xe riêng miễn phí, sân hiên và quầy bar. Khách sạn 3 sao này có dịch vụ phòng và lễ tân 24 giờ. Sân golf Montgomerie Links và CLB chơi golf Montgomerie Links Vietnam đều nằm trong bán kính 15 km từ khách sạn.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/iHome%20Hoi%20An/iHome%20Hoi%20An.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/iHome%20Hoi%20An/iHome%20Hoi%20An.jpg'),
 
-INSERT INTO HOTEL VALUES(9, N'Florida Nha Trang Hotel',N'Việt Nam','HOTEL',N'Nha Trang', 
+(9, N'Florida Nha Trang Hotel',N'Việt Nam','HOTEL',N'Nha Trang', 
 	N'66 Quang Trung, Nha Trang, Việt Nam',
 	5, 8.4, 
 	N'Tọa lạc tại thành phố Nha Trang, cách Bãi biển Nha Trang 1,5 km, Florida Nha Trang Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, trung tâm thể dục và sảnh khách chung. Khách sạn 5 sao này có CLB trẻ em, dịch vụ phòng, WiFi miễn phí, sân hiên và tầm nhìn ra thành phố. Du khách có thể dùng bữa tại nhà hàng hoặc nhâm nhi đồ uống ở quầy bar.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Florida%20Nha%20Trang%20Hotel/Florida%20hotel.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Florida%20Nha%20Trang%20Hotel/Florida%20hotel.jpg'),
 
-INSERT INTO HOTEL VALUES(10, N'Crown Hotel Nha Trang',N'Việt Nam','HOTEL',N'Nha Trang', 
+(10, N'Crown Hotel Nha Trang',N'Việt Nam','HOTEL',N'Nha Trang', 
 	N'19 Dã Tượng, Nha Trang, Việt Nam',
 	4, 8.1, 
 	N'Tọa lạc tại thành phố Nha Trang, cách Bãi biển Nha Trang 300 m, Crown Hotel Nha Trang cung cấp chỗ nghỉ với trung tâm thể dục, chỗ đỗ xe riêng miễn phí, sảnh khách chung và nhà hàng. Khách sạn 4 sao này có dịch vụ tiền sảnh, bàn đặt tour, lễ tân 24 giờ, dịch vụ đưa đón sân bay, dịch vụ phòng và WiFi miễn phí.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Crown%20Hotel%20Nha%20Trang/Crown%20Hotel%20Nha%20Trang.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Crown%20Hotel%20Nha%20Trang/Crown%20Hotel%20Nha%20Trang.jpg'),
 
-INSERT INTO HOTEL VALUES(11, N'Fati Botique Hotel Vũng Tàu', N'Việt Nam', 'HOTEL', N'Vũng Tàu',
+(11, N'Fati Botique Hotel Vũng Tàu', N'Việt Nam', 'HOTEL', N'Vũng Tàu',
 	N'112/3 Trần Phú Tòa nhà Fati Boutique, 112/3 Trần Phú, Phường 5, Vũng Tàu, Việt Nam',
  	4, 0,
 	N'Tọa lạc tại thành phố Vũng Tàu, cách Bãi Dâu vài bước chân, Fati Boutique Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, khu vườn, sân hiên và WiFi miễn phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg'),
 
-INSERT INTO HOTEL VALUES(12, N'Halios Luxury Hotel Hạ Long', N'Việt Nam', 'HOTEL', N'Quảng Ninh',
+(12, N'Halios Luxury Hotel Hạ Long', N'Việt Nam', 'HOTEL', N'Quảng Ninh',
 	N'38 Nguyễn Du, Hồng Gai, Thành phố Hạ Long, Quảng Ninh, Việt Nam',
  	5, 0,
 	N'Tọa lạc tại thành phố Vũng Tàu, cách Bãi Dâu vài bước chân, Fati Boutique Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, khu vườn, sân hiên và WiFi miễn phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg'),
 
-INSERT INTO HOTEL VALUES(13, N'Mi Nhon Em Hotel Muine Phan Thiết', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(13, N'Mi Nhon Em Hotel Muine Phan Thiết', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N' 202 Nguyễn Đình Chiểu Kp 2, Ham Tien Village, Hòa Bình, Tp. Phan Thiết, Bình Thuận, Việt Nam',
  	3, 0,
 	N'Nằm ở thành phố Phan Thiết, cách Bãi biển Hàm Tiến vài bước chân, Mi Nhon Em Hotel Muine cung cấp chỗ nghỉ với xe đạp cho khách sử dụng miễn phí, chỗ đỗ xe riêng miễn phí, hồ bơi ngoài trời và khu vườn.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg'),
 
-INSERT INTO HOTEL VALUES(14, N'DeLaSol Sapa Hotel', N'Việt Nam', 'HOTEL', N'Lào Cai',
+(14, N'DeLaSol Sapa Hotel', N'Việt Nam', 'HOTEL', N'Lào Cai',
 	N'16 Mường Hoa 16, Sa Pa, Việt Nam',
  	4, 0,
 	N'Tọa lạc tại thành phố Vũng Tàu, cách Bãi Dâu vài bước chân, Fati Boutique Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, khu vườn, sân hiên và WiFi miễn phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg'),
 
-INSERT INTO HOTEL VALUES(15, N'Pistachio Sapa Hotel', N'Việt Nam', 'HOTEL', N'Lào Cai',
+(15, N'Pistachio Sapa Hotel', N'Việt Nam', 'HOTEL', N'Lào Cai',
 	N'Số 5, Thác Bạc Street, Sapa, Lào Cai, Sa Pa, Việt Nam',
  	4, 0,
 	N'Nằm ở thị xã Sa Pa, cách Ga cáp treo Fansipan Legend 4,6 km, Pistachio Hotel Sapa cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, trung tâm thể dục và sảnh khách chung.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Pistachio%20Hotel%20Sapa/200762189.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Pistachio%20Hotel%20Sapa/200762189.jpg'),
 
-INSERT INTO HOTEL VALUES(16, N'Star City Riverside By Haviland Hotel', N'Việt Nam', 'HOTEL', N'Đà Nẵng',
+(16, N'Star City Riverside By Haviland Hotel', N'Việt Nam', 'HOTEL', N'Đà Nẵng',
 	N'147-149 Trần Hưng Đạo, Nại Hiên Đông, Sơn Trà, Đà Nẵng, Việt Nam',
  	5, 0,
 	N'Nằm bên bờ Sông Hàn, Star City Riverside By Haviland cung cấp không gian sinh hoạt hiện đại với tầm nhìn ra toàn cảnh thành phố Đà Nẵng.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/428612339.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/428612339.jpg'),
 
-INSERT INTO HOTEL VALUES(17, N'Na Hostel Hue', N'Việt Nam', 'HOTEL', N'Huế',
+(17, N'Na Hostel Hue', N'Việt Nam', 'HOTEL', N'Huế',
 	N'69 Võ Thị Sáu, Huế, Việt Nam',
  	2, 9.4,
 	N'Featuring 2-star accommodation, Na Hostel Hue is located in Hue, 1.3 km from Trang Tien Bridge and 2 km from Dong Ba Market. With a terrace, the 2-star hotel has air-conditioned rooms with free WiFi. The accommodation provides airport transfers, while a bicycle rental service is also available.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Na%20Hostel%20Hue/Na%20Hostel%20Hue.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Na%20Hostel%20Hue/Na%20Hostel%20Hue.jpg'),
 
-INSERT INTO HOTEL VALUES(18, N'The Chum Boutique', N'Việt Nam', 'HOTEL', N'Huế',
+(18, N'The Chum Boutique', N'Việt Nam', 'HOTEL', N'Huế',
 	N'5 Trương Định, Huế, Việt Nam',
  	3, 9.1,
 	N'The Chum Boutique cung cấp phòng nghỉ tại thành phố Huế, cách Tử Cấm Thành 2,8 km và Hồ Tịnh Tâm 3,3 km. Chỗ nghỉ này nằm gần một số điểm tham quan nổi tiếng, cách Bảo tàng Hồ Chí Minh 1,1 km, Nhà thờ Dòng Chúa Cứu Thế 1,7 km và Cung An Định 1,8 km. Ngoài WiFi miễn phí, chỗ nghỉ còn có sân hiên cũng như phòng xông hơi khô.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Deluxe%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i%20C%C3%B3%20B%E1%BB%93n%20T%E1%BA%AFm1.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Deluxe%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i%20C%C3%B3%20B%E1%BB%93n%20T%E1%BA%AFm1.jpg'),
 
-INSERT INTO HOTEL VALUES(19, N'Art Garden Dalat', N'Việt Nam', 'HOTEL', N'Đà Lạt',
+(19, N'Art Garden Dalat', N'Việt Nam', 'HOTEL', N'Đà Lạt',
 	N'79 Đường Đào Duy Từ, Đà Lạt, Việt Nam',
  	0, 8.1,
 	N'Art Garden Dalat features city views, free WiFi and free private parking, located in Da Lat, 3.9 km from Truc Lam Temple. There is a private bathroom with shower in every unit, along with bathrobes, slippers and a hair dryer.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Art%20Garden%20Dalat/Ph%C3%B2ng%20Gia%20%C4%90%C3%ACnh1.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Art%20Garden%20Dalat/Ph%C3%B2ng%20Gia%20%C4%90%C3%ACnh1.jpg'),
 
-INSERT INTO HOTEL VALUES(20, N'Đà Lạt Thanh Xuân Hotel', N'Việt Nam', 'HOTEL', N'Đà Lạt',
+(20, N'Đà Lạt Thanh Xuân Hotel', N'Việt Nam', 'HOTEL', N'Đà Lạt',
 	N'126 Đường Tô Hiến Thành, Đà Lạt, Việt Nam',
  	4, 8.3,
 	N'Tọa lạc tại thành phố Đà Lạt, cách Công viên Yersin 1,6 km, Đà Lạt Thanh Xuân Hotel cung cấp chỗ nghỉ với sân hiên, chỗ đỗ xe riêng miễn phí và nhà hàng. Khách sạn 4 sao này có dịch vụ tiền sảnh, bàn đặt tour, dịch vụ phòng, lễ tân 24 giờ và dịch vụ thu đổi ngoại tệ cho khách.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel.jpg'),
 
-INSERT INTO HOTEL VALUES(21, N'Mandala Cham Bay Mui Ne', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(21, N'Mandala Cham Bay Mui Ne', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'Đường DT 716, phường Mũi Né, Phan Thiết',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi biển Long Sơn 600 m, Mandala Cham Bay Mui Ne cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, trung tâm thể dục và nhà hàng. Mỗi chỗ nghỉ tại khách sạn 5 sao này đều có tầm nhìn ra biển và du khách có thể sử dụng phòng xông hơi khô cũng như bể sục. ',
-	N'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mandala%20Cham%20Bay%20Mui%20Ne/445116348.jpg');
+	N'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mandala%20Cham%20Bay%20Mui%20Ne/445116348.jpg'),
 
-INSERT INTO HOTEL VALUES(22, N'RUBENS BOUTIQUE HOTEL', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(22, N'RUBENS BOUTIQUE HOTEL', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'D3 -32A Khu đô thị Phố Biển, Phường Phú Thủy, TP Phan Thiết, Bình Thuận',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi biển Đồi Dương 500 m, RUBENS BOUTIQUE HOTEL có chỗ nghỉ với sân hiên, chỗ đỗ xe riêng miễn phí, nhà hàng và quầy bar.  Chỗ nghỉ nằm cách Bãi biển Thương Chánh 2,2 km, Sân Golf Sea Link 500 m và ga tàu Phan Thiết 3,1 km.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/RUBENS%20BOUTIQUE%20HOTEL/447358764.jpg')
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/RUBENS%20BOUTIQUE%20HOTEL/447358764.jpg'),
 
-INSERT INTO HOTEL VALUES(23, N'Movenpick Hotel Phan Thiet', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(23, N'Movenpick Hotel Phan Thiet', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'Đường Hòn Giò - Thuận Quý, Thôn Tiến Hòa, Xã Tiến Thành, Thành phố Phan Thiết, Bình Thuận',
  	4, 0,
 	N'Quay mặt ra bãi biển ở thành phố Phan Thiết, Mövenpick Resort Phan Thiet cung cấp chỗ nghỉ 5 sao và có hồ bơi ngoài trời, trung tâm thể dục cũng như khu vườn. Resort này còn có CLB trẻ em, nhà hàng và sân hiên. Chỗ nghỉ cung cấp dịch vụ phòng, dịch vụ lễ tân 24 giờ và phòng giữ hành lý cho khách.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Movenpick%20Resort%20Phan%20Thiet/334369514.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Movenpick%20Resort%20Phan%20Thiet/334369514.jpg'),
 
-INSERT INTO HOTEL VALUES(24, N'Radisson Resort Phan Thiet', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(24, N'Radisson Resort Phan Thiet', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'Đường Lạc Long Quân, Thôn Tiến Hòa, Xã Tiến Thành , Phan Thiết',
  	4, 0,
 	N'ọa lạc tại thành phố Phan Thiết, cách ga Phan Thiết 14 km, Radisson Resort Phan Thiet cung cấp chỗ nghỉ với xe đạp cho khách sử dụng miễn phí, chỗ đỗ xe riêng miễn phí, hồ bơi ngoài trời và trung tâm thể dục. Khách sạn 4 sao này có khu vườn và phòng nghỉ gắn máy điều hòa với WiFi miễn phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Radisson%20Resort%20Phan%20Thiet/367681542.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Radisson%20Resort%20Phan%20Thiet/367681542.jpg'),
 
-INSERT INTO HOTEL VALUES(25, N'Kim Long Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(25, N'Kim Long Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'Hẻm 69 Nguyễn Đình Chiểu, Hàm Tiến, Phan Thiết',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi đá Ông Địa 1,8 km và Suối Tiên 6,5 km, Kim Long Hotel cung cấp chỗ nghỉ có WiFi miễn phí, máy điều hòa, khu vực bãi biển riêng và khu vườn.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Kim%20Long%20Hotel/468897403.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Kim%20Long%20Hotel/468897403.jpg'),
 
-INSERT INTO HOTEL VALUES(26, N'Mui Ne Alena Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(26, N'Mui Ne Alena Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'265/5 Nguyễn Đình Chiểu, Phường Hàm Tiến, Thành phố Phan Thiết,',
  	4, 0,
 	N'ọa lạc tại thành phố Phan Thiết, cách Bãi biển Hàm Tiến vài bước chân, Mui Ne Alena Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, khu vườn và sảnh khách chung. Chỗ nghỉ này có dịch vụ phòng, nhà hàng, sòng bạc và sân chơi cho trẻ em.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mui%20Ne%20Alena%20Hotel/236967178.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mui%20Ne%20Alena%20Hotel/236967178.jpg'),
 
-INSERT INTO HOTEL VALUES(27, N'Wanderlust Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(27, N'Wanderlust Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'375 Nguyễn Đình Chiểu, Phan Thiết',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi biển Hàm Tiến 300 m và Suối Tiên 1,3 km, Wanderlust Hotel cung cấp chỗ nghỉ với WiFi miễn phí. Chỗ nghỉ này nằm trong bán kính 17 km từ Sân golf Sea Link, 18 km từ Bến xe Bình Thuận và 19 km từ ga Phan Thiết.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Wanderlust%20Hotel/465910803.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Wanderlust%20Hotel/465910803.jpg'),
 
-INSERT INTO HOTEL VALUES(28, N'Sea Night Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(28, N'Sea Night Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'N4 - 11 Phan Trung, Phú Thuỷ, Khu đô thị phố biển Phan Thiết, Bình Thuận',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi biển Đồi Dương 700 m, Sea Night Hotel có chỗ nghỉ với sảnh khách chung, chỗ đỗ xe riêng miễn phí, sân hiên và quầy bar. Khách sạn này nằm trong bán kính khoảng 2,4 km từ Bãi biển Thương Chánh và 700 m từ Sân golf Sea Link',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sea%20Night%20Hotel/333122531.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sea%20Night%20Hotel/333122531.jpg'),
 
-INSERT INTO HOTEL VALUES(29, N'EMERALD OCEAN HOTEL', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(29, N'EMERALD OCEAN HOTEL', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'D5/01 Khu Đô Thị Du Lịch Biển - Phú Thủy - Phan Thiết, Phan Thiết',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bến xe Bình Thuận 2,7 km, EMERALD OCEAN HOTEL cung cấp chỗ nghỉ với nhà hàng, chỗ đỗ xe riêng miễn phí, quán bar và sân hiên. Khách sạn này nằm trong bán kính khoảng 5 km từ Phố ẩm thực Phan Thiết, 2,5 km từ Bảo tàng Hồ Chí Minh và 2,6 km từ Cảng cá Phan Thiết. ',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/EMERALD%20OCEAN%20HOTEL/426295909.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/EMERALD%20OCEAN%20HOTEL/426295909.jpg'),
 
-INSERT INTO HOTEL VALUES(30, N'TIFFANY HOTEL & RESTAURANT', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(30, N'TIFFANY HOTEL & RESTAURANT', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'D3 79-80 Khu Đô Thị Biển Phan Thiết, Phường Phú Thuỷ, Thành Phố Phan Thiết',
  	4, 0,
 	N'TIFFANY HOTEL & RESTAURANT là khách sạn 3 sao tọa lạc tại Phan Thiết, đối diện với bãi biển. Ngoài dịch vụ phòng, nơi nghỉ này còn chào đón du khách với nhà hàng, công viên nước và sân hiên. Khách sạn cũng cung cấp Wi-Fi miễn phí cũng như dịch vụ đưa đón sân bay có tính phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/TIFFANY%20HOTEL%20%26%20RESTAURANT/411699222.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/TIFFANY%20HOTEL%20%26%20RESTAURANT/411699222.jpg'),
 	
-INSERT INTO HOTEL VALUES(31, N'Long Life Riverside Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+(31, N'Long Life Riverside Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'61 Nguyễn Phúc Chu, Minh An, Hội An',
  	4, 0,
 	N'Chỉ mất 2 phút đi dạo ngắn từ Long Life Riverside Hotel là du khách có thể đến Phố Cổ Hội An nổi tiếng, Di sản thế giới được UNESCO công nhận. Khách sạn boutique này có hồ bơi ngoài trời và các lựa chọn ăn uống ngay trong khuôn viên. Du khách có thể truy cập Wi-Fi miễn phí ở tất cả các khu vực.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/117079623.jpg');
-INSERT INTO HOTEL VALUES(32, N'Hoi An Dream City Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/117079623.jpg'),
+(32, N'Hoi An Dream City Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N' 39 Trần Cao Vân, Sơn Phong, Hội An',
  	5, 0,
 	N'Nằm cách Phố Cổ Hội An 5 phút đi bộ, Hoi An Dream City Hotel có hồ bơi ngoài trời cũng như nhà hàng trong khuôn viên. Khách sạn này cung cấp chỗ nghỉ ấm cúng với Wi-Fi miễn phí.Tất cả phòng nghỉ tại đây đều có cửa sổ lớn, máy điều hòa và không gian lớn hơn. TV truyền hình cáp màn hình phẳng và bàn làm việc cũng được trang bị trong phòng.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121432858.jpg');
-INSERT INTO HOTEL VALUES(33, N'Hoa My II Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121432858.jpg'),
+(33, N'Hoa My II Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'44 Trần Cao Vân, Sơn Phong, Hội An',
  	4, 0,
 	N'Hoa My II có nhà hàng, hồ bơi trong nhà và cung cấp các phòng với Wi-Fi miễn phí. Nằm trên đường Trần Cao Vân, khách sạn cách vài bước chân từ khu trung tâm thành phố Hội An, Di sản Thế giới được UNESCO công nhận. Tất cả các phòng đều được trang bị máy điều hòa và cho tầm nhìn ra quang cảnh thành phố.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433652.jpg');
-INSERT INTO HOTEL VALUES(34, N'HOI AN HISTORIC HOTEL', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433652.jpg'),
+(34, N'HOI AN HISTORIC HOTEL', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'10 Trần Hưng Đạo, Sơn Phong, Hội An',
  	5, 0,
 	N'Tọa lạc tại vị trí lý tưởng ở thành phố Hội An, HOI AN HISTORIC HOTEL cung cấp phòng nghỉ gắn máy điều hòa với WiFi miễn phí, chỗ đỗ xe riêng miễn phí và dịch vụ phòng. Khách sạn này có xe đạp cho khách sử dụng miễn phí, khu vườn, quầy bar, trung tâm thể dục, hồ bơi ngoài trời mở cửa quanh năm và sân hiên. Du khách có thể dùng bữa tại nhà hàng.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302775.jpg');
-INSERT INTO HOTEL VALUES(35, N'HY Local Budget Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302775.jpg'),
+(35, N'HY Local Budget Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'694 Đường Hai Bà Trưng phường Cẩm Phô, TP Hội An',
  	5, 0,
 	N'Tọa lạc tại vị trí tuyệt đẹp ở thành phố Hội An, HY Local Budget Hotel by Hoianese - 5 mins walk to Hoi An Ancient Town có phòng nghỉ gắn máy điều hòa, nhà hàng, WiFi miễn phí và quầy bar. Khách sạn 1 sao này cung cấp dịch vụ phòng và dịch vụ tiền sảnh. Một số phòng nghỉ tại đây có ban công nhìn ra thành phố.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/336597848.jpg');
-INSERT INTO HOTEL VALUES(36, N'Golden River Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/336597848.jpg'),
+(36, N'Golden River Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N' 04 Nguyễn Phúc Nguyên, Minh An, TP Hội An',
  	5, 0,
 	N'Golden River Hotel nằm chỉ một vài bước chân từ phố cổ Hội An và cung cấp chỗ ở thoải mái, hồ bơi trong nhà và Wi-Fi miễn phí. Ngay trong khuôn viên khách sạn còn có nhà hàng. Các phòng nghỉ của khách sạn Golden River được trang bị máy lạnh đầy đủ và truyền hình cáp màn hình phẳng, minibar và khu vực tiếp khách. Các phòng đều có phòng tắm riêng với đồ vệ sinh cá nhân miễn phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239870611.jpg');
-INSERT INTO HOTEL VALUES(37, N'Hoi An Pho Library Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239870611.jpg'),
+(37, N'Hoi An Pho Library Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'96 Bà Triệu, phường Cẩm Phô, TP Hội An',
  	4, 0,
 	N'Tọa lạc tại trung tâm thành phố Hội An, cách Khu Phố Cổ giàu giá trị văn hóa chỉ 5 phút đi bộ, Hoi An Pho Library Hotel chào đón du khách bằng đồ uống đồng thời cung cấp hồ bơi trên sân thượng, các phòng hiện đại với những tác phẩm thủ công của địa phương và Wi-Fi miễn phí trong toàn khuôn viên.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/64559435.jpg');
-INSERT INTO HOTEL VALUES(38, N'Uptown Hoi An Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/64559435.jpg'),
+(38, N'Uptown Hoi An Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'209 Lý Thường Kiệt, Sơn Phong, Hội An',
  	4, 0,
 	N'Tọa lạc tại thành phố Hội An, cách Bảo tàng Lịch sử Hội An 800 m, Uptown Hoi An Hotel & Spa có hồ bơi ngoài trời, khu vườn và tầm nhìn ra khu vườn. Trong số các tiện nghi của chỗ nghỉ này có nhà hàng, lễ tân 24 giờ, dịch vụ phòng và WiFi miễn phí. Nơi đây có máy ATM, dịch vụ tiền sảnh và dịch vụ thu đổi ngoại tệ cho khách.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/218594100.jpg');
-INSERT INTO HOTEL VALUES(39, N'Thanh Binh Central Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/218594100.jpg'),
+(39, N'Thanh Binh Central Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'98 Bà Triệu, Cẩm Phô, Hội An',
  	4, 0,
 	N'Tọa lạc tại trung tâm Thành phố Hội An, Thanh Binh III - Serene Hotel cung cấp các phòng nghỉ trang nhã với Wi-Fi miễn phí và tầm nhìn ra quang cảnh hồ bơi/thành phố. Khách sạn có spa và hồ bơi ngoài trời.hanh Binh III Hotel tọa lạc tại vị trí thuận tiện nằm trong bán kính chưa đến 5 phút đi bộ từ Khu Phố Cổ, nơi có các điểm tham quan như Bảo tàng Chứng tích Chiến tranh.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/246386236.jpg');
-INSERT INTO HOTEL VALUES(40, N'Thanh Van 1 Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/246386236.jpg'),
+(40, N'Thanh Van 1 Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'78 Trần Hưng Đạo, Sơn Phong, Hội An',
  	5, 0,
 	N'Thanh Van 1 Hotel ở Phố Cổ Hội An, cách Bãi biển An Bàng một đoạn tản bộ. Wi-Fi được cung cấp miễn phí trong toàn bộ khuôn viên nơi này.Các phòng máy lạnh tại Thanh Van 1 Hotel cung cấp tầm nhìn tuyệt vời hướng ra khu vườn. Trong phòng có các tiện nghi phòng tắm riêng, không gian tiếp khách rộng rãi và bàn làm việc.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059761.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059761.jpg'),
 
 
-INSERT INTO HOTEL VALUES(42, N'Minh Phú 2 Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+(42, N'Minh Phú 2 Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
 	N'25 Đường Trần Khánh Dư, Đà Lạt,',
  	2, 0,
 	N'Minh Phú 2 Hotel tọa lạc tại thành phố Đà Lạt, cách Câu lạc bộ Golf Dalat Palace 1,1 km và Vườn hoa Đà Lạt 1,9 km. Với Wi-Fi miễn phí, khách sạn 1 sao này có quầy lễ tân 24 giờ và dịch vụ trợ giúp đặc biệt. Tại đây có bãi đậu xe riêng miễn phí và chỗ nghỉ cung cấp dịch vụ đưa đón sân bay có tính phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/487331477.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/487331477.jpg'),
 
-INSERT INTO HOTEL VALUES(43, N'Torino Hotel Dalat', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+(43, N'Torino Hotel Dalat', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
 	N'45 Đường Thủ Khoa Huân, Đà Lạt,',
  	5, 0,
 	N'Nằm ở thành phố Đà Lạt, Torino Hotel Dalat có sảnh khách chung, sân hiên, nhà hàng và quầy bar. Khách sạn 2 sao này cung cấp dịch vụ phòng, dịch vụ tiền sảnh, dịch vụ lễ tân 24 giờ, dịch vụ đưa đón sân bay, khu vực bếp chung và WiFi miễn phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/471041099.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/471041099.jpg'),
 
-INSERT INTO HOTEL VALUES(44, N'HouseChill Dalat Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+(44, N'HouseChill Dalat Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
 	N'Đường Hà Huy Tập 6 Tầng, Đà Lạt',
  	5, 0,
 	N'Nằm ở Đà Lạt, cách Quảng trường Lâm Viên 1,2 km, HouseChill Dalat Hotel cung cấp chỗ nghỉ với nhà hàng, chỗ đỗ xe riêng miễn phí và quán bar. Khách sạn 2 sao này có dịch vụ trợ giúp đặc biệt và bàn đặt tour. Chỗ nghỉ có quầy lễ tân 24 giờ, dịch vụ đưa đón sân bay, dịch vụ phòng và WiFi miễn phí trong toàn bộ khuôn viên.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481510906.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481510906.jpg'),
 
-INSERT INTO HOTEL VALUES(45, N'Dalat Wind Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+(45, N'Dalat Wind Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
 	N'Lô R2 03-04. Thung lũng Golf, Phường 2, Đà Lạt',
  	3, 0,
 	N'Tọa lạc tại thành phố Đà Lạt, cách Hồ Xuân Hương 500 m, Dalat Wind Hotel là khách sạn 2 sao có lễ tân 24 giờ, sảnh khách chung, Wi-Fi và chỗ đỗ xe riêng miễn phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402605354.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402605354.jpg'),
 
-INSERT INTO HOTEL VALUES(46, N'Vuon Xuan Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+(46, N'Vuon Xuan Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
 	N'40 Đường Tô Hiến Thành, Đà Lạt',
  	5, 0,
 	N'Tọa lạc tại thành phố Đà Lạt, cách Công viên Yersin 1,6 km, Vuon Xuan Hotel cung cấp chỗ nghỉ với vườn, chỗ đỗ xe riêng miễn phí và sân hiên. Khách sạn 3 sao này có bếp chung, dịch vụ phòng, lễ tân 24 giờ, dịch vụ tiền sảnh và tổ chức các tour du lịch cho khách.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976426.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976426.jpg'),
 
-INSERT INTO HOTEL VALUES(47, N'Sunset Hill Dalat', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+(47, N'Sunset Hill Dalat', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
 	N'5/24 Nguyễn Hữu Cảnh, Phường 8, Đà Lạt',
  	5, 0,
 	N'Tọa lạc tại thành phố Đà Lạt, cách Câu lạc bộ Golf Dalat Palace 2,1 km, Sunset Hill Dalat cung cấp chỗ nghỉ với vườn, chỗ đỗ xe riêng miễn phí, sảnh khách chung và sân hiên. Khách sạn 3 sao này có dịch vụ trợ giúp đặc biệt và bàn bán tour. Chỗ nghỉ có quầy lễ tân 24 giờ, dịch vụ đưa đón sân bay, dịch vụ phòng và WiFi miễn phí trong toàn bộ khuôn viên.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/480342705.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/480342705.jpg'),
 
-INSERT INTO HOTEL VALUES(48, N'AN Boutique Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+(48, N'AN Boutique Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
 	N'138 Bùi Thị Xuân, phường 2, thành phố Đà Lạt',
  	4, 0,
 	N'Tọa lạc tại thành phố Đà Lạt, cách sân golf Dalat Palace Golf Club 1,5 km, AN Boutique Hotel có dịch vụ tiền sảnh, phòng nghỉ không hút thuốc, khu vườn, WiFi miễn phí, sảnh khách chung và sân hiên. Khách sạn 3 sao này cung cấp dịch vụ phòng, dịch vụ lễ tân 24 giờ và dịch vụ thu đổi ngoại tệ cho khách.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429887656.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429887656.jpg'),
 
-INSERT INTO HOTEL VALUES(49, N'Đảo Hoa Dalat Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+(49, N'Đảo Hoa Dalat Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
 	N'56 Đường Phạm Ngũ Lão, Đà Lạt',
  	4, 0,
 	N'Đảo Hoa Đà Lạt Hotel tọa lạc tại thành phố Đà Lạt, cách Hồ Xuân Hương 1,6 km và Công viên Yersin Đà Lạt 1,8 km. Khách sạn 2 sao này cung cấp dịch vụ phòng và lễ tân 24 giờ. Chỗ nghỉ cấm hút thuốc và cách Quảng trường Lâm Viên 1,4 km.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487047698.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487047698.jpg'),
 
-INSERT INTO HOTEL VALUES(50, N'Hạ Na Hotel Đà Lạt', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+(50, N'Hạ Na Hotel Đà Lạt', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
 	N'Hẻm 163 Ba Tháng Hai, Đà Lạt',
  	5, 0,
 	N'Nằm ở thành phố Đà Lạt, cách Quảng trường Lâm Viên 1,9 km, Hạ Na Hotel Đà Lạt cung cấp chỗ nghỉ với sảnh khách chung, chỗ đỗ xe riêng miễn phí và sân hiên. Chỗ nghỉ này nằm trong bán kính 2,1 km từ Hồ Xuân Hương, 2,2 km từ Công viên Yersin và 3,1 km từ Vườn hoa Đà Lạt. Nơi đây cung cấp dịch vụ lễ tân 24 giờ, dịch vụ đưa đón sân bay, khu bếp chung và WiFi miễn phí trong toàn bộ khuôn viên.',
 	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/346439681.jpg');
 
-
+UPDATE HOTEL SET AccountId = 0;
 
 --!add room Facility
 INSERT INTO FACILITY_CONST VALUES(1,'SWIMMING_POOL');

@@ -134,7 +134,7 @@ namespace SunriseServerData.Repositories
                 builder.Append($", @Year={year};");
             }
 
-            Console.WriteLine("\t", builder.ToString());
+            Console.WriteLine(builder.ToString());
             
             return await _dataContext.Set<YealyRevenue>()
                 .FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
@@ -149,7 +149,7 @@ namespace SunriseServerData.Repositories
                 builder.Append($", @Date=\'{date?.ToString("MM-dd-yyyy")}\';");
             }
 
-            Console.WriteLine("\t", builder.ToString());
+            Console.WriteLine(builder.ToString());
             
             var result = await _dataContext.Set<WeeklyRevenue>()
                 .FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();

@@ -21,7 +21,8 @@ const searchSchema = z.object({
   currentPage: z.number(),
   totalPages: z.number(),
   hasNext: z.boolean(),
-  hasPrevious: z.boolean()
+  hasPrevious: z.boolean(),
+  totalCount: z.number(),
 })
 
 

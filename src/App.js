@@ -24,6 +24,7 @@ const CountryPage = lazy(() => import("./pages/Country/Country"));
 const VoucherShop = lazy(() => import("./pages/VoucherShop/VoucherShop"));
 const Checkout = lazy(() => import("./pages/Checkout/Checkout"));
 const SuccessOrder = lazy(() => import("./pages/SuccessOrder/SuccessOrder"));
+const Orders = lazy(() => import("./pages/Orders/Orders"));
 const AuthenticationPage = lazy(() =>
   import("./pages/Authentication/Authentication")
 );
@@ -115,6 +116,14 @@ function App() {
                 element={
                   <UserPageLayout>
                     <SuccessOrder />
+                  </UserPageLayout>
+                }
+              />
+              <Route
+                path={PAGES.ORDERS}
+                element={
+                  <UserPageLayout>
+                    <Orders />
                   </UserPageLayout>
                 }
               />

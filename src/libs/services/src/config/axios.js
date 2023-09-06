@@ -16,7 +16,6 @@ const axiosMockAdapterInstance = new AxiosMockAdapter(axiosMockInstance, {
   delayResponse: MOCK_API.DELAY_RESPONSE_MOCK_API,
 });
 
-console.log(authServiceConfig.isMockApi && isDevelopment());
 const axios =
   authServiceConfig.isMockApi && isDevelopment()
     ? axiosMockInstance

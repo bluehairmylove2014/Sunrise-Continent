@@ -127,9 +127,11 @@ const OrderDetailPicker = React.forwardRef(
       <form
         className="room__pre-checkout-picker"
         ref={ref}
-        onSubmit={form.handleSubmit((data) =>
-          onPreCheckout(data, roomDetail[0])
+        onSubmit={form.handleSubmit(
+          (data) => onPreCheckout(data, roomDetail[0]),
+          (error) => toast.error(error[Object.keys(error)[0]].message)
         )}
+        noValidate
       >
         {isCheckingRoomAvailable && (
           <div className="pre-checkout-picker__loading">

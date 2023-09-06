@@ -1,4 +1,8 @@
 @import '../partial/mixin';
+// Responsive settings
+$desktop-breakpoint: 1024px;
+$tablet-breakpoint: 768px;
+$mobile-breakpoint: 480px;
 
 .header {
     position: sticky;
@@ -349,7 +353,7 @@
             margin: 0 1rem 0 2rem;
             position: relative;
             // border - border radius - background color - color - padding - font size
-            @include normal-btn(1.5px solid black, 5px, white, black, 15px 26px, 14px);
+            @include normal-btn(1.5px solid black, 5px, transparent, black, 15px 26px, 14px);
             position: relative;
             width: 7rem;
 
@@ -395,6 +399,7 @@
 
         .product-nav__wish-list:hover {
             background-color: red;
+            border-color: red;
 
             .wishlist__length {
                 opacity: 0;
@@ -711,6 +716,24 @@
                     height: 20px;
                 }
             }
+        }
+    }
+}
+
+@media (max-width: $desktop-breakpoint) {
+    .header .header__product-nav .product-nav__wish-list {
+        padding: 10px 26px;
+
+        .wishlist-btn__label {
+            font-size: 0.75rem;
+        }
+    }
+
+    .header .header__product-nav .product-nav__wish-list,
+    .header .header__product-nav .product-nav__cart .cart-btn__label {
+        img {
+            width: 20px;
+            height: 20px;
         }
     }
 }

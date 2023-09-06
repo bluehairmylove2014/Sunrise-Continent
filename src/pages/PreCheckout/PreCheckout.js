@@ -27,6 +27,7 @@ import { useEffect } from "react";
 import { isEqual } from "lodash";
 import { isValidEmail } from "../../utils/validators/email.validator";
 import { isValidPhoneNumber } from "../../utils/validators/phoneNumber.validator";
+import { useGetUser } from "../../libs/business-logic/src/lib/auth/process/hooks";
 
 const calculateTotal = (rooms, voucher, nightCount) => {
   let total = rooms.reduce((acc, roomData) => {
@@ -41,6 +42,7 @@ const calculateTotal = (rooms, voucher, nightCount) => {
 };
 
 const PreCheckout = () => {
+  const userData = useGetUser();
   const selectedRoomsObject = getOrderLocalStorage();
   const [oldOrderDetail, setOldOrderDetail] = useState(selectedRoomsObject);
   // Extract common fields from the first order
@@ -108,6 +110,16 @@ const PreCheckout = () => {
   const [total, setTotal] = useState(
     calculateTotal(roomsData, sunriseVoucher, night)
   );
+
+  useEffect(() => {
+    if (userData) {
+      contactForm.setValue("fullName", userData.fullName);
+      typeof userData.dateOfBirth === "string" &&
+        userData.dateOfBirth.length > 0 &&
+        contactForm.setValue("dob", userData.dateOfBirth.substring(0, 10));
+      contactForm.setValue("email", userData.emailAddress);
+    }
+  }, [userData]);
 
   useEffect(() => {
     if (selectedRoomsObject && !isEqual(selectedRoomsObject, oldOrderDetail)) {

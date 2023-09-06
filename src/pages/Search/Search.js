@@ -61,6 +61,7 @@ function createCheckboxDefaultValue(inputObject) {
   return checkboxNames;
 }
 const Search = () => {
+  const [totalHotels, setTotalHotels] = useState(0);
   const [selectedSort, setSelectedSort] = useState(null);
   const { onSearch, isLoading: isSearching } = useSearch();
   const sortDropdownRef = useRef(null);
@@ -124,6 +125,7 @@ const Search = () => {
       })
         .then((data) => {
           if (data) {
+            setTotalHotels(data.totalCount);
             setHotels(data.hotelList);
             setPagination({
               currentPage: data.currentPage,
@@ -211,6 +213,14 @@ const Search = () => {
       }
     }
 
+    const keysToExclude = ["sortingCol", "sortType"];
+
+    // Sử dụng Object.entries() để lọc và tạo đối tượng mới
+    newCriteria = Object.fromEntries(
+      Object.entries(newCriteria).filter(
+        ([key]) => !keysToExclude.includes(key)
+      )
+    );
     let paramsCriteria = { ...newCriteria };
     if (newBudget) {
       newCriteria = {
@@ -310,11 +320,8 @@ const Search = () => {
                 <small>
                   Hiển thị{" "}
                   {calculateFromIndex(pagination.currentPage, itemsPerPage)} -{" "}
-                  {pagination.currentPage * itemsPerPage} trong{" "}
-                  {Number(pagination.maxPage * itemsPerPage).toLocaleString(
-                    "en"
-                  )}{" "}
-                  kết quả
+                  {Math.min(pagination.currentPage * itemsPerPage, totalHotels)}{" "}
+                  trong {totalHotels} kết quả
                 </small>
               </div>
               <hr />

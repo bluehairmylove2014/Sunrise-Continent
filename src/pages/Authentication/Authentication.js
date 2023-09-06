@@ -222,24 +222,28 @@ const Authentication = () => {
                       <Link
                         to="https://www.facebook.com/MinMinPD2211/"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <i className="fi fi-brands-facebook"></i>
                       </Link>
                       <Link
                         to="https://twitter.com/PHAN_DUONG_MINH"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <i className="fi fi-brands-twitter"></i>
                       </Link>
                       <Link
                         to="https://www.youtube.com/channel/UCD2T2jAlO282XPmDfftRpvw"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <i className="fi fi-brands-youtube"></i>
                       </Link>
                       <Link
                         to="https://www.linkedin.com/in/phan-phúc-đạt-b88871243/"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <i className="fi fi-brands-linkedin"></i>
                       </Link>
@@ -341,14 +345,15 @@ const Authentication = () => {
                       className="authen-form__social-btn google"
                       type="button"
                       onClick={handleGoogleLogin}
-                      disabled={isGoogleLoginLoading}
+                      // disabled={isGoogleLoginLoading}
                     >
                       <img src={googleIcon} alt="social" />
-                      <span>
+                      {/* <span>
                         {isGoogleLoginLoading
                           ? `In process`
                           : `Login with google`}
-                      </span>
+                      </span> */}
+                      <span>Login with google</span>
                     </button>
                   </div>
 

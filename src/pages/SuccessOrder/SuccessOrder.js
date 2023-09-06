@@ -59,7 +59,7 @@ const SuccessOrder = () => {
   return hotelData && Array.isArray(roomsData) ? (
     <main className="pre-checkout">
       <div className="container">
-        <h3>Điền thông tin liên hệ</h3>
+        <h3>ĐẶT PHÒNG THÀNH CÔNG!</h3>
         <h3>Thông tin đặt phòng</h3>
         <form noValidate>
           <section className="contact">

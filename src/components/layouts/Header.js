@@ -257,7 +257,7 @@ const Header = () => {
                   {partner.category_name}
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <div className="header-main-nav__language">
                   <NavDropdown
                     name="Tiếng Việt"
@@ -266,7 +266,7 @@ const Header = () => {
                     options={languages}
                   />
                 </div>
-              </li>
+              </li> */}
             </ul>
             <ul
               className={`header-main-nav__user-interact ${
@@ -347,7 +347,7 @@ const Header = () => {
                   {Array.isArray(wishlist) ? wishlist.length : 0}
                 </div>
                 <span className="wishlist-btn__label">
-                  <i className="fi fi-rs-heart"></i>
+                  <i className="fi fi-bs-heart"></i>
                   Wish List
                 </span>
                 <span className="wishlist-btn__content">

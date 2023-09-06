@@ -65,7 +65,7 @@ const Pagination = ({
           {calculateToIndex(data, state.currentPage, maxElementPerPage)} trong{" "}
           {data.length} khách sạn nổi bật
         </p>
-        {data.length > 1 && (
+        {data.length >= 1 && (
           <div className="home-trending__page-pagination">
             <button
               disabled={state.currentPage === 1}
@@ -121,7 +121,7 @@ const Pagination = ({
   const simplePagination = ({ data }) => {
     return (
       <div className="home-trending__page-pagination-wrapper">
-        {data.length > 1 && (
+        {data.length >= 1 && (
           <div className="home-trending__page-pagination">
             <button
               disabled={state.currentPage === 1}

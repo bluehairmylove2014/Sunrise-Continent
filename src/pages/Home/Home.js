@@ -15,7 +15,7 @@ import FireIcon from "../../assets/images/icons/fire.svg";
 import CityGraphic from "../../assets/images/bgs/360_F_63940372_ghZQzzZEwektiDoOroft0eNNZlC66k5c.png";
 
 // img
-import VietnamField from "../../assets/images/bgs/Mountain.png";
+// import VietnamField from "../../assets/images/bgs/Mountain.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { stringifySearchParams } from "../../utils/helpers/params";
 import { useGetHotHotelQuery } from "../../libs/business-logic/src/lib/hotel/fetching/query";
@@ -400,10 +400,10 @@ const Home = () => {
         )}
       </section>
 
-      <section className="home__why-choosing-us">
-        {/* why-choosing-us header background */}
-        <img src={VietnamField} alt="Vietnam field" />
-      </section>
+      {/* <section className="home__why-choosing-us"> */}
+      {/* why-choosing-us header background */}
+      {/* <img src={VietnamField} alt="Vietnam field" /> */}
+      {/* </section> */}
     </main>
   );
 };

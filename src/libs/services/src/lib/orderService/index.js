@@ -3,6 +3,7 @@ import { Services } from "../../service";
 import {
   getCouponResponseSchema,
   getOrderTaxResponseSchema,
+  getOrdersSchema,
   getShippingResponseSchema,
   updateOrderResponseSchema,
 } from "./schema";
@@ -17,6 +18,7 @@ export class OrderService extends Services {
   getTaxUrl = "/order/get-tax";
   getCouponUrl = "/order/get-coupon";
   updateOrderUrl = "/order";
+  getOrderUrl = "/order";
 
   getShipping = async (params) => {
     this.abortController = new AbortController();
@@ -123,6 +125,37 @@ export class OrderService extends Services {
     } catch (error) {
       if (this.isCancel(error)) {
         // Handle other errors
+        throw error;
+      } else if (isAxiosError(error)) {
+        throw new Error(
+          error.response ? error.response.data.message : unknownErrorMsg
+        );
+      }
+      throw new Error(unknownErrorMsg);
+    }
+  };
+  getOrders = async (token) => {
+    this.abortController = new AbortController();
+    try {
+      if(!token) {
+        return null
+      }
+      else {
+        const response = await this.fetchApi({
+          method: "GET",
+          url: this.getOrderUrl,
+          schema: getOrdersSchema,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          signal: this.abortController.signal,
+          transformResponse: (res) => res,
+          isProduction: true
+        });
+        return response;
+      }
+    } catch (error) {
+      if (this.isCancel(error)) {
         throw error;
       } else if (isAxiosError(error)) {
         throw new Error(

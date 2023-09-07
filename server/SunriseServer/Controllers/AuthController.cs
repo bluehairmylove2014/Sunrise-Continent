@@ -219,13 +219,7 @@ namespace SunriseServer.Controllers
                 });
             }
 
-            if (!acc.RefreshToken.Equals(refreshToken))
-            {
-                return Unauthorized(new {
-                    message = "Refresh Token không hợp lệ"
-                });
-            }
-            else if (acc.TokenExpires < DateTime.Now)
+            if (acc.TokenExpires < DateTime.Now)
             {
                 return Unauthorized(new {
                     message = "Refresh Token đã hết hạn, vui lòng đăng nhập lại"

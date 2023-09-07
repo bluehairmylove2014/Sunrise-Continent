@@ -1,4 +1,5 @@
-﻿using SunriseServerCore.Models;
+﻿using SunriseServerCore.Dtos;
+using SunriseServerCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace SunriseServerCore.RepoInterfaces
     {
         Task<List<Review>> GetHotelReviewAsync(int id);
         Task<WeeklyStatistics> GetHotelWeeklyTotalReviewAsync(int hotelId, DateTime? date);
+        Task<int> AddHotelReviewAsync(int accountId, AddReviewDto reviewDto);
     }
 }

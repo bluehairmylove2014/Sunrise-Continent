@@ -3,14 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using SunriseServerData;
 using SunriseServerCore.Models;
 using SunriseServerCore.RepoInterfaces;
-using SunriseServer.Common.Helper;
-using SunriseServerCore.Dtos.Room;
-using Microsoft.Data.SqlClient;
+using SunriseServerCore.Dtos;
 
 namespace SunriseServerData.Repositories
 {
@@ -41,6 +36,20 @@ namespace SunriseServerData.Repositories
             var result = (await _dataContext.Set<WeeklyStatistics>()
                 .FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync()).FirstOrDefault();
 
+            return result;
+        }
+
+        public async Task<int> AddHotelReviewAsync(int accountId, AddReviewDto reviewDto)
+        {
+            var builder = new StringBuilder("EXEC USP_AddReview ");
+            builder.Append($"@AccountId={accountId}, ");
+            builder.Append($"@HotelId={reviewDto.HotelId}, ");
+            builder.Append($"@Points={reviewDto.Points}, ");
+            builder.Append($"@Content=N\'{reviewDto.Content}\';");
+
+            Console.WriteLine(builder.ToString());
+            var result = await _dataContext.Database
+                .ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
             return result;
         }
     }

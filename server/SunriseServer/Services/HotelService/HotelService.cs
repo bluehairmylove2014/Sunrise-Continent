@@ -112,5 +112,10 @@ namespace SunriseServer.Services.HotelService
         {
             return await _unitOfWork.HotelRepo.GetHotelTopUserAsync(hotelId);
         }
+
+        public async Task<int> AddHotelReview(int accountId, AddReviewDto reviewDto)
+        {
+            return await _unitOfWork.ReviewRepo.AddHotelReviewAsync(accountId, reviewDto);
+        }
     }
 }

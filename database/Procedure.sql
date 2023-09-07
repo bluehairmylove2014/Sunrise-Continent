@@ -17,7 +17,9 @@ RETURNS FLOAT
 BEGIN
 	declare @Value FLOAT
 	SET @Value = (SELECT AVG(Points) FROM REVIEW WHERE HotelId = @HotelId)
-	IF @Value IS NULL RETURN 0
+	IF (@Value IS NULL)
+		SET @Value = 10.0;
+
     RETURN @Value
 END
 GO
@@ -235,7 +237,7 @@ BEGIN
 		DECLARE @Id INT
 		EXEC @Id = USP_GetNextColumnId 'HOTEL', 'Id';
 		
-		INSERT INTO HOTEL VALUES (@Id, @Name, @Country, @HotelType, @ProvinceCity, @Address, @Stars, 0, @Description, @Image, @AccountId);
+		INSERT INTO HOTEL VALUES (@Id, @Name, @Country, @HotelType, @ProvinceCity, @Address, @Stars, 10.0, @Description, @Image, @AccountId);
 		UPDATE PERSONAL_DETAILS SET HotelId = @Id WHERE AccountId = @AccountId;
 	END TRY
 

@@ -306,5 +306,23 @@ namespace SunriseServer.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost("review"), Authorize(Roles = GlobalConstant.User)]
+        public async Task<ActionResult<ResponseMessageDetails<int>>> AddHotelReview(AddReviewDto review)
+        {
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            var result = 0;
+
+            try
+            {
+                result = await _hotelService.AddHotelReview(accountId, review);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new ResponseMessageDetails<int>(exception.Message, ResponseStatusCode.BadRequest));
+            }
+
+            return Ok(new ResponseMessageDetails<int>("Đánh giá khách sạn thành công", result));
+        }
     }
 }

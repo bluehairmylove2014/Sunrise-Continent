@@ -39,15 +39,10 @@ const Breadcrumb = () => {
         },
       ];
     }
-    console.log(newTabList);
     setBreadcrumbsLocalStorage(newTabList);
     setTabList(getBreadcrumbsLocalStorage());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
-
-  useEffect(() => {
-    console.log(tabList);
-  }, [tabList]);
 
   return (
     <div className="breadcrumb">

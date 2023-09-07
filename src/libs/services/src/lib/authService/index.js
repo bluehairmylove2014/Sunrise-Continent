@@ -51,7 +51,6 @@ export class AuthService extends Services {
         transformResponse: (res) => res,
         isProduction: true,
       });
-      // console.log(response)
       return response;
     } catch (error) {
       if (this.isCancel(error)) {
@@ -67,7 +66,6 @@ export class AuthService extends Services {
   };
   refreshToken = async (refreshToken) => {
     this.abortController = new AbortController();
-    console.log("REFRESH TOKEN: ", refreshToken);
     try {
       const response = await this.fetchApi({
         method: "POST",

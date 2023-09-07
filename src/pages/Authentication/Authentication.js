@@ -242,7 +242,7 @@ const Authentication = () => {
                         <i className="fi fi-brands-youtube"></i>
                       </Link>
                       <Link
-                        to="https://www.linkedin.com/in/phan-phúc-đạt-b88871243/"
+                        to="https://www.linkedin.com/in/blue-hair2014/"
                         target="_blank"
                         rel="noopener noreferrer"
                       >

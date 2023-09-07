@@ -46,7 +46,6 @@ export const withAuthenticateUrl = (WrappedComponent) => {
           typeof window !== "undefined"
             ? JSON.parse(window.localStorage.getItem(LOCAL_STORAGE_KEYS.ORDER))
             : null;
-        console.log("CHECK: ", localOrder);
         if (
           needLocalOrderUrls.find((u) => currentPathname.includes(u.authUrl)) &&
           !localOrder

@@ -16,6 +16,8 @@ using SunriseServerCore.Dtos.Hotel;
 using SunriseServer.Services.CacheService;
 using SunriseServerCore.Common.Helper;
 using Newtonsoft.Json;
+using System.Security.Claims;
+using SunriseServer.Services.AccountService;
 
 namespace SunriseServer.Controllers
 {
@@ -28,11 +30,13 @@ namespace SunriseServer.Controllers
         readonly IHotelService _hotelService;
         readonly IRoomService _roomService;
         readonly ICacheService _cacheService;
+        readonly IAccountService _accountService;
 
-        public HotelController(IHotelService hotelService, IRoomService roomService, ICacheService cacheService)
+        public HotelController(IHotelService hotelService, IRoomService roomService, ICacheService cacheService, IAccountService accountService)
         {
             _hotelService = hotelService;
             _roomService = roomService;
+            _accountService = accountService;
             _cacheService = cacheService;
         }
 
@@ -61,11 +65,6 @@ namespace SunriseServer.Controllers
         [HttpGet("")]
         public async Task<ActionResult<List<HotelDto>>> GetAllHotelInfo()
         {
-            var cacheHotelData = _cacheService.GetData<IEnumerable<HotelDto>>("hotels");
-
-            if (cacheHotelData != null && cacheHotelData.Count() > 0)
-                return Ok(cacheHotelData);
-
             var result = await _hotelService.GetAllHotels();
 
             var finalResult = new List<HotelDto>();
@@ -75,30 +74,19 @@ namespace SunriseServer.Controllers
                 finalResult.Add(await TransferHotelData(item));
             }
 
-            // Set expiry time
-            var expiryTime = DateTimeOffset.Now.AddSeconds(120);
-            _cacheService.SetData<IEnumerable<HotelDto>>("hotels", finalResult, expiryTime);
-
             return Ok(finalResult);
         }
 
         [HttpGet("single")]
         public async Task<ActionResult<HotelDto>> GetSingleHotel(int id)
         {
-            var cacheHotelData = _cacheService.GetData<HotelDto>($"hotel{id}");
-
-            if (cacheHotelData != null)
-                return Ok(cacheHotelData);
-
             var rawData = await _hotelService.GetSingleHotel(id);
             if (rawData is null)
-                return NotFound("Hotel not found.");
+                return NotFound(new {
+                    message = "Không tìm được khách sạn."
+                });
 
             var result = await TransferHotelData(rawData);
-
-            // Set expiry time
-            var expiryTime = DateTimeOffset.Now.AddSeconds(120);
-            _cacheService.SetData<HotelDto>($"hotel{id}", result, expiryTime);
 
             return Ok(result);
         }
@@ -112,24 +100,15 @@ namespace SunriseServer.Controllers
         [HttpGet("recommend")]
         public async Task<ActionResult<List<HotelDto>>> GetRecommendedHotel()
         {
-            var cacheHotelData = _cacheService.GetData<IEnumerable<HotelDto>>($"recommended-hotels");
-
-            if (cacheHotelData != null && cacheHotelData.Count() > 0)
-                return Ok(cacheHotelData);
-
             var rawData = await _hotelService.GetRecommendedHotel(10);
             if (rawData is null)
-                return NotFound("No Hotel available.");
+                return NotFound(rawData);
 
             var result = new List<HotelDto>();
             foreach(var item in rawData)
             {
                 result.Add(await TransferHotelData(item));
             };
-
-            // Set expiry time
-            var expiryTime = DateTimeOffset.Now.AddSeconds(120);
-            _cacheService.SetData<IEnumerable<HotelDto>>($"recommended-hotels", result, expiryTime);
 
             return Ok(result);
         }
@@ -142,38 +121,57 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpPost, Authorize(Roles = GlobalConstant.Admin)]
-        public async Task<ActionResult<ResponseMessageDetails<List<Hotel>>>> AddHotel(Hotel hotel)
+        [HttpPost, Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
+        public async Task<ActionResult<ResponseMessageDetails<int>>> AddHotel(InputHotelDto hotel)
         {
-            var result = await _hotelService.AddHotel(hotel);
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            var result = 0;
 
-            if (result is null)
-                return BadRequest("Cannot add hotel.");
+            try
+            {
+                result = await _hotelService.AddHotel(accountId, hotel); 
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message,
+                });
+            }
 
-            return Ok(new ResponseMessageDetails<Hotel>("Add hotel successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Tạo khách sạn thành công", result));
         }
 
-        [HttpPut, Authorize(Roles = GlobalConstant.Admin)]
-        public async Task<ActionResult<ResponseMessageDetails<Hotel>>> UpdateHotel(Hotel request)
+        [HttpPut, Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
+        public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateHotel(Hotel request)
         {
-            var result = await _hotelService.UpdateHotel(request);
-            if (result is null)
-                return NotFound("Hotel not found.");
+            int result;
+            try
+            {
+                result = await _hotelService.UpdateHotel(request); 
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message,
+                });
+            }
 
-            return Ok(new ResponseMessageDetails<Hotel>("Update hotel successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Cập nhật khách sạn thành công", result));
         }
 
-        [HttpDelete, Authorize(Roles = GlobalConstant.Admin)]
+        [HttpDelete, Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<Hotel>>> DeleteHotel(int id)
         {
             var result = await _hotelService.DeleteHotel(id);
-            _cacheService.RemoveData($"hotel{id}");
             if (result is null)
-                return NotFound("Hotel not found.");
+                return NotFound(new {
+                    message = "Không tìm thấy khách sạn"
+                });
 
             return Ok(new ResponseMessageDetails<Hotel>("Delete hotel successfully", result));
         }
-        //?{location}{room_type}{start_date}{end_date}{budget}{rooms}{adults}{children}
+
+        
         [HttpGet("search")]
         public async Task<ActionResult<List<HotelDto>>> GetSearchHotel(
             [FromQuery] string location,
@@ -185,56 +183,154 @@ namespace SunriseServer.Controllers
             [FromQuery] int rooms,
             [FromQuery] int adults,
             [FromQuery] int children,
-            [FromQuery] HotelPagingDto hotelDto
+            [FromQuery] PagingDto hotelDto,
+            [FromQuery] string hotelType,
+            [FromQuery] string bedType,
+            [FromQuery] string guestRating,
+            [FromQuery] string facilities,
+            [FromQuery] string service,
+            [FromQuery] string sortingCol,
+            [FromQuery] string sortType
         )
         {
             // Thêm filter sort
+            int ratingVal = 0;
+            if (guestRating is not null)
+            {
+                Enum.TryParse(guestRating, out HotelFilterEnum userPoint);
+                ratingVal = (int)userPoint;
+            }
 
             max_budget = max_budget == 0 ? Int32.MaxValue : max_budget;
             var result = await _hotelService.GetSearchHotels(
-                new SearchHotelDto(location, room_type, start_date, end_date, min_budget, max_budget, rooms, adults, children)
+                new SearchHotelDto(location, room_type, start_date, end_date, min_budget, max_budget, rooms, adults, children, new FilterHotelDto() {
+                    hotelType = hotelType,
+                    bedType = bedType,
+                    guestRating = ratingVal,
+                    facilities = facilities,
+                    service = service,
+                    sortingCol = sortingCol,
+                    sortType = sortType,
+                })
             );
 
             if (result is null)
-                return NotFound("Hotel not found.");
+                return NotFound(new {
+                    message = "Không tìm thấy khách sạn"
+                });
             
             var finalResult = new List<HotelDto>();
             foreach (var item in result)
             {
-                // var hotelInfo = await TransferHotelData(item);
                 finalResult.Add(await TransferHotelData(item));
             }
 
-            var pages = PageList<HotelDto>.ToPageList(finalResult.AsQueryable(), hotelDto.page_number, hotelDto.page_size);
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(new {
-                pages.TotalCount,
-                pages.PageSize,
-                pages.CurrentPage,
-                pages.TotalPages,
-                pages.HasNext,
-                pages.HasPrevious
-            }));
+            var hotelList = PageList<HotelDto>.ToPageList(finalResult.AsQueryable(), hotelDto.page_number, hotelDto.page_size);
 
-            return Ok(pages);
+            return Ok(new {
+                hotelList,
+                totalCount = hotelList.TotalCount,
+                pageSize = hotelList.PageSize,
+                currentPage = hotelList.CurrentPage,
+                totalPages = hotelList.TotalPages,
+                hasNext = hotelList.HasNext,
+                hasPrevious = hotelList.HasPrevious
+            });
         }
 
         [HttpGet("review")]
         public async Task<ActionResult<List<Review>>> GetAllHotelReview(int hotelId)
         {
-            var cacheHotelData = _cacheService.GetData<IEnumerable<Review>>($"reviews-hotel{hotelId}");
-
-            if (cacheHotelData != null && cacheHotelData.Count() > 0)
-                return Ok(cacheHotelData);
-            // end cache
-
             var result = await _hotelService.GetHotelReview(hotelId);
 
+            return Ok(result);
+        }
 
-            // Set expiry time
-            var expiryTime = DateTimeOffset.Now.AddSeconds(120);
-            _cacheService.SetData<IEnumerable<Review>>($"reviews-hotel{hotelId}", result, expiryTime);
+        
+        [HttpGet("yearly-revenue"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
+        public async Task<ActionResult<List<YealyRevenue>>> GetHotelYearlyRevenue(int? hotelId, int? year)
+        {
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            int checkHotelId = hotelId ?? (await _accountService.GetAccountDetailsById(accountId)).HotelId;
+            List<YealyRevenue> result = new();
+
+            if (checkHotelId == 0)
+                return BadRequest(new {
+                    message = "Tài khoản quản trị không có khách sạn",
+                });
+
+            try
+            {
+                result = await _hotelService.GetHotelYealyRevenue(checkHotelId , year);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message,
+                });
+            }
 
             return Ok(result);
+        }
+
+        [HttpGet("weekly-revenue"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
+        public async Task<ActionResult<StatisticsHotelDto>> GetHotelWeeklyRevenue(int? hotelId, DateTime? date)
+        {
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            int checkHotelId = hotelId ?? (await _accountService.GetAccountDetailsById(accountId)).HotelId;
+            StatisticsHotelDto result;
+
+            if (checkHotelId == 0)
+                return BadRequest(new {
+                    message = "Admin không sỡ hữu khách sạn.",
+                });
+
+            try
+            {
+                date ??= DateTime.Now;
+                var rawReview = await _hotelService.GetHotelWeeklyTotalReview(checkHotelId, date);
+                var rawOrder = await _hotelService.GetHotelWeeklyTotalOrder(checkHotelId, date);
+
+                result = new StatisticsHotelDto{
+                    Revenue = await _hotelService.GetHotelWeeklyRevenue(checkHotelId , date),
+                    TotalOrder = rawOrder.ThisWeek,
+                    LastOrder = rawOrder.LastWeek,
+                    TotalReview = rawReview.ThisWeek,
+                    LastReview = rawReview.LastWeek,
+                };
+                result.Revenue.ForEach(p => {
+                    result.TotalRevenue += p.ThisWeek;
+                    result.LastRevenue += p.LastWeek;
+                });
+
+                result.Accounts = await _hotelService.GetHotelTopUser(checkHotelId);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message,
+                });
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("review"), Authorize(Roles = GlobalConstant.User)]
+        public async Task<ActionResult<ResponseMessageDetails<int>>> AddHotelReview(AddReviewDto review)
+        {
+            Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
+            var result = 0;
+
+            try
+            {
+                result = await _hotelService.AddHotelReview(accountId, review);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new ResponseMessageDetails<int>(exception.Message, ResponseStatusCode.BadRequest));
+            }
+
+            return Ok(new ResponseMessageDetails<int>("Đánh giá khách sạn thành công", result));
         }
     }
 }

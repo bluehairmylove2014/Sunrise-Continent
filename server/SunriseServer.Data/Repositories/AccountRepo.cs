@@ -22,10 +22,8 @@ namespace SunriseServerData.Repositories
 
         public override async Task<Account> CreateAsync(Account acc)
         {
-            var builder = new StringBuilder(@"
-                DECLARE @result INT
-                EXEC @result = dbo.USP_AddAccount ");
-            builder.Append($"@Id = \'{acc.Id}\', ");
+            var builder = new StringBuilder("DECLARE @result INT;\nEXEC @result = dbo.USP_AddAccount ");
+            builder.Append($"@Id = {acc.Id}, ");
             builder.Append($"@Email = \'{acc.Email}\', ");
             builder.Append($"@FullName = N\'{acc.FullName}\', ");
             builder.Append($"@PasswordHash = \'{acc.PasswordHash}\', ");
@@ -37,7 +35,7 @@ namespace SunriseServerData.Repositories
 
             builder.Append($"EXEC USP_GetAccountById @Id = @result;");
 
-            // Console.WriteLine(builder.ToString());
+            Console.WriteLine(builder.ToString());
             var result = await _dataContext.Account.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
             return result.FirstOrDefault();
         }
@@ -87,13 +85,6 @@ namespace SunriseServerData.Repositories
             return (result.FirstOrDefault()).MyValue;
         }
 
-        // public async Task<string> GetAccountEmailByIdAsync(int accountId)
-        // {
-        //     var result = await _dataContext.PersonalDetail
-        //         .FromSqlInterpolated($"EXEC USP_GetAccountDetailById @AccountId={accountId};").ToListAsync();
-        //     return "hh";
-        // }
-
         public async Task<PersonalDetail> GetAccountDetailsByIdAsync(int accountId)
         {
             var result = await _dataContext.PersonalDetail
@@ -104,7 +95,7 @@ namespace SunriseServerData.Repositories
         public async Task<PersonalDetail> GetAccountDetailSocialAsync(string email, string fullName)
         {
             var result = await _dataContext.PersonalDetail
-                .FromSqlInterpolated($"EXEC USP_GetAccountSocial @Email={email}, @FullName={fullName};").ToListAsync();
+                .FromSqlInterpolated($"EXEC USP_GetAccountDetailSocial @Email={email}, @FullName={fullName};").ToListAsync();
             return result.FirstOrDefault();
         }
 
@@ -113,12 +104,13 @@ namespace SunriseServerData.Repositories
             var builder = new StringBuilder(@"
                 DECLARE @result INT
                 EXEC @result = USP_AddAccountSocial ");
-            builder.Append($"@Id = \'{acc.Id}\', ");
+            builder.Append($"@Id = {acc.Id}, ");
             builder.Append($"@Email = \'{acc.Email}\', ");
             builder.Append($"@FullName = N\'{acc.FullName}\', ");
             builder.Append($"@RefreshToken = \'{acc.RefreshToken}\', ");
             builder.Append($"@TokenCreated = \'{acc.TokenCreated}\', ");
-            builder.Append($"@TokenExpires = \'{acc.TokenExpires}\';");
+            builder.Append($"@TokenExpires = \'{acc.TokenExpires}\',");
+            builder.Append($"@UserRole = \'{acc.UserRole}\';");
 
             // Console.WriteLine(builder.ToString());
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
@@ -129,7 +121,7 @@ namespace SunriseServerData.Repositories
         {
             // USP_UpdateAccountPersonalInfo
             var builder = new StringBuilder($"EXEC USP_UpdateAccountPersonalInfo ");
-            builder.Append($"@AccountId = \'{accountId}\', ");
+            builder.Append($"@AccountId = {accountId}, ");
             builder.Append($"@FullName = N\'{dataDto.FullName}\', ");
             builder.Append($"@PhoneNumber = \'{dataDto.PhoneNumber}\', ");
             builder.Append($"@DateOfBirth = \'{dataDto.DateOfBirth}\', ");
@@ -139,6 +131,47 @@ namespace SunriseServerData.Repositories
             // Console.WriteLine(builder.ToString());
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
             return result;
+        }
+
+        public async Task<int> BanAccountAsync(BanAccountDto acc)
+        {
+            var builder = new StringBuilder($"EXEC USP_BanAccount @AccountId={acc.AccountId};");
+
+            Console.WriteLine(builder.ToString());
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            return result;
+        }
+
+        // AccountInfoDto
+        public async Task<List<AccountInfoDto>> GetAllAccountInfoAsync(FilterAccountDto searchAccount)
+        {
+            var builder = new StringBuilder($"EXEC USP_FindAccountByName ");
+            builder.Append($"@Name = N\'{searchAccount.Name}\'");
+            if (!string.IsNullOrEmpty(searchAccount.Role))
+                builder.Append($", @Role = \'{searchAccount.Role}\'");
+            if (!string.IsNullOrEmpty(searchAccount.Gender))
+                builder.Append($", @Gender = N\'{searchAccount.Gender}\'");
+            if (!string.IsNullOrEmpty(searchAccount.SortingCol))
+                builder.Append($", @SortingCol = \'{searchAccount.SortingCol}\'");
+            if (!string.IsNullOrEmpty(searchAccount.SortType))
+                builder.Append($", @SortType = \'{searchAccount.SortType}\'");
+            builder.Append(";");
+
+            Console.WriteLine(builder.ToString());
+            var result = await _dataContext.Set<AccountInfoDto>()
+                .FromSqlInterpolated($"EXECUTE({builder.ToString()})")
+                .IgnoreQueryFilters()
+                .ToListAsync();
+            return result;
+        }
+
+        public async Task<Account> GetMatchingRefreshToken(string refreshToken)
+        {
+            var builder = new StringBuilder($"dbo.USP_GetMatchingRefreshToken @RefreshToken = \'{refreshToken}\';");
+
+            Console.WriteLine(builder.ToString());
+            var result = await _dataContext.Account.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+            return result.FirstOrDefault();
         }
     }
 }

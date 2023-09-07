@@ -64,17 +64,6 @@ namespace SunriseServer.Controllers
             return Ok(finalResult);
         }
 
-        // [HttpPost] //, Authorize(Roles = GlobalConstant.User)
-        // public async Task<ActionResult<ResponseMessageDetails<int>>> AddBooking(AddBookingDto bookingDto)
-        // {
-        //     var result = await _bookingService.AddBooking(bookingDto);
-
-        //     if (result == 0)
-        //         return BadRequest("Cannot add booking.");
-
-        //     return Ok(new ResponseMessageDetails<int>("Add booking successfully", result));
-        // }
-
         [HttpPut, Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<BookingAccount>>> UpdateBooking(BookingAccount request)
         {
@@ -82,7 +71,7 @@ namespace SunriseServer.Controllers
             if (result == 0)
                 return NotFound("Booking not found.");
 
-            return Ok(new ResponseMessageDetails<BookingAccount>("Update booking successfully", ResponseStatusCode.Ok));
+            return Ok(new ResponseDetails(ResponseStatusCode.Ok, "Cập nhật đơn đặt thành công"));
         }
 
         [HttpDelete, Authorize(Roles = GlobalConstant.User)]
@@ -92,7 +81,7 @@ namespace SunriseServer.Controllers
             if (result == 0)
                 return NotFound("Booking not found.");
 
-            return Ok(new ResponseMessageDetails<int>("Delete booking successfully", ResponseStatusCode.Ok));
+            return Ok(new ResponseDetails(ResponseStatusCode.Ok, "Xóa đơn đặt thành công"));
         }
     }
 }

@@ -11,5 +11,7 @@
         public string Image { get; set; } = string.Empty;
         public string Rank { get; set; } = string.Empty;
         public int Point { get; set; }
+        public string Role { get; set; } = string.Empty;
+        public int HotelId { get; set; }
     }
 }

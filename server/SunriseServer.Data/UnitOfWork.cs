@@ -109,6 +109,19 @@ namespace SunriseServerData
         }
         #endregion
 
+        #region Admin
+        private IAdminRepo _adminRepo;
+        public IAdminRepo AdminRepo
+        {
+            get
+            {
+                if (_adminRepo == null)
+                    _adminRepo = new AdminRepo(_dataContext);
+                return _adminRepo;
+            }
+        }
+        #endregion
+
         public async Task<bool> SaveChangesAsync()
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))

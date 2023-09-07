@@ -6,7 +6,7 @@ namespace SunriseServerCore.Dtos.Order
         public int RoomTypeId { get; set; }
         public DateTime CheckIn { get; set; }
         public DateTime CheckOut { get; set; }
-        public int NumberOfRoom { get; set; }
+        public int NumberOfRoom { get; set; } = 1;
     }
 
     public class InputOrderDto

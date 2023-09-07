@@ -2,15 +2,14 @@ USE [sunrise-hotel]
 GO
 
 --!add account
-INSERT INTO ACCOUNT (Id, MemberPoint, AccountRank, Email, PasswordHash, PasswordSalt, UserRole, RefreshToken, TokenCreated, TokenExpires)
-VALUES	
-(1, 0, 'Bronze', 'lydat@gmail.com', '00ba0af9630c9eccf44741a603ccbb32b238c0ecd7141200c1641e2756328d4c3f1d94c7af70efd2b0af3c3ef2aff4f519290b2a29d0605a046283be6526c406', '0c7aeca9679f1de913b12d341f1ca586b4defaf7503651003354a5f8c8519265889436a9bb39085eb8df092d6bd2dca144e9a2e57df70d17ecbf1dd1c276576ad425b415d9f09c3cf3f319bacead74282a6b7bf60de2f7d97a2b9fbab5022f65a7d56efc4a3015bcbe31f7ff152ca3ea5ee527516a5a06fff4039d6ac09e9fe6', 'User', 'zJ7lpuRkqAGuiAYgRC+WQIZejkentkhE08e+s2eTOY9fbSto5X6GirvmmLzyQcbAkTXypnVNhYRBCXU8ocEeYw==', '2023-08-09 20:03:58.000', '2023-08-16 20:03:58.000'),
-(2, 0, 'Bronze', 'pdat@gmail.com', '1b9c6d61d183e699774df08fee179b5751fd1c1241407f7a0914669c0907393ce9f49b6cbf41bb4bd7d134f9b285bc804f1741360a19543535bae867b7c750fb', '1432927fae5e4b8e421b97be56fabe0854c081cf1ac5fdaa719fcefbec6a14f7d919fc6e9eabb143f4895714e76413ec606e7e4c0774578ef3d70f6cc9e210bcaaf4cfc8590fa85158e338b572a1ea167783d4cc03e894e3995b7ed91c32e2a18537e01d905a41d89dcc8aafe9cc341985a25f0719cb1ee9e150a96db6e7ee56', 'User', 'nk/TmDwMY7JByDIXK+W6GhGPXfhbchlqZ2gne4DdsWHn6QqCHgRxIJ8j4V4nTfsdyZGtZ3vpHsEI82NY41zEAA==', '2023-08-09 20:06:42.000', '2023-08-16 20:06:42.000'),
-(3, 0, 'Bronze', 'cuong457@gmail.com', 'ceae4c3043f6c58da07969a59afd02c3564250fae49ef5efc98158ef65c1ceca5f2ede0728044a6a23148fc8abfa0b252c81e92e71f080092a9d8e541bddde92', 'fdf3c9599cf9d981c2df2629557cebfb952c14fb66753a07e6d81706787d4c54f1e08958968a69ee5de89b0c5373010902b08776a69c86996d3fbda6d12aa54af1cf470960c6e3313c7c0c69fe5249c272fea9d958a859ea63158bb81e9d1439f3a4860860494caf8e569069d64d26acf3a162480e7b31c21249a9d0a2c7d874', 'User', 'ZqpZt9FF7o1JqL4Pyqm+xqb5ld4o/r05Un3RbyXVtDM2Q+X2v1R/94OEWrofC9fVwkcPDyapIqJPsj08afrhYw==', '2023-08-09 20:07:51.000', '2023-08-16 20:07:51.000'),
-(4, 0, 'Bronze', 'hahaha@gmail.com', 'd9f32996fe0dfa426245c93e7b4fb51fcddbfccc8813ff8d014d97b81727505dfb7522442bdde8bbfc8b6db5bfdb132d610cdeb2ce4271f187d9c66dd1ec41cd', '966e8aa101ab756bcbd472761a2328f86282234bb31378c3d6f32b7d3ed42141e90f93dabedce0ce8882dccac6e2273db18eb245dc4d83a679be074992472665697f19ca5cbc53639bddfc2695e78ef0b2602ff5724be676c6c00dd7b28cf5394114b1c18efe7823b64e8154c783eb1cc2b24b77e541455e9f01a0ff5cd275a7', 'User', 'yxxXPrTmh/L981F23IBHrXUsLfgFjCCDbtMlwYo9ixj3DYT/sikgkXgfKNvOGJ5WXcdJ+sNXopbEdZG3FJbHCw==', '2023-08-09 20:08:41.000', '2023-08-16 20:08:41.000'),
-(5, 0, 'Bronze', 'lydatadmin@gmail.com', 'b4c676c2a3ad96d16eb1c23070fc12b4a3478aa7c03e68900de8e128d74d33a85833452082a303dd62724e40d26671211171916da878a28406dffe30970f1bc6', '78e6ec95334ccafc5f24401f1bafda9630dea41464453ad6e8d8a36798096b0ffdf37aa4ed0593d10c60e852c9ad4790c8a963cd1adc50627fab1614c4c51209fadc3f774c9e9a8580169dbf67a5ca4171244ffc2183caaef114557dd3c54aa2ff733d2c5aebf366e3df083bf30471c984460469c78b45dac16da61b8f01d835', 'User', 'GyqcQo1/q7SVt6UScAIcE3JvLyZ9qRUplvpP0b/ois/AOLgQHMfN4N8HKe5OqsjdYE9C15u11WUaRTqOgUB2eA==', '2023-08-09 20:09:05.000', '2023-08-16 20:09:05.000'),
-(6, 0, 'Bronze', 'cuong@gmail.com', '63927922e816797646afdb67a26598edc3d8e6a7b4eafb8ac0b36ddadd69a88843f7b8f1fc1a2ee6f15ac5ba0de867e3389d0ff13ebda5642437dcc4f5c27dfe', 'cc97f6039c4ccc0cf944c9facab11a534f8152b300de76f70dd307e9479e080febe982ff831a7df759ae81c8e03f8307e33de5e1420e94ef56eadde1d8e2f49267b19b56d6a5d0fc5152c94441da96427fc131232abd7470062b389c0905836361d7df0fa54e7721aa9ea8dada7c9964d0585d55ac94c4da26491c014f271c0f', 'User', 'W0Q20ryEsowpc2Zb51yStSA3I37I84srULomm+e0qgiZfOwDWEipfF0hP2bb96UW6JfHauKfX33uFYjjJAAnBA==', '2023-08-09 20:09:59.000', '2023-08-16 20:09:59.000'),
-(7, 0, 'Diamond', 'bluehairmylove2014@gmail.com', '3e1dcac1eddc9f99ee06fe71178e0ad0562c551b9a382cc72ee7c00919f31878a90325fb1b287ec43a9711177c08a43d29b1e42b157f790fa5336b5920ea4f2b', 'b1a5137653964ebd04abe46f552e674ed622992983149cc27f5a2d9a3465ccd5fabdce76fb71b33ea74c3729fd3483acbdc6102738e5e142bc2bbf5f2e4c0b6886705a109ef2fbc79a598acb92b1722e9617fc61323aa1a8197ca3de3620755fe7815b6dc54e4effc71f0f661fbfacbb7f96e0199b6ee7416389a83e95cc4bac', 'User', '+34iPTdqI5mhEhia6qfgp9qMprkg3uVLdwfhcd6Tn8YlgRwiGchjKYsyByhgyBfIC0NLO5cLKDmvuNrc0jCfBw==', '2023-08-14 21:42:55.000', '2023-08-21 21:42:55.000');
+-- INSERT INTO ACCOUNT (Id, MemberPoint, RequiredRank, Email, PasswordHash, PasswordSalt, UserRole, RefreshToken, TokenCreated, TokenExpires, Active) VALUES	
+-- (1, 0, 'Bronze', 'lydat@gmail.com', '00ba0af9630c9eccf44741a603ccbb32b238c0ecd7141200c1641e2756328d4c3f1d94c7af70efd2b0af3c3ef2aff4f519290b2a29d0605a046283be6526c406', '0c7aeca9679f1de913b12d341f1ca586b4defaf7503651003354a5f8c8519265889436a9bb39085eb8df092d6bd2dca144e9a2e57df70d17ecbf1dd1c276576ad425b415d9f09c3cf3f319bacead74282a6b7bf60de2f7d97a2b9fbab5022f65a7d56efc4a3015bcbe31f7ff152ca3ea5ee527516a5a06fff4039d6ac09e9fe6', 'User', 'zJ7lpuRkqAGuiAYgRC+WQIZejkentkhE08e+s2eTOY9fbSto5X6GirvmmLzyQcbAkTXypnVNhYRBCXU8ocEeYw==', '2023-08-09 20:03:58.000', '2023-08-16 20:03:58.000', 1),
+-- (2, 0, 'Bronze', 'pdat@gmail.com', '1b9c6d61d183e699774df08fee179b5751fd1c1241407f7a0914669c0907393ce9f49b6cbf41bb4bd7d134f9b285bc804f1741360a19543535bae867b7c750fb', '1432927fae5e4b8e421b97be56fabe0854c081cf1ac5fdaa719fcefbec6a14f7d919fc6e9eabb143f4895714e76413ec606e7e4c0774578ef3d70f6cc9e210bcaaf4cfc8590fa85158e338b572a1ea167783d4cc03e894e3995b7ed91c32e2a18537e01d905a41d89dcc8aafe9cc341985a25f0719cb1ee9e150a96db6e7ee56', 'User', 'nk/TmDwMY7JByDIXK+W6GhGPXfhbchlqZ2gne4DdsWHn6QqCHgRxIJ8j4V4nTfsdyZGtZ3vpHsEI82NY41zEAA==', '2023-08-09 20:06:42.000', '2023-08-16 20:06:42.000', 1),
+-- (3, 0, 'Bronze', 'cuong457@gmail.com', 'ceae4c3043f6c58da07969a59afd02c3564250fae49ef5efc98158ef65c1ceca5f2ede0728044a6a23148fc8abfa0b252c81e92e71f080092a9d8e541bddde92', 'fdf3c9599cf9d981c2df2629557cebfb952c14fb66753a07e6d81706787d4c54f1e08958968a69ee5de89b0c5373010902b08776a69c86996d3fbda6d12aa54af1cf470960c6e3313c7c0c69fe5249c272fea9d958a859ea63158bb81e9d1439f3a4860860494caf8e569069d64d26acf3a162480e7b31c21249a9d0a2c7d874', 'User', 'ZqpZt9FF7o1JqL4Pyqm+xqb5ld4o/r05Un3RbyXVtDM2Q+X2v1R/94OEWrofC9fVwkcPDyapIqJPsj08afrhYw==', '2023-08-09 20:07:51.000', '2023-08-16 20:07:51.000', 1),
+-- (4, 0, 'Bronze', 'hahaha@gmail.com', 'd9f32996fe0dfa426245c93e7b4fb51fcddbfccc8813ff8d014d97b81727505dfb7522442bdde8bbfc8b6db5bfdb132d610cdeb2ce4271f187d9c66dd1ec41cd', '966e8aa101ab756bcbd472761a2328f86282234bb31378c3d6f32b7d3ed42141e90f93dabedce0ce8882dccac6e2273db18eb245dc4d83a679be074992472665697f19ca5cbc53639bddfc2695e78ef0b2602ff5724be676c6c00dd7b28cf5394114b1c18efe7823b64e8154c783eb1cc2b24b77e541455e9f01a0ff5cd275a7', 'User', 'yxxXPrTmh/L981F23IBHrXUsLfgFjCCDbtMlwYo9ixj3DYT/sikgkXgfKNvOGJ5WXcdJ+sNXopbEdZG3FJbHCw==', '2023-08-09 20:08:41.000', '2023-08-16 20:08:41.000', 1),
+-- (5, 0, 'Bronze', 'lydatadmin@gmail.com', 'b4c676c2a3ad96d16eb1c23070fc12b4a3478aa7c03e68900de8e128d74d33a85833452082a303dd62724e40d26671211171916da878a28406dffe30970f1bc6', '78e6ec95334ccafc5f24401f1bafda9630dea41464453ad6e8d8a36798096b0ffdf37aa4ed0593d10c60e852c9ad4790c8a963cd1adc50627fab1614c4c51209fadc3f774c9e9a8580169dbf67a5ca4171244ffc2183caaef114557dd3c54aa2ff733d2c5aebf366e3df083bf30471c984460469c78b45dac16da61b8f01d835', 'User', 'GyqcQo1/q7SVt6UScAIcE3JvLyZ9qRUplvpP0b/ois/AOLgQHMfN4N8HKe5OqsjdYE9C15u11WUaRTqOgUB2eA==', '2023-08-09 20:09:05.000', '2023-08-16 20:09:05.000', 1),
+-- (6, 0, 'Bronze', 'cuong@gmail.com', '63927922e816797646afdb67a26598edc3d8e6a7b4eafb8ac0b36ddadd69a88843f7b8f1fc1a2ee6f15ac5ba0de867e3389d0ff13ebda5642437dcc4f5c27dfe', 'cc97f6039c4ccc0cf944c9facab11a534f8152b300de76f70dd307e9479e080febe982ff831a7df759ae81c8e03f8307e33de5e1420e94ef56eadde1d8e2f49267b19b56d6a5d0fc5152c94441da96427fc131232abd7470062b389c0905836361d7df0fa54e7721aa9ea8dada7c9964d0585d55ac94c4da26491c014f271c0f', 'User', 'W0Q20ryEsowpc2Zb51yStSA3I37I84srULomm+e0qgiZfOwDWEipfF0hP2bb96UW6JfHauKfX33uFYjjJAAnBA==', '2023-08-09 20:09:59.000', '2023-08-16 20:09:59.000', 1),
+-- (7, 0, 'Diamond', 'bluehairmylove2014@gmail.com', '3e1dcac1eddc9f99ee06fe71178e0ad0562c551b9a382cc72ee7c00919f31878a90325fb1b287ec43a9711177c08a43d29b1e42b157f790fa5336b5920ea4f2b', 'b1a5137653964ebd04abe46f552e674ed622992983149cc27f5a2d9a3465ccd5fabdce76fb71b33ea74c3729fd3483acbdc6102738e5e142bc2bbf5f2e4c0b6886705a109ef2fbc79a598acb92b1722e9617fc61323aa1a8197ca3de3620755fe7815b6dc54e4effc71f0f661fbfacbb7f96e0199b6ee7416389a83e95cc4bac', 'User', '+34iPTdqI5mhEhia6qfgp9qMprkg3uVLdwfhcd6Tn8YlgRwiGchjKYsyByhgyBfIC0NLO5cLKDmvuNrc0jCfBw==', '2023-08-14 21:42:55.000', '2023-08-21 21:42:55.000', 1);
 
 ----!add personal information
 --INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank) VALUES 
@@ -28,245 +27,323 @@ INSERT INTO POINT_RANK (RankName, RankValue) VALUES
 	('Silver', 4000),
 	('Bronze', 100);
 
-INSERT INTO VOUCHER (VoucherId, Name, Value, Point, AccountRank) VALUES 
-	(1, 'Voucher 2%', 0.02, 50, 'Bronze'), --> 2% -> 6%
-	(2, 'Voucher 5%', 0.05, 150, 'Silver'), --> 6% -> 12%
-	(3, 'Voucher 10%', 0.1, 300, 'Gold'), --> 6% -> 12%
-	(4, 'Voucher 15%', 0.15, 450, 'Gold'), --> 12% -> 15%
-	(5, 'Voucher 20%', 0.2, 600, 'Diamond'); --> 15% -> 20%
+INSERT INTO VOUCHER (VoucherId, Name, Value, Point, RequiredRank, Quantity) VALUES 
+	(1, 'Voucher 2%', 0.02, 50, 'Bronze', 100), --> 2% -> 6%
+	(2, 'Voucher 5%', 0.05, 150, 'Silver', 50), --> 6% -> 12%
+	(3, 'Voucher 10%', 0.1, 300, 'Gold', 100), --> 6% -> 12%
+	(4, 'Voucher 15%', 0.15, 450, 'Gold', 500), --> 12% -> 15%
+	(5, 'Voucher 20%', 0.2, 600, 'Diamond', 100), --> 15% -> 20%
+	(6, 'SUMMER25OFF', 0.25, 400, 'Bronze', 100),
+  	(7, 'LUXURY50', 0.5, 1000, 'Diamond', 100),
+  	(8, 'COZYGETAWAY', 0.25, 300, 'Bronze', 100),
+  	(9, 'HOTELBLISS10', 0.1, 500, 'Silver', 100),
+  	(10, 'SWEETRETREAT15', 0.15, 800, 'Gold', 100),
+  	(11, 'DREAMY50', 0.5, 600, 'Gold', 100),
+  	(12, 'RELAXNOW', 0.1, 300, 'Silver', 100),
+  	(13, 'STAYCATION2023', 0.2, 700, 'Gold', 100),
+  	(14, 'HOLIDAYHIDEAWAY', 0.3, 400, 'Bronze', 100),
+  	(15, 'VIPTRAVEL25', 0.25, 1000, 'Diamond', 100),
+  	(16, 'ROOMWITHVIEW', 0.15, 600, 'Gold', 100),
+  	(17, 'FAMILYFUN20', 0.2, 500, 'Silver', 100),
+  	(18, 'BEACHPARADISE', 0.15, 800, 'Gold', 100),
+  	(19, 'URBANESCAPE', 0.2, 700, 'Gold', 100),
+  	(20, 'MOUNTAINMAGIC', 0.15, 600, 'Gold', 100),
+  	(21, 'CITYBREAK10', 0.1, 300, 'Silver', 100),
+  	(22, 'OCEANFRONT25', 0.25, 1000, 'Diamond', 100),
+  	(23, 'HONEYMOON50', 0.5, 400, 'Bronze', 100),
+  	(24, 'WANDERLUST15', 0.15, 500, 'Silver', 100),
+  	(25, 'ADVENTURE30', 0.3, 800, 'Gold', 100);
+
 
 --!add hotel 
-INSERT INTO HOTEL VALUES(1, N'Triple E Hotel Metro Ben Thanh',N'Việt Nam','HOTEL',N'TP Hồ Chí Minh',
+INSERT INTO HOTEL (Id, Name, Country, HotelType, ProvinceCity, Address, Stars, Rating, Description, Image) VALUES
+(1, N'Triple E Hotel Metro Ben Thanh',N'Việt Nam','HOTEL',N'TP Hồ Chí Minh',
 	 N'146- 148 Đường Ký Con, Phường Nguyễn Thái Bình, Quận 1, Thành phố Hồ Chí Minh, Việt Nam',
 	 3, 8.8, 
 	 N'Tọa lạc ở Thành phố Hồ Chí Minh, cách Bảo tàng Mỹ thuật 300 m, Triple E Hotel Metro Ben Thanh cung cấp chỗ nghỉ 3 sao với trung tâm thể dục.Khách sạn 3 sao này cung cấp WiFi miễn phí, dịch vụ phòng và dịch vụ lễ tân 24 giờ. Nhân viên tại đây có thể thu xếp dịch vụ đưa đón cho khách.',
-	 N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Triple%20E%20Hotel%20Metro%20Ben%20Thanh/Triple%20E%20Hotel%20Metro%20Ben%20Thanh.jpg');
+	 N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Triple%20E%20Hotel%20Metro%20Ben%20Thanh/Triple%20E%20Hotel%20Metro%20Ben%20Thanh.jpg'),
 
-INSERT INTO HOTEL VALUES(2, N'Nexus House Thao Dien',N'Việt Nam','HOMESTAY',N'Hồ Chí Minh City',
+(2, N'Nexus House Thao Dien',N'Việt Nam','HOMESTAY',N'Hồ Chí Minh City',
 	N'8/9 Võ Trường Toản, An Phú, Quận 2, TP. Hồ Chí Minh, Việt Nam',
  	0, 9.5,
 	N'Nằm cách Bảo tàng Lịch sử Việt Nam 6,3 km, Nexus House Thao Dien có khu vườn, sân hiên và chỗ nghỉ gắn máy điều hòa với ban công cùng WiFi miễn phí.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Nexus%20House%20Thao%20Dien/Studio%20Nh%C3%ACn%20Ra%20V%C6%B0%E1%BB%9Dn1.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Nexus%20House%20Thao%20Dien/Studio%20Nh%C3%ACn%20Ra%20V%C6%B0%E1%BB%9Dn1.jpg'),
 
-INSERT INTO HOTEL VALUES(3, N'Landmark Plus Luxury - Vinhomes Central Park',N'Việt Nam','SINGLE_APARTMENT',N'TP Hồ Chí Minh', 
+(3, N'Landmark Plus Luxury - Vinhomes Central Park',N'Việt Nam','SINGLE_APARTMENT',N'TP Hồ Chí Minh', 
 	N'146- 148 Đường Ký Con, Phường Nguyễn Thái Bình, Quận 1,Thành phố Hồ Chí Minh , Việt Nam',
 	0, 8.1, 
 	N'Tọa lạc tại Thành phố Hồ Chí Minh, Landmark Plus Luxury - Vinhomes Central Park cung cấp chỗ nghỉ với hồ bơi ngoài trời, khu vườn, sảnh khách chung, sân hiên, quầy bar và tầm nhìn ra thành phố.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Landmark%20Plus%20Luxury%20-%20Vinhomes%20Central%20Park/landmark.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Landmark%20Plus%20Luxury%20-%20Vinhomes%20Central%20Park/landmark.jpg'),
 
-INSERT INTO HOTEL VALUES(4, N'Musketeers Guest House',N'Việt Nam','HOTEL',N'Hà Nội', 
+(4, N'Musketeers Guest House',N'Việt Nam','HOTEL',N'Hà Nội', 
 	N'21 Ngõ 67 Tô Ngọc Vân Quảng An, Quận Tây Hồ, Hà Nội, Việt Nam',
 	0, 9.7, 
 	N'Tọa lạc tại thành phố Hà Nội, cách Hồ Tây 3,2 km, Musketeers Guest House cung cấp chỗ nghỉ với sảnh khách chung, chỗ đỗ xe riêng miễn phí, sân hiên và quầy bar. Trong số các tiện nghi tại chỗ nghỉ này có quầy lễ tân 24 giờ, dịch vụ trợ giúp đặc biệt và Wi-Fi miễn phí trong toàn bộ khuôn viên. Du khách có thể ngắm nhìn quang cảnh khu vườn.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Musketeers%20Guest%20House/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i1.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Musketeers%20Guest%20House/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%C6%A1%CC%80ng%20%C4%90%C3%B4i1.jpg'),
 
-INSERT INTO HOTEL VALUES(5, N'Cristina Boutique Hotel',N'Việt Nam','HOTEL',N'Hà Nội', 
+(5, N'Cristina Boutique Hotel',N'Việt Nam','HOTEL',N'Hà Nội', 
 	N'4A Ngõ Phất Lộc, Quận Hoàn Kiếm, Hà Nội, Việt Nam',
 	3, 9.1, 
 	N'Tọa lạc tại một vị trí thuận tiện ở trung tâm thành phố Hà Nội, Cristina Boutique Hotel cung cấp chỗ nghỉ 3 sao gần Ô Quan Chưởng Hà Nội và Nhà hát múa rối nước Thăng Long. Khách sạn 3 sao này cung cấp các phòng máy lạnh với phòng tắm riêng. Chỗ nghỉ có lễ tân 24 giờ, dịch vụ đưa đón sân bay, dịch vụ phòng và WiFi miễn phí.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Cristina%20Boutique%20Hotel/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i2%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C6%A1n%20C%C3%B3%20Ban%20C%C3%B4ng1.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Cristina%20Boutique%20Hotel/Pho%CC%80ng%20Deluxe%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i2%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C6%A1n%20C%C3%B3%20Ban%20C%C3%B4ng1.jpg'),
 
-INSERT INTO HOTEL VALUES(6, N'SMARANA Hanoi HERITAGE',N'Việt Nam','HOTEL',N'Hà Nội', 
+(6, N'SMARANA Hanoi HERITAGE',N'Việt Nam','HOTEL',N'Hà Nội', 
 	N'Phường Dịch Vọng Hầu, Quận Cầu Giấy Số 5, Ngõ 82/1 Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội, Việt Nam',
 	5, 9.7, 
 	N'Tọa lạc tại thành phố Hà Nội, cách Bảo tàng Dân tộc học Việt Nam 2,4 km, SMARANA Hanoi HERITAGE có dịch vụ tiền sảnh, phòng nghỉ không hút thuốc, sân hiên, WiFi miễn phí trong toàn bộ khuôn viên và nhà hàng. Khách sạn 5 sao này cung cấp dịch vụ phòng, dịch vụ lễ tân 24 giờ, dịch vụ đưa đón sân bay và dịch vụ cho thuê xe đạp.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/SMARANA%20Hanoi%20HERITAGE/smarana-hanoi-heritage.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/SMARANA%20Hanoi%20HERITAGE/smarana-hanoi-heritage.jpg'),
 
-INSERT INTO HOTEL VALUES(7, N'An Hiên Homestay Hội An',N'Việt Nam','HOMESTAY',N'Hội An', 
+(7, N'An Hiên Homestay Hội An',N'Việt Nam','HOMESTAY',N'Hội An', 
 	N'164 Lý Thái Tổ, phường Cẩm Châu, Cẩm Châu, Hội An, Việt Nam',
 	0, 9.6, 
 	N'Tọa lạc tại thành phố Hội An, cách Bảo tàng Lịch sử Hội An 1,2 km và Hội quán Triều Châu Trung Quốc 1,6 km, An Hiên Homestay Hội An cung cấp chỗ nghỉ với WiFi miễn phí, máy điều hòa, xe đạp miễn phí và khu vườn.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/An%20Hi%C3%AAn%20Homestay%20H%E1%BB%99i%20An/An%20Hi%C3%AAn%20Homestay%20H%E1%BB%99i%20An.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/An%20Hi%C3%AAn%20Homestay%20H%E1%BB%99i%20An/An%20Hi%C3%AAn%20Homestay%20H%E1%BB%99i%20An.jpg'),
 
-INSERT INTO HOTEL VALUES(8, N'iHome Hoi An',N'Việt Nam','HOTEL',N'Hội An', 
+(8, N'iHome Hoi An',N'Việt Nam','HOTEL',N'Hội An', 
 	N'54 Nguyễn Tri Phương, Cẩm Nam, Hội An, Việt Nam',
 	3, 9.2, 
 	N'Tọa lạc tại thành phố Hội An, cách Hội quán Triều Châu 600 m, iHome Hoi An cung cấp chỗ nghỉ với trung tâm thể dục, chỗ đỗ xe riêng miễn phí, sân hiên và quầy bar. Khách sạn 3 sao này có dịch vụ phòng và lễ tân 24 giờ. Sân golf Montgomerie Links và CLB chơi golf Montgomerie Links Vietnam đều nằm trong bán kính 15 km từ khách sạn.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/iHome%20Hoi%20An/iHome%20Hoi%20An.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/iHome%20Hoi%20An/iHome%20Hoi%20An.jpg'),
 
-INSERT INTO HOTEL VALUES(9, N'Florida Nha Trang Hotel',N'Việt Nam','HOTEL',N'Nha Trang', 
+(9, N'Florida Nha Trang Hotel',N'Việt Nam','HOTEL',N'Nha Trang', 
 	N'66 Quang Trung, Nha Trang, Việt Nam',
 	5, 8.4, 
 	N'Tọa lạc tại thành phố Nha Trang, cách Bãi biển Nha Trang 1,5 km, Florida Nha Trang Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, trung tâm thể dục và sảnh khách chung. Khách sạn 5 sao này có CLB trẻ em, dịch vụ phòng, WiFi miễn phí, sân hiên và tầm nhìn ra thành phố. Du khách có thể dùng bữa tại nhà hàng hoặc nhâm nhi đồ uống ở quầy bar.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Florida%20Nha%20Trang%20Hotel/Florida%20hotel.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Florida%20Nha%20Trang%20Hotel/Florida%20hotel.jpg'),
 
-INSERT INTO HOTEL VALUES(10, N'Crown Hotel Nha Trang',N'Việt Nam','HOTEL',N'Nha Trang', 
+(10, N'Crown Hotel Nha Trang',N'Việt Nam','HOTEL',N'Nha Trang', 
 	N'19 Dã Tượng, Nha Trang, Việt Nam',
 	4, 8.1, 
 	N'Tọa lạc tại thành phố Nha Trang, cách Bãi biển Nha Trang 300 m, Crown Hotel Nha Trang cung cấp chỗ nghỉ với trung tâm thể dục, chỗ đỗ xe riêng miễn phí, sảnh khách chung và nhà hàng. Khách sạn 4 sao này có dịch vụ tiền sảnh, bàn đặt tour, lễ tân 24 giờ, dịch vụ đưa đón sân bay, dịch vụ phòng và WiFi miễn phí.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Crown%20Hotel%20Nha%20Trang/Crown%20Hotel%20Nha%20Trang.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Crown%20Hotel%20Nha%20Trang/Crown%20Hotel%20Nha%20Trang.jpg'),
 
-INSERT INTO HOTEL VALUES(11, N'Fati Botique Hotel Vũng Tàu', N'Việt Nam', 'HOTEL', N'Vũng Tàu',
+(11, N'Fati Botique Hotel Vũng Tàu', N'Việt Nam', 'HOTEL', N'Vũng Tàu',
 	N'112/3 Trần Phú Tòa nhà Fati Boutique, 112/3 Trần Phú, Phường 5, Vũng Tàu, Việt Nam',
  	4, 0,
 	N'Tọa lạc tại thành phố Vũng Tàu, cách Bãi Dâu vài bước chân, Fati Boutique Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, khu vườn, sân hiên và WiFi miễn phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg'),
 
-INSERT INTO HOTEL VALUES(12, N'Halios Luxury Hotel Hạ Long', N'Việt Nam', 'HOTEL', N'Quảng Ninh',
+(12, N'Halios Luxury Hotel Hạ Long', N'Việt Nam', 'HOTEL', N'Quảng Ninh',
 	N'38 Nguyễn Du, Hồng Gai, Thành phố Hạ Long, Quảng Ninh, Việt Nam',
  	5, 0,
 	N'Tọa lạc tại thành phố Vũng Tàu, cách Bãi Dâu vài bước chân, Fati Boutique Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, khu vườn, sân hiên và WiFi miễn phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg'),
 
-INSERT INTO HOTEL VALUES(13, N'Mi Nhon Em Hotel Muine Phan Thiết', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(13, N'Mi Nhon Em Hotel Muine Phan Thiết', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N' 202 Nguyễn Đình Chiểu Kp 2, Ham Tien Village, Hòa Bình, Tp. Phan Thiết, Bình Thuận, Việt Nam',
  	3, 0,
 	N'Nằm ở thành phố Phan Thiết, cách Bãi biển Hàm Tiến vài bước chân, Mi Nhon Em Hotel Muine cung cấp chỗ nghỉ với xe đạp cho khách sử dụng miễn phí, chỗ đỗ xe riêng miễn phí, hồ bơi ngoài trời và khu vườn.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg'),
 
-INSERT INTO HOTEL VALUES(14, N'DeLaSol Sapa Hotel', N'Việt Nam', 'HOTEL', N'Lào Cai',
+(14, N'DeLaSol Sapa Hotel', N'Việt Nam', 'HOTEL', N'Lào Cai',
 	N'16 Mường Hoa 16, Sa Pa, Việt Nam',
  	4, 0,
 	N'Tọa lạc tại thành phố Vũng Tàu, cách Bãi Dâu vài bước chân, Fati Boutique Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, khu vườn, sân hiên và WiFi miễn phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Fati%20Boutique%20Hotel/335467546.jpg'),
 
-INSERT INTO HOTEL VALUES(15, N'Pistachio Sapa Hotel', N'Việt Nam', 'HOTEL', N'Lào Cai',
+(15, N'Pistachio Sapa Hotel', N'Việt Nam', 'HOTEL', N'Lào Cai',
 	N'Số 5, Thác Bạc Street, Sapa, Lào Cai, Sa Pa, Việt Nam',
  	4, 0,
 	N'Nằm ở thị xã Sa Pa, cách Ga cáp treo Fansipan Legend 4,6 km, Pistachio Hotel Sapa cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, trung tâm thể dục và sảnh khách chung.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Pistachio%20Hotel%20Sapa/200762189.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Pistachio%20Hotel%20Sapa/200762189.jpg'),
 
-INSERT INTO HOTEL VALUES(16, N'Star City Riverside By Haviland Hotel', N'Việt Nam', 'HOTEL', N'Đà Nẵng',
+(16, N'Star City Riverside By Haviland Hotel', N'Việt Nam', 'HOTEL', N'Đà Nẵng',
 	N'147-149 Trần Hưng Đạo, Nại Hiên Đông, Sơn Trà, Đà Nẵng, Việt Nam',
  	5, 0,
 	N'Nằm bên bờ Sông Hàn, Star City Riverside By Haviland cung cấp không gian sinh hoạt hiện đại với tầm nhìn ra toàn cảnh thành phố Đà Nẵng.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/428612339.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Star%20City%20Riverside%20Hotel%20By%20Haviland/428612339.jpg'),
 
-INSERT INTO HOTEL VALUES(17, N'Na Hostel Hue', N'Việt Nam', 'HOTEL', N'Huế',
+(17, N'Na Hostel Hue', N'Việt Nam', 'HOTEL', N'Huế',
 	N'69 Võ Thị Sáu, Huế, Việt Nam',
  	2, 9.4,
 	N'Featuring 2-star accommodation, Na Hostel Hue is located in Hue, 1.3 km from Trang Tien Bridge and 2 km from Dong Ba Market. With a terrace, the 2-star hotel has air-conditioned rooms with free WiFi. The accommodation provides airport transfers, while a bicycle rental service is also available.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Na%20Hostel%20Hue/Na%20Hostel%20Hue.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Na%20Hostel%20Hue/Na%20Hostel%20Hue.jpg'),
 
-INSERT INTO HOTEL VALUES(18, N'The Chum Boutique', N'Việt Nam', 'HOTEL', N'Huế',
+(18, N'The Chum Boutique', N'Việt Nam', 'HOTEL', N'Huế',
 	N'5 Trương Định, Huế, Việt Nam',
  	3, 9.1,
 	N'The Chum Boutique cung cấp phòng nghỉ tại thành phố Huế, cách Tử Cấm Thành 2,8 km và Hồ Tịnh Tâm 3,3 km. Chỗ nghỉ này nằm gần một số điểm tham quan nổi tiếng, cách Bảo tàng Hồ Chí Minh 1,1 km, Nhà thờ Dòng Chúa Cứu Thế 1,7 km và Cung An Định 1,8 km. Ngoài WiFi miễn phí, chỗ nghỉ còn có sân hiên cũng như phòng xông hơi khô.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Deluxe%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i%20C%C3%B3%20B%E1%BB%93n%20T%E1%BA%AFm1.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/The%20Chum%20Boutique/Ph%C3%B2ng%20Deluxe%20Gi%C6%B0%E1%BB%9Dng%20%C4%90%C3%B4i%20C%C3%B3%20B%E1%BB%93n%20T%E1%BA%AFm1.jpg'),
 
-INSERT INTO HOTEL VALUES(19, N'Art Garden Dalat', N'Việt Nam', 'HOTEL', N'Đà Lạt',
+(19, N'Art Garden Dalat', N'Việt Nam', 'HOTEL', N'Đà Lạt',
 	N'79 Đường Đào Duy Từ, Đà Lạt, Việt Nam',
  	0, 8.1,
 	N'Art Garden Dalat features city views, free WiFi and free private parking, located in Da Lat, 3.9 km from Truc Lam Temple. There is a private bathroom with shower in every unit, along with bathrobes, slippers and a hair dryer.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Art%20Garden%20Dalat/Ph%C3%B2ng%20Gia%20%C4%90%C3%ACnh1.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Art%20Garden%20Dalat/Ph%C3%B2ng%20Gia%20%C4%90%C3%ACnh1.jpg'),
 
-INSERT INTO HOTEL VALUES(20, N'Đà Lạt Thanh Xuân Hotel', N'Việt Nam', 'HOTEL', N'Đà Lạt',
+(20, N'Đà Lạt Thanh Xuân Hotel', N'Việt Nam', 'HOTEL', N'Đà Lạt',
 	N'126 Đường Tô Hiến Thành, Đà Lạt, Việt Nam',
  	4, 8.3,
 	N'Tọa lạc tại thành phố Đà Lạt, cách Công viên Yersin 1,6 km, Đà Lạt Thanh Xuân Hotel cung cấp chỗ nghỉ với sân hiên, chỗ đỗ xe riêng miễn phí và nhà hàng. Khách sạn 4 sao này có dịch vụ tiền sảnh, bàn đặt tour, dịch vụ phòng, lễ tân 24 giờ và dịch vụ thu đổi ngoại tệ cho khách.',
-	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel.jpg');
+	N'https://atarceni.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel/%C4%90a%CC%80%20La%CC%A3t%20Thanh%20Xu%C3%A2n%20Hotel.jpg'),
 
-INSERT INTO HOTEL VALUES(21, N'Mandala Cham Bay Mui Ne', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(21, N'Mandala Cham Bay Mui Ne', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'Đường DT 716, phường Mũi Né, Phan Thiết',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi biển Long Sơn 600 m, Mandala Cham Bay Mui Ne cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, trung tâm thể dục và nhà hàng. Mỗi chỗ nghỉ tại khách sạn 5 sao này đều có tầm nhìn ra biển và du khách có thể sử dụng phòng xông hơi khô cũng như bể sục. ',
-	N'');
+	N'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mandala%20Cham%20Bay%20Mui%20Ne/445116348.jpg'),
 
-INSERT INTO HOTEL VALUES(22, N'RUBENS BOUTIQUE HOTEL', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(22, N'RUBENS BOUTIQUE HOTEL', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'D3 -32A Khu đô thị Phố Biển, Phường Phú Thủy, TP Phan Thiết, Bình Thuận',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi biển Đồi Dương 500 m, RUBENS BOUTIQUE HOTEL có chỗ nghỉ với sân hiên, chỗ đỗ xe riêng miễn phí, nhà hàng và quầy bar.  Chỗ nghỉ nằm cách Bãi biển Thương Chánh 2,2 km, Sân Golf Sea Link 500 m và ga tàu Phan Thiết 3,1 km.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/RUBENS%20BOUTIQUE%20HOTEL/447358764.jpg')
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/RUBENS%20BOUTIQUE%20HOTEL/447358764.jpg'),
 
-INSERT INTO HOTEL VALUES(23, N'Movenpick Hotel Phan Thiet', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(23, N'Movenpick Hotel Phan Thiet', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'Đường Hòn Giò - Thuận Quý, Thôn Tiến Hòa, Xã Tiến Thành, Thành phố Phan Thiết, Bình Thuận',
  	4, 0,
 	N'Quay mặt ra bãi biển ở thành phố Phan Thiết, Mövenpick Resort Phan Thiet cung cấp chỗ nghỉ 5 sao và có hồ bơi ngoài trời, trung tâm thể dục cũng như khu vườn. Resort này còn có CLB trẻ em, nhà hàng và sân hiên. Chỗ nghỉ cung cấp dịch vụ phòng, dịch vụ lễ tân 24 giờ và phòng giữ hành lý cho khách.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Movenpick%20Resort%20Phan%20Thiet/334369514.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Movenpick%20Resort%20Phan%20Thiet/334369514.jpg'),
 
-INSERT INTO HOTEL VALUES(24, N'Radisson Resort Phan Thiet', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(24, N'Radisson Resort Phan Thiet', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'Đường Lạc Long Quân, Thôn Tiến Hòa, Xã Tiến Thành , Phan Thiết',
  	4, 0,
 	N'ọa lạc tại thành phố Phan Thiết, cách ga Phan Thiết 14 km, Radisson Resort Phan Thiet cung cấp chỗ nghỉ với xe đạp cho khách sử dụng miễn phí, chỗ đỗ xe riêng miễn phí, hồ bơi ngoài trời và trung tâm thể dục. Khách sạn 4 sao này có khu vườn và phòng nghỉ gắn máy điều hòa với WiFi miễn phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Radisson%20Resort%20Phan%20Thiet/367681542.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Radisson%20Resort%20Phan%20Thiet/367681542.jpg'),
 
-INSERT INTO HOTEL VALUES(25, N'Kim Long Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(25, N'Kim Long Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'Hẻm 69 Nguyễn Đình Chiểu, Hàm Tiến, Phan Thiết',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi đá Ông Địa 1,8 km và Suối Tiên 6,5 km, Kim Long Hotel cung cấp chỗ nghỉ có WiFi miễn phí, máy điều hòa, khu vực bãi biển riêng và khu vườn.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Kim%20Long%20Hotel/468897403.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Kim%20Long%20Hotel/468897403.jpg'),
 
-INSERT INTO HOTEL VALUES(26, N'Mui Ne Alena Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(26, N'Mui Ne Alena Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'265/5 Nguyễn Đình Chiểu, Phường Hàm Tiến, Thành phố Phan Thiết,',
  	4, 0,
 	N'ọa lạc tại thành phố Phan Thiết, cách Bãi biển Hàm Tiến vài bước chân, Mui Ne Alena Hotel cung cấp chỗ nghỉ với hồ bơi ngoài trời, chỗ đỗ xe riêng miễn phí, khu vườn và sảnh khách chung. Chỗ nghỉ này có dịch vụ phòng, nhà hàng, sòng bạc và sân chơi cho trẻ em.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mui%20Ne%20Alena%20Hotel/236967178.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Mui%20Ne%20Alena%20Hotel/236967178.jpg'),
 
-INSERT INTO HOTEL VALUES(27, N'Wanderlust Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(27, N'Wanderlust Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'375 Nguyễn Đình Chiểu, Phan Thiết',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi biển Hàm Tiến 300 m và Suối Tiên 1,3 km, Wanderlust Hotel cung cấp chỗ nghỉ với WiFi miễn phí. Chỗ nghỉ này nằm trong bán kính 17 km từ Sân golf Sea Link, 18 km từ Bến xe Bình Thuận và 19 km từ ga Phan Thiết.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Wanderlust%20Hotel/465910803.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Wanderlust%20Hotel/465910803.jpg'),
 
-INSERT INTO HOTEL VALUES(28, N'Sea Night Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(28, N'Sea Night Hotel', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'N4 - 11 Phan Trung, Phú Thuỷ, Khu đô thị phố biển Phan Thiết, Bình Thuận',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bãi biển Đồi Dương 700 m, Sea Night Hotel có chỗ nghỉ với sảnh khách chung, chỗ đỗ xe riêng miễn phí, sân hiên và quầy bar. Khách sạn này nằm trong bán kính khoảng 2,4 km từ Bãi biển Thương Chánh và 700 m từ Sân golf Sea Link',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sea%20Night%20Hotel/333122531.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sea%20Night%20Hotel/333122531.jpg'),
 
-INSERT INTO HOTEL VALUES(29, N'EMERALD OCEAN HOTEL', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(29, N'EMERALD OCEAN HOTEL', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'D5/01 Khu Đô Thị Du Lịch Biển - Phú Thủy - Phan Thiết, Phan Thiết',
  	4, 0,
 	N'Tọa lạc tại thành phố Phan Thiết, cách Bến xe Bình Thuận 2,7 km, EMERALD OCEAN HOTEL cung cấp chỗ nghỉ với nhà hàng, chỗ đỗ xe riêng miễn phí, quán bar và sân hiên. Khách sạn này nằm trong bán kính khoảng 5 km từ Phố ẩm thực Phan Thiết, 2,5 km từ Bảo tàng Hồ Chí Minh và 2,6 km từ Cảng cá Phan Thiết. ',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/EMERALD%20OCEAN%20HOTEL/426295909.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/EMERALD%20OCEAN%20HOTEL/426295909.jpg'),
 
-INSERT INTO HOTEL VALUES(30, N'TIFFANY HOTEL & RESTAURANT', N'Việt Nam', 'HOTEL', N'Bình Thuận',
+(30, N'TIFFANY HOTEL & RESTAURANT', N'Việt Nam', 'HOTEL', N'Bình Thuận',
 	N'D3 79-80 Khu Đô Thị Biển Phan Thiết, Phường Phú Thuỷ, Thành Phố Phan Thiết',
  	4, 0,
 	N'TIFFANY HOTEL & RESTAURANT là khách sạn 3 sao tọa lạc tại Phan Thiết, đối diện với bãi biển. Ngoài dịch vụ phòng, nơi nghỉ này còn chào đón du khách với nhà hàng, công viên nước và sân hiên. Khách sạn cũng cung cấp Wi-Fi miễn phí cũng như dịch vụ đưa đón sân bay có tính phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/TIFFANY%20HOTEL%20%26%20RESTAURANT/411699222.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/TIFFANY%20HOTEL%20%26%20RESTAURANT/411699222.jpg'),
 	
-INSERT INTO HOTEL VALUES(31, N'Long Life Riverside Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+(31, N'Long Life Riverside Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'61 Nguyễn Phúc Chu, Minh An, Hội An',
  	4, 0,
 	N'Chỉ mất 2 phút đi dạo ngắn từ Long Life Riverside Hotel là du khách có thể đến Phố Cổ Hội An nổi tiếng, Di sản thế giới được UNESCO công nhận. Khách sạn boutique này có hồ bơi ngoài trời và các lựa chọn ăn uống ngay trong khuôn viên. Du khách có thể truy cập Wi-Fi miễn phí ở tất cả các khu vực.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/117079623.jpg');
-INSERT INTO HOTEL VALUES(32, N'Hoi An Dream City Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Long%20Life%20Riverside%20Hotel/117079623.jpg'),
+(32, N'Hoi An Dream City Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N' 39 Trần Cao Vân, Sơn Phong, Hội An',
  	5, 0,
 	N'Nằm cách Phố Cổ Hội An 5 phút đi bộ, Hoi An Dream City Hotel có hồ bơi ngoài trời cũng như nhà hàng trong khuôn viên. Khách sạn này cung cấp chỗ nghỉ ấm cúng với Wi-Fi miễn phí.Tất cả phòng nghỉ tại đây đều có cửa sổ lớn, máy điều hòa và không gian lớn hơn. TV truyền hình cáp màn hình phẳng và bàn làm việc cũng được trang bị trong phòng.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121432858.jpg');
-INSERT INTO HOTEL VALUES(33, N'Hoa My II Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Dream%20City%20Hotel/121432858.jpg'),
+(33, N'Hoa My II Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'44 Trần Cao Vân, Sơn Phong, Hội An',
  	4, 0,
 	N'Hoa My II có nhà hàng, hồ bơi trong nhà và cung cấp các phòng với Wi-Fi miễn phí. Nằm trên đường Trần Cao Vân, khách sạn cách vài bước chân từ khu trung tâm thành phố Hội An, Di sản Thế giới được UNESCO công nhận. Tất cả các phòng đều được trang bị máy điều hòa và cho tầm nhìn ra quang cảnh thành phố.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433652.jpg');
-INSERT INTO HOTEL VALUES(34, N'HOI AN HISTORIC HOTEL', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoa%20My%20II%20Hotel/422433652.jpg'),
+(34, N'HOI AN HISTORIC HOTEL', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'10 Trần Hưng Đạo, Sơn Phong, Hội An',
  	5, 0,
 	N'Tọa lạc tại vị trí lý tưởng ở thành phố Hội An, HOI AN HISTORIC HOTEL cung cấp phòng nghỉ gắn máy điều hòa với WiFi miễn phí, chỗ đỗ xe riêng miễn phí và dịch vụ phòng. Khách sạn này có xe đạp cho khách sử dụng miễn phí, khu vườn, quầy bar, trung tâm thể dục, hồ bơi ngoài trời mở cửa quanh năm và sân hiên. Du khách có thể dùng bữa tại nhà hàng.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302775.jpg');
-INSERT INTO HOTEL VALUES(35, N'HY Local Budget Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HOI%20AN%20HISTORIC%20HOTEL/429302775.jpg'),
+(35, N'HY Local Budget Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'694 Đường Hai Bà Trưng phường Cẩm Phô, TP Hội An',
  	5, 0,
 	N'Tọa lạc tại vị trí tuyệt đẹp ở thành phố Hội An, HY Local Budget Hotel by Hoianese - 5 mins walk to Hoi An Ancient Town có phòng nghỉ gắn máy điều hòa, nhà hàng, WiFi miễn phí và quầy bar. Khách sạn 1 sao này cung cấp dịch vụ phòng và dịch vụ tiền sảnh. Một số phòng nghỉ tại đây có ban công nhìn ra thành phố.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/336597848.jpg');
-INSERT INTO HOTEL VALUES(36, N'Golden River Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HY%20Local%20Budget%20Hotel/336597848.jpg'),
+(36, N'Golden River Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N' 04 Nguyễn Phúc Nguyên, Minh An, TP Hội An',
  	5, 0,
 	N'Golden River Hotel nằm chỉ một vài bước chân từ phố cổ Hội An và cung cấp chỗ ở thoải mái, hồ bơi trong nhà và Wi-Fi miễn phí. Ngay trong khuôn viên khách sạn còn có nhà hàng. Các phòng nghỉ của khách sạn Golden River được trang bị máy lạnh đầy đủ và truyền hình cáp màn hình phẳng, minibar và khu vực tiếp khách. Các phòng đều có phòng tắm riêng với đồ vệ sinh cá nhân miễn phí.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239870611.jpg');
-INSERT INTO HOTEL VALUES(37, N'Hoi An Pho Library Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Golden%20River%20Hotel/239870611.jpg'),
+(37, N'Hoi An Pho Library Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'96 Bà Triệu, phường Cẩm Phô, TP Hội An',
  	4, 0,
 	N'Tọa lạc tại trung tâm thành phố Hội An, cách Khu Phố Cổ giàu giá trị văn hóa chỉ 5 phút đi bộ, Hoi An Pho Library Hotel chào đón du khách bằng đồ uống đồng thời cung cấp hồ bơi trên sân thượng, các phòng hiện đại với những tác phẩm thủ công của địa phương và Wi-Fi miễn phí trong toàn khuôn viên.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/64559435.jpg');
-INSERT INTO HOTEL VALUES(38, N'Uptown Hoi An Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Hoi%20An%20Pho%20Library%20Hotel/64559435.jpg'),
+(38, N'Uptown Hoi An Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'209 Lý Thường Kiệt, Sơn Phong, Hội An',
  	4, 0,
 	N'Tọa lạc tại thành phố Hội An, cách Bảo tàng Lịch sử Hội An 800 m, Uptown Hoi An Hotel & Spa có hồ bơi ngoài trời, khu vườn và tầm nhìn ra khu vườn. Trong số các tiện nghi của chỗ nghỉ này có nhà hàng, lễ tân 24 giờ, dịch vụ phòng và WiFi miễn phí. Nơi đây có máy ATM, dịch vụ tiền sảnh và dịch vụ thu đổi ngoại tệ cho khách.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/218594100.jpg');
-INSERT INTO HOTEL VALUES(39, N'Thanh Binh Central Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Uptown%20Hoi%20An%20Hotel/218594100.jpg'),
+(39, N'Thanh Binh Central Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'98 Bà Triệu, Cẩm Phô, Hội An',
  	4, 0,
 	N'Tọa lạc tại trung tâm Thành phố Hội An, Thanh Binh III - Serene Hotel cung cấp các phòng nghỉ trang nhã với Wi-Fi miễn phí và tầm nhìn ra quang cảnh hồ bơi/thành phố. Khách sạn có spa và hồ bơi ngoài trời.hanh Binh III Hotel tọa lạc tại vị trí thuận tiện nằm trong bán kính chưa đến 5 phút đi bộ từ Khu Phố Cổ, nơi có các điểm tham quan như Bảo tàng Chứng tích Chiến tranh.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/246386236.jpg');
-INSERT INTO HOTEL VALUES(40, N'Thanh Van 1 Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Binh%20Central%20Hotel/246386236.jpg'),
+(40, N'Thanh Van 1 Hotel', N'Việt Nam', 'HOTEL', N'Quảng Nam',
 	N'78 Trần Hưng Đạo, Sơn Phong, Hội An',
  	5, 0,
 	N'Thanh Van 1 Hotel ở Phố Cổ Hội An, cách Bãi biển An Bàng một đoạn tản bộ. Wi-Fi được cung cấp miễn phí trong toàn bộ khuôn viên nơi này.Các phòng máy lạnh tại Thanh Van 1 Hotel cung cấp tầm nhìn tuyệt vời hướng ra khu vườn. Trong phòng có các tiện nghi phòng tắm riêng, không gian tiếp khách rộng rãi và bàn làm việc.',
-	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059761.jpg');
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059761.jpg'),
 
+
+(42, N'Minh Phú 2 Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'25 Đường Trần Khánh Dư, Đà Lạt,',
+ 	2, 0,
+	N'Minh Phú 2 Hotel tọa lạc tại thành phố Đà Lạt, cách Câu lạc bộ Golf Dalat Palace 1,1 km và Vườn hoa Đà Lạt 1,9 km. Với Wi-Fi miễn phí, khách sạn 1 sao này có quầy lễ tân 24 giờ và dịch vụ trợ giúp đặc biệt. Tại đây có bãi đậu xe riêng miễn phí và chỗ nghỉ cung cấp dịch vụ đưa đón sân bay có tính phí.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/487331477.jpg'),
+
+(43, N'Torino Hotel Dalat', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'45 Đường Thủ Khoa Huân, Đà Lạt,',
+ 	5, 0,
+	N'Nằm ở thành phố Đà Lạt, Torino Hotel Dalat có sảnh khách chung, sân hiên, nhà hàng và quầy bar. Khách sạn 2 sao này cung cấp dịch vụ phòng, dịch vụ tiền sảnh, dịch vụ lễ tân 24 giờ, dịch vụ đưa đón sân bay, khu vực bếp chung và WiFi miễn phí.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/471041099.jpg'),
+
+(44, N'HouseChill Dalat Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'Đường Hà Huy Tập 6 Tầng, Đà Lạt',
+ 	5, 0,
+	N'Nằm ở Đà Lạt, cách Quảng trường Lâm Viên 1,2 km, HouseChill Dalat Hotel cung cấp chỗ nghỉ với nhà hàng, chỗ đỗ xe riêng miễn phí và quán bar. Khách sạn 2 sao này có dịch vụ trợ giúp đặc biệt và bàn đặt tour. Chỗ nghỉ có quầy lễ tân 24 giờ, dịch vụ đưa đón sân bay, dịch vụ phòng và WiFi miễn phí trong toàn bộ khuôn viên.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481510906.jpg'),
+
+(45, N'Dalat Wind Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'Lô R2 03-04. Thung lũng Golf, Phường 2, Đà Lạt',
+ 	3, 0,
+	N'Tọa lạc tại thành phố Đà Lạt, cách Hồ Xuân Hương 500 m, Dalat Wind Hotel là khách sạn 2 sao có lễ tân 24 giờ, sảnh khách chung, Wi-Fi và chỗ đỗ xe riêng miễn phí.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402605354.jpg'),
+
+(46, N'Vuon Xuan Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'40 Đường Tô Hiến Thành, Đà Lạt',
+ 	5, 0,
+	N'Tọa lạc tại thành phố Đà Lạt, cách Công viên Yersin 1,6 km, Vuon Xuan Hotel cung cấp chỗ nghỉ với vườn, chỗ đỗ xe riêng miễn phí và sân hiên. Khách sạn 3 sao này có bếp chung, dịch vụ phòng, lễ tân 24 giờ, dịch vụ tiền sảnh và tổ chức các tour du lịch cho khách.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976426.jpg'),
+
+(47, N'Sunset Hill Dalat', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'5/24 Nguyễn Hữu Cảnh, Phường 8, Đà Lạt',
+ 	5, 0,
+	N'Tọa lạc tại thành phố Đà Lạt, cách Câu lạc bộ Golf Dalat Palace 2,1 km, Sunset Hill Dalat cung cấp chỗ nghỉ với vườn, chỗ đỗ xe riêng miễn phí, sảnh khách chung và sân hiên. Khách sạn 3 sao này có dịch vụ trợ giúp đặc biệt và bàn bán tour. Chỗ nghỉ có quầy lễ tân 24 giờ, dịch vụ đưa đón sân bay, dịch vụ phòng và WiFi miễn phí trong toàn bộ khuôn viên.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/480342705.jpg'),
+
+(48, N'AN Boutique Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'138 Bùi Thị Xuân, phường 2, thành phố Đà Lạt',
+ 	4, 0,
+	N'Tọa lạc tại thành phố Đà Lạt, cách sân golf Dalat Palace Golf Club 1,5 km, AN Boutique Hotel có dịch vụ tiền sảnh, phòng nghỉ không hút thuốc, khu vườn, WiFi miễn phí, sảnh khách chung và sân hiên. Khách sạn 3 sao này cung cấp dịch vụ phòng, dịch vụ lễ tân 24 giờ và dịch vụ thu đổi ngoại tệ cho khách.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429887656.jpg'),
+
+(49, N'Đảo Hoa Dalat Hotel', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'56 Đường Phạm Ngũ Lão, Đà Lạt',
+ 	4, 0,
+	N'Đảo Hoa Đà Lạt Hotel tọa lạc tại thành phố Đà Lạt, cách Hồ Xuân Hương 1,6 km và Công viên Yersin Đà Lạt 1,8 km. Khách sạn 2 sao này cung cấp dịch vụ phòng và lễ tân 24 giờ. Chỗ nghỉ cấm hút thuốc và cách Quảng trường Lâm Viên 1,4 km.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487047698.jpg'),
+
+(50, N'Hạ Na Hotel Đà Lạt', N'Việt Nam', 'HOTEL', N'Lâm Đồng',
+	N'Hẻm 163 Ba Tháng Hai, Đà Lạt',
+ 	5, 0,
+	N'Nằm ở thành phố Đà Lạt, cách Quảng trường Lâm Viên 1,9 km, Hạ Na Hotel Đà Lạt cung cấp chỗ nghỉ với sảnh khách chung, chỗ đỗ xe riêng miễn phí và sân hiên. Chỗ nghỉ này nằm trong bán kính 2,1 km từ Hồ Xuân Hương, 2,2 km từ Công viên Yersin và 3,1 km từ Vườn hoa Đà Lạt. Nơi đây cung cấp dịch vụ lễ tân 24 giờ, dịch vụ đưa đón sân bay, khu bếp chung và WiFi miễn phí trong toàn bộ khuôn viên.',
+	N'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/346439681.jpg');
+
+UPDATE HOTEL SET AccountId = 0;
 
 --!add room Facility
 INSERT INTO FACILITY_CONST VALUES(1,'SWIMMING_POOL');
@@ -1141,7 +1218,7 @@ INSERT INTO ROOM_SERVICE VALUES(19,2,1);
 INSERT INTO ROOM_TYPE VALUES(20, 1, N'Phòng Gia đình nhìn ra Núi', 2, 30,1892500,
 	N'Phòng gia đình này được bố trí phòng tắm riêng với buồng tắm đứng, máy sấy tóc, dép và đồ vệ sinh cá nhân miễn phí. Phòng gia đình có tiện nghi BBQ, TV màn hình phẳng, tầm nhìn ra núi cũng như rượu vang/rượu sâm panh cho khách. Căn này được trang bị 2 giường.',
 	N'Nhìn ra núi',
-	'SINGLE_OR_DOUBLE');
+	'SINGLE_OR_TWIN');
 
 INSERT INTO ROOM_TYPE VALUES(20, 2, N'Phòng Có Giường Cỡ King Với Ban Công', 3, 25,1700000,
 	N'Phòng giường đôi này được bố trí phòng tắm riêng với buồng tắm đứng, máy sấy tóc, dép và đồ vệ sinh cá nhân miễn phí. Phòng giường đôi có tiện nghi BBQ, TV màn hình phẳng, tầm nhìn ra thành phố cũng như rượu vang/rượu sâm panh cho khách. Căn này được trang bị 1 giường.',
@@ -1507,7 +1584,7 @@ INSERT INTO ROOM_TYPE VALUES(30, 1,N'Suite President Nhìn ra Thành Phố', 3, 
 INSERT INTO ROOM_TYPE VALUES(30, 2,N'Phòng 2 giường đơn có ban công', 3, 80,5400000,
 	N'Phòng giường đôi này được bố trí phòng tắm riêng với buồng tắm đứng, máy sấy tóc, dép và đồ vệ sinh cá nhân miễn phí.',
 	N'Nhìn ra hồ bơi, Ban công, Nhìn ra địa danh nổi tiếng',
-	'SINGLE');
+	'SINGLE_OR_TWIN');
 INSERT INTO ROOM_TYPE VALUES(30, 3,N'Phòng Giường Đôi Nhìn Ra Hồ Bơi', 3, 80,4300000,
 	N'Phòng giường đôi cực lớn này có sofa, SmartTV, bàn ghế trang điểm, minibar và đầy đủ đồ nội thất.',
 	N'Nhìn ra hồ bơi,Nhìn ra thành phố,Nhìn ra địa danh nổi tiếng, Nhìn ra biển',
@@ -1873,6 +1950,314 @@ INSERT INTO ROOM_SERVICE VALUES(40,2,4);
 
 INSERT INTO ROOM_SERVICE VALUES(40,3,1);
 INSERT INTO ROOM_SERVICE VALUES(40,3,2);
+
+
+--todo Minh Phú 2 Hotel
+INSERT INTO ROOM_TYPE VALUES(42, 1,N'', 3, 85,3450000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(42, 2,N'', 3, 60,2640000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(42, 3,N'', 3, 70,1950000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(42,1,4);
+INSERT INTO ROOM_FACILITY VALUES(42,1,5);
+INSERT INTO ROOM_FACILITY VALUES(42,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(42,2,13);
+INSERT INTO ROOM_FACILITY VALUES(42,2,15);
+INSERT INTO ROOM_FACILITY VALUES(42,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(42,3,11);
+INSERT INTO ROOM_FACILITY VALUES(4,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(42,1,5);
+INSERT INTO ROOM_SERVICE VALUES(42,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(42,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(42,3,1);
+INSERT INTO ROOM_SERVICE VALUES(42,3,2);
+
+--todo Torino Hotel Dalat
+INSERT INTO ROOM_TYPE VALUES(43, 1,N'', 3, 85,2960000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(43, 2,N'', 3, 60,2360000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(43, 3,N'', 3, 70,1500000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(43,1,4);
+INSERT INTO ROOM_FACILITY VALUES(43,1,5);
+INSERT INTO ROOM_FACILITY VALUES(43,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(43,2,13);
+INSERT INTO ROOM_FACILITY VALUES(43,2,15);
+INSERT INTO ROOM_FACILITY VALUES(43,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(43,3,11);
+INSERT INTO ROOM_FACILITY VALUES(43,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(43,1,5);
+INSERT INTO ROOM_SERVICE VALUES(43,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(43,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(43,3,1);
+INSERT INTO ROOM_SERVICE VALUES(43,3,2);
+
+--todo HouseChill Dalat Hotel
+INSERT INTO ROOM_TYPE VALUES(44, 1,N'', 3, 85,1750000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(44, 2,N'', 3, 60,2570000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(44, 3,N'', 3, 70,3150000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(44,1,4);
+INSERT INTO ROOM_FACILITY VALUES(44,1,5);
+INSERT INTO ROOM_FACILITY VALUES(44,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(44,2,13);
+INSERT INTO ROOM_FACILITY VALUES(44,2,15);
+INSERT INTO ROOM_FACILITY VALUES(44,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(44,3,11);
+INSERT INTO ROOM_FACILITY VALUES(44,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(44,1,5);
+INSERT INTO ROOM_SERVICE VALUES(44,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(44,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(44,3,1);
+INSERT INTO ROOM_SERVICE VALUES(44,3,2);
+
+--todo Dalat Wind Hotel
+INSERT INTO ROOM_TYPE VALUES(45, 1,N'', 3, 85,4250000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(45, 2,N'', 3, 60,4170000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(45, 3,N'', 3, 70,3240000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(45,1,4);
+INSERT INTO ROOM_FACILITY VALUES(45,1,5);
+INSERT INTO ROOM_FACILITY VALUES(45,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(45,2,13);
+INSERT INTO ROOM_FACILITY VALUES(45,2,15);
+INSERT INTO ROOM_FACILITY VALUES(45,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(45,3,11);
+INSERT INTO ROOM_FACILITY VALUES(45,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(45,1,5);
+INSERT INTO ROOM_SERVICE VALUES(45,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(45,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(45,3,1);
+INSERT INTO ROOM_SERVICE VALUES(45,3,2);
+
+--todo Vuon Xuan Hotel
+INSERT INTO ROOM_TYPE VALUES(46, 1,N'', 3, 85,2450000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(46, 2,N'', 3, 66,4570000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(46, 3,N'', 3, 70,2250000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(46,1,4);
+INSERT INTO ROOM_FACILITY VALUES(46,1,5);
+INSERT INTO ROOM_FACILITY VALUES(46,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(46,2,13);
+INSERT INTO ROOM_FACILITY VALUES(46,2,15);
+INSERT INTO ROOM_FACILITY VALUES(46,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(46,3,11);
+INSERT INTO ROOM_FACILITY VALUES(46,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(46,1,5);
+INSERT INTO ROOM_SERVICE VALUES(46,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(46,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(46,3,1);
+INSERT INTO ROOM_SERVICE VALUES(46,3,2);
+
+--todo Sunset Hill Dalat
+INSERT INTO ROOM_TYPE VALUES(47, 1,N'', 3, 81,2970000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(47, 2,N'', 3, 68,2560000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(47, 3,N'', 3, 72,3570000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(47,1,4);
+INSERT INTO ROOM_FACILITY VALUES(47,1,5);
+INSERT INTO ROOM_FACILITY VALUES(47,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(47,2,13);
+INSERT INTO ROOM_FACILITY VALUES(47,2,15);
+INSERT INTO ROOM_FACILITY VALUES(47,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(47,3,11);
+INSERT INTO ROOM_FACILITY VALUES(47,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(47,1,5);
+INSERT INTO ROOM_SERVICE VALUES(47,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(47,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(47,3,1);
+INSERT INTO ROOM_SERVICE VALUES(47,3,2);
+
+--todo AN Boutique Hotel
+INSERT INTO ROOM_TYPE VALUES(48, 1,N'', 3, 85,1970000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(48, 2,N'', 3, 64,1570000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(48, 3,N'', 3, 72,1250000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(48,1,4);
+INSERT INTO ROOM_FACILITY VALUES(48,1,5);
+INSERT INTO ROOM_FACILITY VALUES(48,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(48,2,13);
+INSERT INTO ROOM_FACILITY VALUES(48,2,15);
+INSERT INTO ROOM_FACILITY VALUES(48,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(48,3,11);
+INSERT INTO ROOM_FACILITY VALUES(48,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(48,1,5);
+INSERT INTO ROOM_SERVICE VALUES(48,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(48,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(48,3,1);
+INSERT INTO ROOM_SERVICE VALUES(48,3,2);
+
+--todo Đảo Hoa Dalat Hotel
+INSERT INTO ROOM_TYPE VALUES(49, 1,N'', 3, 65,4850000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(49, 2,N'', 3, 60,2730000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(49, 3,N'', 3, 60,3360000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(49,1,4);
+INSERT INTO ROOM_FACILITY VALUES(49,1,5);
+INSERT INTO ROOM_FACILITY VALUES(49,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(49,2,13);
+INSERT INTO ROOM_FACILITY VALUES(49,2,15);
+INSERT INTO ROOM_FACILITY VALUES(49,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(49,3,11);
+INSERT INTO ROOM_FACILITY VALUES(49,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(49,1,5);
+INSERT INTO ROOM_SERVICE VALUES(49,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(49,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(49,3,1);
+INSERT INTO ROOM_SERVICE VALUES(49,3,2);
+
+--todo Hạ Na Hotel Đà Lạt
+INSERT INTO ROOM_TYPE VALUES(50, 1,N'', 3, 85,3150000,
+	N'',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(50, 2,N'', 3, 60,2930000,
+	N'.',
+	N'',
+	'LARGE_DOUBLE');
+INSERT INTO ROOM_TYPE VALUES(50, 3,N'', 3, 70,1340000,
+	N'.',
+	N'',
+	'DOUBLE');
+
+--!ADD ROOM FACILITY
+INSERT INTO ROOM_FACILITY VALUES(50,1,4);
+INSERT INTO ROOM_FACILITY VALUES(50,1,5);
+INSERT INTO ROOM_FACILITY VALUES(50,1,8);
+
+INSERT INTO ROOM_FACILITY VALUES(50,2,13);
+INSERT INTO ROOM_FACILITY VALUES(50,2,15);
+INSERT INTO ROOM_FACILITY VALUES(50,2,16);
+
+INSERT INTO ROOM_FACILITY VALUES(50,3,11);
+INSERT INTO ROOM_FACILITY VALUES(50,3,12);
+--! ADD ROOM SERVICE
+INSERT INTO ROOM_SERVICE VALUES(50,1,5);
+INSERT INTO ROOM_SERVICE VALUES(50,1,3);
+
+INSERT INTO ROOM_SERVICE VALUES(50,2,4);
+
+INSERT INTO ROOM_SERVICE VALUES(50,3,1);
+INSERT INTO ROOM_SERVICE VALUES(50,3,2);
+
 
 --! add room picture 
 --todo Triple E Hotel Metro Ben Thanh
@@ -2384,6 +2769,124 @@ INSERT INTO ROOM_PICTURE VALUES(40,2,3,'https://eleinvar.sirv.com/Shared/Sunrise
 INSERT INTO ROOM_PICTURE VALUES(40,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059801.jpg');
 INSERT INTO ROOM_PICTURE VALUES(40,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059792.jpg');
 INSERT INTO ROOM_PICTURE VALUES(40,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Thanh%20Van%201%20Hotel/45059761.jpg');
+
+
+--todo Minh Phú 2 Hotel		
+INSERT INTO ROOM_PICTURE VALUES(42,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486470565.jpg');
+INSERT INTO ROOM_PICTURE VALUES(42,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486470631.jpg');
+INSERT INTO ROOM_PICTURE VALUES(42,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/487331477.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(42,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486470082.jpg');
+INSERT INTO ROOM_PICTURE VALUES(42,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/483917499.jpg');
+INSERT INTO ROOM_PICTURE VALUES(42,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486272578.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(42,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486470180.jpg');
+INSERT INTO ROOM_PICTURE VALUES(42,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486272574.jpg');
+INSERT INTO ROOM_PICTURE VALUES(42,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Minh%20Ph%C3%BA%202%20Hotel/486272558.jpg');
+
+--todo Torino Hotel Dalat
+INSERT INTO ROOM_PICTURE VALUES(43,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474307896.jpg');
+INSERT INTO ROOM_PICTURE VALUES(43,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474298677.jpg');
+INSERT INTO ROOM_PICTURE VALUES(43,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474298667.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(43,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474305730.jpg');
+INSERT INTO ROOM_PICTURE VALUES(43,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474296986.jpg');
+INSERT INTO ROOM_PICTURE VALUES(43,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474297037.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(43,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/471041099.jpg');
+INSERT INTO ROOM_PICTURE VALUES(43,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/474295523.jpg');
+INSERT INTO ROOM_PICTURE VALUES(43,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Torino%20Hotel%20Dalat/471041030.jpg');
+
+--todo HouseChill Dalat Hotel
+INSERT INTO ROOM_PICTURE VALUES(44,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481511046.jpg');
+INSERT INTO ROOM_PICTURE VALUES(44,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481510906.jpg');
+INSERT INTO ROOM_PICTURE VALUES(44,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481510898.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(44,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481510352.jpg');
+INSERT INTO ROOM_PICTURE VALUES(44,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481509555.jpg');
+INSERT INTO ROOM_PICTURE VALUES(44,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481509558.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(44,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481508792.jpg');
+INSERT INTO ROOM_PICTURE VALUES(44,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481509485.jpg');
+INSERT INTO ROOM_PICTURE VALUES(44,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/HouseChill%20Dalat%20Hotel/481509493.jpg');
+
+--todo Dalat Wind Hotel
+INSERT INTO ROOM_PICTURE VALUES(45,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402606970.jpg');
+INSERT INTO ROOM_PICTURE VALUES(45,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/481239795.jpg');
+INSERT INTO ROOM_PICTURE VALUES(45,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/449510419.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(45,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402607942.jpg');
+INSERT INTO ROOM_PICTURE VALUES(45,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402606316.jpg');
+INSERT INTO ROOM_PICTURE VALUES(45,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402605836.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(45,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402605759.jpg');
+INSERT INTO ROOM_PICTURE VALUES(45,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402605354.jpg');
+INSERT INTO ROOM_PICTURE VALUES(45,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Dalat%20Wind%20Hotel/402605742.jpg');
+
+--todo Vuon Xuan Hotel
+INSERT INTO ROOM_PICTURE VALUES(46,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408981593.jpg');
+INSERT INTO ROOM_PICTURE VALUES(46,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408981268.jpg');
+INSERT INTO ROOM_PICTURE VALUES(46,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408981600.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(46,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976032.jpg');
+INSERT INTO ROOM_PICTURE VALUES(46,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408981265.jpg');
+INSERT INTO ROOM_PICTURE VALUES(46,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976035.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(46,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976021.jpg');
+INSERT INTO ROOM_PICTURE VALUES(46,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976898.jpg');
+INSERT INTO ROOM_PICTURE VALUES(46,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Vuon%20Xuan%20Hotel/408976426.jpg');
+
+--todo Sunset Hill Dalat
+INSERT INTO ROOM_PICTURE VALUES(47,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/480342705.jpg');
+INSERT INTO ROOM_PICTURE VALUES(47,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157957.jpg');
+INSERT INTO ROOM_PICTURE VALUES(47,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157975.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(47,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157911.jpg');
+INSERT INTO ROOM_PICTURE VALUES(47,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157878.jpg');
+INSERT INTO ROOM_PICTURE VALUES(47,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157910.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(47,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157876.jpg');
+INSERT INTO ROOM_PICTURE VALUES(47,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157783.jpg');
+INSERT INTO ROOM_PICTURE VALUES(47,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/Sunset%20Hill%20Dalat/478157888.jpg');
+
+--todo AN Boutique Hotel
+INSERT INTO ROOM_PICTURE VALUES(48,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/430679432.jpg');
+INSERT INTO ROOM_PICTURE VALUES(48,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/430679813.jpg');
+INSERT INTO ROOM_PICTURE VALUES(48,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/430676760.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(48,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429887683.jpg');
+INSERT INTO ROOM_PICTURE VALUES(48,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429806403.jpg');
+INSERT INTO ROOM_PICTURE VALUES(48,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429887653.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(48,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429806405.jpg');
+INSERT INTO ROOM_PICTURE VALUES(48,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/429887656.jpg');
+INSERT INTO ROOM_PICTURE VALUES(48,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/AN%20Boutique%20Hotel/428733700.jpg');
+
+--todo Đảo Hoa Dalat Hotel
+INSERT INTO ROOM_PICTURE VALUES(49,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048142.jpg');
+INSERT INTO ROOM_PICTURE VALUES(49,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048285.jpg');
+INSERT INTO ROOM_PICTURE VALUES(49,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048193.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(49,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048118.jpg');
+INSERT INTO ROOM_PICTURE VALUES(49,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048114.jpg');
+INSERT INTO ROOM_PICTURE VALUES(49,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048097.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(49,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487047698.jpg');
+INSERT INTO ROOM_PICTURE VALUES(49,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048117.jpg');
+INSERT INTO ROOM_PICTURE VALUES(49,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/%C4%90%E1%BA%A3o%20Hoa%20Dalat%20Hotel/487048056.jpg');
+
+--todo Hạ Na Hotel Đà Lạt
+INSERT INTO ROOM_PICTURE VALUES(50,1,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456112321.jpg');
+INSERT INTO ROOM_PICTURE VALUES(50,1,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456114903.jpg');
+INSERT INTO ROOM_PICTURE VALUES(50,1,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456112318.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(50,2,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456118711.jpg');
+INSERT INTO ROOM_PICTURE VALUES(50,2,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456103398.jpg');
+INSERT INTO ROOM_PICTURE VALUES(50,2,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456112273.jpg');
+
+INSERT INTO ROOM_PICTURE VALUES(50,3,1,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456099174.jpg');
+INSERT INTO ROOM_PICTURE VALUES(50,3,2,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/346439681.jpg');
+INSERT INTO ROOM_PICTURE VALUES(50,3,3,'https://eleinvar.sirv.com/Shared/Sunrise-Continent-from-rialloer/hotels/H%E1%BA%A1%20Na%20Hotel%20%C4%90%C3%A0%20L%E1%BA%A1t/456098428.jpg');
 
 
 INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank) VALUES
@@ -2987,7 +3490,7 @@ INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, Da
 (598, N'Hoàng Minh Cảnh', 'rachel22@hotmail.com', '0947702520', '2003-06-09', 'Male', N'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', N'Bronze'),
 (599, N'Hồ Võ Thanh Thu', 'stevencombs@gmail.com', '0381390001', '1979-10-01', 'Female', N'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/avt_7.png', N'Bronze'),
 (600, N'Nguyễn Minh Lý', 'justinwaters@gmail.com', '0842756271', '1980-09-27', 'Female', N'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/focalos.png', N'Bronze');
-
+UPDATE PERSONAL_DETAILS SET HotelId = 0;
 
 INSERT INTO REVIEW (ReviewId, AccountId, HotelId, ReviewDate, Points, Content) VALUES
 (1, 299, 7, '2023-03-06', 8, N'Eight light she store quite see serve successful line door.'),

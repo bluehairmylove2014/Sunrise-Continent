@@ -8,6 +8,7 @@ using SunriseServerCore.Dtos;
 using SunriseServerCore.Dtos.Order;
 using SunriseServer.Services.PaymentService;
 using AutoMapper;
+using Microsoft.Data.SqlClient;
 
 namespace SunriseServer.Controllers
 {
@@ -26,15 +27,12 @@ namespace SunriseServer.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet, Authorize(Roles = GlobalConstant.User)]
+        [HttpGet, Authorize]
         public async Task<ActionResult<IEnumerable<GetOrderItemsDto>>> GetAccountOrder()
         {
             Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
 
             var rawResult = await _orderService.GetAccountOrder(accountId);
-
-            if (rawResult.Count() == 0)
-                return NotFound("You do not have any order.");
 
             var result = new List<GetOrderItemsDto>();
             
@@ -58,9 +56,6 @@ namespace SunriseServer.Controllers
                 result.Add(oneOrder);
             }
 
-            if (result is null)
-                return NotFound("You do not have any order.");
-
             return Ok(result);
         }
 
@@ -76,20 +71,33 @@ namespace SunriseServer.Controllers
 
                 if (paymentDto is null)
                 {
-                    return BadRequest("Not enough money to pay your order");
+                    return BadRequest(new {
+                        message = "Tài khoản không đủ số dư để thực hiện giao dịch"
+                    });
                 }
 
                 orderInfo.SessionId = paymentDto.SessionId;
                 var result = await _orderService.CreateOrder(orderInfo, accountId);
 
                 if (result == 0)
-                    return BadRequest("Cannot add booking.");
+                    return BadRequest(new {
+                        message = "Không thể đặt phòng, vui lòng thử lại"
+                    });
 
                 return Ok(paymentDto.Url);
             }
+            catch(SqlException sqlEx)
+            {
+                return BadRequest(new
+                {
+                    message = sqlEx.Message,
+                });
+            }
             catch (Exception)
             {
-                return BadRequest("An error occurs when checkout");
+                return BadRequest(new {
+                    message = "Không thể đặt phòng, vui lòng thử lại"
+                });
             }
         }
     }

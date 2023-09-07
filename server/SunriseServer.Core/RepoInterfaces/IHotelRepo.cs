@@ -11,11 +11,16 @@ namespace SunriseServerCore.RepoInterfaces
 {
     public interface IHotelRepo : IRepository<Hotel>
     {
-        // More info
         Task<List<RoomFacilityConstant>> GetHotelFacilityAsync(int id);
         Task<List<RoomServiceConstant>> GetHotelServiceAsync(int id);
         Task<List<RoomPicture>> GetHotelPictureAsync(int id);
         Task<List<Hotel>> GetRecommendedHotelAsync(int num);
         Task<List<Hotel>> GetSearchHotels(SearchHotelDto searchHotel);
+
+        Task<int> CreateHotelAsync(int accountId, InputHotelDto entity);
+        Task<int> UpdateHotelAsync(Hotel entity);
+        Task<List<YealyRevenue>> GetHotelYealyRevenueAsync(int hotelId, int? year);
+        Task<List<WeeklyRevenue>> GetHotelWeeklyRevenueAsync(int hotelId, DateTime? date);
+        Task<List<TopAccountInfoDto>> GetHotelTopUserAsync(int hotelId);
     }
 }

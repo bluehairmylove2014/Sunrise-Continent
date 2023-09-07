@@ -24,9 +24,9 @@ namespace SunriseServerData.Repositories
             _dataContext = dbContext;
         }
 
-        public override async Task<IEnumerable<Voucher>> GetAllAsync()
+        public async Task<List<VoucherBag>> GetAllVoucherAsync()
         {
-            var result = await _dataContext.Voucher.FromSqlInterpolated($"EXEC USP_GetAllVoucher;").ToListAsync();
+            var result = await _dataContext.VoucherBag.FromSqlInterpolated($"EXEC USP_GetAllVoucher;").ToListAsync();
             return result;
         }
 
@@ -50,7 +50,7 @@ namespace SunriseServerData.Repositories
 
         public async Task<int> CreateAsync(AddVoucherDto voucher)
         {
-            var str = $@"EXEC USP_AddVoucher @Name=N'{voucher.Name}', @Value={voucher.Value}, @Point={voucher.Point}, @AccountRank='{voucher.AccountRank}';";
+            var str = $@"EXEC USP_AddVoucher @Name=N'{voucher.Name}', @Value={voucher.Value}, @Point={voucher.Point}, @RequiredRank='{voucher.RequiredRank}', @Quantity={voucher.Quantity};";
 
             Console.WriteLine(str);
 
@@ -65,7 +65,8 @@ namespace SunriseServerData.Repositories
             builder.Append($"@Name = N\'{voucher.Name}\', ");
             builder.Append($"@Value = {voucher.Value}, ");
             builder.Append($"@Point = {voucher.Point}, ");
-            builder.Append($"@AccountRank = '{voucher.AccountRank}';");
+            builder.Append($"@RequiredRank = \'{voucher.RequiredRank}\', ");
+            builder.Append($"@Quantity = '{voucher.Quantity}';");
 
 
             Console.WriteLine(builder.ToString());
@@ -79,9 +80,9 @@ namespace SunriseServerData.Repositories
             return result;
         }
 
-        public async Task<int> UpdateAccountRankAsync(int accountId)
+        public async Task<int> UpdateRequiredRankAsync(int accountId)
         {
-            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXEC USP_UpdateAccountRank @AccountId={accountId};");
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXEC USP_UpdateRequiredRank @AccountId={accountId};");
             return result;
         }
 

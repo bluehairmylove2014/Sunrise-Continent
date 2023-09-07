@@ -1,4 +1,4 @@
-﻿USE [sunrise-hotel]
+﻿USE [sunrise-hotel];
 GO
 
 
@@ -17,7 +17,9 @@ RETURNS FLOAT
 BEGIN
 	declare @Value FLOAT
 	SET @Value = (SELECT AVG(Points) FROM REVIEW WHERE HotelId = @HotelId)
-	IF @Value IS NULL RETURN 0
+	IF (@Value IS NULL)
+		SET @Value = 10.0;
+
     RETURN @Value
 END
 GO
@@ -75,26 +77,6 @@ BEGIN
 END
 GO
 
-
---CREATE OR ALTER PROC USP_SearchByName 
---	@search_query NVARCHAR(100)
---AS
---	IF NOT EXISTS (select * from HOTEL where Description like (N'%' + @search_query + N'%'))
---	BEGIN
---		RETURN 0
---	END
-
---	SELECT Id, Name, Address, Stars, Image,
---			dbo.USF_GetReviewNum(Id) Reviews, 
---			dbo.USF_GetAvgReview(Id) Points,
---			dbo.USF_GetMinRoomPrice(Id) Price
---	FROM HOTEL
---	WHERE Description like (N'%' + @search_query + N'%')
-
---	RETURN 1
---GO
-
-
 GO
 CREATE OR ALTER PROC USP_GetHotelRoomFacility 
 	@Id INT
@@ -128,7 +110,7 @@ AS
 GO
 
 
--- =================
+
 CREATE OR ALTER PROC USP_GetRoomType 
 	@HotelId INT,
 	@Id INT
@@ -194,7 +176,8 @@ AS
 			Address, Stars,
 			dbo.USF_GetAvgReview(Id) Rating,
 			Description, Image,
-			dbo.USF_GetMinRoomPrice(Id) Price
+			dbo.USF_GetMinRoomPrice(Id) Price,
+			AccountId
 	FROM HOTEL
 GO
 
@@ -211,7 +194,8 @@ AS
 			Address, Stars,
 			dbo.USF_GetAvgReview(Id) Rating,
 			Description, Image,
-			dbo.USF_GetMinRoomPrice(Id) Price
+			dbo.USF_GetMinRoomPrice(Id) Price, 
+			AccountId
 	FROM HOTEL WHERE Id = @Id
 GO
 
@@ -223,36 +207,92 @@ AS
 			Address, Stars,
 			dbo.USF_GetAvgReview(Id) Rating,
 			Description, Image,
-			dbo.USF_GetMinRoomPrice(Id) Price
+			dbo.USF_GetMinRoomPrice(Id) Price, 
+			AccountId
 	FROM HOTEL
 	ORDER BY Rating DESC;
 GO
 
 
 CREATE OR ALTER PROC USP_AddHotel
-	--@Id INT,
+	@AccountId INT,
 	@Name NVARCHAR(100),
 	@Country NVARCHAR(100),
-	@HotelType NVARCHAR(100),
-	@ProvinceCity VARCHAR(100),  
+	@HotelType VARCHAR(100),
+	@ProvinceCity NVARCHAR(100),  
 	@Address NVARCHAR(100),
 	@Stars INT,
-	@Rating FLOAT,
 	@Description NVARCHAR(1000),
 	@Image NVARCHAR(1000)
 AS
+BEGIN
+	IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @AccountId AND UserRole = 'Partner')
+	BEGIN
+		RAISERROR ('Tài khoản không tồn tại hoặc không đủ quyền.', 11, 1);
+		RETURN -2;
+	END
+
+	BEGIN TRAN
 	BEGIN TRY
 		DECLARE @Id INT
 		EXEC @Id = USP_GetNextColumnId 'HOTEL', 'Id';
 		
-		INSERT INTO HOTEL VALUES (@Id, @Name, @Country, @HotelType, @ProvinceCity, @Address, @Stars, @Rating, @Description, @Image)
-		RETURN @Id
+		INSERT INTO HOTEL VALUES (@Id, @Name, @Country, @HotelType, @ProvinceCity, @Address, @Stars, 10.0, @Description, @Image, @AccountId);
+		UPDATE PERSONAL_DETAILS SET HotelId = @Id WHERE AccountId = @AccountId;
 	END TRY
 
 	BEGIN CATCH
-		PRINT N'Hotel insertion error'
-		RETURN -1
+		RAISERROR ('Lỗi trong quá trình thêm khách sạn.', 11, 1);
+		ROLLBACK;
+		RETURN -1;
 	END CATCH
+
+	COMMIT;
+	RETURN @Id
+END
+GO
+
+CREATE OR ALTER PROC USP_UpdateHotel -- // new check
+	@Id INT,
+	@Name NVARCHAR(100),
+	@Country NVARCHAR(100),
+	@HotelType VARCHAR(100),
+	@ProvinceCity NVARCHAR(100),  
+	@Address NVARCHAR(100),
+	@Stars INT,
+	@Description NVARCHAR(1000),
+	@Image NVARCHAR(1000)
+AS
+BEGIN
+	IF NOT EXISTS (SELECT Id FROM HOTEL WHERE Id = @Id)
+	BEGIN
+		RAISERROR ('Khách sạn không tồn tại.', 11, 1);
+		RETURN -2;
+	END
+
+	BEGIN TRAN
+	BEGIN TRY
+		UPDATE HOTEL SET
+			Name = @Name,
+			Country = @Country,
+			HotelType = @HotelType,
+			ProvinceCity = @ProvinceCity,  
+			Address = @Address,
+			Stars = @Stars,
+			Description = @Description,
+			Image = @Image
+		WHERE Id = @Id;
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR ('Lỗi trong quá trình thêm khách sạn.', 11, 1);
+		ROLLBACK;
+		RETURN -1;
+	END CATCH
+
+	COMMIT;
+	RETURN 0
+END
 GO
 
 
@@ -262,11 +302,12 @@ AS
 	SELECT * FROM ACCOUNT
 GO
 
-CREATE OR ALTER PROC USP_GetAccountSocial (
+CREATE OR ALTER PROC USP_GetAccountDetailSocial (
 	@Email VARCHAR(50),
 	@FullName NVARCHAR(1000))
 AS
-	SELECT pd.*, acc.MemberPoint as Point FROM (SELECT * FROM PERSONAL_DETAILS WHERE EmailAddress = @Email AND FullName = @FullName) pd
+	SELECT pd.*, acc.MemberPoint as Point, acc.UserRole as Role FROM 
+	(SELECT * FROM PERSONAL_DETAILS WHERE EmailAddress = @Email AND FullName = @FullName) pd
 	JOIN ACCOUNT acc ON pd.AccountId = acc.Id AND acc.PasswordHash = 'Social';
 GO
 
@@ -277,9 +318,10 @@ CREATE OR ALTER PROC USP_AddAccountSocial (
 	@FullName NVARCHAR(100),
 	@RefreshToken VARCHAR(200),
 	@TokenCreated DATETIME,
-	@TokenExpires DATETIME)
+	@TokenExpires DATETIME,
+	@UserRole VARCHAR(50))
 AS
-	EXEC USP_AddAccount @Id, @Email, @FullName, 'Social', 'Social', 'User', @RefreshToken, @TokenCreated, @TokenExpires;
+	EXEC USP_AddAccount @Id, @Email, @FullName, 'Social', 'Social', @UserRole, @RefreshToken, @TokenCreated, @TokenExpires;
 	RETURN @Id;
 GO
 
@@ -327,15 +369,16 @@ BEGIN
 	BEGIN TRAN
 
 	BEGIN TRY
-		INSERT INTO ACCOUNT VALUES (@Id, 0, 'Bronze', @Email, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires)
+		INSERT INTO ACCOUNT VALUES (@Id, 0, 'Bronze', @Email, @PasswordHash, @PasswordSalt, @UserRole, @RefreshToken, @TokenCreated, @TokenExpires, 1)
 
 		IF NOT EXISTS (SELECT AccountId FROM PERSONAL_DETAILS WHERE AccountId = @Id)
-			INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank) 
-				VALUES (@Id, @FullName, @Email, 'default', '01-01-2002', 'Male', 'https://drallitu.sirv.com/Shared/Sunrise-Continent-from-rialloer/Users/Untitled-UaAu9kQf7-transformed.jpeg', 'Bronze');
+			INSERT INTO PERSONAL_DETAILS (AccountId, FullName, EmailAddress, PhoneNumber, DateOfBirth, Gender, Image, Rank, HotelId) 
+				VALUES (@Id, @FullName, @Email, 'default', '01-01-2002', 'Male', 'https://rialloer.sirv.com/Sunrise-Continent/Users/focalos.png', 'Bronze', 0);
 		ELSE
 			UPDATE PERSONAL_DETAILS SET
 				FullName = @FullName,
-				EmailAddress = @Email
+				EmailAddress = @Email,
+				HotelId = 0
 			WHERE AccountId = @Id;
 	END TRY
 
@@ -355,19 +398,15 @@ GO
 CREATE OR ALTER PROC USP_UpdateAccount
 	@Id INTEGER,
 	@MemberPoint INTEGER,
-	@AccountRank VARCHAR(20),
+	@RequiredRank VARCHAR(20),
 	@Email VARCHAR(50),
 	@PasswordHash VARCHAR(500),
 	@PasswordSalt VARCHAR(500)
-	--@UserRole VARCHAR(50),
- --   @RefreshToken VARCHAR(200),
- --   @TokenCreated DATETIME,
- --   @TokenExpires DATETIME
 AS
 	BEGIN TRY
 		IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @Id)
 		BEGIN
-			PRINT N'Account Id not existed'
+			PRINT N'Tài khoản không tồn tại'
 			RETURN 1
 		END
 
@@ -375,7 +414,7 @@ AS
 		SET
 			MemberPoint = @MemberPoint,
 			Email = @Email,
-			AccountRank = @AccountRank,
+			RequiredRank = @RequiredRank,
 			PasswordHash = @PasswordHash,
 			PasswordSalt = @PasswordSalt
 		WHERE Id = @Id
@@ -406,13 +445,13 @@ AS
 BEGIN
 	IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @AccountId)
 	BEGIN
-		RAISERROR(N'Account Id not existed', 11, 1);
+		RAISERROR(N'Tài khoản không tồn tại', 11, 1);
 		RETURN -2;
 	END
 
 	IF EXISTS (SELECT Id FROM ACCOUNT WHERE Email = @Email AND Id != @AccountId)
 	BEGIN
-		RAISERROR(N'Account Email existed', 11, 1);
+		RAISERROR(N'Email đã tồn tại', 11, 1);
 		RETURN -3;
 	END
 	
@@ -424,7 +463,7 @@ BEGIN
 	END TRY
 
 	BEGIN CATCH
-		RAISERROR(N'Account Id not existed', 11, 1);
+		RAISERROR(N'Tài khoản không tồn tại', 11, 1);
 		ROLLBACK;
 		RETURN -1;
 	END CATCH
@@ -446,7 +485,7 @@ AS
 BEGIN
 	IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @AccountId)
 	BEGIN
-		RAISERROR(N'Account Id not existed', 11, 1);
+		RAISERROR(N'Tài khoản không tồn tại', 11, 1);
 		RETURN -2;
 	END
 	
@@ -470,6 +509,51 @@ BEGIN
 
 	COMMIT;
 	RETURN 0;
+END
+GO
+
+GO
+CREATE OR ALTER PROC USP_BanAccount -- // Check // newCheck
+	@AccountId INT
+AS
+BEGIN
+	IF NOT EXISTS (SELECT * FROM ACCOUNT WHERE Id = @AccountId)
+	BEGIN
+		RAISERROR(N'Tài khoản không tồn tại', 11, 1);
+		RETURN -2;
+	END
+	DECLARE @Id INT = 0;
+	
+	BEGIN TRAN
+
+	BEGIN TRY
+		SELECT @Id = Id FROM HOTEL WHERE AccountId = @AccountId;
+		IF (@Id > 0) DELETE FROM HOTEL WHERE Id = @Id;
+
+		UPDATE ACCOUNT SET 
+			Active = ABS(Active - 1)
+		WHERE Id = @AccountId;
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR(N'Đã có lỗi trong quá trình khóa/mở khóa tài khoản, vui lòng thử lại sau.', 11, 1);
+		ROLLBACK;
+		RETURN -1;
+	END CATCH
+
+	COMMIT;
+	RETURN 0;
+END
+GO
+
+GO
+CREATE OR ALTER PROC USP_GetMatchingRefreshToken
+	@RefreshToken VARCHAR(200)
+AS
+BEGIN
+	SELECT acc.*, pd.FullName
+	FROM (SELECT TOP 1 * FROM ACCOUNT where RefreshToken = @RefreshToken) acc
+	JOIN PERSONAL_DETAILS pd ON acc.Id = pd.AccountId;
 END
 GO
 
@@ -536,12 +620,26 @@ END
 GO
 
 
---TODO PROCEDURE CRUD LOẠI PHÒNG
+--
+GO
+CREATE OR ALTER FUNCTION USF_GetNextRoomId ( -- // new check
+	@HotelId INT)
+RETURNS INT
+BEGIN
+	declare @Result INT;
+	with cte as (select Id id, lead(Id) over (order by Id) nextid from [dbo].[ROOM_TYPE] where HotelId = @HotelId)
+	select @Result = Min(id) from cte where id < nextid - 1;
 
---!Thêm loại phòng // Check
+	if (@Result is null)
+		select @Result = count(Id) from [dbo].[ROOM_TYPE] where HotelId = @HotelId
+
+	return @Result + 1;
+END;
+GO
+
+--// new check
 CREATE OR ALTER PROCEDURE USP_AddRoomType
     @HotelId INT,
-    @Id INT,
     @Name NVARCHAR(100),
     @Vacancy INT,
     @Size FLOAT,
@@ -551,19 +649,29 @@ CREATE OR ALTER PROCEDURE USP_AddRoomType
     @BedType VARCHAR(100)
 AS
 BEGIN
-    --SET NOCOUNT ON;
+	IF NOT EXISTS (SELECT Id FROM HOTEL WHERE Id = @HotelId)
+	BEGIN
+		RAISERROR('Id khách sạn không tồn tại.', 11, 1)
+		RETURN -2
+	END
 
+	BEGIN TRAN
     BEGIN TRY
+		DECLARE @MyId INT = [dbo].USF_GetNextRoomId(@HotelId);
 
         INSERT INTO ROOM_TYPE (HotelId, Id, Name, Vacancy, Size, Price, RoomInfo, RoomView, BedType)
-        VALUES (@HotelId, @Id, @Name, @Vacancy, @Size, dbo.USF_GetServiceFee() + @Price, @RoomInfo, @RoomView, @BedType)
+        VALUES (@HotelId, @MyId, @Name, @Vacancy, @Size, dbo.USF_GetServiceFee() + @Price, @RoomInfo, @RoomView, @BedType)
 
-		RETURN 0
     END TRY
 
     BEGIN CATCH
+		RAISERROR('Lỗi thêm phòng khách sạn.', 11, 1)
+		ROLLBACK;
 		RETURN -1
     END CATCH;
+
+	COMMIT;
+	RETURN @MyId
 END
 GO
 
@@ -574,15 +682,20 @@ CREATE OR ALTER PROCEDURE USP_DeleteRoomType
 AS
 BEGIN
 
+	BEGIN TRAN
     BEGIN TRY
         DELETE FROM ROOM_TYPE
         WHERE HotelId = @HotelId AND Id = @Id
 
-        RETURN 0; -- thành công
     END TRY
     BEGIN CATCH
+		RAISERROR('Lỗi xóa phòng khách sạn.', 11, 1)
+		ROLLBACK;
         RETURN -1; -- thất bại
     END CATCH;
+    
+	COMMIT;
+	RETURN 0; -- thành công
 END
 GO
 
@@ -625,19 +738,23 @@ CREATE OR ALTER PROCEDURE USP_AddRoomPicture
     @PictureLink VARCHAR(1000)
 AS
 BEGIN
-	--SET NOCOUNT ON;
-
+	
+	BEGIN TRAN
     BEGIN TRY
         -- Thêm ảnh phòng mới
         INSERT INTO ROOM_PICTURE (HotelId, RoomTypeId, Id, PictureLink)
         VALUES (@HotelId, @RoomTypeId, @Id, @PictureLink);
-
-		RETURN 0; -- Trả về kết quả 1 khi thêm thành công
+		
     END TRY
 
     BEGIN CATCH
-        RETURN -1; -- Trả về kết quả 0 khi xảy ra lỗi
+		RAISERROR('Lỗi thêm ảnh phòng khách sạn.', 11, 1)
+		ROLLBACK;
+        RETURN -1;
     END CATCH;
+
+	COMMIT;
+	RETURN 0;
 END
 GO
 
@@ -691,6 +808,61 @@ GO
 
 --TODO PROCEDURE CRUD CƠ SỞ VẬT CHẤT PHÒNG
 --! THÊM 
+
+GO
+CREATE OR ALTER PROCEDURE USP_AddRoomFacilityList ( -- // new check
+    @HotelId INT,
+    @RoomId INT,
+    @Facility NVARCHAR(1000))
+AS
+BEGIN
+
+	BEGIN TRAN
+    BEGIN TRY
+        INSERT INTO [dbo].[ROOM_FACILITY] (HotelId, RoomId, FacilityId)
+		SELECT @HotelId, @RoomId, fc.Id  FROM STRING_SPLIT(@Facility, ',') ins
+		JOIN FACILITY_CONST fc ON ins.value = fc.Value
+        
+    END TRY
+
+    BEGIN CATCH
+		RAISERROR('Lỗi thêm nhiều facility vào room_type', 11, 1)
+		ROLLBACK;
+        RETURN -1;
+    END CATCH;
+
+	COMMIT;
+	RETURN 0;
+END
+GO
+
+GO
+CREATE OR ALTER PROCEDURE USP_AddRoomServiceList ( -- // new check
+    @HotelId INT,
+    @RoomId INT,
+    @Service NVARCHAR(1000))
+AS
+BEGIN
+
+	BEGIN TRAN
+    BEGIN TRY
+        INSERT INTO [dbo].[ROOM_SERVICE] (HotelId, RoomId, ServiceId)
+		SELECT @HotelId, @RoomId, sc.Id  FROM STRING_SPLIT(@Service, ',') ins
+		JOIN SERVICE_CONST sc ON ins.value = sc.Value
+        
+    END TRY
+
+    BEGIN CATCH
+		RAISERROR('Lỗi thêm nhiều service vào room_type', 11, 1)
+		ROLLBACK;
+        RETURN -1;
+    END CATCH;
+
+	COMMIT;
+	RETURN 0;
+END
+GO
+
 CREATE OR ALTER PROCEDURE USP_AddRoomFacility
     @HotelId INT,
     @RoomId INT,
@@ -866,31 +1038,34 @@ END
 GO
 
 --TODO PROC CRUD REVIEW
---!THÊM
+--! Thêm review
 CREATE OR ALTER PROCEDURE USP_AddReview
     @AccountId INT,
     @HotelId INT,
     @Points FLOAT,
     @Content NVARCHAR(1000),
-    @Result INT OUTPUT
+	@ReviewDate DATE = NULL
 AS
 BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRANSACTION;
+    BEGIN TRAN;
 
     BEGIN TRY
-        -- Thêm review mới
-        INSERT INTO REVIEW (AccountId, HotelId, Points, Content)
-        VALUES (@AccountId, @HotelId, @Points, @Content);
+		DECLARE @Id INT;
+		EXEC @Id = USP_GetNextColumnId 'REVIEW', 'ReviewId';
+		IF (@ReviewDate IS NULL) SET @ReviewDate = CURRENT_TIMESTAMP;
 
-        COMMIT;
-        SET @Result = 1; -- Trả về kết quả 1 khi thêm thành công
+        INSERT INTO REVIEW (ReviewId, AccountId, HotelId, ReviewDate, Points, Content)
+        VALUES (@Id, @AccountId, @HotelId, @ReviewDate, @Points, @Content);
     END TRY
+
     BEGIN CATCH
+		RAISERROR('Lỗi thêm review.', 11, 1);
         ROLLBACK;
-        SET @Result = 0; -- Trả về kết quả 0 khi xảy ra lỗi
+        RETURN -1;
     END CATCH;
+
+	COMMIT;
+    RETURN 0;
 END;
 GO
 
@@ -1037,18 +1212,18 @@ END
 GO
 
 
---todo PROC CRUD VOUCHER
---! THÊM
+-- VOUCHER -- // new check
 CREATE OR ALTER PROCEDURE USP_AddVoucher
     @Name NVARCHAR(500),
     @Value FLOAT,
     @Point INT,
-	@AccountRank VARCHAR(20)
+	@RequiredRank VARCHAR(20),
+	@Quantity INT
 AS
 BEGIN
 
-	IF (@Point < 1) OR (@Value > 1 OR @Value <= 0)
-	OR (@AccountRank not in (select RankName from POINT_RANK))
+	IF (@Point < 1) OR (@Value > 1 OR @Value <= 0 OR @Quantity <= 0)
+	OR (@RequiredRank not in (select RankName from POINT_RANK))
 	BEGIN
 		RAISERROR('Sai dữ liệu hạng hoặc giá trị voucher', 11, 1);
 		RETURN -2;
@@ -1060,8 +1235,8 @@ BEGIN
 		DECLARE @Id INT;
 		EXEC @Id = USP_GetNextColumnId 'VOUCHER', 'VoucherId'
 
-		INSERT INTO VOUCHER (VoucherId, Name, Value, Point, AccountRank)
-		VALUES (@Id, @Name, @Value, @Point, @AccountRank)
+		INSERT INTO VOUCHER (VoucherId, Name, Value, Point, RequiredRank, Quantity)
+		VALUES (@Id, @Name, @Value, @Point, @RequiredRank, @Quantity)
 	END TRY
 
 	BEGIN CATCH
@@ -1104,7 +1279,8 @@ CREATE OR ALTER PROCEDURE USP_UpdateVoucher
     @Name NVARCHAR(500),
     @Value FLOAT,
 	@Point INT,
-	@AccountRank VARCHAR(20)
+	@RequiredRank VARCHAR(20),
+	@Quantity INT
 AS
 BEGIN
 	BEGIN TRAN
@@ -1114,7 +1290,8 @@ BEGIN
 		SET Name = @Name,
 			Value = @Value,
 			Point = @Point,
-			AccountRank = @AccountRank
+			RequiredRank = @RequiredRank,
+			Quantity = @Quantity
 		WHERE VoucherId = @VoucherId
 	END TRY
 
@@ -1211,7 +1388,7 @@ GO
 CREATE OR ALTER PROCEDURE USP_GetAllVoucher
 AS
 BEGIN
-	SELECT * FROM VOUCHER;
+	SELECT 0 as AccountId, vc.* FROM VOUCHER vc;
 END
 GO
 
@@ -1230,7 +1407,7 @@ CREATE OR ALTER FUNCTION USF_GetVoucherByRank (@Rank VARCHAR(20))
 RETURNS TABLE
 AS
 	RETURN SELECT * FROM VOUCHER 
-		WHERE AccountRank IN (SELECT p2.RankName FROM POINT_RANK p1
+		WHERE RequiredRank IN (SELECT p2.RankName FROM POINT_RANK p1
 						JOIN POINT_RANK p2 ON p1.RankValue >= p2.RankValue
 						WHERE p1.RankName like (@Rank))
 GO
@@ -1243,13 +1420,14 @@ AS
 BEGIN
 	IF (@Rank IS NULL)
 	BEGIN
-		SELECT vb.AccountId, vc.*, vb.Quantity FROM (SELECT * FROM VOUCHER_BAG WHERE AccountId = @AccountId) vb
+		SELECT vb.AccountId, vc.VoucherId, vc.Name, vc.Value, vc.Point, vc.RequiredRank, vb.Quantity 
+		FROM (SELECT * FROM VOUCHER_BAG WHERE AccountId = @AccountId) vb
 		JOIN VOUCHER vc ON vb.VoucherId = vc.VoucherId;
 	END
 	ELSE
 	BEGIN
 		SELECT ISNULL(VB.AccountId, 0) as AccountId, VC.*, ISNULL(VB.Quantity, 0) as Quantity 
-		FROM (SELECT * FROM VOUCHER WHERE AccountRank like @Rank) VC
+		FROM (SELECT VoucherId, Name, Value, Point, RequiredRank FROM VOUCHER WHERE RequiredRank like @Rank) VC
 		LEFT JOIN (SELECT * FROM VOUCHER_BAG WHERE AccountId = @AccountId) VB ON VC.VoucherId = VB.VoucherId;
 	END
 END
@@ -1275,7 +1453,7 @@ END
 GO
 
 GO
-CREATE OR ALTER FUNCTION USF_GetAccountRank (@AccountId INT)
+CREATE OR ALTER FUNCTION USF_GetRequiredRank (@AccountId INT)
 RETURNS VARCHAR(20)
 BEGIN
 	DECLARE @Rank VARCHAR(20) = 'Bronze';
@@ -1289,16 +1467,16 @@ END
 GO
 
 GO
-CREATE OR ALTER PROC USP_UpdateAccountRank (
+CREATE OR ALTER PROC USP_UpdateRequiredRank (
 	@AccountId INT)
 AS
 BEGIN
-	DECLARE @Rank VARCHAR(20) = dbo.USF_GetAccountRank (@AccountId);
+	DECLARE @Rank VARCHAR(20) = dbo.USF_GetRequiredRank (@AccountId);
 	
 	BEGIN TRAN
 
 	BEGIN TRY
-		UPDATE ACCOUNT SET AccountRank = @Rank WHERE Id = @AccountId;
+		UPDATE ACCOUNT SET RequiredRank = @Rank WHERE Id = @AccountId;
 		UPDATE PERSONAL_DETAILS SET Rank = @Rank WHERE AccountId = @AccountId;
 	END TRY
 
@@ -1321,9 +1499,7 @@ CREATE OR ALTER PROCEDURE USP_RedeemVoucher
 	@DateRecorded VARCHAR(30)
 AS
 BEGIN
-	DECLARE @VoucherValue INT;
-	DECLARE @CurrentPoints INT;
-	DECLARE @Quantity INT;
+	DECLARE @VoucherValue INT, @CurrentPoints INT, @Quantity INT;
 	
 	-- Kiểm tra xem tài khoản và voucher có tồn tại không
 	IF NOT EXISTS (SELECT TOP(1) Id FROM ACCOUNT WHERE Id = @AccountId)
@@ -1334,10 +1510,10 @@ BEGIN
 	END
 
 	DECLARE @RankName VARCHAR(20);
-	SELECT @RankName = AccountRank FROM VOUCHER WHERE VoucherId = @VoucherId;
+	SELECT @RankName = RequiredRank FROM VOUCHER WHERE VoucherId = @VoucherId;
 	IF NOT (@RankName IN (SELECT p2.RankName FROM POINT_RANK p1
 						JOIN POINT_RANK p2 ON p1.RankValue >= p2.RankValue
-						WHERE p1.RankName like (SELECT TOP(1) AccountRank FROM ACCOUNT WHERE Id = @AccountId)))
+						WHERE p1.RankName like (SELECT TOP(1) RequiredRank FROM ACCOUNT WHERE Id = @AccountId)))
 	BEGIN
 		RAISERROR(N'Tài khoản không đủ quyền đổi voucher này', 11, 1)
 		RETURN -3;
@@ -1349,11 +1525,17 @@ BEGIN
 
 	IF (@DateRecorded IS NULL) SET @DateRecorded = FORMAT(GETDATE(), 'yyyy-MM-dd HH:mm:ss.fffffff');
 
+	IF NOT EXISTS (SELECT * FROM VOUCHER WHERE VoucherId=@VoucherId AND Quantity > @Number)
+	BEGIN
+		RAISERROR(N'Số lượng voucher còn lại không đủ.', 11, 1)
+		RETURN -4;
+	END
+
 	-- Kiểm tra xem tài khoản có đủ điểm để đổi voucher không
 	IF (@CurrentPoints < (@VoucherValue * @Number))
 	BEGIN
 		RAISERROR(N'Tài khoản không đủ điểm để đổi voucher này', 11, 1)
-		RETURN -4; -- Trả về giá trị -3 nếu tài khoản không đủ điểm để đổi voucher
+		RETURN -5; -- Trả về giá trị -4 nếu tài khoản không đủ điểm để đổi voucher
 	END
 	ELSE
 	BEGIN
@@ -1371,9 +1553,11 @@ BEGIN
 
 			-- Cập nhật điểm của tài khoản
 			UPDATE ACCOUNT SET MemberPoint = @CurrentPoints - (@VoucherValue * @Number) WHERE Id = @AccountId;
+			UPDATE VOUCHER SET Quantity = Quantity - @Number WHERE VoucherId = @VoucherId;
 
 			-- Lưu lịch sử sử dụng điểm vào bảng POINT_HISTORY
-			INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime) VALUES (@AccountId, -(@VoucherValue * @Number), @DateRecorded);
+			INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime, Content) 
+				VALUES (@AccountId, -(@VoucherValue * @Number), @DateRecorded, CONCAT(N'REDEEM - Id=', CAST(@VoucherId as nvarchar(10))));
 		END TRY
 
 		BEGIN CATCH
@@ -1390,8 +1574,8 @@ END
 GO
 
 GO
---todo proc tính điểm từ giao dịch và lưu thay đổi điểm 
-CREATE OR ALTER PROCEDURE USP_UpdateMemberPoints --// WARNING!!!!!!
+--Proc tính điểm dựa vào chi tiêu khi đặt phòng. 
+CREATE OR ALTER PROCEDURE USP_UpdateMemberPoints
     @AccountId INTEGER,
     @TotalPay INT,
 	@DateRecorded VARCHAR(30),
@@ -1409,7 +1593,8 @@ BEGIN
 		UPDATE ACCOUNT SET MemberPoint = MemberPoint + CAST(@EarnedPoints as INT) WHERE Id = @AccountId;
 
 		-- Ghi lại lịch sử điểm vào bảng POINT_HISTORY
-		INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime) VALUES (@AccountId, @EarnedPoints, @DateRecorded);
+		INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime, Content) 
+			VALUES (@AccountId, @EarnedPoints, @DateRecorded, N'Cộng điểm dựa vào chi tiêu.');
 	END TRY
 
 	BEGIN CATCH
@@ -1488,34 +1673,159 @@ AS
 	WHERE RT.HotelId = @HotelId
 GO
 
+
+
 GO
-CREATE OR ALTER PROC USP_FindHotelByName
-	@Location NVARCHAR(50),
-	@RoomType NVARCHAR(50),
-	@StartDate DATE,
-	@EndDate DATE,
-	@MinBudget float,
-	@MaxBudget float,
-	@Rooms int,
-	@Adult int,
-	@Children int
+CREATE OR ALTER FUNCTION USF_CheckHotelAvailability ( -- //new check
+    @HotelId INTEGER,
+	@NumberOfRoom INTEGER,
+	@CheckIn DATE,
+	@CheckOut DATE)
+RETURNS BIT
+BEGIN
+	IF (1 IN (SELECT dbo.USF_CheckRoomAvailability(@HotelId, Id, @NumberOfRoom, @CheckIn, @CheckOut) val FROM ROOM_TYPE WHERE HotelId = @HotelId))
+		RETURN 1
+	RETURN 0
+END
+GO
+
+GO
+CREATE OR ALTER FUNCTION USF_CheckHotelFacility ( -- //new check
+    @HotelId INTEGER,
+	@CheckValue VARCHAR(1000) = null)
+RETURNS BIT
+BEGIN
+	IF (@CheckValue IS NULL) RETURN 1
+	DECLARE @Count INT;
+	SELECT @Count = COUNT(value) FROM STRING_SPLIT(@CheckValue, ',');
+
+	IF @Count IN (SELECT COUNT(rf.RoomId) FROM ROOM_FACILITY rf
+		JOIN FACILITY_CONST fc ON rf.FacilityId = fc.Id
+		WHERE HotelId = @HotelId
+		AND fc.Value IN (SELECT value FROM STRING_SPLIT(@CheckValue, ','))
+		GROUP BY RoomId)
+		RETURN 1
+	RETURN 0
+END
+GO
+
+
+GO
+CREATE OR ALTER FUNCTION USF_CheckHotelService ( -- //new check
+    @HotelId INT,
+	@CheckValue VARCHAR(1000) = null)
+RETURNS BIT
+BEGIN
+	IF (@CheckValue IS NULL) RETURN 1
+	DECLARE @Count INT;
+	SELECT @Count = COUNT(value) FROM STRING_SPLIT(@CheckValue, ',');
+
+	IF @Count IN (SELECT COUNT(rs.RoomId) FROM ROOM_SERVICE rs
+		JOIN SERVICE_CONST rc ON rs.ServiceId = rc.Id
+		WHERE HotelId = @HotelId
+		AND rc.Value IN (SELECT value FROM STRING_SPLIT(@CheckValue, ','))
+		GROUP BY RoomId)
+		RETURN 1
+	RETURN 0
+END
+GO
+
+GO
+CREATE OR ALTER FUNCTION USF_FindHotelRoom ( -- //new check
+    @HotelId INT,
+	@RoomType NVARCHAR(200) = N'',
+	@BedType VARCHAR(100) = null)
+RETURNS BIT
+BEGIN
+	IF (SELECT COUNT(Id) FROM ROOM_TYPE WHERE HotelId = @HotelId) = 0
+		RETURN 1;
+	ELSE IF EXISTS (SELECT * FROM ROOM_TYPE WHERE HotelId = @HotelId
+		AND Name COLLATE SQL_Latin1_General_CP1_CI_AI like '%' + @RoomType + '%' COLLATE SQL_Latin1_General_CP1_CI_AI
+		AND (BedType IN (SELECT value FROM STRING_SPLIT(@BedType, ',')) OR @BedType IS NULL))
+	BEGIN
+		RETURN 1;
+	END;
+
+	RETURN 0;
+END
+
+GO
+CREATE OR ALTER PROC USP_FindHotelByName (-- //new check
+	-- Search
+	@Location NVARCHAR(200) = N'',
+	@RoomType NVARCHAR(200) = N'',
+	@StartDate DATE = '01-01-2022',
+	@EndDate DATE = '01-02-2022',
+	@MinBudget float = 0,
+	@MaxBudget float = 10000000000.0,
+	@Rooms int = 1,
+	@Adult int = 1,
+	@Children int = 0,
+	-- Filter
+	@HotelType VARCHAR(500) = null,
+	@BedType VARCHAR(100) = null,
+	@GuestRating INT = 0,
+	@Facilities VARCHAR(1000) = null,
+	@Service VARCHAR(100) = null,
+	@SortingCol VARCHAR(50) = 'Rating',
+	@SortType VARCHAR(5) = 'DESC')
 AS
-	SELECT h.Id, h.Name, Country, HotelType, ProvinceCity, 
+BEGIN
+	SELECT hoteTable.* FROM 
+	(SELECT h.Id, h.Name, Country, HotelType, ProvinceCity, 
 			Address, Stars,
-			dbo.USF_GetAvgReview(h.Id) Rating,
+			dbo.USF_GetAvgReview(h.Id) as Rating,
 			Description, Image,
-			dbo.USF_GetMinRoomPrice(h.Id) Price
-	FROM HOTEL h inner join ROOM_TYPE rt on h.Id = rt.HotelId
+			dbo.USF_GetMinRoomPrice(h.Id) as Price,
+			AccountId
+	FROM HOTEL h
 	WHERE (h.ProvinceCity COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI or
 		  h.Country COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI or
-	      h.Name COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI) and
-		  dbo.USF_GetMinRoomPrice(h.Id) <= @MaxBudget and 
-		  dbo.USF_GetMinRoomPrice(h.Id) >= @MinBudget and
-	      dbo.USF_CheckRoomAvailability(rt.HotelId, rt.Id, @Rooms, @StartDate, @EndDate) = 1 and
-		  rt.Name COLLATE SQL_Latin1_General_CP1_CI_AI like '%' + @RoomType + '%' COLLATE SQL_Latin1_General_CP1_CI_AI  
-	GROUP BY h.Id, h.Name, Country, HotelType, ProvinceCity, 
-			Address, Stars,
-			Description, Image
+	      h.Name COLLATE Latin1_General_CI_AI like '%' + @Location + '%' COLLATE Latin1_General_CI_AI)
+		  AND dbo.USF_FindHotelRoom(h.Id, @RoomType, @BedType) = 1
+		  AND dbo.USF_GetMinRoomPrice(h.Id) <= @MaxBudget 
+		  AND dbo.USF_GetMinRoomPrice(h.Id) >= @MinBudget
+	      AND dbo.USF_CheckHotelAvailability(h.Id, @Rooms, @StartDate, @EndDate) = 1
+		  AND (h.HotelType IN (SELECT value FROM STRING_SPLIT(@HotelType, ',')) OR @HotelType IS NULL)
+		  AND dbo.USF_GetAvgReview(h.Id) >= @GuestRating
+		  AND dbo.USF_CheckHotelFacility(h.Id, @Facilities) = 1
+		  AND dbo.USF_CheckHotelService(h.Id, @Service) = 1
+		  ) hoteTable
+	ORDER BY 
+		CASE WHEN @SortingCol = 'Rating' THEN Rating END DESC,
+		CASE WHEN @SortingCol = 'Price' AND @SortType ='ASC' THEN Price END ,
+		CASE WHEN @SortingCol = 'Price' AND @SortType ='DESC' THEN Price END DESC
+END
+GO
+
+
+GO
+CREATE OR ALTER PROC USP_FindAccountByName (-- //new check
+	-- Search
+	@Name NVARCHAR(200) = N'',
+	-- Filter
+	@Role NVARCHAR(500) = NULL,
+	@Gender NVARCHAR(200) = NULL,
+	-- sort
+	@SortingCol VARCHAR(50) = 'FullName',
+	@SortType VARCHAR(5) = 'ASC')
+AS
+BEGIN
+	SELECT *, acc.MemberPoint as Point, acc.UserRole as Role
+	FROM ACCOUNT acc JOIN PERSONAL_DETAILS pd ON acc.Id = pd.AccountId
+	JOIN POINT_RANK pr ON pd.Rank = pr.RankName
+	WHERE (pd.FullName COLLATE Latin1_General_CI_AI like '%' + @Name + '%' COLLATE Latin1_General_CI_AI OR
+		  pd.EmailAddress COLLATE Latin1_General_CI_AI like '%' + @Name + '%' COLLATE Latin1_General_CI_AI) 
+		  AND (acc.UserRole IN (SELECT value FROM STRING_SPLIT(@Role, ',')) OR @Role IS NULL)
+		  AND (pd.Gender IN (SELECT value FROM STRING_SPLIT(@Gender, ',')) OR @Gender IS NULL)
+	ORDER BY 
+		CASE WHEN @SortingCol = 'FullName' AND @SortType ='ASC' THEN pd.FullName END,
+		CASE WHEN @SortingCol = 'FullName' AND @SortType ='DESC' THEN pd.FullName END DESC,
+		CASE WHEN @SortingCol = 'DateOfBirth' AND @SortType ='ASC' THEN pd.DateOfBirth END,
+		CASE WHEN @SortingCol = 'DateOfBirth' AND @SortType ='DESC' THEN pd.DateOfBirth END DESC,
+		CASE WHEN @SortingCol = 'Rank' AND @SortType ='ASC' THEN pr.RankValue END,
+		CASE WHEN @SortingCol = 'Rank' AND @SortType ='DESC' THEN pr.RankValue END DESC
+END
 GO
 
 --! thêm booking //
@@ -1550,6 +1860,32 @@ BEGIN
 END
 GO
 
+
+GO --//new check
+CREATE OR ALTER FUNCTION USF_CheckAccountOrder (
+    @AccountId INT,
+    @CheckAccountId INT,
+	@HotelId INT)
+RETURNS BIT
+BEGIN
+	DECLARE @UserRole VARCHAR(50);
+	SELECT @UserRole = UserRole FROM ACCOUNT WHERE Id = @AccountId;
+
+	IF (@UserRole = 'Admin')
+		RETURN 1;
+	ELSE IF (@UserRole = 'User')
+	BEGIN
+		RETURN CASE WHEN @AccountId = @CheckAccountId THEN 1 ELSE 0 END;
+	END
+
+	DECLARE @AccHotel INT = 0;
+	SELECT @AccHotel = CASE WHEN @HotelId = pd.HotelId THEN 1 ELSE 0 END 
+	FROM PERSONAL_DETAILS pd WHERE AccountId = @AccountId;
+
+	RETURN @AccHotel;
+END;
+GO
+
 -- //
 GO
 CREATE OR ALTER PROC USP_GetAllAccountOrder (
@@ -1565,10 +1901,11 @@ BEGIN
 							LEFT JOIN BOOKING_ACCOUNT BA ON BA.BookingId = OD.BookingId
 							LEFT JOIN HOTEL H ON H.Id = BA.HotelId
 							LEFT JOIN ROOM_TYPE RT ON RT.Id = BA.RoomTypeId and RT.HotelId = BA.HotelId
-	WHERE AO.AccountId = @AccountId;
+	WHERE dbo.USF_CheckAccountOrder(@AccountId, AO.AccountId, BA.HotelId) = 1;
 END
 GO
---exec USP_GetAllAccountOrder 10
+
+
 -- //
 GO
 CREATE OR ALTER PROC USP_GetUnconfirmOrder (
@@ -1756,7 +2093,6 @@ CREATE OR ALTER PROC USP_UpdateVoucherAndTotal
 	@OrderId INT,
 	@AccountId INT,
 	@VoucherId INTEGER,
-	@MultipleConfirm BIT = 0,
 	@DateRecorded VARCHAR(30)
 AS
 BEGIN
@@ -1799,24 +2135,12 @@ BEGIN
 		SELECT @Discount = Value FROM VOUCHER WHERE VoucherId = @VoucherId;
 		DECLARE @Total INT = dbo.USF_GetOrderTotal(@OrderId);
 
-		IF ((@VoucherId IS NOT NULL OR @MultipleConfirm = 0) AND @VoucherId > 0)
-		BEGIN
-			-- Giảm số lượng voucher trong túi.
-			IF (@Quantity = 1)
-				DELETE FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
-			ELSE
-				UPDATE VOUCHER_BAG SET Quantity = @Quantity - 1 WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
-		END
-
 		UPDATE ACCOUNT_ORDER
 		SET
 			VoucherId = @VoucherId,
 			Total = @Total - CAST(@Total * @Discount AS FLOAT),
 			Paid = 0
 		WHERE OrderId = @OrderId;
-
-		-- Cập nhật điểm thành viên.
-		EXEC USP_UpdateMemberPoints @AccountId, @Total, @DateRecorded;
 	END TRY
 
 	BEGIN CATCH
@@ -1830,18 +2154,86 @@ BEGIN
 END;
 GO
 
-GO
-CREATE OR ALTER PROCEDURE USP_ConfirmPaid (@SessionId VARCHAR(200))
+GO -- // new check 4
+CREATE OR ALTER PROC USP_ConfirmOrder (
+	@OrderId INT,
+	@MultipleConfirm BIT = 1)
 AS
 BEGIN
-	UPDATE ACCOUNT_ORDER
-		SET
-			Paid = 1
-		WHERE SessionId = @SessionId;
+	BEGIN TRAN
+
+	BEGIN TRY
+		DECLARE @AccountId INT, @Quantity INT, @VoucherId INT;
+		DECLARE @DateRecorded VARCHAR(30) = CAST(FORMAT(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss.fffffff') as VARCHAR(30));
+
+		SELECT 
+			@VoucherId = VoucherId, 
+			@AccountId = AccountId
+		FROM ACCOUNT_ORDER WHERE OrderId = @OrderId;
+
+		SELECT @Quantity = Quantity FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
+
+		DECLARE @Total INT = dbo.USF_GetOrderTotal(@OrderId);
+
+		IF ((@VoucherId IS NOT NULL AND @MultipleConfirm = 0) AND @VoucherId > 0)
+		BEGIN
+			-- Giảm số lượng voucher trong túi.
+			IF (@Quantity = 1)
+				DELETE FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
+			ELSE
+				UPDATE VOUCHER_BAG SET Quantity = @Quantity - 1 WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
+		END
+
+		-- Cập nhật điểm thành viên.
+		EXEC USP_UpdateMemberPoints @AccountId, @Total, @DateRecorded;
+	END TRY
+
+	BEGIN CATCH
+		ROLLBACK;
+		RAISERROR(N'Lỗi xác nhận đơn', 11, 1)
+		RETURN -1;
+	END CATCH
+
+	COMMIT;
+	RETURN 0;
 END
 GO
 
 
+GO
+CREATE OR ALTER PROCEDURE USP_ConfirmPaid (
+	@SessionId VARCHAR(200)
+)
+AS
+BEGIN
+	BEGIN TRAN
+	
+	BEGIN TRY
+		DECLARE @Sql NVARCHAR(MAX) = '';
+		SELECT @Sql += 'EXEC USP_ConfirmOrder @OrderId=' + CAST(OrderId as NVARCHAR(10))  + ';' + CHAR(13)
+		FROM ACCOUNT_ORDER WHERE SessionId = @SessionId AND Paid = 0;
+
+		IF (LEN(@Sql) != 0)
+		BEGIN
+			DECLARE @NewSql NVARCHAR(MAX) = SUBSTRING(@Sql, 1, LEN(@Sql) - 2) + ', @MultipleConfirm=0;';
+			EXECUTE(@NewSql);
+
+			UPDATE ACCOUNT_ORDER SET Paid = 1
+			WHERE SessionId = @SessionId;
+		END
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR('', 11, 1);
+		ROLLBACK TRAN;
+	END CATCH
+
+	COMMIT TRAN;
+	RETURN 0;
+END
+GO
+
+GO
 CREATE OR ALTER FUNCTION USF_GetAccountId (@Email VARCHAR(50))
 RETURNS INT
 BEGIN
@@ -1868,17 +2260,13 @@ AS
 	JOIN (SELECT * FROM ACCOUNT_ORDER WHERE OrderId = @OrderId) AO ON AO.OrderId = OD.OrderId;
 GO
 
-
---! proc lấy danh sách toàn bộ account
---CREATE OR ALTER PROC USP_GetAccountDetailList	
---AS
---	SELECT * FROM PERSONAL_DETAILS
---GO
---! proc lấy thông tin chi tiết tài khoản
+-- 
+GO
 CREATE OR ALTER PROC USP_GetAccountDetailById
 	@AccountId INTEGER
 AS
-	SELECT pd.*, acc.MemberPoint as Point FROM (SELECT * FROM PERSONAL_DETAILS WHERE AccountId = @AccountId) pd
+	SELECT pd.*, acc.MemberPoint as Point, acc.UserRole as Role
+	FROM (SELECT * FROM PERSONAL_DETAILS WHERE AccountId = @AccountId) pd
 	JOIN ACCOUNT acc on pd.AccountId = acc.Id;
 GO
 
@@ -1886,11 +2274,300 @@ GO
 CREATE OR ALTER PROC USP_GetAccountDetailByEmail
 	@Email NVARCHAR(200)
 AS
-	SELECT pd.*, acc.MemberPoint as Point FROM (SELECT * FROM PERSONAL_DETAILS WHERE EmailAddress = @Email) pd
+	SELECT pd.*, acc.MemberPoint as Point, acc.UserRole as Role
+	FROM (SELECT * FROM PERSONAL_DETAILS WHERE EmailAddress = @Email) pd
 	JOIN ACCOUNT acc on pd.AccountId = acc.Id;
 GO
 
+-- // new check
+GO
+CREATE OR ALTER FUNCTION USF_CalculateHotelRevenueByMonth (
+    @HotelId INT,
+    @Year INT,
+    @Month INT)
+RETURNS BIGINT
+BEGIN
+	DECLARE @TotalRevenue BIGINT = 0;
+	DECLARE @Fee INT = 50000;
+
+    DECLARE @StartDate DATE = CAST(STR(@Month) + '-01-' + STR(@Year) as date);
+	DECLARE @EndDate DATE = EOMONTH(@StartDate);
+
+    SELECT @TotalRevenue += (rt.Price - @Fee) * ba.NumberOfRoom
+	FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1 AND
+		DATEDIFF(DAY, @StartDate, CreatedAt) >= 0 AND 
+		DATEDIFF(DAY, CreatedAt, @EndDate) >= 0) ao 
+	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
+	JOIN (SELECT BookingId, NumberOfRoom, RoomTypeId FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba ON ba.BookingId = od.BookingId
+	JOIN (SELECT Id, Price FROM ROOM_TYPE WHERE HotelId = @HotelId) rt ON rt.Id = ba.RoomTypeId
+
+	RETURN @TotalRevenue;
+END;
+GO
+
+-- // new check
+GO
+CREATE OR ALTER PROCEDURE USP_CalculateHotelYearlyRevenue (
+    @HotelId INT,
+    @Year INT = null)
+AS
+BEGIN
+	IF (@Year IS NULL) SET @Year = CAST(YEAR(GETDATE()) AS INT);
+
+	DECLARE @table TABLE(Months INT);
+	INSERT INTO @table (Months) VALUES (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12);
+
+	SELECT Months, 
+		dbo.USF_CalculateHotelRevenueByMonth(@HotelId, @Year, Months) AS ThisYear,
+		dbo.USF_CalculateHotelRevenueByMonth(@HotelId, @Year - 1, Months) AS LastYear
+	FROM @table;
+END
+GO
+
+
+GO -- // new check 2
+CREATE OR ALTER FUNCTION USP_CalculateHotelOneDayRevenue (
+    @HotelId INT,
+    @Date DATE = NULL)
+RETURNS BIGINT
+BEGIN
+	IF (@Date IS NULL) SET @Date = GETDATE();
+
+	DECLARE @TotalRevenue BIGINT = 0;
+	DECLARE @Fee INT = 50000;
+
+	SELECT @TotalRevenue += (rt.Price - @Fee) * ba.NumberOfRoom
+	FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1 AND DATEDIFF(DAY, @Date, CreatedAt) = 0) ao 
+	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
+	JOIN (SELECT BookingId, NumberOfRoom, RoomTypeId FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba ON ba.BookingId = od.BookingId
+	JOIN (SELECT Id, Price FROM ROOM_TYPE WHERE HotelId = @HotelId) rt ON rt.Id = ba.RoomTypeId;
+
+	RETURN @TotalRevenue;
+END
+GO
+
+
+GO -- // new check 2
+CREATE OR ALTER PROCEDURE USP_CalculateHotelWeeklyRevenue (
+    @HotelId INT,
+    @Date DATE = NULL)
+AS
+BEGIN
+	DECLARE @Table TABLE (dayInWeek INT)
+	INSERT INTO @Table VALUES (1),(2),(3),(4),(5),(6),(7);
+
+	IF (@Date IS NULL) SET @Date = GETDATE();
+	DECLARE @StartDate DATE = DATEADD(DAY, 1 - DATEPART(WEEKDAY, @Date), @Date); -- Sunday the week before
+
+	select DayInWeek,
+		dbo.USP_CalculateHotelOneDayRevenue(@HotelId, DATEADD(DAY, DayInWeek, @StartDate)) as ThisWeek,
+		dbo.USP_CalculateHotelOneDayRevenue(@HotelId, DATEADD(DAY, DayInWeek - 7, @StartDate)) as LastWeek
+	from @Table
+END
+GO
+
+
+GO -- // new check 2
+CREATE OR ALTER PROCEDURE USP_GetHotelWeeklyReview (
+    @HotelId INT,
+    @Date DATE = NULL)
+AS
+BEGIN
+	IF (@Date IS NULL) SET @Date = GETDATE();
+	DECLARE @StartDate DATE = DATEADD(DAY, 2 - DATEPART(WEEKDAY, @Date), @Date); -- Monday
+	DECLARE @EndDate DATE = DATEADD(DAY, 6, @StartDate); -- Sunday
+	DECLARE @Result INT;
+
+	SELECT @Result = COUNT(ReviewId) FROM REVIEW WHERE 
+	HotelId = @HotelId AND
+	DATEDIFF(DAY, @StartDate, ReviewDate) >= 0 AND
+	DATEDIFF(DAY, ReviewDate, @EndDate) >= 0;
+
+	RETURN @Result;
+END
+GO
+
+GO -- // new check 2
+CREATE OR ALTER PROCEDURE USP_GetWeeklyReview (
+    @HotelId INT,
+    @Date DATE = NULL)
+AS
+BEGIN
+	IF (@Date IS NULL) SET @Date = GETDATE();
+	DECLARE @LastWeekDate DATE = DATEADD(DAY, -7, @Date);
+
+	DECLARE @ThisWeek INT = 0, @LastWeek INT = 0;
+	EXEC @ThisWeek = USP_GetHotelWeeklyReview @HotelId, @Date;
+	EXEC @LastWeek = USP_GetHotelWeeklyReview @HotelId, @LastWeekDate;
+
+	SELECT @ThisWeek as ThisWeek, @LastWeek as LastWeek;
+END
+GO
+
+
+GO -- // new check 2
+CREATE OR ALTER PROCEDURE USP_GetHotelWeeklyOrder (
+    @HotelId INT,
+    @Date DATE = NULL)
+AS
+BEGIN
+	IF (@Date IS NULL) SET @Date = GETDATE();
+	DECLARE @StartDate DATE = DATEADD(DAY, 2 - DATEPART(WEEKDAY, @Date), @Date); -- Monday
+	DECLARE @EndDate DATE = DATEADD(DAY, 6, @StartDate); -- Sunday
+	DECLARE @Result INT;
+
+	SELECT @Result = COUNT(ao.OrderId) FROM (SELECT * FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba
+	JOIN ORDER_DETAIL od ON od.BookingId = ba.BookingId
+	JOIN ACCOUNT_ORDER ao ON od.OrderId = ao.OrderId
+	WHERE DATEDIFF(DAY, @StartDate, ao.CreatedAt) >= 0 AND DATEDIFF(DAY, ao.CreatedAt, @EndDate) >= 0;
+
+	RETURN @Result;
+END
+GO
+
+GO -- // new check 2
+CREATE OR ALTER PROCEDURE USP_GetWeeklyOrder (
+    @HotelId INT,
+    @Date DATE = NULL)
+AS
+BEGIN
+	IF (@Date IS NULL) SET @Date = GETDATE();
+	DECLARE @LastWeekDate DATE = DATEADD(DAY, -7, @Date);
+
+	DECLARE @ThisWeek INT = 0, @LastWeek INT = 0;
+	EXEC @ThisWeek = USP_GetHotelWeeklyOrder @HotelId, @Date;
+	EXEC @LastWeek = USP_GetHotelWeeklyOrder @HotelId, @LastWeekDate;
+
+	SELECT @ThisWeek as ThisWeek, @LastWeek as LastWeek;
+END
+GO
+
+
+GO -- // new check 4
+CREATE OR ALTER FUNCTION USF_GetTopAccount (
+    @HotelId INT)
+RETURNS @Result TABLE (AccountId INT, TotalSpent BIGINT)
+BEGIN
+	DECLARE @Fee INT = 50000;
+
+	INSERT INTO @Result (AccountId, TotalSpent)
+		SELECT * FROM (SELECT ao.AccountId, CAST(SUM((rt.Price - @Fee) * ba.NumberOfRoom) as BIGINT) as TotalSpent 
+			FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1) ao
+			JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
+			JOIN (SELECT BookingId, NumberOfRoom, RoomTypeId FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba ON ba.BookingId = od.BookingId
+			JOIN (SELECT Id, Price FROM ROOM_TYPE WHERE HotelId = @HotelId) rt ON rt.Id = ba.RoomTypeId
+			GROUP BY ao.AccountId) cal;
+	RETURN;
+END;
+GO
+
+
+GO -- // new check 3
+CREATE OR ALTER PROCEDURE USP_GetHotelTopUser (
+    @HotelId INT)
+AS
+BEGIN
+	DECLARE @HotelStatistics TABLE (AccountId INT, TotalSpent BIGINT);
+
+	INSERT INTO @HotelStatistics (AccountId, TotalSpent)
+		SELECT * FROM (SELECT TOP(7) * FROM dbo.USF_GetTopAccount(@HotelId)
+			ORDER BY TotalSpent DESC) cal;
+
+	SELECT pd.*, acc.Active, acc.MemberPoint as Point, acc.UserRole as Role, res.TotalSpent FROM @HotelStatistics res
+	JOIN ACCOUNT acc ON res.AccountId = acc.Id
+	JOIN PERSONAL_DETAILS pd ON acc.Id = pd.AccountId WHERE acc.UserRole = 'User';
+END
+GO
+
+-- // Admin
+GO
+CREATE OR ALTER FUNCTION USF_CalculateAdminRevenueByMonth (
+    @Year INT,
+    @Month INT)
+RETURNS BIGINT
+BEGIN
+	DECLARE @TotalRevenue BIGINT = 0;
+	DECLARE @Fee INT = 50000;
+
+	-- mỗi phòng đc doanh thu 50k, nhân cho số phòng của booking lấy doanh thu theo tuần và theo năm
+    DECLARE @StartDate DATE = CAST(STR(@Month) + '-01-' + STR(@Year) as date);
+	DECLARE @EndDate DATE = EOMONTH(@StartDate);
+
+    SELECT @TotalRevenue += @Fee * ba.NumberOfRoom
+	FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1 AND
+		DATEDIFF(DAY, @StartDate, CreatedAt) >= 0 AND 
+		DATEDIFF(DAY, CreatedAt, @EndDate) >= 0) ao 
+	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
+	JOIN (SELECT BookingId, NumberOfRoom FROM BOOKING_ACCOUNT) ba ON ba.BookingId = od.BookingId
+
+	RETURN @TotalRevenue;
+END;
+GO
+
+
+-- // new check
+GO
+CREATE OR ALTER PROCEDURE USP_CalculateAdminYearlyRevenue (
+    @Year INT = null)
+AS
+BEGIN
+	IF (@Year IS NULL) SET @Year = CAST(YEAR(GETDATE()) AS INT);
+
+	DECLARE @table TABLE(Months INT);
+	INSERT INTO @table (Months) VALUES (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12);
+
+	SELECT Months, 
+		dbo.USF_CalculateAdminRevenueByMonth(@Year, Months) AS ThisYear,
+		dbo.USF_CalculateAdminRevenueByMonth(@Year - 1, Months) AS LastYear
+	FROM @table;
+END
+GO
+
+GO -- // new check 2
+CREATE OR ALTER FUNCTION USP_CalculateAdminOneDayRevenue (
+    @Date DATE = NULL)
+RETURNS BIGINT
+BEGIN
+	IF (@Date IS NULL) SET @Date = GETDATE();
+
+	DECLARE @TotalRevenue BIGINT = 0;
+	DECLARE @Fee INT = 50000;
+
+	SELECT @TotalRevenue += @Fee * ba.NumberOfRoom
+	FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1 AND DATEDIFF(DAY, @Date, CreatedAt) = 0) ao 
+	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
+	JOIN (SELECT BookingId, NumberOfRoom FROM BOOKING_ACCOUNT) ba ON ba.BookingId = od.BookingId;
+
+	RETURN @TotalRevenue;
+END
+GO
+
+
+GO -- // new check 2
+CREATE OR ALTER PROCEDURE USP_CalculateAdminWeeklyRevenue (
+    @Date DATE = NULL)
+AS
+BEGIN
+	DECLARE @Table TABLE (dayInWeek INT)
+	INSERT INTO @Table VALUES (1),(2),(3),(4),(5),(6),(7);
+
+	IF (@Date IS NULL) SET @Date = GETDATE();
+	DECLARE @StartDate DATE = DATEADD(DAY, 1 - DATEPART(WEEKDAY, @Date), @Date); -- Sunday the week before
+
+	select DayInWeek,
+		dbo.USP_CalculateAdminOneDayRevenue(DATEADD(DAY, DayInWeek, @StartDate)) as ThisWeek,
+		dbo.USP_CalculateAdminOneDayRevenue(DATEADD(DAY, DayInWeek - 7, @StartDate)) as LastWeek
+	from @Table
+END
+GO
+
+
+
+
+-- // check --
+
 --! Func tính điểm input tổng số tiền và số thứ tự của đơn đặt phòng
+GO
 CREATE OR ALTER FUNCTION USF_CaculateBonusPoint(@Total INT, @Times INT)
 RETURNS INT
 BEGIN
@@ -1920,39 +2597,6 @@ AS
 	
 GO
 
-GO
---! proc tính doanh thu của khách sạn theo tháng
-CREATE OR ALTER  PROCEDURE CalculateHotelRevenueByMonth
-    @Year INT,
-    @Month INT,
-    @HotelId INT,
-    @TotalRevenue INT OUTPUT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    DECLARE @StartDate DATE, @EndDate DATE;
-
-    -- Tính ngày bắt đầu của tháng
-    SET @StartDate = DATEFROMPARTS(@Year, @Month, 1);
-
-    -- Tính số ngày của tháng đó
-    SET @EndDate = DATEADD(DAY, -1, DATEADD(MONTH, 1, @StartDate));
-
-    SELECT @TotalRevenue = COALESCE(SUM(Total), -1)
-    FROM ACCOUNT_ORDER AO
-    JOIN ORDER_DETAIL OD ON AO.OrderId = OD.OrderId
-    JOIN BOOKING_ACCOUNT BA ON OD.BookingId = BA.BookingId
-    WHERE AO.Paid = 1
-        AND BA.CheckIn >= @StartDate
-        AND BA.CheckIn <= @EndDate
-        AND BA.HotelId = @HotelId;
-
-    IF @TotalRevenue IS NULL
-        SET @TotalRevenue = -1;
-    
-    RETURN @TotalRevenue;
-END;
 
 --!proc tính doanh thu khách sạn theo quý
 GO
@@ -1989,41 +2633,6 @@ BEGIN
 END;
 GO
 
---!proc tính doanh thu khách sạn trong năm
-GO
-CREATE OR ALTER PROCEDURE CalculateHotelRevenueByYear
-    @Year INT,
-    @HotelId INT,
-    @TotalRevenue INT OUTPUT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    DECLARE @StartDate DATE, @EndDate DATE;
-
-    -- Tính ngày bắt đầu của năm
-    SET @StartDate = DATEFROMPARTS(@Year, 1, 1);
-
-    -- Tính ngày cuối cùng của năm
-    SET @EndDate = DATEADD(DAY, -1, DATEADD(YEAR, 1, @StartDate));
-
-    -- Tính doanh thu
-    SELECT @TotalRevenue = SUM(Total)
-    FROM ACCOUNT_ORDER AO
-    JOIN ORDER_DETAIL OD ON AO.OrderId = OD.OrderId
-    JOIN BOOKING_ACCOUNT BA ON OD.BookingId = BA.BookingId
-    WHERE AO.Paid = 1
-        AND BA.CheckIn >= @StartDate
-        AND BA.CheckIn <= @EndDate
-        AND BA.HotelId = @HotelId;
-
-    IF @TotalRevenue IS NULL
-        SET @TotalRevenue = -1;
-
-    -- Trả về kết quả
-    RETURN @TotalRevenue;
-END;
-GO
 
 --!proc tính diểm thành viên dựa trên số ngày cư trú 
 GO

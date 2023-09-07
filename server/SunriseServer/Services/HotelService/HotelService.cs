@@ -6,35 +6,6 @@ using SunriseServerCore.Dtos;
 
 namespace SunriseServer.Services.HotelService
 {
-    public class PagedList<T> : List<T>
-    {
-        public int CurrentPage { get; private set; }
-        public int TotalPages { get; private set; }
-        public int PageSize { get; private set; }
-        public int TotalCount { get; private set; }
-
-        public bool HasPrevious => CurrentPage > 1;
-        public bool HasNext => CurrentPage < TotalPages;
-
-        public PagedList(List<T> items, int count, int pageNumber, int pageSize)
-        {
-            TotalCount = count;
-            PageSize = pageSize;
-            CurrentPage = pageNumber;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-
-            AddRange(items);
-        }
-
-        public static PagedList<T> ToPagedList(IQueryable<T> source, int pageNumber, int pageSize)
-        {
-            var count = source.Count();
-            var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-
-            return new PagedList<T>(items, count, pageNumber, pageSize);
-        }
-    }
-    
     public class HotelService : IHotelService
     {
         private readonly UnitOfWork _unitOfWork;
@@ -44,10 +15,9 @@ namespace SunriseServer.Services.HotelService
             _unitOfWork = uof;
         }
 
-        public async Task<Hotel> AddHotel(Hotel hotel)
+        public async Task<int> AddHotel(int accountId, InputHotelDto hotel)
         {
-            var result = await _unitOfWork.HotelRepo.CreateAsync(hotel);
-            // await _unitOfWork.SaveChangesAsync();
+            var result = await _unitOfWork.HotelRepo.CreateHotelAsync(accountId, hotel);
             return result;
         }
 
@@ -75,10 +45,9 @@ namespace SunriseServer.Services.HotelService
             return hotel;
         }
 
-        public async Task<Hotel> UpdateHotel(Hotel request)
+        public async Task<int> UpdateHotel(Hotel request)
         {
-            var result = await _unitOfWork.HotelRepo.UpdateAsync(request);
-            await _unitOfWork.SaveChangesAsync();
+            var result = await _unitOfWork.HotelRepo.UpdateHotelAsync(request);
 
             return result;
         }
@@ -117,6 +86,36 @@ namespace SunriseServer.Services.HotelService
         public async Task<List<Hotel>> GetSearchHotels(SearchHotelDto searchHotel)
         {
             return await _unitOfWork.HotelRepo.GetSearchHotels(searchHotel);
+        }
+
+        public async Task<List<YealyRevenue>> GetHotelYealyRevenue(int hotelId, int? year)
+        {
+            return await _unitOfWork.HotelRepo.GetHotelYealyRevenueAsync(hotelId, year);
+        }
+
+        public async Task<List<WeeklyRevenue>> GetHotelWeeklyRevenue(int hotelId, DateTime? date)
+        {
+            return await _unitOfWork.HotelRepo.GetHotelWeeklyRevenueAsync(hotelId, date);
+        }
+
+        public async Task<WeeklyStatistics> GetHotelWeeklyTotalReview(int hotelId, DateTime? date)
+        {
+            return await _unitOfWork.ReviewRepo.GetHotelWeeklyTotalReviewAsync(hotelId, date);
+        }
+
+        public async Task<WeeklyStatistics> GetHotelWeeklyTotalOrder(int hotelId, DateTime? date)
+        {
+            return await _unitOfWork.OrderRepo.GetTotalOrderWeeklyAsync(hotelId, date);
+        }
+
+        public async Task<List<TopAccountInfoDto>> GetHotelTopUser(int hotelId)
+        {
+            return await _unitOfWork.HotelRepo.GetHotelTopUserAsync(hotelId);
+        }
+
+        public async Task<int> AddHotelReview(int accountId, AddReviewDto reviewDto)
+        {
+            return await _unitOfWork.ReviewRepo.AddHotelReviewAsync(accountId, reviewDto);
         }
     }
 }

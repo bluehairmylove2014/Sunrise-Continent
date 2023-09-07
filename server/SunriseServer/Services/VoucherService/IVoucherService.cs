@@ -7,7 +7,7 @@ namespace SunriseServer.Services.VoucherService
 {
     public interface IVoucherService
     {
-        Task<IEnumerable<Voucher>> GetAllVoucher();
+        Task<List<VoucherDto>> GetAllVoucher();
         Task<Voucher> GetVoucherById(int VoucherId);
 
         #nullable enable
@@ -17,7 +17,7 @@ namespace SunriseServer.Services.VoucherService
         Task<int> CreateVoucher(AddVoucherDto voucher);
         Task<int> UpdateVoucher(Voucher voucher);
         Task<int> DeleteVoucher(int voucherId);
-        Task<int> UpdateAccountRank(int accountId);
+        Task<int> UpdateRequiredRank(int accountId);
         Task<int> RedeemVoucher(int accountId, int voucherId, int number);
     }
 }

@@ -31,8 +31,6 @@ namespace SunriseServerData.Repositories
             var str = SetPropValueByReflection.GetPropProcCallString(booking);
             builder.Append(str);
 
-            // Console.WriteLine(str);
-            // EXECUTE({builder.ToString()})
             var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
             return result;
         }

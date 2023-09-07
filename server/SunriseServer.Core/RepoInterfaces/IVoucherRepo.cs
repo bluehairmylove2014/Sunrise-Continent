@@ -12,12 +12,13 @@ namespace SunriseServerCore.RepoInterfaces
     {
         #nullable enable
         Task<List<VoucherBag>> GetAccountVoucherAsync(int accountId, string? rank);
+        Task<List<VoucherBag>> GetAllVoucherAsync();
         #nullable disable
 
         Task<int> CreateAsync(AddVoucherDto voucher);
         Task<int> UpdateVoucherAsync(Voucher voucher);
         Task<int> DeleteVoucherAsync(int voucherId);
-        Task<int> UpdateAccountRankAsync(int accountId);
+        Task<int> UpdateRequiredRankAsync(int accountId);
         Task<int> RedeemVoucherAsync(int accountId, int voucherId, int number);
     }
 }

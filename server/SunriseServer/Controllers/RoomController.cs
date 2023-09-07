@@ -72,7 +72,9 @@ namespace SunriseServer.Controllers
         {
             var roomRawInfo = await _roomService.GetSingleRoom(hotelId, id);
             if (roomRawInfo is null)
-                return NotFound("Room not found");
+                return NotFound(new {
+                    message = "Phòng không tồn tại."
+                });
 
             var result = await TransferRoomData(roomRawInfo);
             return Ok(result);
@@ -83,7 +85,10 @@ namespace SunriseServer.Controllers
         {
             var result = await _roomService.GetRoomPicture(hotelId, id);
             if (result is null)
-                return NotFound("RoomPicture not found");
+                return NotFound(new
+                {
+                    message = "không tìm thấy ảnh phòng"
+                });
             
             return Ok(result);
         }
@@ -110,90 +115,129 @@ namespace SunriseServer.Controllers
         }
 
         // POST
-        [HttpPost(""), Authorize(Roles = GlobalConstant.Admin)]
-        public async Task<ActionResult<ResponseMessageDetails<RoomType>>> CreateRoomType(RoomType request)
+        [HttpPost(""), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
+        public async Task<ActionResult<ResponseMessageDetails<int>>> CreateRoomType(RoomDto request)
         {
-            var result = await _roomService.AddRoomType(request);
-            if (result is null)
-                return BadRequest("Create RoomType failed");
+            int result;
+            try
+            {
+                result = await _roomService.AddRoomType(request);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message,
+                });
+            }
 
-            return Ok(new ResponseMessageDetails<RoomType>("Create RoomType successfully", result));
+            return Ok(new ResponseMessageDetails<int>("tạo phòng thành công", result));
         }
 
-        [HttpPost("picture"), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpPost("picture"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<RoomPicture>>> CreateRoomPicture(RoomPictureDto request)
         {
             var result = await _roomService.AddRoomPicture(request);
             if (result is null)
-                return BadRequest("Create RoomPicture failed");
+                return BadRequest(new {
+                    message = "không thể thêm ảnh cho phòng"
+                });
 
-            return Ok(new ResponseMessageDetails<RoomPicture>("Create RoomPicture successfully", result));
+            return Ok(new ResponseMessageDetails<RoomPicture>("thêm ảnh phòng thành công", result));
         }
 
         // PUT
-        [HttpPut(""), Authorize(Roles = GlobalConstant.Admin)]
-        public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateRoomType(RoomType request)
+        [HttpPut(""), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
+        public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateRoomType(RoomDto request)
         {
-            var result = await _roomService.UpdateRoomType(request);
-            if (result == 0)
-                return NotFound("Room not found.");
+            int result;
+            try
+            {
+                result = await _roomService.DeleteRoomType(new DeleteRoomDto {
+                    HotelId = request.HotelId,
+                    RoomTypeId = request.Id,
+                });
+
+                result = await _roomService.AddRoomType(request);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException exception)
+            {
+                return BadRequest(new {
+                    message = exception.Message,
+                });
+            }
             
-            return Ok(new ResponseMessageDetails<int>("Update RoomType successfully", ResponseStatusCode.Ok));
+            return Ok(new ResponseMessageDetails<int>("cập nhật loại phòng thành công", ResponseStatusCode.Ok));
         }
 
-        [HttpPut("picture"), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpPut("picture"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateRoomPicture(RoomPictureDto updateDto)
         {
             var result = await _roomService.UpdateRoomPicture(updateDto);
             if (result == 0)
                 return NotFound("RoomPicture not found.");
             
-            return Ok(new ResponseMessageDetails<int>("Update RoomPicture successfully", ResponseStatusCode.Ok));
+            return Ok(new ResponseMessageDetails<int>("cập nhật ảnh phòng thành công", ResponseStatusCode.Ok));
         }
 
-        [HttpPut("facility"), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpPut("facility"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateRoomFacility(RoomAmenitiesDto updateDto)
         {
             var result = await _roomService.UpdateRoomFacility(updateDto);
             if (result == 0)
-                return NotFound("Room not found.");
+                return NotFound(new {
+                    message = "Phòng không tồn tại."
+                });
             
             // result ResponseStatusCode.Ok
-            return Ok(new ResponseMessageDetails<int>("Update Room's facilities successfully", result));
+            return Ok(new ResponseMessageDetails<int>("cập nhật cơ sở vật chất cho phòng thành công", result));
         }
 
-        [HttpPut("service"), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpPut("service"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateRoomService(RoomAmenitiesDto updateDto)
         {
             var result = await _roomService.UpdateRoomService(updateDto);
             if (result == 0)
-                return NotFound("Room not found.");
+                return NotFound(new {
+                    message = "Phòng không tồn tại."
+                });
             
             // result ResponseStatusCode.Ok
-            return Ok(new ResponseMessageDetails<int>("Update Room's services successfully", result));
+            return Ok(new ResponseMessageDetails<int>("cập nhật dịch vụ cho phòng thành công", result));
         }
 
         // DELETE
-        [HttpDelete(""), Authorize(Roles = GlobalConstant.Admin)]
-        public async Task<ActionResult<ResponseMessageDetails<int>>> DeleteRoom(DeleteRoomDto request)
+        [HttpDelete(""), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
+        public async Task<ActionResult<ResponseMessageDetails<int>>> DeleteRoom(
+            [FromQuery] int hotelId, 
+            [FromQuery] int roomTypeId
+        )
         {
-            var result = await _roomService.DeleteRoomType(request);
+            var result = await _roomService.DeleteRoomType(new DeleteRoomDto {
+                HotelId = hotelId,
+                RoomTypeId = roomTypeId
+            });
+
             if (result == 0) {
-                return NotFound("Room not found.");
+                return NotFound(new {
+                    message = "Phòng không tồn tại."
+                });
             }
 
-            return Ok(new ResponseMessageDetails<int>("Delete Room successfully", ResponseStatusCode.Ok));
+            return Ok(new ResponseMessageDetails<int>("Xóa loại phòng thành công", ResponseStatusCode.Ok));
         }
 
-        [HttpDelete("picture"), Authorize(Roles = GlobalConstant.Admin)]
+        [HttpDelete("picture"), Authorize(Roles = $"{GlobalConstant.Admin},{GlobalConstant.Partner}")]
         public async Task<ActionResult<ResponseMessageDetails<int>>> DeleteRoomPicture(DeleteRoomPictureDto request)
         {
             var result = await _roomService.DeleteRoomPicture(request);
             if (result == 0) {
-                return NotFound("RoomPicture not found.");
+                return NotFound(new
+                {
+                    message = "Không tìm thấy ảnh phòng"
+                });
             }
 
-            return Ok(new ResponseMessageDetails<int>("Delete RoomPicture successfully", ResponseStatusCode.Ok));
+            return Ok(new ResponseMessageDetails<int>("Xóa ảnh phòng thành công", ResponseStatusCode.Ok));
         }
     }
 }

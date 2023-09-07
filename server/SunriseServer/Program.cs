@@ -14,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using SunriseServer.Services.CacheService;
 using SunriseServer.Services.PaymentService;
 using SunriseServerCore;
+using SunriseServerCore.RepoInterfaces;
+using SunriseServerData.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +33,7 @@ builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IAdminRepo, AdminRepo>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -61,6 +64,11 @@ builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
     {
         policy.WithOrigins("http://www.sunrise-continent.online.s3-website-ap-southeast-1.amazonaws.com").AllowAnyMethod().AllowAnyHeader();
         policy.WithOrigins("http://www.sunrise-continent.online").AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("https://www.sunrise-continent.online").AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("http://www.admin.sunrise-continent.online").AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("https://www.admin.sunrise-continent.online").AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("http://www.partner.sunrise-continent.online").AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("https://www.partner.sunrise-continent.online").AllowAnyMethod().AllowAnyHeader();
         policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
     }));
 

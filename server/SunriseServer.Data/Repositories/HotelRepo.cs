@@ -29,26 +29,42 @@ namespace SunriseServerData.Repositories
             return result.FirstOrDefault();
         }
 
-        public override async Task<Hotel> CreateAsync(Hotel entity)
+        public async Task<int> CreateHotelAsync(int accountId, InputHotelDto entity)
         {           
-            var builder = new StringBuilder("DECLARE @result INT;\n");
-            builder.Append("EXEC @result = dbo.USP_AddHotel ");
-
-            builder.Append($"@Name = \'{entity.Name}\', ");
-            builder.Append($"@Country = \'{entity.Country}\', ");
+            var builder = new StringBuilder("EXEC dbo.USP_AddHotel ");
+            builder.Append($"@AccountId = {accountId}, ");
+            builder.Append($"@Name = N\'{entity.Name}\', ");
+            builder.Append($"@Country = N\'{entity.Country}\', ");
             builder.Append($"@HotelType = \'{entity.HotelType}\', ");
-            builder.Append($"@ProvinceCity = \'{entity.ProvinceCity}\', ");
-            builder.Append($"@Address = \'{entity.Address}\', ");
+            builder.Append($"@ProvinceCity = N\'{entity.ProvinceCity}\', ");
+            builder.Append($"@Address = N\'{entity.Address}\', ");
             builder.Append($"@Stars = {entity.Stars}, ");
-            builder.Append($"@Rating = {entity.Rating}, ");
-            builder.Append($"@Description = \'{entity.Description}\', ");
-            builder.Append($"@Image = \'{entity.Image}\';\n");
-            builder.Append($"EXEC USP_GetHotelById @Id = @result;");
+            builder.Append($"@Description = N\'{entity.Description}\', ");
+            builder.Append($"@Image = N\'{entity.Image}\';");
 
             Console.WriteLine(builder.ToString());
 
-            var result = await _dataContext.Hotel.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
-            return result.FirstOrDefault();
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            return result;
+        }
+
+        public async Task<int> UpdateHotelAsync(Hotel entity)
+        {           
+            var builder = new StringBuilder("EXEC USP_UpdateHotel ");
+            builder.Append($"@Id = {entity.Id}, ");
+            builder.Append($"@Name = N\'{entity.Name}\', ");
+            builder.Append($"@Country = N\'{entity.Country}\', ");
+            builder.Append($"@HotelType = \'{entity.HotelType}\', ");
+            builder.Append($"@ProvinceCity = N\'{entity.ProvinceCity}\', ");
+            builder.Append($"@Address = N\'{entity.Address}\', ");
+            builder.Append($"@Stars = {entity.Stars}, ");
+            builder.Append($"@Description = N\'{entity.Description}\', ");
+            builder.Append($"@Image = N\'{entity.Image}\';");
+
+            Console.WriteLine(builder.ToString());
+
+            var result = await _dataContext.Database.ExecuteSqlInterpolatedAsync($"EXECUTE({builder.ToString()})");
+            return result;
         }
 
 
@@ -83,19 +99,75 @@ namespace SunriseServerData.Repositories
         {
             var builder = new StringBuilder();
             builder.Append("EXEC dbo.USP_FindHotelByName ");
-            builder.Append($"@Location = \'{searchHotel.Location}\', ");
-            builder.Append($"@RoomType = \'{searchHotel.RoomType}\', ");
+            builder.Append($"@Location = N\'{searchHotel.Location}\', ");
+            builder.Append($"@RoomType = N\'{searchHotel.RoomType}\', ");
             builder.Append($"@StartDate = \'{searchHotel.StartDate}\', ");
             builder.Append($"@EndDate = \'{searchHotel.EndDate}\', ");
             builder.Append($"@MinBudget = {searchHotel.MinBudget}, ");
             builder.Append($"@MaxBudget = {searchHotel.MaxBudget}, ");
             builder.Append($"@Rooms = {searchHotel.Rooms}, ");
             builder.Append($"@Adult = {searchHotel.Adults}, ");
-            builder.Append($"@Children = {searchHotel.Children};\n");
+            builder.Append($"@Children = {searchHotel.Children}, ");
+            if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.hotelType))
+                builder.Append($"@HotelType = \'{searchHotel.FilterHotelDto.hotelType}\', ");
+            if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.bedType))
+                builder.Append($"@BedType = \'{searchHotel.FilterHotelDto.bedType}\', ");
+            builder.Append($"@GuestRating = {searchHotel.FilterHotelDto.guestRating}, ");
+            if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.facilities))
+                builder.Append($"@Facilities = \'{searchHotel.FilterHotelDto.facilities}\', ");
+            if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.service))
+                builder.Append($"@Service = \'{searchHotel.FilterHotelDto.service}\', ");
+            builder.Append($"@SortingCol = \'{searchHotel.FilterHotelDto.sortingCol}\', ");
+            builder.Append($"@SortType = \'{searchHotel.FilterHotelDto.sortType}\';\n");
 
             Console.WriteLine(builder.ToString());
 
             return await _dataContext.Hotel.FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+        }
+
+        
+        public async Task<List<YealyRevenue>> GetHotelYealyRevenueAsync(int hotelId, int? year)
+        {
+            var builder = new StringBuilder($"EXEC USP_CalculateHotelYearlyRevenue @HotelId={hotelId};");
+            if (year is not null && year > 0) {
+                builder.Length--;
+                builder.Append($", @Year={year};");
+            }
+
+            Console.WriteLine(builder.ToString());
+            
+            return await _dataContext.Set<YealyRevenue>()
+                .FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+        }
+
+        // USP_CalculateHotelWeeklyRevenue
+        public async Task<List<WeeklyRevenue>> GetHotelWeeklyRevenueAsync(int hotelId, DateTime? date)
+        {
+            var builder = new StringBuilder($"EXEC USP_CalculateHotelWeeklyRevenue @HotelId={hotelId};");
+            if (date is not null) {
+                builder.Length--;
+                builder.Append($", @Date=\'{date?.ToString("MM-dd-yyyy")}\';");
+            }
+
+            Console.WriteLine(builder.ToString());
+            
+            var result = await _dataContext.Set<WeeklyRevenue>()
+                .FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+
+            return result;
+        }
+
+        public async Task<List<TopAccountInfoDto>> GetHotelTopUserAsync(int hotelId)
+        {
+            var builder = new StringBuilder($"EXEC USP_GetHotelTopUser @HotelId={hotelId};");
+
+            Console.WriteLine(builder.ToString());
+            
+            var result = await _dataContext.Set<TopAccountInfoDto>()
+                .FromSqlInterpolated($"EXECUTE({builder.ToString()})")
+                .IgnoreQueryFilters().ToListAsync();
+
+            return result;
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SunriseServer.Common.Helper;
+using SunriseServerCore.Dtos;
 
 namespace SunriseServerData.Repositories
 {
@@ -22,12 +23,15 @@ namespace SunriseServerData.Repositories
 
         public async Task<IEnumerable<Order>> GetAccountOrderAsync(int accountId)
         {
-            return await _dataContext.Order.FromSqlInterpolated($"EXEC USP_GetAllAccountOrder {accountId};").IgnoreQueryFilters().ToListAsync();
+            return await _dataContext.Order
+                .FromSqlInterpolated($"EXEC USP_GetAllAccountOrder {accountId};")
+                .IgnoreQueryFilters()
+                .ToListAsync();
         }
 
         public async Task<int> CreateOrderAsync(ListOrderDto order, int accountId)
         {
-            var builder = new StringBuilder("DECLARE @BookingId INT, @OrderId INT, @Total INT;\n");
+            var builder = new StringBuilder("DECLARE @BookingId INT, @MyOrderId INT, @Total INT;\n");
 
             var str = SetPropValueByReflection.GetPropProcCallString(order);
             str = str.Replace("@AccountId=0", $"@AccountId={accountId}");
@@ -41,26 +45,20 @@ namespace SunriseServerData.Repositories
                             .GroupBy(o => o.HotelId)
                             .Select(x => x.Select(v => v).ToList())
                             .ToList();
-            var multipleConfirm = hotelList.Count > 1;
             
             foreach (var item in hotelList)
             {
-                builder.Append($"EXEC @OrderId = USP_AddFullOrder {str.Remove(start, count)}, @DateRecorded='{DateTime.Now.ToString($"yyyy-MM-dd HH:mm:ss.fffffff")}';\n");
+                builder.Append($"EXEC @MyOrderId = USP_AddFullOrder {str.Remove(start, count)}, @DateRecorded='{DateTime.Now.ToString($"yyyy-MM-dd HH:mm:ss.fffffff")}';\n");
                 
                 foreach (var hotel in item)
                 {
                     var booking = SetPropValueByReflection.GetPropProcCallString(hotel);
                     builder.Append($"EXEC @BookingId = USP_AddBooking @AccountId={accountId}, {booking}");
-                    builder.Append($"EXEC USP_AddBookingByOrderId @OrderId, @BookingId;\n");
+                    builder.Append($"EXEC USP_AddBookingByOrderId @MyOrderId, @BookingId;\n");
                 }
 
-                builder.Append($"EXEC USP_UpdateVoucherAndTotal @OrderId=null, @AccountId={accountId}, @VoucherId={order.VoucherId}, @MultipleConfirm={multipleConfirm}, @DateRecorded='{DateTime.Now.ToString($"yyyy-MM-dd HH:mm:ss.fffffff")}';\n");
+                builder.Append($"EXEC USP_UpdateVoucherAndTotal @OrderId=@MyOrderId, @AccountId={accountId}, @VoucherId={order.VoucherId}, @DateRecorded='{DateTime.Now.ToString($"yyyy-MM-dd HH:mm:ss.fffffff")}';\n");
             }
-
-            var sqlString = builder.ToString();
-            var lastindex = sqlString.LastIndexOf("@MultipleConfirm");
-            builder.Remove(lastindex, $"@MultipleConfirm={multipleConfirm}".Length);
-            builder.Insert(lastindex, $"@MultipleConfirm=0");
 
             Console.WriteLine(builder.ToString());
             
@@ -72,6 +70,22 @@ namespace SunriseServerData.Repositories
         {
             return await _dataContext.Database
                 .ExecuteSqlInterpolatedAsync($"EXEC USP_ConfirmPaid @SessionId={sessionId};");
+        }
+
+        public async Task<WeeklyStatistics> GetTotalOrderWeeklyAsync(int hotelId, DateTime? date)
+        {
+            var builder = new StringBuilder($"EXEC USP_GetWeeklyOrder @HotelId={hotelId};");
+            if (date is not null) {
+                builder.Length--;
+                builder.Append($", @Date=\'{date?.ToString("MM-dd-yyyy")}\';");
+            }
+
+            Console.WriteLine(builder.ToString());
+            
+            var result = (await _dataContext.Set<WeeklyStatistics>()
+                .FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync()).FirstOrDefault();
+
+            return result;
         }
     }
 }

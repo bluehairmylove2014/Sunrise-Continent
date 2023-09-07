@@ -14,9 +14,17 @@ namespace SunriseServer.Services.VoucherService
             _unitOfWork = uof;
         }
 
-        public async Task<IEnumerable<Voucher>> GetAllVoucher()
+        public async Task<List<VoucherDto>> GetAllVoucher()
         {
-            var result = await _unitOfWork.VoucherRepo.GetAllAsync();
+            var rawVoucher = await _unitOfWork.VoucherRepo.GetAllVoucherAsync();
+            var result = new List<VoucherDto>();
+
+            rawVoucher.ForEach(v => {
+                VoucherDto voucher = new();
+                SetPropValueByReflection.AddYToX(voucher, v);
+                result.Add(voucher);
+            });
+
             return result;
         }
 
@@ -33,9 +41,7 @@ namespace SunriseServer.Services.VoucherService
             var result = new List<VoucherDto>();
 
             rawVoucher.ForEach(v => {
-                VoucherDto voucher = new() {
-                    RequiredRank = v.AccountRank
-                };
+                VoucherDto voucher = new() {};
                 SetPropValueByReflection.AddYToX(voucher, v);
                 result.Add(voucher);
             });
@@ -62,9 +68,9 @@ namespace SunriseServer.Services.VoucherService
             return result;
         }
 
-        public async Task<int> UpdateAccountRank(int accountId)
+        public async Task<int> UpdateRequiredRank(int accountId)
         {
-            var result = await _unitOfWork.VoucherRepo.UpdateAccountRankAsync(accountId);
+            var result = await _unitOfWork.VoucherRepo.UpdateRequiredRankAsync(accountId);
             return result;
         }
 

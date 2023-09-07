@@ -26,13 +26,15 @@ namespace SunriseServer.Controllers
             _voucherService = voucherService;
         }
 
-        [HttpGet("")]
-        public async Task<ActionResult<List<Voucher>>> GetAllVoucher()
+        [HttpGet(""), Authorize(Roles = GlobalConstant.Admin)]
+        public async Task<ActionResult<List<VoucherBag>>> GetAllVoucher()
         {
-            var result = await _voucherService.GetAllVoucher();
+            var result = await _voucherService.GetAllVoucher(); // thêm số lượng cho voucher
 
             if (result == null)
-                return BadRequest("Cannot get voucher.");
+                return BadRequest(new {
+                    message = "Không thể lấy danh sách mã khuyến mãi"
+                });
 
             return Ok(result.ToList());
         }
@@ -45,7 +47,9 @@ namespace SunriseServer.Controllers
             var result = await _voucherService.GetAccountVoucher(accountId, rank);
 
             if (result == null)
-                return BadRequest("Cannot get account voucher.");
+                return BadRequest(new {
+                    message = "Không thể lấy danh sách mã khuyến mãi của tài khoản"
+                });
 
             return Ok(result);
         }
@@ -56,7 +60,9 @@ namespace SunriseServer.Controllers
         public async Task<ActionResult<ResponseMessageDetails<int>>> AddVoucher(AddVoucherDto voucherDto)
         {
             if (voucherDto.Value > 1)
-                return BadRequest("Voucher value incorrect.");
+                return BadRequest(new {
+                    message = "Wrong voucher value."
+                });
             
             int result;
             try
@@ -65,20 +71,26 @@ namespace SunriseServer.Controllers
             }
             catch (Microsoft.Data.SqlClient.SqlException exception)
             {
-                return BadRequest(exception.Message);
+                return BadRequest(new {
+                   message = exception.Message
+                });
             }
 
             if (result == -1)
-                return BadRequest("Cannot create voucher.");
+                return BadRequest(new {
+                    message = "Không thể tạo mã khuyến mãi, vui lòng thử lại sau"
+                });
 
-            return Ok(new ResponseMessageDetails<int>("Create voucher successfully.", result));
+            return Ok(new ResponseMessageDetails<int>("Tạo mã khuyến mãi thành công", result));
         }
 
         [HttpPut(""), Authorize(Roles = GlobalConstant.Admin)]
         public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateVoucher(Voucher voucher)
         {
             if (voucher.Value > 1 || voucher.Value < 0)
-                return BadRequest("Wrong voucher value.");
+                return BadRequest(new {
+                    message = "Sai dữ liệu mã khuyến mãi"
+                });
 
             int result;
             try
@@ -87,10 +99,12 @@ namespace SunriseServer.Controllers
             }
             catch (Microsoft.Data.SqlClient.SqlException exception)
             {
-                return BadRequest(exception.Message);
+                return BadRequest(new {
+                   message = exception.Message
+                });
             }
 
-            return Ok(new ResponseMessageDetails<int>("Update voucher successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Cập nhật mã khuyến mãi thành công", result));
         }
 
         [HttpDelete(""), Authorize(Roles = GlobalConstant.Admin)]
@@ -99,28 +113,34 @@ namespace SunriseServer.Controllers
             var result = await _voucherService.DeleteVoucher(voucherId);
 
             if (result == 0)
-                return NotFound("Cannot delete voucher.");
+                return NotFound(new {
+                    message = "Không thể xóa mã khuyến mãi"
+                });
 
-            return Ok(new ResponseMessageDetails<int>("Delete voucher successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Xóa mã khuyến mãi thành công", result));
         }
 
         [HttpPut("account-rank"), Authorize(Roles = GlobalConstant.User)]
-        public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateAccountRank()
+        public async Task<ActionResult<ResponseMessageDetails<int>>> UpdateRequiredRank()
         {
             Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
-            var result = await _voucherService.UpdateAccountRank(accountId);
+            var result = await _voucherService.UpdateRequiredRank(accountId);
 
             if (result == 0)
-                return NotFound("Account not found.");
+                return NotFound(new {
+                    message = "Không tìm thấy tài khoản"
+                });
 
-            return Ok(new ResponseMessageDetails<int>("Update account rank successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Cập nhật hạng thành viên thành công", result));
         }
         
         [HttpPost("redeem"), Authorize(Roles = GlobalConstant.User)]
         public async Task<ActionResult<ResponseMessageDetails<int>>> RedeemVoucher(RedeemVoucherDto voucherDto)
         {
             if (voucherDto.Quantity <= 0) 
-                return BadRequest("Number of voucher incorrect");
+                return BadRequest(new {
+                    message = "Số lượng voucher không hợp lệ."
+                });
             
             Int32.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value, out int accountId);
 
@@ -131,10 +151,18 @@ namespace SunriseServer.Controllers
             }
             catch (Microsoft.Data.SqlClient.SqlException exception)
             {
-                return BadRequest(exception.Message);
+                return BadRequest(new {
+                    message = exception.Message
+                });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new {
+                    message = "Đã xảy ra lỗi trong quá trình đổi mã khuyến mãi, vui lòng thử lại sau"
+                });
             }
 
-            return Ok(new ResponseMessageDetails<int>("Redeem voucher successfully", result));
+            return Ok(new ResponseMessageDetails<int>("Đổi mã khuyến mãi thành công", result));
         }
         
     }

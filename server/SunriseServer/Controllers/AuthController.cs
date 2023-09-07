@@ -35,91 +35,90 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPost("register-admin")]
-        public async Task<ActionResult<ResponseMessageDetails<string>>> RegisterAdmin(LoginDto request)
+        public async Task<ActionResult<ResponseMessageDetails<string>>> RegisterAdmin(RegisterAdminDto request)
         {
+            if (request.Password.Length < 6)
+                return BadRequest(new {
+                    message = "Mật khẩu phải nhiều hơn 6 kí tự"
+                });
+
             var acc = await _accService.GetByUsername(request.Email);
 
             if (acc != null)
             {
-                return BadRequest("Username exists");
+                return BadRequest(new {
+                    message = "Tài khoản đã tồn tại"
+                });
             }
 
-            acc = new Account();
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            acc.Id = await _accService.GetNextAccountId();
-            acc.Email = request.Email;
-            acc.PasswordHash = Helper.ByteArrayToString(passwordHash);
-            acc.PasswordSalt = Helper.ByteArrayToString(passwordSalt);
-            acc.UserRole = GlobalConstant.Admin;
+
+            acc = new Account ()
+            {
+                Id = await _accService.GetNextAccountId(),
+                Email = request.Email,
+                FullName = request.FullName,
+                PasswordHash = Helper.ByteArrayToString(passwordHash),
+                PasswordSalt = Helper.ByteArrayToString(passwordSalt),
+                UserRole = GlobalConstant.Admin,
+                Active = true
+            };
 
             var token = CreateToken(acc, GlobalConstant.Admin);
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, acc);
             await _accService.AddAccount(acc);
-            return Ok(new ResponseMessageDetails<string>("Register admin successfully", token));
+            return Ok(new {
+                accountId = acc.Id,
+                message = "Đăng ký tài khoản quản trị thành công",
+                token,
+                refreshToken = refreshToken.Token,
+                role = GlobalConstant.Admin
+            });
         }
 
         [HttpPost("register")]
         public async Task<ActionResult<ResponseMessageDetails<string>>> Register(RegisterDto request)
         {
             if (request.Password.Length < 6)
-                return BadRequest("Password is too weak, must be greater than 6 characters");
+                return BadRequest(new {
+                    message = "Mật khẩu phải nhiều hơn 6 kí tự"
+                });
+
+            if (request.Role != GlobalConstant.Partner)
+                request.Role = GlobalConstant.User;
 
             var acc = await _accService.GetByUsername(request.Email);
 
             if (acc != null)
             {
-                return BadRequest("Email exists");
+                return BadRequest(new {
+                    message = "Tài khoản email đã tồn tại"
+                });
             }
 
-            acc = new Account();
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            acc.Id = await _accService.GetNextAccountId();
-            acc.Email = request.Email;
-            acc.FullName = request.FullName;
-            acc.PasswordHash = Helper.ByteArrayToString(passwordHash);
-            acc.PasswordSalt = Helper.ByteArrayToString(passwordSalt);
-            acc.UserRole = GlobalConstant.User;
 
-            var token = CreateToken(acc, GlobalConstant.User);
-            var refreshToken = GenerateRefreshToken();
-            SetRefreshToken(refreshToken, acc);
-            await _accService.AddAccount(acc);
-            return Ok(new {
-                Message = "Register successfully",
-                Token = token
-            });
-        }
-
-        [HttpPost("login-social")]
-        public async Task<ActionResult<ResponseMessageDetails<string>>> LoginSocial(LoginSocialDto request)
-        {
-            var personalDetail = await _accService.GetAccountDetailSocial(request.Email, request.FullName);
-            var MyId = personalDetail is null ? await _accService.GetNextAccountId() : personalDetail.AccountId;
-
-            var acc = new Account ()
+            acc = new Account ()
             {
-                Id = MyId,
+                Id = await _accService.GetNextAccountId(),
                 Email = request.Email,
                 FullName = request.FullName,
-                UserRole = GlobalConstant.User
+                PasswordHash = Helper.ByteArrayToString(passwordHash),
+                PasswordSalt = Helper.ByteArrayToString(passwordSalt),
+                UserRole = request.Role
             };
 
-            var token = CreateToken(acc, GlobalConstant.User);
+            var token = CreateToken(acc, request.Role);
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, acc);
 
-            if (personalDetail == null)
-            {
-                var newAcc = new CreateSocialDto ();
-                SetPropValueByReflection.AddYToX(newAcc, acc);
-
-                await _accService.CreateSocial(newAcc);
-            }
-
+            await _accService.AddAccount(acc);
             return Ok(new {
-                Message = "Login successfully",
-                Token = token
+                accountId = acc.Id,
+                message = "Đăng ký thành công",
+                token,
+                refreshToken = refreshToken.Token
             });
         }
 
@@ -130,47 +129,118 @@ namespace SunriseServer.Controllers
 
             if (account == null)
             {
-                return NotFound(new ResponseMessageDetails<string>("User not found", ResponseStatusCode.NotFound));
+                return NotFound(new ResponseMessageDetails<string>("Không tìm thấy tài khoản", ResponseStatusCode.NotFound));
+            }
+
+            if (!account.Active)
+            {
+                return BadRequest(new ResponseDetails(ResponseStatusCode.BadRequest, "Tài khoản đã bị cấm"));
             }
 
             if (account.Email != request.Email ||
                 !VerifyPasswordHash(request.Password, Helper.StringToByteArray(account.PasswordHash), Helper.StringToByteArray(account.PasswordSalt)))
             {
-                return BadRequest("Wrong credentials");
+                return BadRequest(new {
+                    message = "Sai thông tin đăng nhập",
+                });
             }
 
             string token = CreateToken(account, account.UserRole);
 
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, account);
-
+            _accService.SaveChanges();
             return Ok(new
             {
-                Message = "Login successfully",
-                Token = token
+                accountId = account.Id,
+                message = "Đăng nhập thành công",
+                token,
+                refreshToken = refreshToken.Token,
+                role = account.UserRole
             });
         }
 
-        [HttpPost("refresh-token"), Authorize]
-        public async Task<ActionResult<ResponseMessageDetails<string>>> RefreshToken()
+        [HttpPost("login-social")]
+        public async Task<ActionResult<ResponseMessageDetails<string>>> LoginSocial(RegisterSocialDto request)
         {
-            var acc = await _accService.GetByUsername(User.Identity.Name);
-            var refreshToken = Request.Cookies["refreshToken"];
+            if (request.Role != GlobalConstant.Partner)
+                request.Role = GlobalConstant.User;
+
+            var personalDetail = await _accService.GetAccountDetailSocial(request.Email, request.FullName);
+            var MyId = personalDetail is null ? await _accService.GetNextAccountId() : personalDetail.AccountId;
+            Account acc = await _accService.GetAccountById(MyId) ?? new Account ()
+            {
+                Id = MyId,
+                Email = request.Email,
+                FullName = request.FullName,
+                UserRole = request.Role
+            };
+
+            if (!acc.Active)
+            {
+                return BadRequest(new ResponseDetails(ResponseStatusCode.BadRequest, "Tài khoản đã bị cấm"));
+            }
+
+            var token = CreateToken(acc, request.Role);
+            var refreshToken = GenerateRefreshToken();
+            SetRefreshToken(refreshToken, acc);
+            _accService.SaveChanges();
+            if (personalDetail is null)
+            {
+                await _accService.CreateSocial(new CreateSocialDto(acc));
+            }
+
+            return Ok(new {
+                accountId = MyId,
+                message = "Đăng nhập thành công",
+                token,
+                refreshToken = refreshToken.Token,
+                role = request.Role
+            });
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<ResponseMessageDetails<string>>> RefreshToken(string refreshToken)
+        {
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return BadRequest(new
+                {
+                    message = "Refresh token không hợp lệ"
+                });
+            }
+            var acc = await _accService.FindMatchingRefreshToken(refreshToken);
+
+            if (acc == null)
+            {
+                return BadRequest(new
+                {
+                    message = "Không tìm thấy tài khoản"
+                });
+            }
 
             if (!acc.RefreshToken.Equals(refreshToken))
             {
-                return Unauthorized("Invalid Refresh Token.");
+                return Unauthorized(new {
+                    message = "Refresh Token không hợp lệ"
+                });
             }
             else if (acc.TokenExpires < DateTime.Now)
             {
-                return Unauthorized("Token expired.");
+                return Unauthorized(new {
+                    message = "Refresh Token đã hết hạn, vui lòng đăng nhập lại"
+                });
             }
 
             string token = CreateToken(acc, acc.UserRole);
             var newRefreshToken = GenerateRefreshToken();
             SetRefreshToken(newRefreshToken, acc);
             _accService.SaveChanges();
-            return Ok(new ResponseMessageDetails<string>("Refresh token successfully", token));
+            return Ok(new {
+                message = "Refresh token thành công",
+                token,
+                refreshToken = newRefreshToken.Token,
+            });
         }
 
         private RefreshToken GenerateRefreshToken()

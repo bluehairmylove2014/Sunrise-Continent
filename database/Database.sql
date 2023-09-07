@@ -31,6 +31,7 @@ CREATE TABLE HOTEL
 	Rating FLOAT,
 	Description NVARCHAR(1000),
 	Image NVARCHAR(1000),
+	AccountId INT,
 
 	PRIMARY KEY (Id)
 )
@@ -105,7 +106,8 @@ CREATE TABLE VOUCHER
 	Name NVARCHAR(500),
 	Value FLOAT, --!% giam
 	Point INT,
-	AccountRank VARCHAR(20),
+	RequiredRank VARCHAR(20),
+	Quantity INT,
 	
 	PRIMARY KEY (VoucherId)
 )
@@ -125,7 +127,7 @@ CREATE TABLE ACCOUNT
 (
 	Id INTEGER,
     MemberPoint INTEGER,
-	AccountRank VARCHAR(20),
+	RequiredRank VARCHAR(20),
         
     Email VARCHAR(50),
     PasswordHash VARCHAR(500),
@@ -134,6 +136,7 @@ CREATE TABLE ACCOUNT
     RefreshToken VARCHAR(200),
     TokenCreated DATETIME,
     TokenExpires DATETIME,
+	Active BIT,
 
     PRIMARY KEY (Id)
 )
@@ -149,11 +152,13 @@ CREATE TABLE POINT_RANK
 
 CREATE TABLE POINT_HISTORY
 (
+	HistoryId BIGINT IDENTITY(1, 1),
 	AccountId INT,
 	Value INT,
 	RecordedTime VARCHAR(30),
+	Content NVARCHAR(200),
 
-	PRIMARY KEY(AccountId, RecordedTime)
+	PRIMARY KEY(HistoryId)
 )
 
 CREATE TABLE PERSONAL_DETAILS
@@ -166,6 +171,7 @@ CREATE TABLE PERSONAL_DETAILS
 	Gender NVARCHAR(100),
 	Image VARCHAR(1000),
 	Rank VARCHAR(20),
+	HotelId INT,
 
 	PRIMARY KEY (AccountId)
 )
@@ -230,7 +236,7 @@ CREATE TABLE REVIEW
 	ReviewId BIGINT,
 	AccountId INT,
 	HotelId INT,
-	ReviewDate DATETIME,
+	ReviewDate DATE,
 	Points FLOAT,
 	Content NVARCHAR(1000),
 
@@ -256,6 +262,7 @@ ADD
 	CONSTRAINT FK_ROOM_TYPE_HOTEL
 	FOREIGN KEY(HotelId)
 	REFERENCES HOTEL
+	ON DELETE CASCADE
 
 --!FACILITY
 ALTER TABLE ROOM_FACILITY
@@ -350,7 +357,7 @@ ADD
 --ALTER TABLE ACCOUNT
 --ADD
 --	CONSTRAINT FK_ACCOUNT_POINT_RANK
---	FOREIGN KEY(AccountRank)
+--	FOREIGN KEY(RequiredRank)
 --	REFERENCES POINT_RANK
 --	ON DELETE SET NULL
 

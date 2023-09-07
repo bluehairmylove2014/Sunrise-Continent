@@ -16,7 +16,7 @@ const authenticationResponseSchema = z.object({
   message: z.string().optional(),
   token: z.string(),
   refreshToken: z.string().optional(),
-  role: z.string(),
+  role: z.string().optional(),
 });
 
 export { authenticationResponseSchema, getUserResponseSchema };

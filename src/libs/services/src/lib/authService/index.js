@@ -71,16 +71,14 @@ export class AuthService extends Services {
         method: "POST",
         url: this.refreshTokenUrl,
         schema: authenticationResponseSchema,
-        data: { refreshToken },
-        headers: { Authorization: `Bearer ${refreshToken}` },
+        params: { refreshToken },
         signal: this.abortController.signal,
         transformResponse: (res) => res,
         isProduction: true,
       });
-      return {
-        token: response.token,
-      };
+      return response;
     } catch (error) {
+      console.log("refreshToken error: ", error);
       if (this.isCancel(error)) {
         // Handle other errors
         throw error;

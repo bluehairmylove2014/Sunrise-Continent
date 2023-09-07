@@ -3,7 +3,7 @@ name: DEPLOY PARTNER FE
 on:
   push:
     branches:
-      - fe-partner
+      - fe-admin
 
 jobs:
   build:

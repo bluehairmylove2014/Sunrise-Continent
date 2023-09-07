@@ -12,7 +12,6 @@ const Orders = () => {
   const hotelId = partnerDetail.hotelId;
   const { data: roomsData } = useGetRooms(hotelId);
   const orderList = useGetUserOrders();
-  console.log(orderList);
   return (
     <div className="order">
       <h3>Quản lý đơn hàng</h3>

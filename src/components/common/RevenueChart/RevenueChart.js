@@ -24,7 +24,6 @@ const shortformatCurrency = (value) => {
 const formatCurrency = (value) => convertNumberToCurrency("vietnamdong", value);
 
 const RevenueChart = ({ data, options, type, style }) => {
-  console.log({ data, options, type, style });
   const renderBarChart = () => {
     return (
       <ResponsiveContainer width="100%" height="100%">

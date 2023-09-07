@@ -88,7 +88,7 @@ const Rooms = ({
   });
 
   const confirmEdit = (data) => {
-    console.log(data);
+    //
   };
 
   const handleAddFacilities = (dataList) => {

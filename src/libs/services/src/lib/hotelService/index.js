@@ -317,7 +317,6 @@ export class HotelService extends Services {
       });
       return response;
     } catch (error) {
-      console.log(error);
       if (!this.isCancel(error)) {
         // Handle other errors
         console.error("Catch error delete room");
@@ -341,7 +340,6 @@ export class HotelService extends Services {
       });
       return response;
     } catch (error) {
-      console.log(error);
       if (!this.isCancel(error)) {
         // Handle other errors
         console.error("Catch error getYearlyRevenue");
@@ -365,7 +363,6 @@ export class HotelService extends Services {
       });
       return response;
     } catch (error) {
-      console.log(error);
       if (!this.isCancel(error)) {
         // Handle other errors
         console.error("Catch error getWeeklyRevenue");

@@ -9,6 +9,7 @@ import BudgetRange from "./BudgetRange";
 // Helpers
 import { toggleClass } from "../../utils/helpers/ToggleClass";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
+import { getCurrentDateTime } from "../../utils/helpers/Datetime";
 
 const ModernInput = ({
   options = [],
@@ -110,7 +111,7 @@ const ModernInput = ({
               type="datetime-local"
               ref={startDatePickerRef}
               onChange={(e) => handleDateChange(e.target.value)}
-              min={new Date().toISOString().split("T")[0]}
+              min={getCurrentDateTime()}
             />
           </>
         )}

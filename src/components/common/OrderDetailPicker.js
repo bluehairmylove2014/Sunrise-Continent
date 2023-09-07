@@ -11,6 +11,7 @@ import { setRedirectUrl } from "../../utils/helpers/RedirectUrlSaver";
 import { PAGES } from "../../constants/Link.constants";
 import { toast } from "react-hot-toast";
 import { useInitOrder } from "../../libs/business-logic/src/lib/order/process/hooks";
+import { isCheckInValid } from "../../utils/helpers/Datetime";
 
 const OrderDetailPicker = React.forwardRef(
   ({ form, defaultValues, roomDetail, edit, editCallback }, ref) => {
@@ -80,8 +81,8 @@ const OrderDetailPicker = React.forwardRef(
             toast.error("Hãy chọn ngày đến và ngày đi");
             return;
           }
-          if (data.start_date === data.end_date) {
-            toast.error("Ngày đến phải khác với ngày đi");
+          if (!isCheckInValid(data.start_date, data.end_date, 1)) {
+            toast.error("Ngày đến phải trước ngày đi tối thiểu 1 tiếng");
             return;
           }
           checkRoomsAvailability(rd, data.start_date, data.end_date, data.rooms)

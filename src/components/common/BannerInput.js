@@ -3,7 +3,10 @@ import "../../styles/common/bannerInput.scss";
 import { Controller } from "react-hook-form";
 import { BANNER_INPUT } from "../../constants/Variables.constants";
 import { formatDate } from "../../utils/helpers/ShortenDatetime";
-import { isDateGreaterThan } from "../../utils/helpers/Datetime";
+import {
+  getCurrentDateTime,
+  isDateGreaterThan,
+} from "../../utils/helpers/Datetime";
 import { toggleClass } from "../../utils/helpers/ToggleClass";
 
 const BannerInput = ({
@@ -46,7 +49,7 @@ const BannerInput = ({
   const renderDatetimeDoubleInput = (name, background) => {
     const startDate = watch(name[0]);
     const endDate = watch(name[1]);
-    const startDateMin = new Date().toISOString().substring(0, 10);
+    const startDateMin = getCurrentDateTime();
     const endDateMin = startDateMin;
     return (
       <>

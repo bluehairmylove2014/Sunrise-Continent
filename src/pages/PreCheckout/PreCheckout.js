@@ -36,7 +36,6 @@ const calculateTotal = (rooms, voucher, nightCount) => {
     }
     return acc;
   }, 0);
-
   // total -= voucher ? voucher.value * total : 0;
   return total;
 };

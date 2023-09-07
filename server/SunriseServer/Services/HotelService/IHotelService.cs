@@ -18,6 +18,7 @@ namespace SunriseServer.Services.HotelService
         Task<List<RoomPicture>> GetHotelPicture(int id);
         Task<List<Review>> GetHotelReview(int id);
         Task<List<Hotel>> GetRecommendedHotel(int id);
+        Task<int> AddHotelReview(int accountId, AddReviewDto reviewDto);
 
         // search and filter
         Task<List<Hotel>> GetSearchHotels(SearchHotelDto searchHotel);

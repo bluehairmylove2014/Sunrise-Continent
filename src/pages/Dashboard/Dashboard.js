@@ -195,7 +195,7 @@ const Dashboard = () => {
           },
         ],
       });
-      weeklyRevenue.accounts &&
+      weeklyRevenue &&
         setTopUser(
           weeklyRevenue.accounts.map((account) => ({
             id: account.accountId,

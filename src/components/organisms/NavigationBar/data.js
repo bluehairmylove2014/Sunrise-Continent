@@ -1,4 +1,4 @@
-import sunriseHorizontalLogo from "../../../assets/images/logos/sc-horizontal.png";
+import sunriseHorizontalLogo from "../../../assets/images/logos/sc-non-white -short.png";
 import { PAGES } from "../../../constants/Link.constants";
 
 export const logo = {
@@ -9,25 +9,25 @@ export const navigator = [
   {
     id: 1,
     icon: "fi fi-sr-pulse",
-    label: "Bảng điều khuyển",
+    label: "Trung Tâm",
     pathName: PAGES.DASHBOARD,
   },
   {
     id: 2,
     icon: "fi fi-ss-mobile",
-    label: "Đơn đặt phòng",
+    label: "Đơn đặt",
     pathName: PAGES.ORDERS,
   },
   {
     id: 3,
     icon: "fi fi-ss-hotel",
-    label: "Quản lý khách sạn",
+    label: "Khách sạn",
     pathName: PAGES.HOTEL,
   },
   {
     id: 4,
     icon: "fi fi-ss-ticket",
-    label: "Quản lý voucher",
+    label: "Voucher",
     pathName: PAGES.VOUCHER,
   },
 ];

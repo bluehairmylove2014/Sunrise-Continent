@@ -1,4 +1,6 @@
 using System.Text;
+using SunriseServerCore.Dtos;
+using SunriseServerCore.Dtos.Admin;
 using SunriseServerCore.Models;
 using SunriseServerCore.RepoInterfaces;
 
@@ -11,9 +13,6 @@ namespace SunriseServerData.Repositories
         {
             _dataContext = dbContext;
         }
-
-        // mỗi phòng đc doanh thu 50k, nhân cho số phòng của booking lấy doanh thu theo tuần và theo năm
-        // tổng đối tác, tổng người dùng all time
 
         public async Task<List<YealyRevenue>> GetYealyRevenueAsync(int? year)
         {
@@ -42,6 +41,30 @@ namespace SunriseServerData.Repositories
             
             var result = await _dataContext.Set<WeeklyRevenue>()
                 .FromSqlInterpolated($"EXECUTE({builder.ToString()})").ToListAsync();
+
+            return result;
+        }
+
+        public async Task<TotalAccountDto> GetTotalUserPartnerAsync()
+        {
+            var result = (await _dataContext.Set<WeeklyStatistics>()
+                .FromSqlInterpolated($"EXEC USP_GetTotalUserPartner;").ToListAsync()).FirstOrDefault();
+
+            return new TotalAccountDto {
+                TotalPartner = result.ThisWeek,
+                TotalUser = result.LastWeek,
+            };
+        }
+
+        public async Task<List<TopPartnerDto>> GetTopPartnerAsync()
+        {
+            var builder = new StringBuilder($"EXEC USP_GetTopPartner;");
+
+            Console.WriteLine(builder.ToString());
+            
+            var result = await _dataContext.Set<TopPartnerDto>()
+                .FromSqlInterpolated($"EXECUTE({builder.ToString()})")
+                .IgnoreQueryFilters().ToListAsync();
 
             return result;
         }

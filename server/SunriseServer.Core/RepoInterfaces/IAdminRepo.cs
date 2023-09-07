@@ -1,10 +1,5 @@
-﻿using SunriseServerCore.Dtos;
+﻿using SunriseServerCore.Dtos.Admin;
 using SunriseServerCore.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SunriseServerCore.RepoInterfaces
 {
@@ -12,5 +7,7 @@ namespace SunriseServerCore.RepoInterfaces
     {
         Task<List<YealyRevenue>> GetYealyRevenueAsync(int? year);
         Task<List<WeeklyRevenue>> GetWeeklyRevenueAsync(DateTime? date);
+        Task<TotalAccountDto> GetTotalUserPartnerAsync();
+        Task<List<TopPartnerDto>> GetTopPartnerAsync();
     }
 }

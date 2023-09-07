@@ -75,6 +75,7 @@ namespace SunriseServerCore.Dtos.Order
         public int VoucherId { get; set; }
         public int Total { get; set; }
         public bool Paid { get; set; } //-- 1 = True, 0 = False
+        public string CreatedAt { get; set; }
         public List<OrderItemDto> OrderItems { get; set; }
     }
 }

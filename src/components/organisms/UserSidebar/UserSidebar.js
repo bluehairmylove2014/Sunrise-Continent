@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useLogout } from "../../../libs/business-logic/src/lib/auth";
 import "./userSidebar.scss";
 import { PAGES } from "./../../../constants/Link.constants";

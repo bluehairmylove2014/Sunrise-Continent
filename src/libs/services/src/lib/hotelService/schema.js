@@ -114,9 +114,18 @@ const getWeeklyRevenueSchema = z.object({
       lastWeek: z.number(),
     })
   ),
+  accounts: z.array(
+    z.object({
+      id: z.number(),
+      name: z.string(),
+      image: z.string(),
+      totalSpent: z.number(),
+    })
+  ),
   totalRevenue: z.number(),
-  totalReview: z.number(),
-  totalOrder: z.number(),
+  lastRevenue: z.number(),
+  totalPartner: z.number(),
+  totalUser: z.number(),
 });
 
 export {

@@ -35,8 +35,8 @@ export class HotelService extends Services {
   editRoomUrl = `/room`;
   deleteRoomUrl = `/room`;
   banHotelUrl = `/account/ban`;
-  getYearlyRevenueUrl = `/hotel/yearly-revenue`;
-  getWeeklyRevenueUrl = `/hotel/weekly-revenue`;
+  getYearlyRevenueUrl = `/admin/yearly-revenue`;
+  getWeeklyRevenueUrl = `/admin/weekly-revenue`;
 
   search = async (keys) => {
     this.abortController = new AbortController();
@@ -424,7 +424,6 @@ export class HotelService extends Services {
       });
       return response;
     } catch (error) {
-      console.log(error);
       if (!this.isCancel(error)) {
         // Handle other errors
         console.error("Catch error getYearlyRevenue");
@@ -448,7 +447,6 @@ export class HotelService extends Services {
       });
       return response;
     } catch (error) {
-      console.log(error);
       if (!this.isCancel(error)) {
         // Handle other errors
         console.error("Catch error getWeeklyRevenue");

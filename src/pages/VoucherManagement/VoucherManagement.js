@@ -336,7 +336,9 @@ const VoucherManagement = () => {
                     />
                     <div className="voucher__name">{vd.name}</div>
                     <div className="voucher__quantity">{vd.quantity}</div>
-                    <div className="voucher__value">{vd.value} %</div>
+                    <div className="voucher__value">
+                      {(vd.value * 100).toFixed(0)} %
+                    </div>
                     <div className="voucher__required-rank">
                       {RankList[vd.requiredRank] ? (
                         <>

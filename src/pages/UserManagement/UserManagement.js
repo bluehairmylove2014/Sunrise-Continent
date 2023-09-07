@@ -5,7 +5,6 @@ import Filterboard from "./Filterboard";
 import { useForm } from "react-hook-form";
 import {
   BANNER_INPUT,
-  FILTER_INPUT,
   PAGINATION_MODEL,
 } from "../../constants/Variables.constants";
 import { useLocation } from "react-router-dom";
@@ -75,6 +74,7 @@ const UserManagement = () => {
   const [accounts, setAccounts] = useState([]);
   const [criteria, setCriteria] = useState(parseSearchParams(location.search));
   const filterTrueList = createCheckboxDefaultValue(criteria);
+  const FILTER_INPUT = ["user", "partner", "admin", "male", "female"];
   const filterBoardForm = useForm({
     defaultValues: FILTER_INPUT.reduce((values, key) => {
       values[key] = filterTrueList.includes(key);
@@ -178,10 +178,6 @@ const UserManagement = () => {
       return <User data={account} key={account.accountId} />;
     });
   };
-
-  useEffect(() => {
-    console.log(accounts);
-  }, [accounts]);
 
   return (
     <main className="users" key={location}>

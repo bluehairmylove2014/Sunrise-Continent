@@ -20,7 +20,7 @@ const AddVoucher = React.forwardRef(({ callback }, ref) => {
   const rankList = Object.fromEntries(Object.entries(RankList).slice(0, -3));
 
   const onSuccessSubmit = (data) => {
-    onCreateVoucher(data)
+    onCreateVoucher({ ...data, value: data.value / 100 })
       .then((msg) => toast.success(msg))
       .catch((err) => toast.error(err.message))
       .finally(() => toggleClassNoListener(ref.current, "active"));
@@ -89,6 +89,10 @@ const AddVoucher = React.forwardRef(({ callback }, ref) => {
               min: {
                 value: 1,
                 message: "Giá trị voucher ít nhất là 1%",
+              },
+              max: {
+                value: 100,
+                message: "Giá trị voucher ít nhất là 100%",
               },
             }}
             render={({ field }) => (

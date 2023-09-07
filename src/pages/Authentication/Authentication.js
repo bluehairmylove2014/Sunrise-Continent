@@ -6,12 +6,7 @@ import { PAGES } from "../../constants/Link.constants";
 import { REGEX } from "../../constants/Regex";
 import logo from "../../assets/images/logos/sc-non-white.png";
 import { Controller, useForm } from "react-hook-form";
-import {
-  useGoogleLogin,
-  useLogin,
-  useRegister,
-} from "../../libs/business-logic/src/lib/auth";
-import googleIcon from "../../assets/images/icons/google.png";
+import { useLogin, useRegister } from "../../libs/business-logic/src/lib/auth";
 import {
   deleteRedirectUrl,
   getRedirectUrl,
@@ -45,7 +40,6 @@ const Authentication = () => {
   const authenRef = useRef(null);
 
   const { onLogin, isLoading: isLoginLoading } = useLogin();
-  const { onGoogleLogin, isLoading: isGoogleLoginLoading } = useGoogleLogin();
   const { onRegister, isLoading: isRegisterLoading } = useRegister();
 
   // Hook
@@ -84,16 +78,6 @@ const Authentication = () => {
         labelEl.classList.add("active");
       }
     }
-  };
-  const handleGoogleLogin = () => {
-    setIsLoginProcess(true);
-    onGoogleLogin()
-      .then((message) => {
-        handleNavigate(message);
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      });
   };
   const handleLogin = ({ email, password, isRememberMe }) => {
     setIsLoginProcess(true);

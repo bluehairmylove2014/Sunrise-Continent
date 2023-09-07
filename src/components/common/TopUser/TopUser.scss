@@ -55,8 +55,10 @@
                 flex-grow: 1;
 
                 &>img {
+                    min-width: 40px;
                     width: 40px;
                     height: 40px;
+                    object-fit: cover;
                     border-radius: 50%;
                     overflow: hidden;
                     margin-right: 12px;

@@ -35,7 +35,14 @@ const User = ({ data }) => {
     toggleClassNoListener(popupRef.current, "active");
   };
   const handleUnBanHotel = () => {
-    setIsBanned(false);
+    onBanHotel({
+      hotelId: data.accountId,
+    })
+      .then((msg) => {
+        toast.success(msg);
+        setIsBanned(false);
+      })
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -124,6 +131,9 @@ const User = ({ data }) => {
       {isBanned ? (
         <div className="hotel__ban-wrapper">
           <i className="fi fi-bs-ban"></i>
+          <button type="button" onClick={handleUnBanHotel}>
+            Bỏ cấm
+          </button>
         </div>
       ) : (
         <></>

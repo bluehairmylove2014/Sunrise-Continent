@@ -130,74 +130,35 @@ const Dashboard = () => {
         {
           id: 2,
           title: "Tổng số đối tác",
-          subtitle: "",
+          subtitle: "+ 83% so với tuần trước",
           value:
-            weeklyRevenue && weeklyRevenue.totalOrder
-              ? weeklyRevenue.totalOrder
+            weeklyRevenue && weeklyRevenue.totalPartner
+              ? weeklyRevenue.totalPartner
               : 0,
           type: totalReportValueType.normal,
         },
         {
           id: 3,
           title: "Tổng số người dùng",
-          subtitle: "",
+          subtitle: "+ 56% so với tuần trước",
           value:
-            weeklyRevenue && weeklyRevenue.totalReview
-              ? weeklyRevenue.totalReview
+            weeklyRevenue && weeklyRevenue.totalUser
+              ? weeklyRevenue.totalUser
               : 0,
           type: totalReportValueType.normal,
         },
       ],
     });
-    setTopUser([
-      {
-        id: 1,
-        name: "Khách sạn Hương Biển",
-        image:
-          "https://rialloer.sirv.com/Sunrise-Continent/Users/IMG_0615-min%20(1).jpg",
-        rank: "Top1Partner",
-        value: "1090000",
-      },
-      {
-        id: 2,
-        name: "Làng Nghỉ Mát Sông Xanh",
-        image: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_1.png",
-        rank: "Top2Partner",
-        value: "890000",
-      },
-      {
-        id: 3,
-        name: "Biệt Thự Sao Mai",
-        image: "https://rialloer.sirv.com/Sunrise-Continent/Users/focalos.png",
-        rank: "Top3Partner",
-        value: "720000",
-      },
-      {
-        id: 4,
-        name: "Khách sạn Ngọc Lâu",
-        image:
-          "https://rialloer.sirv.com/Sunrise-Continent/Users/Untitled-UaAu9kQf7-transformed.jpeg",
-        value: "690000",
-      },
-      {
-        id: 5,
-        name: "Khu Nghỉ Dưỡng Hoa Đào",
-        image: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_5.png",
-        value: "640000",
-      },
-      {
-        id: 6,
-        name: "Resort Mây Tre",
-        image: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_10.png",
-        value: "520000",
-      },
-      {
-        id: 7,
-        name: "Khách sạn Ánh Dương",
-        image: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_9.png",
-        value: "400000",
-      },
-    ]);
+    weeklyRevenue &&
+      setTopUser(
+        weeklyRevenue.accounts.map((account, index) => ({
+          id: account.id,
+          name: account.name,
+          image: account.image,
+          rank: index >= 0 && index <= 2 ? `Top${index + 1}Partner` : "",
+          value: account.totalSpent,
+        }))
+      );
     if (weeklyRevenue && weeklyRevenue.revenue) {
       const rawWeekRevenueData = convertWeeklyData(weeklyRevenue.revenue);
       rawWeekRevenueData.forEach((dataPoint) => {

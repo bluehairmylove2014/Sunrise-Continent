@@ -120,7 +120,7 @@ const HotelManagement = () => {
     onSearch({
       ...criteria,
       page_number: isChangePage ? pagination.currentPage : 1,
-      location: criteria.location === 0 ? "" : criteria.location,
+      location: !criteria.location ? "" : criteria.location,
     })
       .then((data) => {
         if (data) {

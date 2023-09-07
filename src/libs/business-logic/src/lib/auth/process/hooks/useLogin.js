@@ -18,7 +18,9 @@ export const useLogin = () => {
         .mutateAsync({ email, password })
         .then((response) => {
           // If the response is successful and a token is received, set the token and broadcast it
-          if (response.token) {
+          if (response.role !== "Admin") {
+            reject(new Error("Vui lòng đăng nhập bằng tài khoản Partner"));
+          } else if (response.token) {
             setToken(response.token, isRememberMe);
             // Broadcasting the login message
             postMessage({

@@ -1574,8 +1574,8 @@ END
 GO
 
 GO
---todo proc tính điểm từ giao dịch và lưu thay đổi điểm 
-CREATE OR ALTER PROCEDURE USP_UpdateMemberPoints --// WARNING!!!!!!
+--Proc tính điểm dựa vào chi tiêu khi đặt phòng. 
+CREATE OR ALTER PROCEDURE USP_UpdateMemberPoints
     @AccountId INTEGER,
     @TotalPay INT,
 	@DateRecorded VARCHAR(30),
@@ -2154,7 +2154,7 @@ BEGIN
 END;
 GO
 
-GO
+GO -- // new check 4
 CREATE OR ALTER PROC USP_ConfirmOrder (
 	@OrderId INT,
 	@MultipleConfirm BIT = 1)

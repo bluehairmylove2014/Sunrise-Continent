@@ -34,6 +34,10 @@ import {
   shortenDateTime,
   revertShortenedDateTime,
 } from "../../utils/helpers/ShortenDatetime";
+import {
+  getCurrentDateTime,
+  isCheckInValid,
+} from "../../utils/helpers/Datetime";
 
 const geoUrl =
   "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
@@ -144,9 +148,32 @@ const Home = () => {
         ...params,
         budget: JSON.stringify(extractMinAndMax(searchInputVal.budget)),
       });
+    const paramsKeyList = Object.keys(params);
+    const currentDateTime = getCurrentDateTime();
 
-    if (!Object.keys(params).includes("location")) {
+    if (!paramsKeyList.includes("location")) {
       toast.error("Ít nhất hãy chọn vị trí mong muốn nhé!");
+    } else if (
+      !paramsKeyList.includes("start_date") &&
+      paramsKeyList.includes("end_date")
+    ) {
+      toast.error("Chọn ngày đi mà không chọn ngày đến à?");
+    } else if (
+      paramsKeyList.includes("start_date") &&
+      !isCheckInValid(currentDateTime, params.start_date, 4)
+    ) {
+      toast.error("Ngày đến phải cách 4 tiếng từ thời điểm hiện tại");
+    } else if (
+      paramsKeyList.includes("end_date") &&
+      !isCheckInValid(currentDateTime, params.end_date, 4)
+    ) {
+      toast.error("Ngày đi phải cách 4 tiếng từ thời điểm hiện tại");
+    } else if (
+      paramsKeyList.includes("start_date") &&
+      paramsKeyList.includes("end_date") &&
+      !isCheckInValid(params.start_date, params.end_date, 1)
+    ) {
+      toast.error("Ngày đến phải trước ngày đi tối thiểu 1 tiếng!");
     } else {
       navigate(`/search${stringifySearchParams(params)}`);
     }
@@ -202,14 +229,15 @@ const Home = () => {
         <form
           className="home-destination__form"
           onSubmit={(e) => handleSearch(e, searchInputVal)}
+          noValidate
         >
           {/* Use component to render an input */}
           <div className="home-des-form__row">
             <ModernInput
               options={countries}
               defaultVal={searchInputVal.location}
-              search={true}
-              valMultipleLevel={true}
+              search={false}
+              valMultipleLevel={false}
               inputType={"text"}
               callback={updateSearchInputVal}
               input_name={"location"}

@@ -1,0 +1,36 @@
+@import "./styles/partial/_mixin.scss";
+
+// Global configuration
+@import './styles/partial/config';
+
+// App style
+.App {
+    .app__notification {
+        font-family: RobotoBold;
+        font-size: 0.75rem;
+        letter-spacing: -0.5px;
+    }
+
+    .scroll-button {
+        position: fixed;
+        bottom: 50px;
+        right: 50px;
+        // border - border radius - background color - color - padding - font size
+        @include normal-btn(none, 50%, var(--butterfly-bush), white, 12px 15px, 0.75rem);
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.2s ease-in-out;
+
+        &.active {
+            visibility: visible;
+            opacity: 0.5;
+            pointer-events: all;
+
+        }
+
+        &.active:hover {
+            opacity: 0.8;
+        }
+    }
+}

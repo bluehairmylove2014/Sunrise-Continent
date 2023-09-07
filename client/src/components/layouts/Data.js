@@ -43,7 +43,7 @@ export const categories = [
   },
   {
     category_name: "Ra thế giới",
-    icon: "fi fi-sr-home-heart",
+    icon: "fi fi-sr-world",
     href: null,
     options: foreignCountries.map((country) => ({
       option_url: PAGES.COUNTRY + `?name=${country}`,

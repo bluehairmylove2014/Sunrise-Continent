@@ -1,0 +1,54 @@
+@import '../../../styles/partial/mixin';
+
+.total-report {
+    &>p {
+        opacity: 0.5;
+        margin: 8px 0 1.5rem 0;
+    }
+
+    .reports {
+        // columns - row - gap
+        @include dgrid(repeat(3, 1fr), auto, 20px);
+
+        .report-box {
+            width: calc(100% - 40px);
+            padding: 20px;
+            // direction - justify content - align items - flex wrap
+            @include dflex(column, flex-start, flex-start, nowrap);
+
+            &:nth-child(1) {
+                border-radius: 16px;
+                background: #FFE2E5;
+            }
+
+            &:nth-child(2) {
+                border-radius: 16px;
+                background: #FFF4DE;
+            }
+
+            &:nth-child(3) {
+                border-radius: 16px;
+                background: #DCFCE7;
+            }
+
+            img {
+                width: 30px;
+                height: 30px;
+            }
+
+            strong {
+                margin: 16px 0 8px 0;
+            }
+
+            h6 {
+                font-weight: 500;
+                margin-bottom: 4px;
+            }
+
+            small {
+                font-weight: 600;
+                color: var(--ultramarine-blue);
+            }
+        }
+    }
+}

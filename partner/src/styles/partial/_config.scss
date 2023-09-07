@@ -1,0 +1,234 @@
+// Responsive settings
+$desktop-breakpoint: 1024px;
+$tablet-breakpoint: 768px;
+$mobile-breakpoint: 480px;
+
+$container-width: 1400px;
+
+// Color define
+:root {
+    --quill-grey: #d3d3d3;
+    --desert-storm: #F7F7F7;
+    --midnight: #141130;
+    --butterfly-bush: #3C2C7C;
+    --light-butterfly-bush: #503d9e;
+    --mountain-mist: #9390A0;
+    --dirty-orange: #D37200;
+    --light-dirty-orange: #e27a03;
+    --ebony-clay: #232641;
+    --heavy-white-smoke: #e6ecf1;
+    --milk-white: #FDFCFC;
+    --tuna: #372C57;
+    --soft-blue: #6E88FD;
+    --ultramarine-blue: #4A6CFF;
+    --toxic-green: #3CE241;
+    --kelly-green: #0BC311;
+    --linen: #fdeee6;
+    --cloud-burst: #20274D;
+    --hard-pink: #bb77ae;
+    --smoke-pink: #a35996;
+    --silver: #ccd2d8;
+    --gold: #ffd176;
+    --old-gold: #fabf49;
+    --bronze: #695036;
+    --diamond: #b8d8e7;
+    --cloud-burst: #1E3266;
+}
+
+/* Import fonts */
+@font-face {
+    font-family: Montserrat;
+    src: url('../../assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: RobotoBold;
+    src: url('../../assets/fonts/Roboto_Mono/RobotoMono-Bold.ttf');
+}
+
+/* Smooth scroll behavior*/
+@media (prefers-reduced-motion: no-preference) {
+    :root {
+        scroll-behavior: smooth;
+    }
+}
+
+
+/* Overall */
+:root {
+    font-size: 16px;
+    /* Font size desktop */
+}
+
+@media (min-width: $desktop-breakpoint) {
+    :root {
+        font-size: 20px;
+        /* Font size tablet */
+    }
+}
+
+@media (max-width: $desktop-breakpoint) {
+    :root {
+        font-size: 14px;
+        /* Font size tablet */
+    }
+}
+
+@media (max-width: $tablet-breakpoint) {
+    :root {
+        font-size: 12px;
+        /* Font size mobile */
+    }
+}
+
+@media (max-width: $mobile-breakpoint) {
+    :root {
+        font-size: 10px;
+        /* Font size mobile */
+    }
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-family: Montserrat, sans-serif;
+    letter-spacing: 0.2px;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+body {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+
+.container {
+    margin: 0px auto;
+    padding: 0px 100px;
+    max-width: $container-width;
+}
+
+@media (max-width: $desktop-breakpoint) {
+    .container {
+        padding: 0px 50px;
+    }
+}
+
+
+@media (max-width: $mobile-breakpoint) {
+    .container {
+        padding: 0px 30px;
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: bold;
+    margin: 0;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+h3 {
+    font-size: 1.125rem;
+}
+
+h4 {
+    font-size: 1rem;
+}
+
+h5 {
+    font-size: 0.875rem;
+    letter-spacing: 0.1px;
+}
+
+h6 {
+    font-size: 0.75rem;
+}
+
+p {
+    color: var(--light-grey);
+    font-size: 0.75rem;
+    margin: 0;
+}
+
+small {
+    color: var(--light-grey);
+    font-size: 0.6rem;
+}
+
+button {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 0.875rem;
+    font-family: Montserrat, sans-serif;
+}
+
+ul {
+    padding: 0;
+
+    li {
+        list-style: none;
+    }
+}
+
+a {
+    text-decoration: none;
+}
+
+i {
+    position: relative;
+    bottom: -2px;
+}
+
+.custom-line-template {
+    width: 100%;
+    position: relative;
+    border-top: dashed 3px #7e7e7e;
+    height: 2px;
+    text-align: center;
+    margin: 80px auto;
+
+    img {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -60%);
+        width: 50px;
+        height: 50px;
+        background-color: white;
+        padding: 0 10px;
+    }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}

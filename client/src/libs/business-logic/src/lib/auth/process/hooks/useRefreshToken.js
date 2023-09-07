@@ -26,19 +26,19 @@ export const useRefreshToken = () => {
           if (res.token) {
             // Update the new token on the client
             resetToken(res.token);
-            resetRefreshToken(null);
+            resetRefreshToken(res.refreshToken);
             // Broadcasting the login message
             postMessage({
               message: BROADCAST_MESSAGE.SEND_TOKEN,
               token: res.token,
-              refreshToken: null,
+              refreshToken: res.refreshToken,
               isRemember: getIsRememberMeLocalStorage(),
             });
             resolve({
               statusCode: res.statusCode,
               message: res.message,
               token: res.token,
-              refreshToken: null,
+              refreshToken: res.refreshToken,
             });
           } else {
             throw new Error("Refresh Token is not found");

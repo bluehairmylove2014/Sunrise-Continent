@@ -17,6 +17,10 @@ export const authUrls = [
     authUrl: "/orders",
     redirectUrl: "/login",
   },
+  {
+    authUrl: "/profile",
+    redirectUrl: "/login",
+  },
 ];
 export const needLocalOrderUrls = [
   {

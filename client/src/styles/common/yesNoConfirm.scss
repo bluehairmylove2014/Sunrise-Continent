@@ -40,6 +40,7 @@
         .yes-no-confirm__btn {
             // direction - justify content - align items - flex wrap
             @include dflex(row, space-between, center, nowrap);
+            gap: 20px;
 
             button {
                 // border - border radius - background color - color - padding - font size

@@ -1,0 +1,8 @@
+@import '../partial/mixin';
+
+.voucher {
+    width: 100%;
+    height: calc(100vh - 170px);
+    // direction - justify content - align items - flex wrap
+    @include dflex(column, center, center, nowrap);
+}

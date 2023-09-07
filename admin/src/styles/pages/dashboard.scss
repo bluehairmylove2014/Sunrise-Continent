@@ -1,0 +1,40 @@
+@import '../partial/mixin';
+
+
+.dashboard {
+    // columns - row - gap
+    @include dgrid(60% 1fr, auto, 1rem);
+    width: calc(100% - 50px);
+    height: fit-content;
+    padding: 25px;
+    row-gap: 40px;
+    position: relative;
+
+    .dashboard__total-report {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .dashboard__user-rank {
+        grid-column: 2;
+        grid-row: 1 /span 2;
+    }
+
+    .dashboard__total-revenue {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .dashboard__income {
+        grid-column: 1 /span 2;
+        grid-row: 3;
+    }
+
+    .empty {
+        grid-column: 1 /span 2;
+        width: 100%;
+        height: calc(100vh - 270px);
+        // direction - justify content - align items - flex wrap
+        @include dflex(column, center, center, nowrap);
+    }
+}

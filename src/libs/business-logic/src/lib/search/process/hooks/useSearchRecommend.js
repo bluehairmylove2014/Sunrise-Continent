@@ -8,6 +8,13 @@ export const useSearchRecommend = () => {
   const { dispatch } = useSearchContext();
 
   const onSearchRecommend = debounce((keyword) => {
+    if (keyword.trim() === "") {
+      dispatch({
+        type: "SET_RECOMMEND_PRODUCT",
+        payload: [],
+      });
+      return [];
+    }
     const lowercaseKeyword = convertViToEn(keyword, true);
 
     const matchingLocations = [];
@@ -15,7 +22,10 @@ export const useSearchRecommend = () => {
     locations.forEach((location) => {
       const lowercaseLocationName = convertViToEn(location.name, true);
 
-      if (lowercaseLocationName.includes(lowercaseKeyword)) {
+      if (
+        lowercaseLocationName.includes(lowercaseKeyword) ||
+        lowercaseKeyword.includes(lowercaseLocationName)
+      ) {
         matchingLocations.push(location);
       }
     });

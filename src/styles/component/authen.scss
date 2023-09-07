@@ -9,14 +9,6 @@
     transition: all 0.5s ease-in;
     background-color: black;
 
-    .authen__login-bg {
-        background-image: url('https://rialloer.sirv.com/Sunrise-Continent/backgrounds/mountain-night.jpg');
-        transition: all 0.5s ease-in;
-    }
-
-    .authen__register-bg {
-        background-image: url('https://rialloer.sirv.com/Sunrise-Continent/backgrounds/mountain-day.jpg');
-    }
 
     .authen__login-bg,
     .authen__register-bg {
@@ -28,6 +20,17 @@
         position: absolute;
         top: 0;
         left: 0;
+    }
+
+    .authen__login-bg {
+        background-image: url('https://rialloer.sirv.com/Sunrise-Continent/backgrounds/mountain-night.jpg');
+        transition: all 0.5s ease-in;
+        z-index: 9;
+    }
+
+    .authen__register-bg {
+        background-image: url('https://rialloer.sirv.com/Sunrise-Continent/backgrounds/mountain-day.jpg');
+        z-index: 8;
     }
 
     &.register {
@@ -76,6 +79,7 @@
         left: 0;
         width: 100vw;
         height: 100vh;
+        z-index: 98;
 
         .authen__wrapper {
             @include absolute-center;

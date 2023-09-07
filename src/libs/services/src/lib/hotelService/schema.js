@@ -23,8 +23,7 @@ const searchSchema = z.object({
   hasNext: z.boolean(),
   hasPrevious: z.boolean(),
   totalCount: z.number(),
-})
-
+});
 
 const hotelDetailSchema = z.object({
   id: z.number(),
@@ -84,6 +83,9 @@ const getReviewSchema = z.array(
     content: z.string(),
   })
 );
+const reviewSchema = z.object({
+  message: z.string(),
+});
 
 export {
   searchSchema,
@@ -94,4 +96,5 @@ export {
   getRoomsSchema,
   getPictureSchema,
   getReviewSchema,
+  reviewSchema,
 };

@@ -19,3 +19,8 @@ export const useGetRoomDataMutation = () => {
     retry: mutationConfig.RETRY,
   });
 };
+export const useReviewHotelMutation = () => {
+  return useMutation(hotelService.reviewHotel, {
+    retry: mutationConfig.RETRY,
+  });
+};

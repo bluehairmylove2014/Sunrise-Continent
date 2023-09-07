@@ -12,13 +12,13 @@ const Footer = () => {
           <div className="split-row">
             <img src={sunriseContinentLogo} alt="logo" />
             <p>
-              <i class="fi fi-sr-phone-call"></i>&nbsp;033.3783.9146
+              <i className="fi fi-sr-phone-call"></i>&nbsp;033.3783.9146
             </p>
             <p>
-              <i class="fi fi-sr-envelope"></i>&nbsp;phucdat4102@gmail.com
+              <i className="fi fi-sr-envelope"></i>&nbsp;phucdat4102@gmail.com
             </p>
             <p>
-              <i class="fi fi-ss-marker"></i>&nbsp;2014 Quốc lộ 5, làng Bảo
+              <i className="fi fi-ss-marker"></i>&nbsp;2014 Quốc Lộ 5, Làng Bảo
               Mệnh, Lục Địa Bình Minh
             </p>
           </div>

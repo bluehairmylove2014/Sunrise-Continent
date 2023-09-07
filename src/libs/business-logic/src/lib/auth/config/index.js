@@ -18,5 +18,19 @@ export const authUrls = [
     redirectUrl: "/login",
   },
 ];
+export const needLocalOrderUrls = [
+  {
+    authUrl: "/provide-information",
+    redirectUrl: "/",
+  },
+  {
+    authUrl: "/success-order",
+    redirectUrl: "/",
+  },
+  {
+    authUrl: "/checkout",
+    redirectUrl: "/",
+  },
+];
 
 export const Loader = DefaultLoader;

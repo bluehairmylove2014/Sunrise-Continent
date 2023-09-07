@@ -158,8 +158,8 @@ const Authentication = () => {
           className={`authen ${page === "/register" ? "register" : ""}`}
           ref={authenRef}
         >
-          <div className="authen__register-bg"></div>
           <div className="authen__login-bg"></div>
+          <div className="authen__register-bg"></div>
           <header className="authen__header">
             <nav>
               <ul>

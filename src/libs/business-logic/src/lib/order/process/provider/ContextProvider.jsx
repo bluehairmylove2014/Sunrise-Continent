@@ -9,7 +9,7 @@ export const ContextProvider = ({ children, accessToken }) => {
     order: null,
     accessToken: accessToken,
   });
-  const localCart = getOrderLocalStorage();
+  const localOrder = getOrderLocalStorage();
 
   useEffect(() => {
     dispatch({
@@ -21,7 +21,7 @@ export const ContextProvider = ({ children, accessToken }) => {
   useEffect(() => {
     dispatch({
       type: "SET_ORDER",
-      payload: localCart,
+      payload: localOrder,
     });
   }, []);
 

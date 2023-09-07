@@ -444,6 +444,7 @@ const PreCheckout = () => {
                     id="otherRequirements"
                     onFocus={(e) => handleFocus(e.target)}
                     onBlur={(e) => handleBlur(e.target)}
+                    placeholder="Nhập gì đó đi..."
                   />
                 </div>
               )}
@@ -462,7 +463,7 @@ const PreCheckout = () => {
               form={contactForm}
               name={"isAcceptPolicy"}
               label={
-                "Tôi đồng ý với điều khoản và chính sách bảo mật của Sunrise Continent"
+                "Tôi đồng ý với chính sách huỷ đặt phòng của Sunrise Continent"
               }
               checkboxSize={"16px"}
             />

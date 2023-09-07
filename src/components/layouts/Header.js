@@ -121,6 +121,7 @@ const Header = () => {
                   name_il={c.icon}
                   name={c.category_name}
                   href={c.href}
+                  options={c.options}
                 />
               </li>
             );
@@ -151,7 +152,10 @@ const Header = () => {
     }
   };
   const onSearch = (content) => {
-    const realKeyWords = typeof content === "string" ? content : content.search;
+    const realKeyWords = (
+      typeof content === "string" ? content : content.search
+    ).replace(/[._\-,]/g, " ");
+
     if (!realKeyWords || !realKeyWords.trim().length) {
       toast.error("Nhập gì đó đi!");
     } else {

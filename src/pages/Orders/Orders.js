@@ -31,7 +31,7 @@ const Orders = () => {
             </tr>
           </thead>
           <tbody>
-            {ordersData.map((orderDetail) => (
+            {ordersData.reverse().map((orderDetail) => (
               <tr key={orderDetail.orderId}>
                 <td>{orderDetail.orderId}</td>
                 <td>

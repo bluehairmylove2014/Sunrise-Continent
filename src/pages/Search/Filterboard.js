@@ -30,6 +30,7 @@ const Filterboard = ({ form, defaultValues, callback }) => {
             onCheckboxChange(callbackData, paramKey, checkboxData);
           }}
           key={checkboxData[k].INPUT_NAME}
+          checkboxSize="1rem"
         />
       ));
     } else {

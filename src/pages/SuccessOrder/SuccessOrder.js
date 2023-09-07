@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 import { icon, nationality } from "./Data";
 import { combineAddress } from "./../../utils/helpers/Address";
@@ -6,6 +6,7 @@ import { useGetOrder } from "./../../libs/business-logic/src/lib/order/process/h
 import {
   useGetHotelDetail,
   useGetRooms,
+  useReviewHotel,
 } from "../../libs/business-logic/src/lib/hotel/process/hooks";
 
 import "../../styles/component/successOrder.scss";
@@ -15,6 +16,11 @@ import { calcNight } from "../../utils/helpers/Datetime";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PAGES } from "../../constants/Link.constants";
+import Empty from "./../../components/common/Empty";
+import { toggleClassNoListener } from "./../../utils/helpers/ToggleClass";
+import ReviewPopup from "../../components/common/ReviewPopup";
+import { toast } from "react-hot-toast";
+import { useClearLocalOrder } from "../../libs/business-logic/src/lib/order/process/hooks/useClearLocalOrder";
 
 const calculateTotal = (rooms, voucher, nightCount) => {
   let total = rooms.reduce((acc, roomData) => {
@@ -29,7 +35,9 @@ const calculateTotal = (rooms, voucher, nightCount) => {
 };
 
 const SuccessOrder = () => {
+  const reviewPopupRef = useRef(null);
   const selectedRoomsObject = useGetOrder();
+  const { onClearLocalOrder } = useClearLocalOrder();
   const navigate = useNavigate();
   // Extract common fields from the first order
   const {
@@ -50,6 +58,22 @@ const SuccessOrder = () => {
   const endDateFormatted = formatDate(end_date);
   const night = calcNight(start_date, end_date);
   const [total, setTotal] = useState(0);
+  const { onReview } = useReviewHotel();
+
+  const handleReviewHotel = ({ point, content }) => {
+    const reviewPkg = {
+      hotelId,
+      points: point,
+      content,
+    };
+    onReview(reviewPkg)
+      .then((msg) => {
+        toast.success(msg);
+        navigate(PAGES.ORDERS);
+        onClearLocalOrder();
+      })
+      .catch((error) => toast.error(error.message));
+  };
 
   useEffect(() => {
     setTotal(calculateTotal(roomsData, 0, night));
@@ -95,13 +119,23 @@ const SuccessOrder = () => {
                 Lưu ý tất cả các yêu cầu chỉ được đáp ứng tùy theo khách sạn
               </p>
 
-              {selectedRoomsObject.specialNeeds &&
+              {typeof selectedRoomsObject.specialNeeds === "string" &&
+              selectedRoomsObject.specialNeeds !== "" ? (
                 selectedRoomsObject.specialNeeds.split(", ").map((sn) => (
                   <div className="other-option__check" key={sn}>
                     <i className="fi fi-sr-checkbox"></i>
                     <span>{sn}</span>
                   </div>
-                ))}
+                ))
+              ) : (
+                <div
+                  className="other-option__check"
+                  style={{ gridColumn: "1 /span 2" }}
+                >
+                  {/* <i className="fi fi-sr-checkbox"></i> */}
+                  <Empty label={"Không có yêu cầu"} />
+                </div>
+              )}
             </div>
 
             <h5>
@@ -111,9 +145,21 @@ const SuccessOrder = () => {
           </section>
           <section className="submit">
             <button
+              id="review"
+              type="button"
+              onClick={() =>
+                toggleClassNoListener(reviewPopupRef.current, "active")
+              }
+            >
+              ĐÁNH GIÁ KHÁCH SẠN
+            </button>
+            <button
               id="checkout"
               type="button"
-              onClick={() => navigate(PAGES.HOME)}
+              onClick={() => {
+                navigate(PAGES.HOME);
+                onClearLocalOrder();
+              }}
             >
               VỀ TRANG CHỦ
             </button>
@@ -207,6 +253,7 @@ const SuccessOrder = () => {
           </div>
         </section>
       </div>
+      <ReviewPopup ref={reviewPopupRef} callback={handleReviewHotel} />
     </main>
   ) : (
     <SunriseLoader />

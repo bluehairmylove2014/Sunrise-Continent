@@ -26,7 +26,7 @@ const NavDropdown = ({ name, name_il, name_ir, options, href }) => {
     );
   };
   const handleDropdownClick = (dropdownInstance, href) => {
-    href && navigate(href);
+    href && navigate(href, { replace: true });
   };
   function handleMouseEnter() {
     clearTimeout(timerId); // Hủy bỏ setTimeout trước đó (nếu có)

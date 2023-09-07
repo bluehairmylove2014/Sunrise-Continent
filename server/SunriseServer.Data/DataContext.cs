@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using SunriseServerCore.Dtos;
+using SunriseServerCore.Dtos.Admin;
 
 namespace SunriseServerData
 {
@@ -39,7 +40,7 @@ namespace SunriseServerData
                 .HasKey(x => new { x.AccountId, x.VoucherId });
             
             modelBuilder.Entity<Order>()
-                .HasKey(x => new { x.RoomTypeId, x.HotelId });
+                .HasKey(x => new { x.OrderId });
 
             modelBuilder.Entity<MyFunctionResult>()
                 .HasNoKey().ToTable("MyFunctionResult", t => t.ExcludeFromMigrations());
@@ -75,6 +76,10 @@ namespace SunriseServerData
             // TopAccountInfoDto
             modelBuilder.Entity<TopAccountInfoDto>()
                 .HasKey(x => new { x.AccountId });
+
+            // TopPartnerDto
+            modelBuilder.Entity<TopPartnerDto>()
+                .HasKey(x => new { x.Id });
         }
 
         public DbSet<Hotel> Hotel { get; set; }

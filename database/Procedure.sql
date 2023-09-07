@@ -1749,6 +1749,27 @@ BEGIN
 	RETURN 0;
 END
 
+
+GO
+CREATE OR ALTER FUNCTION USF_CheckHotelRatting ( -- //new check
+    @HotelPoints FLOAT,
+	@GuestRating VARCHAR(100))
+RETURNS BIT
+BEGIN
+	IF (@GuestRating IS NULL) RETURN 1;
+
+	DECLARE @PointTable TABLE (Points FLOAT, Tag VARCHAR(100))
+	INSERT INTO @PointTable (Points, Tag) VALUES
+	(9.0, 'EXCELLENT'),(8.0, 'GREAT'),(7.0, 'VERY_GOOD'),(6.0, 'SATISFIED');
+
+	DECLARE @Min FLOAT, @Max FLOAT;
+	SELECT @Min = MIN(Points), @Max = MAX(Points) FROM @PointTable pt 
+	JOIN (SELECT value FROM STRING_SPLIT(@GuestRating, ',')) st ON st.value = pt.Tag
+
+	IF (@Min = @Max) RETURN CASE WHEN @HotelPoints >= @Max THEN 1 ELSE 0 END; 
+	RETURN CASE WHEN NOT (@HotelPoints < @Min OR @HotelPoints > @Max) THEN 1 ELSE 0 END;
+END
+
 GO
 CREATE OR ALTER PROC USP_FindHotelByName (-- //new check
 	-- Search
@@ -1764,7 +1785,7 @@ CREATE OR ALTER PROC USP_FindHotelByName (-- //new check
 	-- Filter
 	@HotelType VARCHAR(500) = null,
 	@BedType VARCHAR(100) = null,
-	@GuestRating INT = 0,
+	@GuestRating VARCHAR(100) = null,
 	@Facilities VARCHAR(1000) = null,
 	@Service VARCHAR(100) = null,
 	@SortingCol VARCHAR(50) = 'Rating',
@@ -1787,7 +1808,7 @@ BEGIN
 		  AND dbo.USF_GetMinRoomPrice(h.Id) >= @MinBudget
 	      AND dbo.USF_CheckHotelAvailability(h.Id, @Rooms, @StartDate, @EndDate) = 1
 		  AND (h.HotelType IN (SELECT value FROM STRING_SPLIT(@HotelType, ',')) OR @HotelType IS NULL)
-		  AND dbo.USF_GetAvgReview(h.Id) >= @GuestRating
+		  AND dbo.USF_CheckHotelRatting(dbo.USF_GetAvgReview(h.Id), @GuestRating) = 1
 		  AND dbo.USF_CheckHotelFacility(h.Id, @Facilities) = 1
 		  AND dbo.USF_CheckHotelService(h.Id, @Service) = 1
 		  ) hoteTable
@@ -1821,8 +1842,8 @@ BEGIN
 	ORDER BY 
 		CASE WHEN @SortingCol = 'FullName' AND @SortType ='ASC' THEN pd.FullName END,
 		CASE WHEN @SortingCol = 'FullName' AND @SortType ='DESC' THEN pd.FullName END DESC,
-		CASE WHEN @SortingCol = 'DateOfBirth' AND @SortType ='ASC' THEN pd.DateOfBirth END,
-		CASE WHEN @SortingCol = 'DateOfBirth' AND @SortType ='DESC' THEN pd.DateOfBirth END DESC,
+		CASE WHEN @SortingCol = 'DateOfBirth' AND @SortType ='ASC' THEN pd.DateOfBirth END DESC,
+		CASE WHEN @SortingCol = 'DateOfBirth' AND @SortType ='DESC' THEN pd.DateOfBirth END,
 		CASE WHEN @SortingCol = 'Rank' AND @SortType ='ASC' THEN pr.RankValue END,
 		CASE WHEN @SortingCol = 'Rank' AND @SortType ='DESC' THEN pr.RankValue END DESC
 END
@@ -1893,7 +1914,7 @@ CREATE OR ALTER PROC USP_GetAllAccountOrder (
 AS
 BEGIN
 	SELECT BA.RoomTypeId, BA.HotelId, H.Name as HotelName, H.Country, H.HotelType, H.ProvinceCity, H.Address, H.Stars, H.Rating, H.Image,
-			AO.OrderId, AO.AccountId, AO.FullName, AO.Nation, AO.DateOfBirth, 
+			AO.OrderId, AO.AccountId, AO.FullName, AO.Nation, AO.DateOfBirth, AO.CreatedAt,
 			AO.Email, AO.PhoneNumber, AO.SpecialNeeds, AO.Notes, AO.VoucherId, 
 			AO.Total, AO.Paid, BA.CheckIn, BA.CheckOut, BA.NumberOfRoom, 
 			RT.Name as RoomName, RT.Vacancy, RT.RoomInfo, RT.RoomView, RT.BedType
@@ -2562,6 +2583,50 @@ END
 GO
 
 
+GO -- // new check 4
+CREATE OR ALTER PROC USP_GetTotalUserPartner
+AS BEGIN
+	DECLARE @User INT, @Partner INT;
+	
+	SELECT @User = COUNT(Id) FROM ACCOUNT WHERE UserRole = 'User'
+	SELECT @Partner = COUNT(Id) FROM ACCOUNT WHERE UserRole = 'Partner'
+
+	SELECT @User as LastWeek, @Partner as ThisWeek;
+END;
+GO
+
+GO -- // new check 4
+CREATE OR ALTER PROC USP_GetTotalUserPartner
+AS BEGIN
+	DECLARE @User INT, @Partner INT;
+	
+	SELECT @User = COUNT(Id) FROM ACCOUNT WHERE UserRole = 'User'
+	SELECT @Partner = COUNT(Id) FROM ACCOUNT WHERE UserRole = 'Partner'
+
+	SELECT @User as LastWeek, @Partner as ThisWeek;
+END;
+GO
+
+GO -- // new check 4
+CREATE OR ALTER FUNCTION USF_GetPartnerTotal (
+    @HotelId INT)
+RETURNS BIGINT
+BEGIN
+	DECLARE @Profit BIGINT = 0;
+	SELECT @Profit = ISNULL(SUM(CAST(TotalSpent as BIGINT)), 0) FROM dbo.USF_GetTopAccount(@HotelId);
+
+	RETURN @Profit;
+END;
+GO
+
+
+GO -- // new check 3
+CREATE OR ALTER PROCEDURE USP_GetTopPartner
+AS BEGIN
+	SELECT TOP(7) h.*, dbo.USF_GetPartnerTotal(h.Id) as TotalSpent
+	FROM HOTEL h ORDER BY TotalSpent DESC;
+END
+GO
 
 
 -- // check --

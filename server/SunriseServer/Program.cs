@@ -64,8 +64,11 @@ builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
     {
         policy.WithOrigins("http://www.sunrise-continent.online.s3-website-ap-southeast-1.amazonaws.com").AllowAnyMethod().AllowAnyHeader();
         policy.WithOrigins("http://www.sunrise-continent.online").AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("https://www.sunrise-continent.online").AllowAnyMethod().AllowAnyHeader();
         policy.WithOrigins("http://www.admin.sunrise-continent.online").AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("https://www.admin.sunrise-continent.online").AllowAnyMethod().AllowAnyHeader();
         policy.WithOrigins("http://www.partner.sunrise-continent.online").AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("https://www.partner.sunrise-continent.online").AllowAnyMethod().AllowAnyHeader();
         policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
     }));
 

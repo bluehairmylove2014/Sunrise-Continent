@@ -14,3 +14,28 @@ export const useCheckRoomAvailableMutation = () => {
     retry: mutationConfig.RETRY,
   });
 };
+export const useCreateHotelMutation = () => {
+  return useMutation(hotelService.createHotel, {
+    retry: mutationConfig.RETRY,
+  });
+};
+export const useEditHotelMutation = () => {
+  return useMutation(hotelService.editHotel, {
+    retry: mutationConfig.RETRY,
+  });
+};
+export const useCreateRoomMutation = () => {
+  return useMutation(hotelService.createRoom, {
+    retry: mutationConfig.RETRY,
+  });
+};
+export const useEditRoomMutation = () => {
+  return useMutation(hotelService.editRoom, {
+    retry: mutationConfig.RETRY,
+  });
+};
+export const useDeleteRoomMutation = () => {
+  return useMutation(hotelService.deleteRoom, {
+    retry: mutationConfig.RETRY,
+  });
+};

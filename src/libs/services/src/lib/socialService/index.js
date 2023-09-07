@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getAxiosNormalInstance, isAxiosError } from "../../config/axios";
 import { googleApiConfig, facebookApiConfig } from "../../config/config";
-import { getApiUrl } from "../../config/url";
 import { Services } from "../../service";
 import { updateAccountResponseSchema } from "./schema";
 
 const unknownErrorMsg = "Social service unknown error";
 
 export class SocialService extends Services {
-  url = getApiUrl() + "/social";
   abortController;
-  updateAccountUrl = "/social/updateAccount";
+  updateAccountUrl = "/auth/login-social";
 
   // GOOGLE LOGIN
   validateToken = async (token) => {
@@ -81,7 +79,8 @@ export class SocialService extends Services {
         schema: updateAccountResponseSchema,
         data,
         signal: this.abortController.signal,
-        transformResponse: (res) => res.message,
+        transformResponse: (res) => res,
+        isProduction: true,
       });
       return response;
     } catch (error) {

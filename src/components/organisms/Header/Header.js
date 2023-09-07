@@ -1,16 +1,14 @@
 import React, { useState } from "react";
 import "./header.scss";
 import { country } from "./Data";
+import UserSidebar from "../UserSidebar/UserSidebar";
+import { useGetUser } from "./../../../libs/business-logic/src/lib/auth/process/hooks/useGetUser";
 
 const Header = () => {
   // eslint-disable-next-line no-unused-vars
   const [selectedLanguage, setSelectedLanguage] = useState(country[0]);
-  const partnerData = {
-    id: 1,
-    image: "https://rialloer.sirv.com/Sunrise-Continent/Users/avt_3.png",
-    role: "partner",
-    name: "Diệu Linh",
-  };
+  const [isUserSidebarActive, setIsUserSidebarActive] = useState(false);
+  const partnerData = useGetUser();
 
   return (
     <div className="header">
@@ -31,14 +29,27 @@ const Header = () => {
       <button className="header__notification">
         <i className="fi fi-rs-bell"></i>
       </button>
-      <button className="header__partner">
-        <img src={partnerData.image} alt="partner" />
-        <div className="partner__info">
-          <span>{partnerData.name}</span>
-          <span>{partnerData.role}</span>
-        </div>
-        <i className="fi fi-rr-angle-small-down"></i>
-      </button>
+      {partnerData ? (
+        <button
+          className="header__partner"
+          onClick={() => setIsUserSidebarActive(!isUserSidebarActive)}
+        >
+          <img src={partnerData.image} alt="partner" />
+          <div className="partner__info">
+            <span>{partnerData.fullName}</span>
+            <span>Partner</span>
+          </div>
+          <i className="fi fi-rr-angle-small-down"></i>
+        </button>
+      ) : (
+        <></>
+      )}
+
+      <UserSidebar
+        isActive={isUserSidebarActive}
+        callback={setIsUserSidebarActive}
+        userData={partnerData}
+      />
     </div>
   );
 };

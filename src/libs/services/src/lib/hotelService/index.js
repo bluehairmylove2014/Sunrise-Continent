@@ -1,11 +1,18 @@
 import { Services } from "../../service";
 import {
   bookingSchema,
+  createHotelSchema,
+  createRoomSchema,
+  deleteRoomSchema,
+  editHotelSchema,
+  editRoomSchema,
   getHotHotelSchema,
   getPictureSchema,
   getReviewSchema,
   getRoomsSchema,
   getSpecificRoomSchema,
+  getWeeklyRevenueSchema,
+  getYearlyRevenueSchema,
   hotelDetailSchema,
   searchSchema,
 } from "./schema";
@@ -21,11 +28,17 @@ export class HotelService extends Services {
   checkRoomAvailableUrl = `/room/available`;
   getPictureUrl = `/hotel/picture`;
   getReviewUrl = `/hotel/review`;
+  createHotelUrl = `/hotel`;
+  editHotelUrl = `/hotel`;
+  createRoomUrl = `/room`;
+  editRoomUrl = `/room`;
+  deleteRoomUrl = `/room`;
+  getYearlyRevenueUrl = `/hotel/yearly-revenue`;
+  getWeeklyRevenueUrl = `/hotel/weekly-revenue`;
 
   search = async (keys) => {
     this.abortController = new AbortController();
     try {
-      console.log(keys);
       const response = await this.fetchApi({
         method: "GET",
         url: this.searchUrl,
@@ -195,6 +208,167 @@ export class HotelService extends Services {
       if (!this.isCancel(error)) {
         // Handle other errors
         console.error("Catch error review");
+        throw error;
+      }
+    }
+  };
+  createHotel = async ({ data, token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "POST",
+        url: this.createHotelUrl,
+        schema: createHotelSchema,
+        data,
+        headers: { Authorization: `Bearer ${token}` },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res.message,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error createHotel");
+        throw error;
+      }
+    }
+  };
+  editHotel = async ({ data, token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "PUT",
+        url: this.editHotelUrl,
+        schema: editHotelSchema,
+        data,
+        headers: { Authorization: `Bearer ${token}` },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res.message,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error edit hotel");
+        throw error;
+      }
+    }
+  };
+  createRoom = async ({ data, token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "POST",
+        url: this.createRoomUrl,
+        schema: createRoomSchema,
+        data,
+        headers: { Authorization: `Bearer ${token}` },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res.message,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error create room");
+        throw error;
+      }
+    }
+  };
+  editRoom = async ({ data, token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "PUT",
+        url: this.editRoomUrl,
+        schema: editRoomSchema,
+        data,
+        headers: { Authorization: `Bearer ${token}` },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res.message,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error edit room");
+        throw error;
+      }
+    }
+  };
+  deleteRoom = async ({ data, token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "DELETE",
+        url: this.deleteRoomUrl,
+        schema: deleteRoomSchema,
+        params: data,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res.message,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      console.log(error);
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error delete room");
+        throw error;
+      }
+    }
+  };
+  getYearlyRevenue = async ({ token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "GET",
+        url: this.getYearlyRevenueUrl,
+        schema: getYearlyRevenueSchema,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      console.log(error);
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error getYearlyRevenue");
+        throw error;
+      }
+    }
+  };
+  getWeeklyRevenue = async ({ token }) => {
+    this.abortController = new AbortController();
+    try {
+      const response = await this.fetchApi({
+        method: "GET",
+        url: this.getWeeklyRevenueUrl,
+        schema: getWeeklyRevenueSchema,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        signal: this.abortController.signal,
+        transformResponse: (res) => res,
+        isProduction: true,
+      });
+      return response;
+    } catch (error) {
+      console.log(error);
+      if (!this.isCancel(error)) {
+        // Handle other errors
+        console.error("Catch error getWeeklyRevenue");
         throw error;
       }
     }

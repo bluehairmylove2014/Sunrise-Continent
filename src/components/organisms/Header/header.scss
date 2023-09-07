@@ -79,7 +79,10 @@
             @include dflex(column, center, flex-start, nowrap);
 
             span {
+                max-width: 250px;
+                @include limit-line(1);
                 text-transform: capitalize;
+                text-align: left;
 
                 &:nth-child(1) {
                     font-size: 0.75rem;

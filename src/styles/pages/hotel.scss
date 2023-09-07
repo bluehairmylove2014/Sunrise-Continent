@@ -48,7 +48,7 @@
                 left: 0;
                 width: 50%;
                 height: 100%;
-                background: linear-gradient(to right, rgba($color: #b3eabc, $alpha: 0.9), rgba($color: #c9efc6, $alpha: 0.9), rgba($color: #dcf4d2, $alpha: 0.9), rgba($color: #ecf9e0, $alpha: 0.9), rgba($color: #fafff0, $alpha: 0));
+                background: linear-gradient(to right, rgba($color: #e4f2ff, $alpha: 0.9), rgba($color: #edf5ff, $alpha: 0.9), rgba($color: #f5f8ff, $alpha: 0.9), rgba($color: #fbfbff, $alpha: 0.9), rgba($color: #ffffff, $alpha: 0));
             }
 
             .location,
@@ -152,6 +152,11 @@
                     overflow-y: auto;
                     overflow-x: hidden;
 
+                    &>p {
+                        font-size: 0.75rem;
+                        white-space: nowrap;
+                    }
+
                     .amenity {
                         // direction - justify content - align items - flex wrap
                         @include dflex(column, center, center, nowrap);
@@ -234,8 +239,6 @@
                             font-size: 0.75rem;
                             font-weight: 600;
                         }
-
-                        small {}
                     }
 
                     div:not(.rating__info) {

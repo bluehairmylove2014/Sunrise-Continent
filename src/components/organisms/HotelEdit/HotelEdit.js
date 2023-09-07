@@ -1,18 +1,95 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./HotelEdit.scss";
 import { useForm } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import { toggleClass } from "../../../utils/helpers/ToggleClass";
+import { useEditHotel } from "../../../libs/business-logic/src/lib/hotel/process/hooks";
+import { toast } from "react-hot-toast";
+import { countries } from "./../../../constants/CountriesData";
+import { provinces } from "./../../../constants/ProvinceCityData";
+import { useUpload } from "../../../libs/business-logic/src/lib/sirv/process/hooks/useUpload";
+import { generateImageVersion } from "../../../utils/helpers/imageVersion";
 
-const HotelEdit = React.forwardRef(({ hotelDetail }, ref) => {
-  const { control, handleSubmit } = useForm();
+const HotelEdit = React.forwardRef(({ hotelDetail, callback }, ref) => {
+  const editImageInputRef = useRef(null);
+  const [hotelImage, setHotelImage] = useState(hotelDetail.image);
+  const [isUploading, setIsUploading] = useState(false);
+  const { onEditHotel, isLoading: isEditing } = useEditHotel();
+  const { onUpload } = useUpload();
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: {
+      name: hotelDetail.name,
+      description: hotelDetail.description,
+      address: hotelDetail.address,
+      provinceCity: hotelDetail.provinceCity,
+      country: hotelDetail.country,
+    },
+  });
 
-  const onSuccessSubmit = (data) => {
-    console.log(data);
+  const onSuccessSubmit = ({
+    name,
+    description,
+    address,
+    provinceCity,
+    country,
+  }) => {
+    if (typeof hotelImage !== "string") {
+      // upload to sirv
+      setIsUploading(true);
+      onUpload({
+        imgFile: hotelImage,
+        hotelName: hotelDetail.name,
+        imgName: `hotelThumbnail.${hotelImage.type.split("/")[1]}`,
+      })
+        .then((res) => {
+          // Update to server
+          const editHotelPkg = {
+            ...hotelDetail,
+            name,
+            description,
+            address,
+            provinceCity,
+            country,
+            image: res.path,
+          };
+          onEditHotel(editHotelPkg)
+            .then((msg) => toast.success(msg))
+            .catch((err) => toast.error(err.message));
+        })
+        .catch((error) => {
+          console.error("ERROR: ", error);
+          toast.error("Unexpected Error");
+        })
+        .finally(() => {
+          callback && callback();
+          setIsUploading(false);
+          toggleClass(ref.current, "active");
+        });
+    } else {
+      const editHotelPkg = {
+        ...hotelDetail,
+        name,
+        description,
+        address,
+        provinceCity,
+        country,
+        image: hotelImage.path,
+      };
+      onEditHotel(editHotelPkg)
+        .then((msg) => toast.success(msg))
+        .catch((err) => toast.error(err.message))
+        .finally(() => {
+          toggleClass(ref.current, "active");
+        });
+    }
   };
   const onErrorSubmit = (err) => {
-    console.log(err);
+    toast.error(err[Object.keys(err)[0]].message);
   };
+
+  useEffect(() => {
+    setHotelImage(hotelDetail.image);
+  }, [hotelDetail]);
 
   return (
     <div className="hotel-edit" ref={ref}>
@@ -25,7 +102,6 @@ const HotelEdit = React.forwardRef(({ hotelDetail }, ref) => {
           <Controller
             name="name"
             control={control}
-            defaultValue={hotelDetail.name}
             rules={{
               required: {
                 value: true,
@@ -42,7 +118,6 @@ const HotelEdit = React.forwardRef(({ hotelDetail }, ref) => {
           <Controller
             name="description"
             control={control}
-            defaultValue={hotelDetail.description}
             render={({ field }) => (
               <div className="input-wrapper">
                 <label htmlFor="description">Description</label>
@@ -54,7 +129,6 @@ const HotelEdit = React.forwardRef(({ hotelDetail }, ref) => {
             <Controller
               name="address"
               control={control}
-              defaultValue={hotelDetail.address}
               rules={{
                 required: {
                   value: true,
@@ -71,7 +145,6 @@ const HotelEdit = React.forwardRef(({ hotelDetail }, ref) => {
             <Controller
               name="provinceCity"
               control={control}
-              defaultValue={hotelDetail.provinceCity}
               rules={{
                 required: {
                   value: true,
@@ -81,14 +154,27 @@ const HotelEdit = React.forwardRef(({ hotelDetail }, ref) => {
               render={({ field }) => (
                 <div className="input-wrapper">
                   <label htmlFor="provinceCity">Province / City</label>
-                  <input id="provinceCity" {...field} type="text" />
+
+                  <select {...field} name="provinceCity" id="provinceCity">
+                    <option value={""} disabled>
+                      Chọn tỉnh / thành phố
+                    </option>
+                    {provinces.map((p) => (
+                      <option
+                        value={p}
+                        defaultChecked={field.value === p}
+                        key={p}
+                      >
+                        {p}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               )}
             />
             <Controller
               name="country"
               control={control}
-              defaultValue={hotelDetail.country}
               rules={{
                 required: {
                   value: true,
@@ -98,18 +184,68 @@ const HotelEdit = React.forwardRef(({ hotelDetail }, ref) => {
               render={({ field }) => (
                 <div className="input-wrapper">
                   <label htmlFor="country">Country</label>
-                  <input id="country" {...field} type="text" />
+                  <select {...field} name="country" id="country">
+                    <option value={""} disabled>
+                      Chọn quốc gia
+                    </option>
+                    {countries.map((country) => (
+                      <option
+                        value={country.value}
+                        defaultChecked={field.value === country.value}
+                        key={country.value}
+                      >
+                        {country.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               )}
             />
           </div>
-          <div className="btn-wrapper">
-            <button type="submit">Confirm</button>
+          <div className="hotel-edit__image">
+            <p>Ảnh đại diện khách sạn</p>
+            <img
+              src={
+                typeof hotelImage === "string"
+                  ? hotelImage + generateImageVersion()
+                  : URL.createObjectURL(hotelImage)
+              }
+              alt="hotel"
+            />
+            <input
+              type="file"
+              name="hotelImage"
+              id="hotelImage"
+              accept="image/jpg,image/png"
+              onChange={(e) => {
+                setHotelImage(Array.from(e.target.files)[0]);
+              }}
+              ref={editImageInputRef}
+            />
             <button
               type="button"
-              onClick={() => toggleClass(ref.current, "active")}
+              onClick={() =>
+                editImageInputRef.current && editImageInputRef.current.click()
+              }
             >
-              Cancel
+              Chỉnh sửa
+            </button>
+          </div>
+          <div className="btn-wrapper">
+            <button type="submit" disabled={isEditing || isUploading}>
+              {isEditing || isUploading ? "Chờ chút..." : "Xác nhận"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                toggleClass(ref.current, "active");
+                setTimeout(() => {
+                  reset();
+                }, 500);
+              }}
+              disabled={isEditing || isUploading}
+            >
+              Huỷ
             </button>
           </div>
         </form>

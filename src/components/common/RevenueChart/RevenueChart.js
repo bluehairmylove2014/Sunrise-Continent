@@ -18,11 +18,13 @@ import { chartType } from "../../../constants/Variables.constants";
 const barSize = 20;
 const fontSize = 13;
 
-const shortformatCurrency = (value) =>
-  convertNumberToCurrency("vietnamdong", value, true);
+const shortformatCurrency = (value) => {
+  return convertNumberToCurrency("vietnamdong", value, true);
+};
 const formatCurrency = (value) => convertNumberToCurrency("vietnamdong", value);
 
 const RevenueChart = ({ data, options, type, style }) => {
+  console.log({ data, options, type, style });
   const renderBarChart = () => {
     return (
       <ResponsiveContainer width="100%" height="100%">

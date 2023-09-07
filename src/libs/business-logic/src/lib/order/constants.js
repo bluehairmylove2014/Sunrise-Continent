@@ -9,3 +9,7 @@ export const defaultOrder = {
   voucherId: 0,
   orders: [],
 };
+
+export const QUERY_KEYS = {
+  GET_ORDERS: "GET_ORDERS",
+};

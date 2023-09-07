@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ACCOMMODATION_FACILITIES,
   BED_TYPES,
@@ -12,27 +12,144 @@ import { toggleClass } from "../../../utils/helpers/ToggleClass";
 import addIcon from "../../../assets/images/icons/add.png";
 import { useForm } from "react-hook-form";
 import { Controller } from "react-hook-form";
+import MultiPicker from "../MultiPicker/MultiPicker";
+import {
+  useCreateRoom,
+  useDeleteRoom,
+} from "../../../libs/business-logic/src/lib/hotel/process/hooks";
+import { toast } from "react-hot-toast";
+import { useUpload } from "../../../libs/business-logic/src/lib/sirv/process/hooks/useUpload";
+import { generateImageVersion } from "../../../utils/helpers/imageVersion";
+import Empty from "../Empty/Empty";
 
-const Rooms = ({ roomsData, openGallery }) => {
+const Rooms = ({
+  roomsData,
+  openGallery,
+  hotelData,
+  closeCreateCallback,
+  refetchCallback,
+}) => {
   let room = null;
+  const [isCreatingRoom, setIsCreatingRoom] = useState(false);
   const deleteRoomConfirmRef = useRef(null);
+  const [multiPickerData, setMultiPickerData] = useState({});
+  const [multiPickerDefaultValues, setMultiPickerDefaultValues] = useState([]);
+  const inputFileRef = useRef(null);
+  const selectedImage = useRef(null);
+  const selectedDelete = useRef(null);
+
+  const multiPickerCallback = useRef(() => {});
+  const multiPickerRef = useRef(null);
+  const [editRoomData, setEditRoomData] = useState(
+    roomsData && !Array.isArray(roomsData) ? roomsData : null
+  );
+  const { onDeleteRoom } = useDeleteRoom();
+  const { onCreateRoom } = useCreateRoom();
 
   const handleDeleteRoom = (value) => {
     if (value) {
-    } else {
-      toggleClass(deleteRoomConfirmRef.current, "active");
+      onDeleteRoom({
+        id: selectedDelete.current,
+        hotelId: hotelData.id,
+      })
+        .then((msg) => toast.success(msg))
+        .catch((err) => toast.error(err.message))
+        .finally(() => {
+          refetchCallback && refetchCallback();
+          selectedDelete.current = null;
+        });
     }
+    toggleClass(deleteRoomConfirmRef.current, "active");
   };
 
   const getInstance = (id) => {
     return document.getElementById(id);
   };
 
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      room_name: "",
+      bed_type: "",
+      room_size: 0,
+      description: "",
+      vacancy: 0,
+      price: 0,
+    },
+  });
+  const { control: controlCreate, handleSubmit: handleSubmitCreate } = useForm({
+    defaultValues: {
+      room_name: "",
+      bed_type: "",
+      room_size: 0,
+      description: "",
+      vacancy: 0,
+      price: 0,
+    },
+  });
 
   const confirmEdit = (data) => {
     console.log(data);
   };
+
+  const handleAddFacilities = (dataList) => {
+    setEditRoomData({ ...editRoomData, facility: dataList });
+  };
+  const handleAddServices = (dataList) => {
+    setEditRoomData({ ...editRoomData, service: dataList });
+  };
+  const { onUpload } = useUpload();
+
+  const handleCreateRoom = (data) => {
+    // UPLOAD IMAGE TO SIRV
+    setIsCreatingRoom(true);
+    const promises = selectedImage.current.map((si, index) =>
+      onUpload({
+        imgFile: si,
+        hotelName: hotelData.name,
+        imgName: `${data.room_name}@${index}.${si.type.split("/")[1]}`,
+      })
+    );
+    Promise.all(promises)
+      .then((res) => {
+        const roomPictures = res.map((r, index) => ({
+          id: index + 1,
+          link: r.path,
+        }));
+        const createRoomPkg = {
+          ...editRoomData,
+          roomInfo: data.description,
+          name: data.room_name,
+          bedType: data.bed_type,
+          size: data.room_size,
+          vacancy: data.vacancy,
+          price: data.price,
+          picture: roomPictures,
+        };
+        onCreateRoom(createRoomPkg)
+          .then((msg) => toast.success(msg))
+          .catch((err) => toast.error(err.message));
+        // toggleClass(getInstance(`room@${editRoomData.id}`), "edit");
+        closeCreateCallback && closeCreateCallback();
+        refetchCallback && refetchCallback();
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setIsCreatingRoom(false);
+      });
+  };
+  const errorCreateRoom = (err) => {
+    if (err) {
+      toast.error(err[Object.keys(err)[0]].message);
+    }
+  };
+
+  useEffect(() => {
+    if (roomsData && !Array.isArray(roomsData)) {
+      setEditRoomData(roomsData);
+    }
+  }, [roomsData]);
 
   if (Array.isArray(roomsData)) {
     room = roomsData.map((rd, index) => {
@@ -67,7 +184,7 @@ const Rooms = ({ roomsData, openGallery }) => {
                 {rd.picture.map((rp) => {
                   return (
                     <img
-                      src={rp.link}
+                      src={rp.link + generateImageVersion()}
                       alt="room_picture"
                       key={`picture@${rp.id}`}
                     />
@@ -133,29 +250,41 @@ const Rooms = ({ roomsData, openGallery }) => {
                   ㎡
                 </span>
               </div>
-              <div className="main-infor__hightlight" style={{ opacity: 1 }}>
-                <img src={icon.viewIcon} alt="view" />
+              {rd.roomView !== "null" ? (
+                <div className="main-infor__hightlight" style={{ opacity: 1 }}>
+                  <img src={icon.viewIcon} alt="view" />
 
-                <div className="room-view-wrapper">
-                  {rd.roomView
-                    .split(",")
-                    .slice(0, 3)
-                    .map((rv) => (
-                      <span key={`room@${rd.id}view@${rv}`}>{rv}</span>
-                    ))}
-                  {rd.roomView.split(",").length > 3 ? (
-                    <span>+ {rd.roomView.split(",").length - 3} more</span>
-                  ) : (
-                    <></>
-                  )}
+                  <div className="room-view-wrapper">
+                    {rd.roomView
+                      .split(",")
+                      .slice(0, 3)
+                      .map((rv) => (
+                        <span key={`room@${rd.id}view@${rv}`}>{rv}</span>
+                      ))}
+                    {rd.roomView.split(",").length > 3 ? (
+                      <span>+ {rd.roomView.split(",").length - 3} more</span>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <></>
+              )}
             </div>
             <div className="room__facilities-services">
               <h6>Giá này đã bao gồm</h6>
 
               <div className="facilities">
                 <small>Tiện nghi</small>
+                {Array.isArray(rd.facility) && rd.facility.length === 0 ? (
+                  <div className="empty" style={{ gridColumn: "1 /span 4" }}>
+                    <Empty label={"Không có gì cả"} />
+                  </div>
+                ) : (
+                  <></>
+                )}
+
                 {rd.facility.map((fa) => {
                   return (
                     <div className="facilities__item" key={fa}>
@@ -171,6 +300,13 @@ const Rooms = ({ roomsData, openGallery }) => {
               </div>
               <div className="services">
                 <small>Dịch vụ</small>
+                {Array.isArray(rd.facility) && rd.facility.length === 0 ? (
+                  <div className="empty" style={{ gridColumn: "1 /span 4" }}>
+                    <Empty label={"Không có gì cả"} />
+                  </div>
+                ) : (
+                  <></>
+                )}
                 {rd.service.map((sv) => {
                   return (
                     <div className="services__item" key={sv}>
@@ -189,7 +325,9 @@ const Rooms = ({ roomsData, openGallery }) => {
               <h6>Mô tả</h6>
 
               <div className="short__description">
-                <p className="description">{rd.roomInfo}</p>
+                <p className="description">
+                  {rd.roomInfo === "null" ? "" : rd.roomInfo}
+                </p>
                 <Controller
                   name="description"
                   control={control}
@@ -258,14 +396,17 @@ const Rooms = ({ roomsData, openGallery }) => {
                     }}
                     render={({ field }) => <input {...field} type="number" />}
                   />
-                  / đêm
+                  VNĐ / đêm
                 </p>
                 <div className="btn__wrapper">
                   <button
                     className={"booking"}
                     type="button"
                     onClick={() => {
-                      toggleClass(getInstance(`room@${rd.id}`), "edit");
+                      toast.error(
+                        "XIN LỖI! Chúng tôi chưa hỗ trợ chức năng này"
+                      );
+                      // toggleClass(getInstance(`room@${rd.id}`), "edit");
                     }}
                   >
                     <i className="fi fi-sr-pen-clip"></i>
@@ -282,9 +423,10 @@ const Rooms = ({ roomsData, openGallery }) => {
                   <button
                     className="delete"
                     type="button"
-                    onClick={() =>
-                      toggleClass(deleteRoomConfirmRef.current, "active")
-                    }
+                    onClick={() => {
+                      selectedDelete.current = rd.id;
+                      toggleClass(deleteRoomConfirmRef.current, "active");
+                    }}
                   >
                     <i className="fi fi-ss-trash"></i>
                   </button>
@@ -300,25 +442,27 @@ const Rooms = ({ roomsData, openGallery }) => {
         </form>
       );
     });
-  } else if (roomsData) {
+  } else if (editRoomData) {
     room = (
       <form
         className="room__wrapper edit"
-        key={`room@${roomsData.id}`}
-        id={`room@${roomsData.id}`}
-        onSubmit={handleSubmit(confirmEdit)}
+        key={`room@${editRoomData.id}`}
+        id={`room@${editRoomData.id}`}
+        onSubmit={handleSubmitCreate(handleCreateRoom, errorCreateRoom)}
       >
         <h5 className="edit-room__name">
           <Controller
             name="room_name"
-            control={control}
+            control={controlCreate}
             rules={{
               required: {
                 value: true,
-                message: "Room name is required",
+                message: "Bạn chưa thêm tên loại phòng",
               },
             }}
-            render={({ field }) => <input {...field} type="text" />}
+            render={({ field }) => (
+              <input {...field} type="text" placeholder="Tên loại phòng" />
+            )}
           />
         </h5>
 
@@ -327,44 +471,76 @@ const Rooms = ({ roomsData, openGallery }) => {
             <h6>Loại phòng</h6>
 
             <div className="main-infor__img-wrapper">
-              {roomsData.picture.map((rp) => {
-                return (
-                  <img
-                    src={rp.link}
-                    alt="room_picture"
-                    key={`picture@${rp.id}`}
+              {Array.isArray(editRoomData.picture) &&
+              editRoomData.picture.length > 0 ? (
+                editRoomData.picture.map((rp) => {
+                  return (
+                    <img
+                      src={rp.link}
+                      alt="room_picture"
+                      key={`picture@${rp.id}`}
+                    />
+                  );
+                })
+              ) : (
+                <>
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    ref={inputFileRef}
+                    accept="image/jpg,image/png"
+                    multiple={true}
+                    onChange={(e) => {
+                      const selectedImages = Array.from(e.target.files);
+                      selectedImage.current = selectedImages;
+                      setEditRoomData({
+                        ...editRoomData,
+                        picture: selectedImages.map((si, index) => ({
+                          id: index,
+                          link: URL.createObjectURL(si),
+                        })),
+                      });
+                    }}
                   />
-                );
-              })}
+                  <button
+                    type="button"
+                    onClick={() => inputFileRef.current.click()}
+                  >
+                    <i className="fi fi-rr-layer-plus"></i>Thêm hình ảnh
+                  </button>
+                </>
+              )}
             </div>
             <button
               className="main-infor__view-all-img"
               type="button"
-              onClick={() => openGallery(roomsData.picture)}
+              onClick={() => openGallery(editRoomData.picture)}
             >
               Quản lý ảnh
             </button>
 
             <div className="main-infor__hightlight edit">
-              {roomsData.bedType ? (
-                <img src={BED_TYPES[roomsData.bedType].ICON} alt="bedtype" />
+              {editRoomData.bedType ? (
+                <img src={BED_TYPES[editRoomData.bedType].ICON} alt="bedtype" />
               ) : (
                 <></>
               )}
 
               <Controller
                 name="bed_type"
-                control={control}
+                control={controlCreate}
+                rules={{
+                  required: "Bạn cần chọn loại giường",
+                }}
                 render={({ field }) => (
                   <select {...field}>
+                    <option value={""} disabled>
+                      Loại giường
+                    </option>
                     {Object.keys(BED_TYPES)
-                      .filter((btk) => btk !== roomsData.bedType)
+                      .filter((btk) => btk !== editRoomData.bedType)
                       .map((btk, index) => (
-                        <option
-                          value={btk}
-                          defaultChecked={index === 0}
-                          key={btk}
-                        >
+                        <option value={btk} key={btk}>
                           {BED_TYPES[btk].LABEL}
                         </option>
                       ))}
@@ -379,11 +555,15 @@ const Rooms = ({ roomsData, openGallery }) => {
                 Kích thước:{" "}
                 <Controller
                   name="room_size"
-                  control={control}
+                  control={controlCreate}
                   rules={{
                     required: {
                       value: true,
                       message: "Room size is required",
+                    },
+                    min: {
+                      value: 1,
+                      message: "Bạn cần nhập kích thước phòng",
                     },
                   }}
                   render={({ field }) => <input {...field} type="number" />}
@@ -395,14 +575,14 @@ const Rooms = ({ roomsData, openGallery }) => {
             <img src={icon.viewIcon} alt="view" />
 
             <div className="room-view-wrapper">
-              {roomsData.roomView
+              {editRoomData.roomView
                 .split(",")
                 .slice(0, 3)
                 .map((rv) => (
-                  <span key={`room@${roomsData.id}view@${rv}`}>{rv}</span>
+                  <span key={`room@${editRoomData.id}view@${rv}`}>{rv}</span>
                 ))}
-              {roomsData.roomView.split(",").length > 3 ? (
-                <span>+ {roomsData.roomView.split(",").length - 3} more</span>
+              {editRoomData.roomView.split(",").length > 3 ? (
+                <span>+ {editRoomData.roomView.split(",").length - 3} more</span>
               ) : (
                 <></>
               )}
@@ -415,8 +595,8 @@ const Rooms = ({ roomsData, openGallery }) => {
             <div className="facilities">
               <small>Tiện nghi</small>
               {Array.isArray(roomsData.facility) &&
-                roomsData.facility.length > 0 &&
-                roomsData.facility.map((fa) => {
+                editRoomData.facility.length > 0 &&
+                editRoomData.facility.map((fa) => {
                   return ACCOMMODATION_FACILITIES[fa] ? (
                     <div className="facilities__item" key={fa}>
                       <img src={ACCOMMODATION_FACILITIES[fa].ICON} alt="fa" />
@@ -426,16 +606,25 @@ const Rooms = ({ roomsData, openGallery }) => {
                     <></>
                   );
                 })}
-              <button className="facilities__item button" type="button">
+              <button
+                className="facilities__item button"
+                type="button"
+                onClick={() => {
+                  setMultiPickerData(ACCOMMODATION_FACILITIES);
+                  multiPickerCallback.current = handleAddFacilities;
+                  setMultiPickerDefaultValues(editRoomData.facility);
+                  toggleClass(multiPickerRef.current, "active");
+                }}
+              >
                 <img src={addIcon} alt="add" />
                 <p>Thêm</p>
               </button>
             </div>
             <div className="services">
               <small>Dịch vụ</small>
-              {Array.isArray(roomsData.service) &&
-                roomsData.service.length > 0 &&
-                roomsData.service.map((sv) => {
+              {Array.isArray(editRoomData.service) &&
+                editRoomData.service.length > 0 &&
+                editRoomData.service.map((sv) => {
                   return ROOM_OPTIONS[sv] ? (
                     <div className="services__item" key={sv}>
                       <i className={ROOM_OPTIONS[sv].ICON}></i>
@@ -445,7 +634,16 @@ const Rooms = ({ roomsData, openGallery }) => {
                     <></>
                   );
                 })}
-              <div className="services__item button" type="button">
+              <div
+                className="services__item button"
+                type="button"
+                onClick={() => {
+                  setMultiPickerData(ROOM_OPTIONS);
+                  multiPickerCallback.current = handleAddServices;
+                  setMultiPickerDefaultValues(editRoomData.service);
+                  toggleClass(multiPickerRef.current, "active");
+                }}
+              >
                 <i className="fi fi-rs-add"></i>
                 <span>Thêm</span>
               </div>
@@ -457,9 +655,13 @@ const Rooms = ({ roomsData, openGallery }) => {
             <div className="short__description">
               <Controller
                 name="description"
-                control={control}
+                control={controlCreate}
                 render={({ field }) => (
-                  <textarea {...field} className="edit-description" />
+                  <textarea
+                    {...field}
+                    className="edit-description"
+                    style={{ resize: "none" }}
+                  />
                 )}
               />
               <p className="edit-vacancy">
@@ -468,16 +670,19 @@ const Rooms = ({ roomsData, openGallery }) => {
                   Số phòng:
                   <Controller
                     name="vacancy"
-                    control={control}
+                    control={controlCreate}
                     rules={{
                       required: {
                         value: true,
                         message: "Vacancy is required",
                       },
+                      min: {
+                        value: 1,
+                        message: "Bạn cần nhập số phòng có sẵn",
+                      },
                     }}
                     render={({ field }) => <input {...field} type="number" />}
                   />{" "}
-                  phòng
                 </b>
               </p>
             </div>
@@ -489,26 +694,32 @@ const Rooms = ({ roomsData, openGallery }) => {
               <p className="edit-price">
                 <Controller
                   name="price"
-                  control={control}
+                  control={controlCreate}
                   rules={{
                     required: {
                       value: true,
                       message: "Price is required",
                     },
+                    min: {
+                      value: 1,
+                      message: "Bạn cần chọn giá phòng",
+                    },
                   }}
                   render={({ field }) => <input {...field} type="number" />}
                 />
-                / đêm
+                VNĐ / đêm
               </p>
               <div className="btn__wrapper">
                 <button
                   className={"confirm"}
-                  type="button"
-                  onClick={() => {
-                    toggleClass(getInstance(`room@${roomsData.id}`), "edit");
-                  }}
+                  type="submit"
+                  disabled={isCreatingRoom}
                 >
-                  <i className="fi fi-br-check"></i>
+                  {isCreatingRoom ? (
+                    <i className="fi fi-bs-ban"></i>
+                  ) : (
+                    <i className="fi fi-br-check"></i>
+                  )}
                 </button>
               </div>
             </div>
@@ -519,10 +730,15 @@ const Rooms = ({ roomsData, openGallery }) => {
           callback={handleDeleteRoom}
           ref={deleteRoomConfirmRef}
         />
+        <MultiPicker
+          data={multiPickerData}
+          callback={multiPickerCallback.current}
+          ref={multiPickerRef}
+          defaultValues={multiPickerDefaultValues}
+        />
       </form>
     );
   }
-  console.log(roomsData);
   return <>{room}</>;
 };
 

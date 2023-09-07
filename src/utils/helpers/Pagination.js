@@ -84,7 +84,10 @@ export const calculateNumberList = (pageNumber, maxPage) => {
 
   return displayPages;
 };
-const defaultStartPage = 1;
+
 export const calculateMaxPage = (data, maxElementPerPage) => {
-  return data ? Math.ceil(data.length / maxElementPerPage) : defaultStartPage;
+  const defaultStartPage = 1;
+  return data && Math.ceil(data.length / maxElementPerPage) > 0
+    ? Math.ceil(data.length / maxElementPerPage)
+    : defaultStartPage;
 };

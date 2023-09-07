@@ -5,6 +5,8 @@ import { useAccessToken } from "./useAccessToken";
 import { useAuthBroadcastChannel } from "./useAuthBroadcastChannel";
 
 const isRememberMeDefault = false;
+const defaultRole = "Partner";
+
 export const useRegister = () => {
   const { postMessage } = useAuthBroadcastChannel();
   const { setToken } = useAccessToken();
@@ -15,7 +17,7 @@ export const useRegister = () => {
   const onRegister = ({ email, fullName, password }) => {
     return new Promise((resolve, reject) => {
       registerMutation
-        .mutateAsync({ email, fullName, password })
+        .mutateAsync({ email, fullName, password, role: defaultRole })
         .then((response) => {
           // On success, if token is present, store it in session storage and update context
 

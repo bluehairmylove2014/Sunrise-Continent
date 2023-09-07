@@ -15,7 +15,7 @@ const Gallery = ({ data, isOpen, openCallback }) => {
             <button onClick={() => openCallback(!isOpen)}>x</button>
           </div>
           <div className={`box__content`}>
-            {data && Array.isArray(data) ? (
+            {data && Array.isArray(data) && data.length > 0 ? (
               data.map((pd) => {
                 return (
                   <button

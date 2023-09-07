@@ -75,7 +75,60 @@ const getReviewSchema = z.array(
     content: z.string(),
   })
 );
-
+const createHotelSchema = z.object({
+  message: z.string(),
+});
+const editHotelSchema = z.object({
+  message: z.string(),
+});
+const createRoomSchema = z.object({
+  message: z.string(),
+});
+const editRoomSchema = z.object({
+  message: z.string(),
+});
+const deleteRoomSchema = z.object({
+  message: z.string(),
+});
+const getYearlyRevenueSchema = z.array(
+  z.object({
+    months: z.number(),
+    thisYear: z.number(),
+    lastYear: z.number(),
+  })
+);
+const getWeeklyRevenueSchema = z.object({
+  revenue: z.array(
+    z.object({
+      dayInWeek: z.number(),
+      thisWeek: z.number(),
+      lastWeek: z.number(),
+    })
+  ),
+  accounts: z.array(
+    z.object({
+      accountId: z.number(),
+      fullName: z.string(),
+      emailAddress: z.string(),
+      phoneNumber: z.string(),
+      dateOfBirth: z.string(),
+      gender: z.string(),
+      image: z.string(),
+      rank: z.string(),
+      point: z.number(),
+      role: z.string(),
+      hotelId: z.number(),
+      active: z.boolean(),
+      totalSpent: z.number(),
+    })
+  ),
+  totalRevenue: z.number(),
+  totalReview: z.number(),
+  totalOrder: z.number(),
+  lastRevenue: z.number(),
+  lastReview: z.number(),
+  lastOrder: z.number(),
+});
 export {
   searchSchema,
   hotelDetailSchema,
@@ -85,4 +138,11 @@ export {
   getRoomsSchema,
   getPictureSchema,
   getReviewSchema,
+  createHotelSchema,
+  editHotelSchema,
+  createRoomSchema,
+  editRoomSchema,
+  deleteRoomSchema,
+  getYearlyRevenueSchema,
+  getWeeklyRevenueSchema,
 };

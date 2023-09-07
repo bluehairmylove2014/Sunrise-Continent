@@ -14,7 +14,7 @@
         margin: 0 0 20px 20px;
 
         input {
-            width: 200px;
+            width: 400px;
             background-color: transparent;
             border-radius: 5px;
             padding: 10px;
@@ -68,6 +68,24 @@
                     &:nth-child(3) {
                         grid-column: 2;
                         grid-row: 2;
+                    }
+                }
+
+                button {
+                    cursor: pointer;
+                    grid-column: 1 /span 2;
+                    grid-row: 1 /span 2;
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(column, center, center, nowrap);
+                    font-size: 0.75rem;
+                    transition: background 0.2s ease-in;
+
+                    i {
+                        font-size: 1.5rem;
+                    }
+
+                    &:hover {
+                        background-color: rgba($color: #000000, $alpha: 0.2);
                     }
                 }
             }
@@ -291,7 +309,7 @@
                     margin-top: 20px;
 
                     span {
-                        font-size: 1.25rem;
+                        font-size: 1rem;
                         font-weight: 700;
                         color: var(--butterfly-bush);
                     }

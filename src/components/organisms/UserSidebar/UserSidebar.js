@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLogout } from "../../../libs/business-logic/src/lib/auth";
 import "./userSidebar.scss";
-import { RankList } from "../../../constants/Rank";
+import { PAGES } from "./../../../constants/Link.constants";
 
 const UserSidebar = ({ isActive, userData, callback }) => {
   const sidebarRef = useRef(null);
   const { onLogout } = useLogout();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (sidebarRef.current.classList.contains("active") && !isActive) {
@@ -32,10 +33,10 @@ const UserSidebar = ({ isActive, userData, callback }) => {
         <div className="cc-user-sidebar-header__rank">
           {userData && (
             <>
-              <img src={RankList[userData.rank].image} alt="rank" />
+              <img src={userData.image} alt="rank" />
               <span>
-                {RankList[userData.rank].label} <br />
-                <small>{userData.point} Điểm</small>
+                {userData.name} <br />
+                <small>{userData.role}</small>
               </span>
             </>
           )}
@@ -48,7 +49,7 @@ const UserSidebar = ({ isActive, userData, callback }) => {
         </button>
       </div>
       <ul>
-        <li>
+        {/* <li>
           <Link to="/profile">
             <i className="fi fi-rr-user"></i>
             <span>Your profile</span>
@@ -59,10 +60,11 @@ const UserSidebar = ({ isActive, userData, callback }) => {
             <i className="fi fi-rr-settings"></i>
             <span>Setting</span>
           </Link>
-        </li>
+        </li> */}
         <li>
           <button
             onClick={() => {
+              navigate(PAGES.LOGIN);
               onLogout();
               handleClose();
             }}

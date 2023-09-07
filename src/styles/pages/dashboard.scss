@@ -8,6 +8,7 @@
     height: fit-content;
     padding: 25px;
     row-gap: 40px;
+    position: relative;
 
     .dashboard__total-report {
         grid-column: 1;
@@ -27,5 +28,13 @@
     .dashboard__income {
         grid-column: 1 /span 2;
         grid-row: 3;
+    }
+
+    .empty {
+        grid-column: 1 /span 2;
+        width: 100%;
+        height: calc(100vh - 270px);
+        // direction - justify content - align items - flex wrap
+        @include dflex(column, center, center, nowrap);
     }
 }

@@ -27,15 +27,24 @@ import { pointToLabel } from "../../utils/helpers/Rating";
 import { emptyRoom } from "./Data";
 import HotelEdit from "../../components/organisms/HotelEdit/HotelEdit";
 import { toggleClass } from "../../utils/helpers/ToggleClass";
+import { useGetUser } from "../../libs/business-logic/src/lib/auth/process/hooks";
+import Empty from "../../components/common/Empty/Empty";
+import { generateImageVersion } from "../../utils/helpers/imageVersion";
 
 const maximumReviewPerPage = 4;
 const defaultReviewStartPage = 1;
+
 const Hotel = () => {
-  const hotelId = 1;
+  const [hotelThumbnailVersion, setHotelThumbnailVersion] = useState(
+    generateImageVersion()
+  );
+  const partnerDetail = useGetUser();
+  const hotelId = partnerDetail ? partnerDetail.hotelId : null;
   const hotelData = useGetHotelDetail(hotelId);
-  const roomsData = useGetRooms(hotelId);
+  const { data: roomsData, refetch: roomsDataRefetch } = useGetRooms(hotelId);
   const picturesData = useGetPictures({ id: hotelId });
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
+  emptyRoom.hotelId = hotelId;
 
   const [reviewPagination, setReviewPagination] = useState({
     currentPage: 1,
@@ -68,7 +77,7 @@ const Hotel = () => {
     <div className="hotel">
       <div className="hotel__introduction">
         <div className="background">
-          <img src={hotelData.image} alt="backgound" />
+          <img src={hotelData.image + hotelThumbnailVersion} alt="backgound" />
           <div className="overlay"></div>
           <div className="text">
             <h2>{hotelData.name}</h2>
@@ -103,35 +112,45 @@ const Hotel = () => {
           <div className="amenities">
             <h6>Tiện nghi</h6>
             <div className="amenity__list">
-              {hotelData.facilities.map((am) => (
-                <div className="amenity" key={am}>
-                  <img
-                    src={ACCOMMODATION_FACILITIES[am].ICON}
-                    alt={ACCOMMODATION_FACILITIES[am].ICON}
-                  />
-                  <p>{ACCOMMODATION_FACILITIES[am].LABEL}</p>
-                </div>
-              ))}
+              {hotelData.facilities.length > 0 ? (
+                hotelData.facilities.map((am) => (
+                  <div className="amenity" key={am}>
+                    <img
+                      src={ACCOMMODATION_FACILITIES[am].ICON}
+                      alt={ACCOMMODATION_FACILITIES[am].ICON}
+                    />
+                    <p>{ACCOMMODATION_FACILITIES[am].LABEL}</p>
+                  </div>
+                ))
+              ) : (
+                <p>Không có dữ liệu</p>
+              )}
             </div>
           </div>
           <div className="facilities">
             <h6>Dịch vụ</h6>
             <div className="facility__list">
-              {hotelData.services.map((fa) => (
-                <div className="facility" key={fa}>
-                  <div>
-                    <i className={ROOM_OPTIONS[fa].ICON}></i>
+              {hotelData.services.length > 0 ? (
+                hotelData.services.map((fa) => (
+                  <div className="facility" key={fa}>
+                    <div>
+                      <i className={ROOM_OPTIONS[fa].ICON}></i>
+                    </div>
+                    <p>{ROOM_OPTIONS[fa].LABEL}</p>
                   </div>
-                  <p>{ROOM_OPTIONS[fa].LABEL}</p>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p>Không có dữ liệu</p>
+              )}
             </div>
           </div>
           <div className="price-and-rating">
             <div className="rating">
               <div className="rating__info">
                 <span>Tuyệt vời</span>
-                <small>2014 Đánh giá</small>
+                <small>
+                  {Array.isArray(hotelReview) ? hotelReview.length : 0} Đánh giá
+                </small>
               </div>
               <div className="point">{hotelData.rating.toFixed(2)}</div>
             </div>
@@ -155,17 +174,40 @@ const Hotel = () => {
           </button>
         </h3>
         {isCreatingRoom ? (
-          <Rooms roomsData={emptyRoom} openGallery={openRoomGallery} />
+          <Rooms
+            roomsData={emptyRoom}
+            openGallery={openRoomGallery}
+            hotelData={hotelData}
+            closeCreateCallback={() => setIsCreatingRoom(!isCreatingRoom)}
+            refetchCallback={roomsDataRefetch}
+          />
         ) : (
           <></>
         )}
-        <Rooms roomsData={roomsData} openGallery={openRoomGallery} />
+
+        {Array.isArray(roomsData) && roomsData.length > 0 ? (
+          <Rooms
+            roomsData={roomsData}
+            openGallery={openRoomGallery}
+            hotelData={hotelData}
+            refetchCallback={roomsDataRefetch}
+          />
+        ) : (
+          <div className="empty" style={{ marginTop: "2rem" }}>
+            <Empty label={"Không có dữ liệu"} />
+          </div>
+        )}
+        {/* <Rooms
+          roomsData={roomsData}
+          openGallery={openRoomGallery}
+          hotelData={hotelData}
+        /> */}
       </div>
 
       <section className="hotel-detail__reviews">
         <h3>Đánh giá</h3>
 
-        {hotelReview ? (
+        {Array.isArray(hotelReview) && hotelReview.length > 0 ? (
           <>
             <div className="reviews__total-result">
               <strong>{hotelData.rating.toFixed(1)}</strong>
@@ -239,7 +281,9 @@ const Hotel = () => {
             </div>
           </>
         ) : (
-          <></>
+          <div className="empty" style={{ marginTop: "2rem" }}>
+            <Empty label={"Không có dữ liệu"} />
+          </div>
         )}
       </section>
 
@@ -249,7 +293,13 @@ const Hotel = () => {
         openCallback={handleCloseGallery}
       />
 
-      <HotelEdit hotelDetail={hotelData} ref={editHotelRef} />
+      <HotelEdit
+        hotelDetail={hotelData}
+        ref={editHotelRef}
+        callback={() => {
+          setHotelThumbnailVersion(generateImageVersion());
+        }}
+      />
     </div>
   ) : (
     <div className="empty">

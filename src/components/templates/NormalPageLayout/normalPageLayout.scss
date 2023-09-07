@@ -4,6 +4,7 @@
     // direction - justify content - align items - flex wrap
     @include dflex(row, flex-start, flex-start, nowrap);
     width: 100vw;
+    overflow: hidden;
 
     .navigation-bar {
         flex-shrink: 1;

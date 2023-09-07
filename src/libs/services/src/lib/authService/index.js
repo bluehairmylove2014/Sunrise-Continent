@@ -97,6 +97,7 @@ export class AuthService extends Services {
     this.abortController = new AbortController();
     try {
       if (!token) return null;
+
       const response = await this.fetchApi({
         method: "GET",
         url: this.getUserUrl,

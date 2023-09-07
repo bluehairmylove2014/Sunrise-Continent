@@ -1,6 +1,7 @@
 export function setCookie(name, value, hours) {
-  if (typeof document !== "undefined") {
+  if (typeof document !== "undefined" && typeof window !== "undefined") {
     let expires = "";
+    const path = "; path=/";
     if (hours) {
       const date = new Date();
 
@@ -8,7 +9,7 @@ export function setCookie(name, value, hours) {
       date.setTime(date.getTime() + hours * 60 * 60 * 1000);
       expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "") + expires;
+    document.cookie = name + "=" + (value || "") + expires + path;
   }
 }
 

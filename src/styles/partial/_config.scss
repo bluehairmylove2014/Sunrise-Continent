@@ -32,6 +32,7 @@ $container-width: 1400px;
     --old-gold: #fabf49;
     --bronze: #695036;
     --diamond: #b8d8e7;
+    --cloud-burst: #1E3266;
 }
 
 /* Import fonts */
@@ -218,4 +219,16 @@ i {
         background-color: white;
         padding: 0 10px;
     }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
 }

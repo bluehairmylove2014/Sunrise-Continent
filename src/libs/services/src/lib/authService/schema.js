@@ -17,7 +17,7 @@ const authenticationResponseSchema = z.object({
   statusCode: z.number().optional(),
   message: z.string(),
   token: z.string().optional(),
-  role: z.string(),
+  role: z.string().optional(),
 });
 
 export { authenticationResponseSchema, getUserResponseSchema };

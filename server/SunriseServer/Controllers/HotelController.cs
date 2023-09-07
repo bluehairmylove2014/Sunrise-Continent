@@ -227,7 +227,15 @@ namespace SunriseServer.Controllers
 
             var hotelList = PageList<HotelDto>.ToPageList(finalResult.AsQueryable(), hotelDto.page_number, hotelDto.page_size);
 
-            return Ok(result);
+            return Ok(new {
+                hotelList,
+                totalCount = hotelList.TotalCount,
+                pageSize = hotelList.PageSize,
+                currentPage = hotelList.CurrentPage,
+                totalPages = hotelList.TotalPages,
+                hasNext = hotelList.HasNext,
+                hasPrevious = hotelList.HasPrevious
+            });
         }
 
         [HttpGet("review")]

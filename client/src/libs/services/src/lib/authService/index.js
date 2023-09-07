@@ -11,7 +11,7 @@ export class AuthService extends Services {
 
   registerUrl = "/auth/register";
   loginUrl = "/auth/login";
-  refreshTokenUrl = "/auth/refreshToken";
+  refreshTokenUrl = "/auth/refresh-token";
   getUserUrl = "/account/current-account";
 
   register = async (data) => {
@@ -64,21 +64,20 @@ export class AuthService extends Services {
       throw new Error(unknownError);
     }
   };
-  refreshToken = async (data) => {
+  refreshToken = async (refreshToken) => {
     this.abortController = new AbortController();
     try {
       const response = await this.fetchApi({
         method: "POST",
         url: this.refreshTokenUrl,
         schema: authenticationResponseSchema,
-        data: {},
-        headers: { Authorization: `Bearer ${data}` },
+        data: { refreshToken },
+        headers: { Authorization: `Bearer ${refreshToken}` },
         signal: this.abortController.signal,
         transformResponse: (res) => res,
         isProduction: true,
       });
       return {
-        message: response.message,
         token: response.token,
       };
     } catch (error) {

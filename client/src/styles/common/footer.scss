@@ -1,0 +1,145 @@
+@import '../partial/mixin';
+$TV: 1440px;
+$desktop-breakpoint: 1024px;
+$tablet-breakpoint: 768px;
+$mobile-breakpoint: 480px;
+
+.footer {
+    background-color: var(--ebony-clay);
+    padding-bottom: 30px;
+    font-family: Montserrat, sans-serif;
+    text-align: center;
+    width: 100vw;
+    height: fit-content;
+
+    .footer__upper-bg {
+        width: 100%;
+        height: 500px;
+        background-image: url('../../assets//images/bgs/Mountain.png');
+        background-size: 100vw auto;
+        background-repeat: no-repeat;
+    }
+
+    .container {
+        .footer__row {
+            background-color: var(--ebony-clay);
+            width: 100%;
+            padding: 0.6% 0%;
+            color: gray;
+            font-size: 0.8em;
+
+            a {
+                text-decoration: none;
+                color: gray;
+                transition: 0.5s;
+
+                &:hover {
+                    color: #fff;
+                }
+
+                i {
+                    font-size: 2em;
+                    margin: 0% 1%;
+                }
+            }
+
+            ul {
+                width: 100%;
+
+                li {
+                    display: inline-block;
+                    margin: 0px 30px;
+                }
+            }
+
+            &.split {
+                // direction - justify content - align items - flex wrap
+                @include dflex(row, space-between, flex-start, nowrap);
+
+                .split-row {
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(column, flex-start, flex-start, nowrap);
+
+                    &:nth-child(1) {
+                        img {
+                            width: auto;
+                            height: 100px;
+                        }
+
+                        p {
+                            color: white;
+                            margin-left: 18px;
+                            font-size: 0.85rem;
+                            font-weight: 600;
+                            margin-bottom: 12px;
+
+                            i {
+                                margin-right: 5px;
+                                font-size: 0.9rem;
+                            }
+                        }
+                    }
+
+                    &:nth-child(2) {
+                        // direction - justify content - align items - flex wrap
+                        @include dflex(column, flex-start, flex-end, nowrap);
+                        text-align: right;
+                        color: white;
+
+                        h3 {
+                            margin-bottom: 12px;
+                            font-size: 0.85rem;
+
+                            a {
+                                color: white;
+                            }
+                        }
+
+                        .social-media {
+                            margin: 0 8px 8px 0;
+
+                            a {
+                                margin-left: 15px;
+                                font-size: 0.75rem;
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            &.copyright {
+                margin-top: 3rem;
+            }
+        }
+    }
+
+}
+
+
+
+@media (min-width: 0) {
+    .footer {
+
+        .footer__upper-bg {
+            height: 300px;
+        }
+    }
+}
+
+@media (min-width: $desktop-breakpoint) {
+    .footer {
+        .footer__upper-bg {
+            height: 500px;
+        }
+    }
+}
+
+@media (min-width: $TV) {
+    .footer {
+
+        .footer__upper-bg {
+            height: 700px;
+        }
+    }
+}

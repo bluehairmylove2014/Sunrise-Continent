@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback } from "react";
+import React from "react";
 import { FILTER_CHECKBOX_KEY } from "../../constants/filter.constants";
 import BudgetRange from "../../components/common/BudgetRange";
 import Checkbox from "../../components/common/Checkbox";
@@ -30,19 +30,20 @@ const Filterboard = ({ form, defaultValues, callback }) => {
             onCheckboxChange(callbackData, paramKey, checkboxData);
           }}
           key={checkboxData[k].INPUT_NAME}
+          checkboxSize="1rem"
         />
       ));
     } else {
       return <></>;
     }
   };
-  const setBudget = useCallback((budget) => {
+  const setBudget = (budget) => {
     form.setValue(budgetName, budget);
     callback({
       key: budgetName,
       value: budget,
     });
-  }, []);
+  };
 
   return (
     <form className="filterboard">

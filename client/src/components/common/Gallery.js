@@ -44,7 +44,7 @@ const Gallery = ({ data, isOpen, openCallback }) => {
               <img
                 src={
                   selectedPicture &&
-                  (selectedPicture.pictureLink || selectedPicture.link)
+                  ((selectedPicture.pictureLink || selectedPicture.link) + `?brightness=1`)
                 }
                 alt={selectedPicture && selectedPicture.id}
               />

@@ -32,6 +32,7 @@ export class Services {
     signal,
     transformResponse,
     isProduction,
+    withCredentials,
   }) {
     const mockParams = {
       method,
@@ -40,10 +41,12 @@ export class Services {
       params,
       headers,
       signal,
+      withCredentials,
     };
     const response = await (!isProduction
       ? this.axios(mockParams)
       : this.productionAxios(mockParams));
+
     const dataResponse = schema.parse(response.data);
     return transformResponse ? transformResponse(dataResponse) : dataResponse;
   }

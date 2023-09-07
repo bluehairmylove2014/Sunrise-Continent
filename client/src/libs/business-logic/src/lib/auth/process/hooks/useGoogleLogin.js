@@ -9,6 +9,7 @@ import { getTokenFromUrl } from "../helper/urlSearchParamsHelper";
 import { googlePopupPostMessage } from "../helper/windowEventHelper";
 import { useAccessToken } from "./useAccessToken";
 import { useAuthBroadcastChannel } from "./useAuthBroadcastChannel";
+import { useHandleRefreshToken } from "./useHandleRefreshToken";
 
 const isRememberMeDefault = true;
 // const successMessage = "Login success";
@@ -37,6 +38,7 @@ export const useGoogleLogin = () => {
 
   // Get the setToken function from useAccessToken
   const { setToken } = useAccessToken();
+  const { setRefreshToken } = useHandleRefreshToken();
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.opener) {
@@ -92,11 +94,6 @@ export const useGoogleLogin = () => {
                   // => do not set token, do not login, do not broadcast
                   // setToken(payload.accessToken, isRememberMeDefault);
                   // Send login notification message to other tabs
-                  postMessage({
-                    message: BROADCAST_MESSAGE.SEND_TOKEN,
-                    token: payload.accessToken,
-                    isRemember: isRememberMeDefault,
-                  });
                   // Update account on server
                   updateAccountMutation
                     .mutateAsync({
@@ -106,6 +103,13 @@ export const useGoogleLogin = () => {
                     .then((res) => {
                       // Remove listener
                       setToken(res.token, isRememberMeDefault);
+                      setRefreshToken(res.refreshToken, isRememberMeDefault);
+                      postMessage({
+                        message: BROADCAST_MESSAGE.SEND_TOKEN,
+                        token: payload.accessToken,
+                        refreshToken: res.refreshToken,
+                        isRemember: isRememberMeDefault,
+                      });
                       handleExit(handleAuthentication);
                       resolve(res.message);
                     })

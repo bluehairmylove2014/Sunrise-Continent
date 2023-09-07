@@ -30,7 +30,7 @@ const BannerInput = ({
           name={name}
           control={control}
           rules={{
-            require: true,
+            required: "Không được bỏ trống địa điểm",
           }}
           render={({ field }) => (
             <input {...field} placeholder="Tìm kiếm địa điểm" />
@@ -46,9 +46,8 @@ const BannerInput = ({
   const renderDatetimeDoubleInput = (name, background) => {
     const startDate = watch(name[0]);
     const endDate = watch(name[1]);
-    const startDateMin = new Date().toISOString().substring(0, 16);
+    const startDateMin = new Date().toISOString().substring(0, 10);
     const endDateMin = startDateMin;
-    // const endDateMin = startDate ? (isDateGreaterThan(startDateMin, startDate) ? startDateMin : startDate) : startDateMin;
     return (
       <>
         <button
@@ -62,7 +61,11 @@ const BannerInput = ({
             name={name[0]}
             control={control}
             rules={{
-              require: true,
+              required: "Không được bỏ trống ngày bắt đầu",
+              min: {
+                value: endDateMin,
+                message: "Ngày giờ đến phải lớn hơn ngày giờ hiện tại",
+              },
             }}
             render={({ field }) => (
               <input
@@ -80,7 +83,13 @@ const BannerInput = ({
           />
           <div className="cc-banner-input__multiline-value">
             <p>{formatDate(startDate).dateMonthYear || "Ngày đến"}</p>
-            <small>{formatDate(startDate).days}</small>
+            {startDate ? (
+              <small>
+                {formatDate(startDate).time24} - {formatDate(startDate).days}
+              </small>
+            ) : (
+              <></>
+            )}
           </div>
         </button>
         <button
@@ -94,7 +103,11 @@ const BannerInput = ({
             name={name[1]}
             control={control}
             rules={{
-              require: true,
+              required: "Không được bỏ trống ngày kết thúc",
+              min: {
+                value: endDateMin,
+                message: "Ngày giờ đi phải lớn hơn ngày giờ hiện tại",
+              },
             }}
             render={({ field }) => (
               <>
@@ -114,7 +127,13 @@ const BannerInput = ({
           />
           <div className="cc-banner-input__multiline-value">
             <p>{formatDate(endDate).dateMonthYear || "Ngày đi"}</p>
-            <small>{formatDate(endDate).days}</small>
+            {startDate ? (
+              <small>
+                {formatDate(endDate).time24} - {formatDate(endDate).days}
+              </small>
+            ) : (
+              <></>
+            )}
           </div>
         </button>
       </>
@@ -158,7 +177,7 @@ const BannerInput = ({
           name={input_name}
           control={control}
           rules={{
-            require: true,
+            required: true,
           }}
           render={({ field }) => (
             <>

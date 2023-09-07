@@ -29,3 +29,8 @@ export const useUpdateOrderMutation = () => {
     retry: mutationConfig.RETRY,
   });
 };
+export const useGetUserOrdersMutation = () => {
+  return useMutation(orderService.getOrders, {
+    retry: mutationConfig.RETRY,
+  });
+};

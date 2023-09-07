@@ -2,21 +2,22 @@
 import { axios } from "../../../../../../services/src";
 import React from "react";
 import { authConfig } from "../../../../configs";
-import { useAccessToken } from "../hooks/useAccessToken";
 import { useRefreshToken } from "../hooks/useRefreshToken";
 import { BroadcastProvider } from "./BroadcastProvider";
 import { AuthContextProvider } from "./ContextProvider";
-import { useFacebookLogin, useGoogleLogin } from "../hooks";
+import { useFacebookLogin, useGoogleLogin, useLogout } from "../hooks";
 import { withAuthenticateUrl } from "./withAuthenticateUrl";
+import { useHandleRefreshToken } from "../hooks/useHandleRefreshToken";
 
 const EnhancedContextProvider = withAuthenticateUrl(AuthContextProvider);
 // This is the AuthProvider for the entire app
 export const AuthProvider = ({ children }) => {
   // Get the resetToken and getToken functions from useAccessToken
-  const { getToken } = useAccessToken();
+  const { getRefreshToken } = useHandleRefreshToken();
   const { onRefreshToken } = useRefreshToken();
   const { onFacebookLogin } = useFacebookLogin();
   const { onGoogleLogin } = useGoogleLogin();
+  const { onLogout } = useLogout();
 
   // Use axios interceptor to handle response
   axios.interceptors.response.use(
@@ -29,14 +30,14 @@ export const AuthProvider = ({ children }) => {
       // It means token is expired now! Need to refresh
       if (
         error.response?.status === 401 &&
-        error.response.data?.message === "Invalid credential" &&
+        // error.response.data?.message === "Invalid credential" &&
         authConfig.isNeedRefreshToken
       ) {
         // Get the token
-        const token = getToken();
-        if (token) {
+        const refreshToken = getRefreshToken();
+        if (refreshToken) {
           // If token exists, refresh the token
-          onRefreshToken(token)
+          onRefreshToken(refreshToken)
             .then((res) => {
               // Check if res.token is undefined
               if (!res.token) {
@@ -46,10 +47,15 @@ export const AuthProvider = ({ children }) => {
               // Update the new token for the request
               error.config.headers["Authorization"] = "Bearer " + res.token;
             })
+            .catch((err) => {
+              onLogout();
+            })
             .finally(() => {
               // Resend the request with the new token
               return axios(error.config);
             });
+        } else {
+          onLogout();
         }
       }
       // If any other error, reject the promise

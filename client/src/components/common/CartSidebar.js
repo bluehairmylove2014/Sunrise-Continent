@@ -20,6 +20,8 @@ import { useCartContext } from "../../libs/business-logic/src/lib/cart/process/c
 import { toast } from "react-hot-toast";
 import MultipleOptionPopup from "./Popup/MultipleOptionPopup";
 import OrderDetailPicker from "./OrderDetailPicker";
+import { Link, useLocation } from "react-router-dom";
+import { PAGES } from "../../constants/Link.constants";
 
 const deleteType = {
   ROOM: 1,
@@ -108,13 +110,20 @@ const CartSidebar = ({ isActive, callback }) => {
   });
   const { onClearCart } = useClearCart();
   const { onDeleteItem } = useDeleteFromCart();
+  const location = useLocation();
+
+  useEffect(() => {
+    callback && callback(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
+
   useEffect(() => {
     if (sidebarRef.current.classList.contains("active") && !isActive) {
       sidebarRef.current.classList.remove("active");
-      callback(false);
+      callback && callback(false);
     } else if (!sidebarRef.current.classList.contains("active") && isActive) {
       sidebarRef.current.classList.add("active");
-      callback(true);
+      callback && callback(true);
     }
   }, [isActive, sidebarRef, callback]);
 
@@ -158,7 +167,9 @@ const CartSidebar = ({ isActive, callback }) => {
           </div>
           <div className="hotel__information">
             <div className="information__title">
-              <h6>{d.hotel.name}</h6>
+              <Link to={PAGES.HOTEL_DETAIL + `?id=${d.hotel.id}`}>
+                {d.hotel.name}
+              </Link>
               <p>
                 {combineAddress(
                   d.hotel.address,
@@ -226,10 +237,11 @@ const CartSidebar = ({ isActive, callback }) => {
     if (value) {
       onClearCart()
         .then((message) => toast.success(message))
-        .catch((err) => toast.error(err.message));
-    } else {
-      toggleClass(clearCartPopUpRef.current, "active");
+        .catch((err) =>
+          toast.error(err.response?.data?.message || err.message)
+        );
     }
+    toggleClass(clearCartPopUpRef.current, "active");
   };
 
   const onSuccessSubmit = (data) => {

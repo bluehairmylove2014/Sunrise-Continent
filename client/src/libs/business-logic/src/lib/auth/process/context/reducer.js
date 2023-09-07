@@ -10,6 +10,14 @@ export const authReducer = (state, action) => {
         return {
           token: action.payload,
         };
+      case CONTEXT_ACTION.SET_REFRESH_ACTION:
+        // Returns a new state with the new token when the action is to set the token
+        return {
+          refreshToken: action.payload,
+        };
+      case CONTEXT_ACTION.SET_ALL_ACTION:
+        // Returns a new state with the new token when the action is to set the token
+        return action.payload;
       default:
         // Returns the current state for any other action
         return state;

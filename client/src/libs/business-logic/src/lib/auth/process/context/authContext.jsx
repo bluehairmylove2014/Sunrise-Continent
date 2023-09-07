@@ -3,9 +3,10 @@ import { useContext } from "react";
 
 export const AuthContext = React.createContext({
   state: {
-    token: null
+    token: null,
+    refreshToken: null,
   },
-  dispatch: () => undefined
+  dispatch: () => undefined,
 });
 
 export const useAuthContext = () => {

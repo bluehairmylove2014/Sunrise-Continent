@@ -30,6 +30,7 @@ const OrderDetailPicker = React.forwardRef(
         },
       ];
     }
+
     const navigate = useNavigate();
     const isLoggedIn = useIsLogged();
     const { onCheckRoomAvailable, isLoading: isCheckingRoomAvailable } =
@@ -76,7 +77,11 @@ const OrderDetailPicker = React.forwardRef(
             data.start_date.length === 0 ||
             data.end_date.length === 0
           ) {
-            toast.error("Hãy chọn ngày bắt đầu và ngày kết thúc");
+            toast.error("Hãy chọn ngày đến và ngày đi");
+            return;
+          }
+          if (data.start_date === data.end_date) {
+            toast.error("Ngày đến phải khác với ngày đi");
             return;
           }
           checkRoomsAvailability(rd, data.start_date, data.end_date, data.rooms)
@@ -106,15 +111,13 @@ const OrderDetailPicker = React.forwardRef(
 
                 navigate(PAGES.PRE_CHECKOUT);
                 toast.success("Thành công");
+                toggleClass(ref.current, "active");
               } else {
                 toast.error("Phòng đã hết chỗ vào ngày này!");
-                // Array.isArray(rd)
-                //   ? toast.error("Một số phòng đã hết chỗ vào ngày này!")
-                //   : toast.error("Phòng đã hết chỗ vào ngày này!");
               }
             })
             .catch((error) => {
-              toast.error(error.message);
+              toast.error(error.response.data.message || error.message);
             });
         }
       }
@@ -124,9 +127,11 @@ const OrderDetailPicker = React.forwardRef(
       <form
         className="room__pre-checkout-picker"
         ref={ref}
-        onSubmit={form.handleSubmit((data) =>
-          onPreCheckout(data, roomDetail[0])
+        onSubmit={form.handleSubmit(
+          (data) => onPreCheckout(data, roomDetail[0]),
+          (error) => toast.error(error[Object.keys(error)[0]].message)
         )}
+        noValidate
       >
         {isCheckingRoomAvailable && (
           <div className="pre-checkout-picker__loading">

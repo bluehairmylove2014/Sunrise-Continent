@@ -165,7 +165,9 @@ const HotelDetail = () => {
                 <div className="review__label">
                   {pointToLabel(hotelData.rating)}
                 </div>
-                <div className="review__count">{`1250 Reviews`}</div>
+                <div className="review__count">{`${
+                  Array.isArray(hotelReview) ? hotelReview.length : 0
+                } Reviews`}</div>
               </div>
             </div>
             <div className="overall__booking-price">

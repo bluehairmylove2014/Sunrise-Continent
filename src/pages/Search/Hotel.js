@@ -79,7 +79,7 @@ const Hotel = ({ data, criteria }) => {
         <div className="hotel__rating">
           <div className="rating__infor">
             <p>Tuyệt vời</p>
-            <small>{Math.floor(Math.random() * 50) + 1} Nhận xét</small>
+            <small>Nhận xét thực</small>
           </div>
           <div className="rating__point">{data.rating.toFixed(1)}</div>
         </div>

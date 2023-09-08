@@ -101,8 +101,8 @@ namespace SunriseServerData.Repositories
             builder.Append("EXEC dbo.USP_FindHotelByName ");
             builder.Append($"@Location = N\'{searchHotel.Location}\', ");
             builder.Append($"@RoomType = N\'{searchHotel.RoomType}\', ");
-            builder.Append($"@StartDate = \'{searchHotel.StartDate}\', ");
-            builder.Append($"@EndDate = \'{searchHotel.EndDate}\', ");
+            builder.Append($"@StartDate = \'{searchHotel.StartDate.ToString("yyyy-MM-dd HH:mm:ss")}\', ");
+            builder.Append($"@EndDate = \'{searchHotel.EndDate.ToString("yyyy-MM-dd HH:mm:ss")}\', ");
             builder.Append($"@MinBudget = {searchHotel.MinBudget}, ");
             builder.Append($"@MaxBudget = {searchHotel.MaxBudget}, ");
             builder.Append($"@Rooms = {searchHotel.Rooms}, ");

@@ -1779,8 +1779,8 @@ CREATE OR ALTER PROC USP_FindHotelByName (-- //new check
 	-- Search
 	@Location NVARCHAR(200) = N'',
 	@RoomType NVARCHAR(200) = N'',
-	@StartDate DATE = '01-01-2022',
-	@EndDate DATE = '01-02-2022',
+	@StartDate DATETIME = '2020-01-01 12:00:00',
+	@EndDate DATETIME = '2020-01-01 12:00:00',
 	@MinBudget float = 0,
 	@MaxBudget float = 10000000000.0,
 	@Rooms int = 1,

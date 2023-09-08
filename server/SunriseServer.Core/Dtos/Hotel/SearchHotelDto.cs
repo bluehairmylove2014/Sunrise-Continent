@@ -4,8 +4,8 @@
     {
         public string Location { get; set; }
         public string RoomType { get; set;}
-        public DateTime StartDate { get; set;}
-        public DateTime EndDate { get; set;}
+        public DateTime StartDate { get; set;} = new DateTime(2015, 12, 31);
+        public DateTime EndDate { get; set;} = new DateTime(2015, 12, 31);
         public double MinBudget { get; set;}
         public double MaxBudget { get; set; }
         public int Rooms { get; set;}

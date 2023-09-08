@@ -176,8 +176,8 @@ namespace SunriseServer.Controllers
         public async Task<ActionResult<List<HotelDto>>> GetSearchHotel(
             [FromQuery] string location,
             [FromQuery] string room_type,
-            [FromQuery] DateTime start_date,
-            [FromQuery] DateTime end_date,
+            [FromQuery] string start_date,
+            [FromQuery] string end_date,
             [FromQuery] double min_budget,
             [FromQuery] double max_budget,
             [FromQuery] int rooms,
@@ -194,10 +194,12 @@ namespace SunriseServer.Controllers
         )
         {
             // Thêm filter sort
+            var my_start_date = DateTime.TryParse(start_date, out DateTime checkIn) ? checkIn : new DateTime(2000, 1, 1);
+            var my_end_date = DateTime.TryParse(end_date, out DateTime checkOut) ? checkOut : my_start_date.AddDays(1);
 
             max_budget = max_budget == 0 ? Int32.MaxValue : max_budget;
             var result = await _hotelService.GetSearchHotels(
-                new SearchHotelDto(location, room_type, start_date, end_date, min_budget, max_budget, rooms, adults, children, new FilterHotelDto() {
+                new SearchHotelDto(location, room_type, my_start_date, my_end_date, min_budget, max_budget, rooms, adults, children, new FilterHotelDto() {
                     hotelType = hotelType,
                     bedType = bedType,
                     guestRating = guestRating,

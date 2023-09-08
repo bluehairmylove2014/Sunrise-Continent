@@ -22,10 +22,10 @@ import ReviewPopup from "../../components/common/ReviewPopup";
 import { toast } from "react-hot-toast";
 import { useClearLocalOrder } from "../../libs/business-logic/src/lib/order/process/hooks/useClearLocalOrder";
 
-const calculateTotal = (rooms, voucher, nightCount) => {
+const calculateTotal = (rooms, voucher, nightCount, numberOfRoom) => {
   let total = rooms.reduce((acc, roomData) => {
     if (roomData && roomData.price) {
-      return acc + roomData.price * nightCount;
+      return acc + roomData.price * nightCount * numberOfRoom;
     }
     return acc;
   }, 0);
@@ -76,7 +76,7 @@ const SuccessOrder = () => {
   };
 
   useEffect(() => {
-    setTotal(calculateTotal(roomsData, 0, night));
+    setTotal(calculateTotal(roomsData, 0, night, rooms));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomsData]);
 
@@ -140,7 +140,7 @@ const SuccessOrder = () => {
 
             <h5>
               <i className="fi fi-br-comment-alt"></i>
-              Yêu cầu đặc biệt: <span>hello</span>
+              Yêu cầu đặc biệt: <span>{selectedRoomsObject.notes}</span>
             </h5>
           </section>
           <section className="submit">
@@ -233,7 +233,10 @@ const SuccessOrder = () => {
                     </span>
                   </div>
                   <p className="price primary">
-                    {convertNumberToCurrency("vietnamdong", rd.price * night)}
+                    {convertNumberToCurrency(
+                      "vietnamdong",
+                      rd.price * night * rooms
+                    )}
                   </p>
                 </div>
               ))

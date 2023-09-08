@@ -22,6 +22,7 @@ import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import Pagination from "../../components/common/Pagination";
 import Empty from "../../components/common/Empty";
 import { calculateFromIndex } from "../../utils/helpers/Pagination";
+import { toast } from "react-hot-toast";
 
 const itemsPerPage = 8;
 const budgetKey = "budget";
@@ -271,7 +272,9 @@ const Search = () => {
       </div>
       <form
         className="search__criteria-board"
-        onSubmit={searchBoardForm.handleSubmit(onMoreOptionPreSearch)}
+        onSubmit={searchBoardForm.handleSubmit(onMoreOptionPreSearch, (error) =>
+          toast.error(error[Object.keys(error)[0]].message)
+        )}
       >
         <BannerInput
           name={BANNER_INPUT.LOCATION.INPUT_NAME}
@@ -282,6 +285,7 @@ const Search = () => {
           name={BANNER_INPUT.DATE_TIME_DOUBLE.INPUT_NAME}
           type={BANNER_INPUT.DATE_TIME_DOUBLE.TYPE}
           form={searchBoardForm}
+          isSkipRequiredCheck={true}
         />
         <BannerInput
           name={BANNER_INPUT.PEOPLE_AND_ROOM.INPUT_NAME}

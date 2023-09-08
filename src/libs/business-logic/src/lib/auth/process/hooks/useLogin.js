@@ -20,7 +20,9 @@ export const useLogin = () => {
         .mutateAsync({ email, password })
         .then((response) => {
           // If the response is successful and a token is received, set the token and broadcast it
-          if (response.token) {
+          if (response.role !== "User") {
+            reject(new Error("Vui lòng đăng nhập bằng tài khoản người dùng"));
+          } else if (response.token) {
             setToken(response.token, isRememberMe);
             setRefreshToken(response.refreshToken, isRememberMe);
             // Broadcasting the login message

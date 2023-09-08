@@ -14,7 +14,7 @@ import { formatDate } from "../../utils/helpers/ShortenDatetime";
 import { calcNight } from "../../utils/helpers/Datetime";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
 // import { calculateDiscountedPrice } from "../../utils/helpers/Discount";
-import { stringifySearchParams } from "../../utils/helpers/params";
+// import { stringifySearchParams } from "../../utils/helpers/params";
 import { toast } from "react-hot-toast";
 import { toggleClass } from "../../utils/helpers/ToggleClass";
 import OrderDetailPicker from "../../components/common/OrderDetailPicker";
@@ -29,10 +29,10 @@ import { isValidEmail } from "../../utils/validators/email.validator";
 import { isValidPhoneNumber } from "../../utils/validators/phoneNumber.validator";
 import { useGetUser } from "../../libs/business-logic/src/lib/auth/process/hooks";
 
-const calculateTotal = (rooms, voucher, nightCount) => {
+const calculateTotal = (rooms, voucher, nightCount, numberOfRoom) => {
   let total = rooms.reduce((acc, roomData) => {
     if (roomData && roomData.price) {
-      return acc + roomData.price * nightCount;
+      return acc + roomData.price * nightCount * numberOfRoom;
     }
     return acc;
   }, 0);
@@ -107,7 +107,7 @@ const PreCheckout = () => {
   );
 
   const [total, setTotal] = useState(
-    calculateTotal(roomsData, sunriseVoucher, night)
+    calculateTotal(roomsData, sunriseVoucher, night, rooms)
   );
 
   useEffect(() => {
@@ -138,13 +138,15 @@ const PreCheckout = () => {
     setEndDateFormatted(formatDate(end_date));
 
     const nightCount = calcNight(start_date, end_date);
-    const total = calculateTotal(roomsData, sunriseVoucher, nightCount);
+    const total = calculateTotal(roomsData, sunriseVoucher, nightCount, rooms);
     setNight(nightCount);
     setTotal(total);
   }, [oldOrderDetail]);
 
   useEffect(() => {
-    setTotal(calculateTotal(roomsData, sunriseVoucher, night));
+    setTotal(
+      calculateTotal(roomsData, sunriseVoucher, night, bookingFormValue.rooms)
+    );
   }, [roomsData, sunriseVoucher]);
 
   const today = new Date();
@@ -155,17 +157,50 @@ const PreCheckout = () => {
   ).padStart(2, "0")}-${String(minDate.getDate()).padStart(2, "0")}`;
 
   const handleEdit = (data) => {
-    setBookingFormValue(data);
-    window.history.pushState(
-      null,
-      null,
-      PAGES.PRE_CHECKOUT +
-        stringifySearchParams({
-          hotelId,
-          roomID: roomIds[0],
-          ...data,
-        })
+    // window.history.pushState(
+    //   null,
+    //   null,
+    //   PAGES.PRE_CHECKOUT +
+    //     stringifySearchParams({
+    //       hotelId,
+    //       roomID: roomIds[0],
+    //       ...data,
+    //     })
+    // );
+    setStartDateFormatted(formatDate(data.start_date));
+    setEndDateFormatted(formatDate(data.end_date));
+
+    const nightCount = calcNight(data.start_date, data.end_date);
+    const total = calculateTotal(
+      roomsData,
+      sunriseVoucher,
+      nightCount,
+      data.rooms
     );
+    setNight(nightCount);
+    setTotal(total);
+
+    onInitOrder({
+      fullName: null,
+      nation: null,
+      dateOfBirth: null,
+      email: null,
+      phoneNumber: null,
+      specialNeeds: null,
+      notes: null,
+      voucherId: null,
+      total: null,
+      orders: roomsData.map((rdata) => ({
+        hotelId: hotelId,
+        roomTypeId: rdata.id,
+        checkIn: data.start_date,
+        checkOut: data.end_date,
+        numberOfRoom: data.rooms,
+        adults: data.adults,
+        childrens: data.childrens,
+      })),
+    });
+    setBookingFormValue(data);
   };
   const getSelectedOptions = (formData) => {
     const selectedOptions = [];
@@ -220,6 +255,8 @@ const PreCheckout = () => {
         checkIn: bookingFormValue.start_date,
         checkOut: bookingFormValue.end_date,
         numberOfRoom: bookingFormValue.rooms,
+        adults: bookingFormValue.adults,
+        childrens: bookingFormValue.childrens,
       })),
     });
     navigate(PAGES.CHECKOUT);
@@ -494,7 +531,9 @@ const PreCheckout = () => {
               </div>
 
               <p>
-                {startDateFormatted.days +
+                {startDateFormatted.time24 +
+                  ", " +
+                  startDateFormatted.days +
                   ", " +
                   startDateFormatted.dateMonthYear}
               </p>
@@ -506,7 +545,11 @@ const PreCheckout = () => {
               </div>
 
               <p>
-                {endDateFormatted.days + ", " + endDateFormatted.dateMonthYear}
+                {endDateFormatted.time24 +
+                  ", " +
+                  endDateFormatted.days +
+                  ", " +
+                  endDateFormatted.dateMonthYear}
               </p>
             </div>
             <div className="detail__row">
@@ -555,7 +598,10 @@ const PreCheckout = () => {
                   </div>
                   <p className="price primary">
                     {roomsData
-                      ? convertNumberToCurrency("vietnamdong", rd.price * night)
+                      ? convertNumberToCurrency(
+                          "vietnamdong",
+                          rd.price * night * bookingFormValue.rooms
+                        )
                       : "Đang tính toán"}
                   </p>
                 </div>

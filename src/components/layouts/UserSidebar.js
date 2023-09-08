@@ -55,12 +55,12 @@ const UserSidebar = ({ isActive, userData, callback }) => {
         </button>
       </div>
       <ul>
-        {/* <li>
-          <Link to={PAGES.HOME}>
+        <li>
+          <Link to={PAGES.PROFILE}>
             <i className="fi fi-rr-user"></i>
             <span>Cá Nhân</span>
           </Link>
-        </li> */}
+        </li>
         <li>
           <Link to={PAGES.ORDERS}>
             <i className="fi fi-rs-ballot"></i>

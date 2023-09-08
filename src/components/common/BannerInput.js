@@ -17,6 +17,7 @@ const BannerInput = ({
   form,
   min,
   background,
+  isSkipRequiredCheck,
 }) => {
   const { control, watch, setValue } = form;
   const perRef = useRef(null);
@@ -46,7 +47,7 @@ const BannerInput = ({
     const input = ev.target.querySelector("input");
     input && input.showPicker();
   };
-  const renderDatetimeDoubleInput = (name, background) => {
+  const renderDatetimeDoubleInput = (name, background, isSkipRequiredCheck) => {
     const startDate = watch(name[0]);
     const endDate = watch(name[1]);
     const startDateMin = getCurrentDateTime();
@@ -64,7 +65,9 @@ const BannerInput = ({
             name={name[0]}
             control={control}
             rules={{
-              required: "Không được bỏ trống ngày bắt đầu",
+              required: isSkipRequiredCheck
+                ? false
+                : "Không được bỏ trống ngày bắt đầu",
               min: {
                 value: endDateMin,
                 message: "Ngày giờ đến phải lớn hơn ngày giờ hiện tại",
@@ -106,7 +109,9 @@ const BannerInput = ({
             name={name[1]}
             control={control}
             rules={{
-              required: "Không được bỏ trống ngày kết thúc",
+              required: isSkipRequiredCheck
+                ? false
+                : "Không được bỏ trống ngày kết thúc",
               min: {
                 value: endDateMin,
                 message: "Ngày giờ đi phải lớn hơn ngày giờ hiện tại",
@@ -225,7 +230,7 @@ const BannerInput = ({
       {type === BANNER_INPUT.LOCATION.TYPE &&
         renderLocationInput(name, background)}
       {type === BANNER_INPUT.DATE_TIME_DOUBLE.TYPE &&
-        renderDatetimeDoubleInput(name, background)}
+        renderDatetimeDoubleInput(name, background, isSkipRequiredCheck)}
       {type === BANNER_INPUT.PEOPLE_AND_ROOM.TYPE &&
         renderPeopleRoomInput(name, title, description, min, background)}
     </div>

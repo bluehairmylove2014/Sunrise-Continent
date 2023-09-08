@@ -26,6 +26,7 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
     adults: dateTimeParams["adults"] ?? 1,
     childrens: dateTimeParams["childrens"] ?? 0,
   };
+  const [selectedRoom, setSelectedRoom] = useState([]);
   const pickerForm = useForm({
     defaultValues: pickerFormDefaultValue,
   });
@@ -213,6 +214,7 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
                 <div className="btn__wrapper">
                   <button
                     onClick={() => {
+                      setSelectedRoom(rd);
                       toggleClass(pickerRef.current);
                     }}
                     className={rd.vacancy ? "booking" : "change"}
@@ -234,17 +236,21 @@ const Rooms = ({ hotelData, roomsData, openGallery }) => {
               </div>
             </div>
           </div>
-          <OrderDetailPicker
-            ref={pickerRef}
-            form={pickerForm}
-            defaultValues={pickerFormDefaultValue}
-            roomDetail={rd}
-          />
         </div>
       );
     });
   }
-  return <>{room}</>;
+  return (
+    <>
+      {room}
+      <OrderDetailPicker
+        ref={pickerRef}
+        form={pickerForm}
+        defaultValues={pickerFormDefaultValue}
+        roomDetail={selectedRoom}
+      />
+    </>
+  );
 };
 
 export default Rooms;

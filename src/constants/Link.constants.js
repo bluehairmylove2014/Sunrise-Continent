@@ -1,6 +1,7 @@
 export const PAGES = {
   HOME: "/",
   SEARCH: "/search",
+  PROFILE: "/profile",
   HOTEL_DETAIL: "/hotel",
   LOGIN: "/login",
   REGISTER: "/register",

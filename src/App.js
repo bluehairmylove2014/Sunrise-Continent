@@ -25,6 +25,7 @@ const VoucherShop = lazy(() => import("./pages/VoucherShop/VoucherShop"));
 const Checkout = lazy(() => import("./pages/Checkout/Checkout"));
 const SuccessOrder = lazy(() => import("./pages/SuccessOrder/SuccessOrder"));
 const Orders = lazy(() => import("./pages/Orders/Orders"));
+const Profile = lazy(() => import("./pages/Profile/Profile"));
 const AuthenticationPage = lazy(() =>
   import("./pages/Authentication/Authentication")
 );
@@ -124,6 +125,14 @@ function App() {
                 element={
                   <UserPageLayout>
                     <Orders />
+                  </UserPageLayout>
+                }
+              />
+              <Route
+                path={PAGES.PROFILE}
+                element={
+                  <UserPageLayout>
+                    <Profile />
                   </UserPageLayout>
                 }
               />

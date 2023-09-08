@@ -93,11 +93,11 @@ const SuccessOrder = () => {
             <p>
               Quốc tịch:{" "}
               <span>
-                {
-                  nationality.find(
-                    (n) => n.value === selectedRoomsObject.nation
-                  ).label
-                }
+                {nationality.find((n) => n.value === selectedRoomsObject.nation)
+                  ? nationality.find(
+                      (n) => n.value === selectedRoomsObject.nation
+                    ).label
+                  : ""}
               </span>
             </p>
             <p>

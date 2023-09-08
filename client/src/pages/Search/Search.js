@@ -21,13 +21,27 @@ import { useSearch } from "../../libs/business-logic/src/lib/hotel";
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import Pagination from "../../components/common/Pagination";
 import Empty from "../../components/common/Empty";
-import {
-  calculateMaxPage,
-  slicePaginationData,
-} from "../../utils/helpers/Pagination";
+import { calculateFromIndex } from "../../utils/helpers/Pagination";
 
 const itemsPerPage = 8;
 const budgetKey = "budget";
+const sortCriteria = {
+  RATING: {
+    sortingCol: "Rating",
+    sortType: "ASC",
+    name: "Phổ biến nhất",
+  },
+  ASC_PRICE: {
+    sortingCol: "Price",
+    sortType: "ASC",
+    name: "Giá tăng dần",
+  },
+  DESC_PRICE: {
+    sortingCol: "Price",
+    sortType: "DESC",
+    name: "Giá giảm dần",
+  },
+};
 function createCheckboxDefaultValue(inputObject) {
   const {
     location,
@@ -47,6 +61,8 @@ function createCheckboxDefaultValue(inputObject) {
   return checkboxNames;
 }
 const Search = () => {
+  const [totalHotels, setTotalHotels] = useState(0);
+  const [selectedSort, setSelectedSort] = useState(null);
   const { onSearch, isLoading: isSearching } = useSearch();
   const sortDropdownRef = useRef(null);
   const [pagination, setPagination] = useState({
@@ -89,34 +105,42 @@ const Search = () => {
     if (searchBoardForm.getValues().location !== newCriteria.location) {
       searchBoardForm.setValue("location", newCriteria.location);
     }
-    handleSearch(criteria);
+    handleSearch(newCriteria);
   }, [location]);
 
   const scrollToTop = () => {
-    const element = document.querySelector(`.search__results`);
+    const element = document.querySelector(`.results__title`);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  const handleSearch = (criteria) => {
-    console.log("SEARCH");
+  const handleSearch = (criteria, isChangePage) => {
     if (typeof criteria.budget === "string") return;
     if (Object.keys(criteria).length) {
-      onSearch({ ...criteria, page_number: pagination.currentPage })
+      scrollToTop();
+      onSearch({
+        ...criteria,
+        page_number: isChangePage ? pagination.currentPage : 1,
+      })
         .then((data) => {
-          setHotels(data);
-          setPagination({
-            ...pagination,
-            maxPage: Array.isArray(data)
-              ? calculateMaxPage(data, itemsPerPage)
-              : 1,
-          });
+          if (data) {
+            setTotalHotels(data.totalCount);
+            setHotels(data.hotelList);
+            setPagination({
+              currentPage: data.currentPage,
+              maxPage: data.totalPages,
+            });
+          }
         })
         .catch((err) => {
           console.error(err);
         });
     }
+  };
+
+  const handleChangePage = () => {
+    handleSearch(criteria, true);
   };
 
   const budgetToObject = (arrayBudget) => {
@@ -180,12 +204,23 @@ const Search = () => {
       } else {
         if (Array.isArray(newCriteria[key])) {
           newCriteria[key] = newCriteria[key].filter((v) => v !== value);
+          if (newCriteria[key].length === 0) {
+            delete newCriteria[key];
+          }
         } else {
           delete newCriteria[key];
         }
       }
     }
 
+    const keysToExclude = ["sortingCol", "sortType"];
+
+    // Sử dụng Object.entries() để lọc và tạo đối tượng mới
+    newCriteria = Object.fromEntries(
+      Object.entries(newCriteria).filter(
+        ([key]) => !keysToExclude.includes(key)
+      )
+    );
     let paramsCriteria = { ...newCriteria };
     if (newBudget) {
       newCriteria = {
@@ -213,12 +248,7 @@ const Search = () => {
           <Empty label={"Không có khách sạn nào cả"} />
         </div>
       );
-    return slicePaginationData(
-      hotelList,
-      pagination.currentPage,
-      pagination.maxPage,
-      itemsPerPage
-    ).map((hotel) => {
+    return hotelList.map((hotel) => {
       return <Hotel data={hotel} key={hotel.id} criteria={criteria} />;
     });
   };
@@ -227,11 +257,17 @@ const Search = () => {
     <main className="search" key={location}>
       <div className="search__banner">
         <img src={TravelImg} alt="travel" />
-        <h5>Bạn muốn du lịch tới Vương Quốc Anh?</h5>
+        <h5>Đây là bản thử nhiệm!</h5>
         <small>
-          Hãy đọc tất cả các yêu cầu thủ tục nhập cảnh trước khi đặt chỗ nhé.
+          Phục vụ mục đích học tập, không đặt được phòng trong thực tế.
         </small>
-        <button>Tìm hiểu thêm</button>
+        <button
+          onClick={() =>
+            window.open("https://www.facebook.com/MinMinPD2211/", "_blank")
+          }
+        >
+          Tìm hiểu thêm
+        </button>
       </div>
       <form
         className="search__criteria-board"
@@ -282,8 +318,10 @@ const Search = () => {
                   </span>
                 </h3>
                 <small>
-                  Hiển thị 0 - 14 trong {Number(4102014).toLocaleString("en")}{" "}
-                  kết quả
+                  Hiển thị{" "}
+                  {calculateFromIndex(pagination.currentPage, itemsPerPage)} -{" "}
+                  {Math.min(pagination.currentPage * itemsPerPage, totalHotels)}{" "}
+                  trong {totalHotels} kết quả
                 </small>
               </div>
               <hr />
@@ -298,13 +336,31 @@ const Search = () => {
                       toggleClass(sortDropdownRef.current, "active")
                     }
                   >
-                    <span>Sắp xếp theo</span>
+                    {selectedSort ? (
+                      <span>{selectedSort}</span>
+                    ) : (
+                      <span>Sắp xếp theo</span>
+                    )}
                     <i className="fi fi-ts-angle-small-down"></i>
                   </button>
                   <div className="results-sort__dropdown" ref={sortDropdownRef}>
-                    <button>Phổ biến nhất</button>
-                    <button>Giá tăng dần</button>
-                    <button>Giá giảm dần</button>
+                    {Object.keys(sortCriteria).map((sck) => (
+                      <button
+                        key={sck}
+                        onClick={() => {
+                          setSelectedSort(sortCriteria[sck].name);
+                          const newCriteria = {
+                            ...criteria,
+                            sortingCol: sortCriteria[sck].sortingCol,
+                            sortType: sortCriteria[sck].sortType,
+                          };
+                          setCriteria(newCriteria);
+                          handleSearch(newCriteria);
+                        }}
+                      >
+                        {sortCriteria[sck].name}
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -319,7 +375,7 @@ const Search = () => {
                     setState: setPagination,
                   }}
                   model={PAGINATION_MODEL.SIMPLE}
-                  callback={scrollToTop}
+                  callback={handleChangePage}
                 />
               </div>
             </div>

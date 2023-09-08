@@ -1,6 +1,7 @@
 export const PAGES = {
   HOME: "/",
   SEARCH: "/search",
+  PROFILE: "/profile",
   HOTEL_DETAIL: "/hotel",
   LOGIN: "/login",
   REGISTER: "/register",
@@ -10,6 +11,8 @@ export const PAGES = {
   COUNTRY: "/country",
   VOUCHER_SHOP: "/voucher-shop",
   CHECKOUT: "/checkout",
+  SUCCESS_ORDER: "/success-order",
+  ORDERS: "/orders",
   ADMIN: "http://www.admin.sunrise-continent.online",
   PARTNER: "http://www.partner.sunrise-continent.online",
 };

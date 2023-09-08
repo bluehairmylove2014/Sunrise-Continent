@@ -15,8 +15,8 @@ import FireIcon from "../../assets/images/icons/fire.svg";
 import CityGraphic from "../../assets/images/bgs/360_F_63940372_ghZQzzZEwektiDoOroft0eNNZlC66k5c.png";
 
 // img
-import VietnamField from "../../assets/images/bgs/Mountain.png";
-import { useNavigate } from "react-router-dom";
+// import VietnamField from "../../assets/images/bgs/Mountain.png";
+import { useLocation, useNavigate } from "react-router-dom";
 import { stringifySearchParams } from "../../utils/helpers/params";
 import { useGetHotHotelQuery } from "../../libs/business-logic/src/lib/hotel/fetching/query";
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
@@ -30,6 +30,14 @@ import {
 import Pagination from "../../components/common/Pagination";
 import { PAGINATION_MODEL } from "../../constants/Variables.constants";
 import { LOCATION_TYPES } from "../../constants/filter.constants";
+import {
+  shortenDateTime,
+  revertShortenedDateTime,
+} from "../../utils/helpers/ShortenDatetime";
+import {
+  getCurrentDateTime,
+  isCheckInValid,
+} from "../../utils/helpers/Datetime";
 
 const geoUrl =
   "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
@@ -76,6 +84,7 @@ const Home = () => {
     currentPage: defaultReviewStartPage,
     maxPage: calculateMaxPage(hotHotelData, maximumHotHotelPerPage),
   });
+  const location = useLocation();
 
   useEffect(() => {
     setHotHotelPagination({
@@ -84,11 +93,20 @@ const Home = () => {
     });
   }, [hotHotelData]);
 
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      navigate("/");
+    }
+  }, [location]);
+
   // Methods
   const updateSearchInputVal = (key, value) => {
+    if (key.includes("date")) {
+      value = shortenDateTime(value);
+    }
     setSearchInputVal((prevState) => ({
       ...prevState,
-      [key]: value,
+      [key]: key.includes("date") ? value : value,
     }));
   };
   const extractMinAndMax = (rangeString) => {
@@ -122,16 +140,40 @@ const Home = () => {
     defaultSearchInputVal.hotelType !== roomType &&
       (params = { ...params, hotelType: getLocationKeyFromLabel(roomType) });
     defaultSearchInputVal.start_date !== start_date &&
-      (params = { ...params, start_date });
+      (params = { ...params, start_date: revertShortenedDateTime(start_date) });
     defaultSearchInputVal.end_date !== end_date &&
-      (params = { ...params, end_date });
+      (params = { ...params, end_date: revertShortenedDateTime(end_date) });
     defaultSearchInputVal.budget !== budget &&
       (params = {
         ...params,
         budget: JSON.stringify(extractMinAndMax(searchInputVal.budget)),
       });
-    if (!Object.keys(params).includes("location")) {
+    const paramsKeyList = Object.keys(params);
+    const currentDateTime = getCurrentDateTime();
+
+    if (!paramsKeyList.includes("location")) {
       toast.error("Ít nhất hãy chọn vị trí mong muốn nhé!");
+    } else if (
+      !paramsKeyList.includes("start_date") &&
+      paramsKeyList.includes("end_date")
+    ) {
+      toast.error("Chọn ngày đi mà không chọn ngày đến à?");
+    } else if (
+      paramsKeyList.includes("start_date") &&
+      !isCheckInValid(currentDateTime, params.start_date, 4)
+    ) {
+      toast.error("Ngày đến phải cách 4 tiếng từ thời điểm hiện tại");
+    } else if (
+      paramsKeyList.includes("end_date") &&
+      !isCheckInValid(currentDateTime, params.end_date, 4)
+    ) {
+      toast.error("Ngày đi phải cách 4 tiếng từ thời điểm hiện tại");
+    } else if (
+      paramsKeyList.includes("start_date") &&
+      paramsKeyList.includes("end_date") &&
+      !isCheckInValid(params.start_date, params.end_date, 1)
+    ) {
+      toast.error("Ngày đến phải trước ngày đi tối thiểu 1 tiếng!");
     } else {
       navigate(`/search${stringifySearchParams(params)}`);
     }
@@ -182,18 +224,20 @@ const Home = () => {
           />
           <h3>ĐỊA ĐIỂM MONG MUỐN</h3>
         </div>
+        <p>Hãy chọn ít nhất một địa điểm muốn đến nhé!</p>
         {/* Input field */}
         <form
           className="home-destination__form"
           onSubmit={(e) => handleSearch(e, searchInputVal)}
+          noValidate
         >
           {/* Use component to render an input */}
           <div className="home-des-form__row">
             <ModernInput
               options={countries}
               defaultVal={searchInputVal.location}
-              search={true}
-              valMultipleLevel={true}
+              search={false}
+              valMultipleLevel={false}
               inputType={"text"}
               callback={updateSearchInputVal}
               input_name={"location"}
@@ -384,10 +428,10 @@ const Home = () => {
         )}
       </section>
 
-      <section className="home__why-choosing-us">
-        {/* why-choosing-us header background */}
-        <img src={VietnamField} alt="Vietnam field" />
-      </section>
+      {/* <section className="home__why-choosing-us"> */}
+      {/* why-choosing-us header background */}
+      {/* <img src={VietnamField} alt="Vietnam field" /> */}
+      {/* </section> */}
     </main>
   );
 };

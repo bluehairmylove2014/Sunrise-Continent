@@ -1,0 +1,57 @@
+@import '../../../styles/partial/mixin';
+
+.navigation-bar {
+    width: 200px;
+    height: 100vh;
+    background-color: var(--tuna);
+    border-right: 1px solid var(--heavy-white-smoke);
+    $padding-value: 5px;
+
+    .navigation-bar__logo {
+        padding: 30px;
+        width: calc(100% - 60px);
+        height: auto;
+    }
+
+    ul {
+        // direction - justify content - align items - flex wrap
+        @include dflex(column, flex-start, center, nowrap);
+        gap: 15px;
+        width: calc(100% - $padding-value * 2);
+        height: fit-content;
+        margin: 0;
+        margin-top: 0.5rem;
+
+        li {
+            width: 90%;
+            height: 40px;
+            overflow: hidden;
+
+            button {
+                width: 100%;
+                height: 100%;
+                // border - border radius - background color - color - padding - font size
+                @include normal-btn(none, 6px, transparent, white, 0 15px, 0.8rem);
+                // direction - justify content - align items - flex wrap
+                @include dflex(row, flex-start, center, nowrap);
+                gap: 15px;
+
+                i {
+                    font-size: 0.7rem;
+                }
+
+                span {
+                    font-size: 0.7rem;
+                    font-weight: 600;
+                }
+            }
+
+            &.active {
+                button {
+                    background-color: var(--desert-storm);
+                    color: black;
+                }
+            }
+        }
+    }
+}

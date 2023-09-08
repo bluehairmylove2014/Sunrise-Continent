@@ -112,7 +112,8 @@ namespace SunriseServerData.Repositories
                 builder.Append($"@HotelType = \'{searchHotel.FilterHotelDto.hotelType}\', ");
             if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.bedType))
                 builder.Append($"@BedType = \'{searchHotel.FilterHotelDto.bedType}\', ");
-            builder.Append($"@GuestRating = {searchHotel.FilterHotelDto.guestRating}, ");
+            if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.guestRating))
+                builder.Append($"@GuestRating = \'{searchHotel.FilterHotelDto.guestRating}\', ");
             if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.facilities))
                 builder.Append($"@Facilities = \'{searchHotel.FilterHotelDto.facilities}\', ");
             if (!string.IsNullOrEmpty(searchHotel.FilterHotelDto.service))

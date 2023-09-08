@@ -88,8 +88,15 @@
                 .information__title {
                     height: 45px;
 
-                    h6 {
+                    a {
                         @include limit-line(1);
+                        color: black;
+                        font-weight: 600;
+                        font-size: 0.85rem;
+
+                        &:hover {
+                            color: var(--butterfly-bush)
+                        }
                     }
 
                     p {

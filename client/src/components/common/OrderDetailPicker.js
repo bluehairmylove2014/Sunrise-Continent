@@ -11,6 +11,7 @@ import { setRedirectUrl } from "../../utils/helpers/RedirectUrlSaver";
 import { PAGES } from "../../constants/Link.constants";
 import { toast } from "react-hot-toast";
 import { useInitOrder } from "../../libs/business-logic/src/lib/order/process/hooks";
+import { isCheckInValid } from "../../utils/helpers/Datetime";
 
 const OrderDetailPicker = React.forwardRef(
   ({ form, defaultValues, roomDetail, edit, editCallback }, ref) => {
@@ -30,6 +31,7 @@ const OrderDetailPicker = React.forwardRef(
         },
       ];
     }
+
     const navigate = useNavigate();
     const isLoggedIn = useIsLogged();
     const { onCheckRoomAvailable, isLoading: isCheckingRoomAvailable } =
@@ -76,7 +78,11 @@ const OrderDetailPicker = React.forwardRef(
             data.start_date.length === 0 ||
             data.end_date.length === 0
           ) {
-            toast.error("Hãy chọn ngày bắt đầu và ngày kết thúc");
+            toast.error("Hãy chọn ngày đến và ngày đi");
+            return;
+          }
+          if (!isCheckInValid(data.start_date, data.end_date, 1)) {
+            toast.error("Ngày đến phải trước ngày đi tối thiểu 1 tiếng");
             return;
           }
           checkRoomsAvailability(rd, data.start_date, data.end_date, data.rooms)
@@ -106,15 +112,13 @@ const OrderDetailPicker = React.forwardRef(
 
                 navigate(PAGES.PRE_CHECKOUT);
                 toast.success("Thành công");
+                toggleClass(ref.current, "active");
               } else {
                 toast.error("Phòng đã hết chỗ vào ngày này!");
-                // Array.isArray(rd)
-                //   ? toast.error("Một số phòng đã hết chỗ vào ngày này!")
-                //   : toast.error("Phòng đã hết chỗ vào ngày này!");
               }
             })
             .catch((error) => {
-              toast.error(error.message);
+              toast.error(error.response.data.message || error.message);
             });
         }
       }
@@ -124,9 +128,11 @@ const OrderDetailPicker = React.forwardRef(
       <form
         className="room__pre-checkout-picker"
         ref={ref}
-        onSubmit={form.handleSubmit((data) =>
-          onPreCheckout(data, roomDetail[0])
+        onSubmit={form.handleSubmit(
+          (data) => onPreCheckout(data, roomDetail[0]),
+          (error) => toast.error(error[Object.keys(error)[0]].message)
         )}
+        noValidate
       >
         {isCheckingRoomAvailable && (
           <div className="pre-checkout-picker__loading">

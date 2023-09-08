@@ -55,7 +55,7 @@
 
     .main__wrapper {
         // columns - row - gap
-        @include dgrid(30% 1fr, auto, 0);
+        @include dgrid(22% 1fr, auto, 0);
         position: relative;
 
         .search__loader {
@@ -71,7 +71,7 @@
         }
 
         .filterboard {
-            margin-left: 3rem;
+            // margin-left: 3rem;
             border-radius: 10px;
             grid-column: 1;
             // direction - justify content - align items - flex wrap

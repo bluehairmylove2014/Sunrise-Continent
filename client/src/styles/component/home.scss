@@ -94,6 +94,7 @@
         margin: 3rem auto;
 
         .home-destination__title {
+            margin-bottom: 0.6rem;
             // direction - justify content - align items - flex wrap
             @include dflex(row, flex-start, center, nowrap);
 

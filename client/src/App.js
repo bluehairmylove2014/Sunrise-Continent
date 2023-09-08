@@ -23,6 +23,9 @@ const PreCheckout = lazy(() => import("./pages/PreCheckout/PreCheckout"));
 const CountryPage = lazy(() => import("./pages/Country/Country"));
 const VoucherShop = lazy(() => import("./pages/VoucherShop/VoucherShop"));
 const Checkout = lazy(() => import("./pages/Checkout/Checkout"));
+const SuccessOrder = lazy(() => import("./pages/SuccessOrder/SuccessOrder"));
+const Orders = lazy(() => import("./pages/Orders/Orders"));
+const Profile = lazy(() => import("./pages/Profile/Profile"));
 const AuthenticationPage = lazy(() =>
   import("./pages/Authentication/Authentication")
 );
@@ -110,6 +113,30 @@ function App() {
                 }
               />
               <Route
+                path={PAGES.SUCCESS_ORDER}
+                element={
+                  <UserPageLayout>
+                    <SuccessOrder />
+                  </UserPageLayout>
+                }
+              />
+              <Route
+                path={PAGES.ORDERS}
+                element={
+                  <UserPageLayout>
+                    <Orders />
+                  </UserPageLayout>
+                }
+              />
+              <Route
+                path={PAGES.PROFILE}
+                element={
+                  <UserPageLayout>
+                    <Profile />
+                  </UserPageLayout>
+                }
+              />
+              <Route
                 exact
                 path={PAGES.LOGIN}
                 element={<AuthenticationPage />}
@@ -118,6 +145,14 @@ function App() {
                 exact
                 path={PAGES.REGISTER}
                 element={<AuthenticationPage />}
+              />
+              <Route
+                path="*"
+                element={
+                  <UserPageLayout>
+                    <HomePage />
+                  </UserPageLayout>
+                }
               />
             </Routes>
           )}

@@ -1,0 +1,26 @@
+@import '../../../styles/partial/mixin';
+
+.normal-page-layout {
+    // direction - justify content - align items - flex wrap
+    @include dflex(row, flex-start, flex-start, nowrap);
+    width: 100vw;
+    overflow: hidden;
+
+    .navigation-bar {
+        flex-shrink: 1;
+    }
+
+    .main-layout {
+        flex-grow: 1;
+        min-height: 100vh;
+        height: 10vh;
+        width: calc(100% - 180px);
+
+        .scrollable-content {
+            height: 100%;
+            overflow-y: auto;
+            width: 100%;
+            /* Cho phép cuộn khi nội dung vượt quá kích thước */
+        }
+    }
+}

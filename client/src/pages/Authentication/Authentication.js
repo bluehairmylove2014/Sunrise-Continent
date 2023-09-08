@@ -1,38 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import "../../styles/component/authen.scss";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
-// Loader
-import PageLoader from "../../components/common/Loader/PageLoader";
-
-// Notification trigger
 import toast from "react-hot-toast";
-
-// Constant
 import { PAGES } from "../../constants/Link.constants";
 import { REGEX } from "../../constants/Regex";
-
-// Img
 import logo from "../../assets/images/logos/sc-non-white.png";
-import mountain_night from "../../assets/images/bgs/mountain-night.jpg";
-import mountain_day from "../../assets/images/bgs/mountain-day.jpg";
-
-// Form
 import { Controller, useForm } from "react-hook-form";
 import {
-  // useFacebookLogin,
   useGoogleLogin,
+  useIsLogged,
   useLogin,
   useRegister,
 } from "../../libs/business-logic/src/lib/auth";
 import googleIcon from "../../assets/images/icons/google.png";
-// import facebookIcon from "../../assets/images/icons/facebook.png";
 import {
   deleteRedirectUrl,
   getRedirectUrl,
 } from "../../utils/helpers/RedirectUrlSaver";
 
 const Authentication = () => {
+  const isLoginProcess = useRef(false);
   const loginForm = useForm({
     defaultValues: {
       email: "",
@@ -53,45 +40,40 @@ const Authentication = () => {
   const location = useLocation();
 
   const [page, setPage] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
 
   const registerFormRef = useRef(null);
   const authenRef = useRef(null);
 
   const { onLogin, isLoading: isLoginLoading } = useLogin();
+  // eslint-disable-next-line no-unused-vars
   const { onGoogleLogin, isLoading: isGoogleLoginLoading } = useGoogleLogin();
-  // const { onFacebookLogin, isLoading: isFBLoginLoading } = useFacebookLogin();
   const { onRegister, isLoading: isRegisterLoading } = useRegister();
+  const isLoggin = useIsLogged();
 
   // Hook
   useEffect(() => {
     setPage(location.pathname);
-
-    const imageSources = [mountain_night, mountain_day];
-
-    // Preloading background image
-    Promise.all(imageSources.map((src) => preloadImage(src)))
-      .then((images) => {
-        // Update background-image of .authen
-        changeBackground(location.pathname);
-      })
-      .catch((error) => {
-        toast.error("Cannot load background image");
-      })
-      .finally(() => {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 500);
-      });
   }, [location]);
+
+  useEffect(() => {
+    if (isLoggin && !isLoginProcess.current) {
+      navigate(PAGES.HOME);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggin]);
 
   // Methods
   const handleNavigate = () => {
     const oldRedirectUrl = getRedirectUrl();
     if (oldRedirectUrl) {
-      deleteRedirectUrl();
       navigate(oldRedirectUrl);
-    } else navigate(PAGES.HOME);
+      deleteRedirectUrl();
+    } else {
+      navigate(PAGES.HOME);
+    }
+    setTimeout(() => {
+      isLoginProcess.current = false;
+    }, 2000);
   };
 
   const handleFocus = (target) => {
@@ -109,26 +91,18 @@ const Authentication = () => {
     }
   };
   const handleGoogleLogin = () => {
+    isLoginProcess.current = true;
     onGoogleLogin()
       .then((message) => {
         toast.success(message);
         handleNavigate();
       })
       .catch((err) => {
-        toast.error(err.message);
+        toast.error(err.response?.data?.message || err.message);
       });
   };
-  // const handleFacebookLogin = () => {
-  //   onFacebookLogin()
-  //     .then((message) => {
-  //       toast.success(message);
-  //       handleNavigate();
-  //     })
-  //     .catch((err) => {
-  //       toast.error(err.message);
-  //     });
-  // };
   const handleLogin = ({ email, password, isRememberMe }) => {
+    isLoginProcess.current = true;
     onLogin({
       isRememberMe,
       email,
@@ -139,7 +113,7 @@ const Authentication = () => {
         handleNavigate();
       })
       .catch((err) => {
-        toast.error(err.message);
+        toast.error(err.response?.data?.message || err.message);
       });
   };
   const handleLoginError = (errors) => {
@@ -152,13 +126,14 @@ const Authentication = () => {
     }
   };
   const handleRegister = ({ email, fullName, password }) => {
+    isLoginProcess.current = true;
     onRegister({ email, fullName, password })
       .then((message) => {
         toast.success(message);
         handleNavigate();
       })
       .catch((err) => {
-        toast.error(err.message);
+        toast.error(err.response?.data?.message || err.message);
       });
   };
   const handleRegisterError = (errors) => {
@@ -172,41 +147,19 @@ const Authentication = () => {
       }
     }
   };
-
-  const changeBackground = (cur_page) => {
-    if (authenRef && authenRef.current) {
-      if (cur_page === PAGES.LOGIN) {
-        authenRef.current.style.backgroundImage = `url(${mountain_night})`;
-      } else if (cur_page === PAGES.REGISTER) {
-        authenRef.current.style.backgroundImage = `url(${mountain_day})`;
-      } else {
-        toast.error("Cannot load background image");
-      }
-    } else {
-      toast.error("Cannot load background image");
-    }
-  };
-
   const changePage = (pathname) => {
-    setPage(pathname);
-    changeBackground(pathname);
-    window.history.pushState(null, "", pathname);
-  };
-
-  // Methods preloading image
-  const preloadImage = (src) => {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => resolve(img);
-      img.onerror = (error) => reject(error);
-    });
+    navigate(pathname, { replace: true });
   };
 
   return (
     <>
       {
-        <div className={`authen`} ref={authenRef}>
+        <div
+          className={`authen ${page === "/register" ? "register" : ""}`}
+          ref={authenRef}
+        >
+          <div className="authen__login-bg"></div>
+          <div className="authen__register-bg"></div>
           <header className="authen__header">
             <nav>
               <ul>
@@ -270,24 +223,28 @@ const Authentication = () => {
                       <Link
                         to="https://www.facebook.com/MinMinPD2211/"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <i className="fi fi-brands-facebook"></i>
                       </Link>
                       <Link
                         to="https://twitter.com/PHAN_DUONG_MINH"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <i className="fi fi-brands-twitter"></i>
                       </Link>
                       <Link
                         to="https://www.youtube.com/channel/UCD2T2jAlO282XPmDfftRpvw"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <i className="fi fi-brands-youtube"></i>
                       </Link>
                       <Link
-                        to="https://www.linkedin.com/in/phan-phúc-đạt-b88871243/"
+                        to="https://www.linkedin.com/in/blue-hair2014/"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <i className="fi fi-brands-linkedin"></i>
                       </Link>
@@ -389,28 +346,16 @@ const Authentication = () => {
                       className="authen-form__social-btn google"
                       type="button"
                       onClick={handleGoogleLogin}
-                      disabled={isGoogleLoginLoading}
+                      // disabled={isGoogleLoginLoading}
                     >
                       <img src={googleIcon} alt="social" />
-                      <span>
+                      {/* <span>
                         {isGoogleLoginLoading
                           ? `In process`
                           : `Login with google`}
-                      </span>
+                      </span> */}
+                      <span>Login with google</span>
                     </button>
-                    {/* <button
-                      className="authen-form__social-btn facebook"
-                      type="button"
-                      onClick={handleFacebookLogin}
-                      disabled={isFBLoginLoading}
-                    >
-                      <img src={facebookIcon} alt="social" />
-                      <span>
-                        {isFBLoginLoading
-                          ? `In process`
-                          : `Login with facebook`}
-                      </span>
-                    </button> */}
                   </div>
 
                   <button
@@ -528,7 +473,6 @@ const Authentication = () => {
           </main>
         </div>
       }
-      {isLoading && <PageLoader />}
     </>
   );
 };

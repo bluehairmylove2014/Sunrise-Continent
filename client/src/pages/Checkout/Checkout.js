@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "../../styles/component/checkout.scss";
 import { useGetOrder } from "../../libs/business-logic/src/lib/order/process/hooks";
-import { useGetCheckoutUrl } from "../../libs/business-logic/src/lib/checkout/process/hooks";
 import sunriseHorizontalLogo from "../../assets/images/logos/sc-horizontal.png";
 import { checkoutMethods } from "../../constants/CheckoutMethods";
 import {
@@ -13,32 +12,12 @@ import { formatDate } from "../../utils/helpers/ShortenDatetime";
 import SunriseLoader from "../../components/common/Loader/SunriseLoader";
 import { calcNight } from "../../utils/helpers/Datetime";
 import { convertNumberToCurrency } from "../../utils/helpers/MoneyConverter";
-
-// const mockData = {
-//   fullName: "Phan Phúc Đạt",
-//   nation: "vietnam",
-//   dateOfBirth: "2023-08-08",
-//   email: "phucdat4102@gmail.com",
-//   phoneNumber: "+84337839146",
-//   specialNeeds: "",
-//   notes: "Không",
-//   voucherId: 0,
-//   total: 980000,
-//   orders: [
-//     {
-//       hotelId: 1,
-//       roomTypeId: 3,
-//       checkIn: "2023-08-15T13:37",
-//       checkOut: "2023-08-17T13:37",
-//       numberOfRoom: 1,
-//     },
-//   ],
-// };
+import { useCreateOrder } from "./../../libs/business-logic/src/lib/order/process/hooks/useCreateOrder";
+import { toast } from "react-hot-toast";
 
 const Checkout = () => {
   const [selectedMethod, setSelectedMethod] = useState(checkoutMethods.VISA.id);
   const orderDetail = useGetOrder();
-  // const orderDetail = mockData;
   const hotelId =
     orderDetail && orderDetail.orders[0] ? orderDetail.orders[0].hotelId : null;
   const roomIds = orderDetail
@@ -50,8 +29,7 @@ const Checkout = () => {
     Array.isArray(allRoomData) && Array.isArray(roomIds)
       ? allRoomData.filter((rd) => roomIds.includes(rd.id))
       : [];
-  const { onGetCheckoutUrl, isLoading: isGettingCheckoutUrl } =
-    useGetCheckoutUrl();
+  const { onCreateOrder, isLoading: isGettingCheckoutUrl } = useCreateOrder();
 
   const momoCheckout = ({ QR }) => {
     return (
@@ -64,24 +42,25 @@ const Checkout = () => {
     );
   };
 
-  const handleVisaCheckout = (total) => {
-    onGetCheckoutUrl(total)
-      .then((data) => {
-        window && (window.location.href = data);
+  const handleVisaCheckout = () => {
+    onCreateOrder()
+      .then((checkoutUrl) => {
+        window && (window.location.href = checkoutUrl);
       })
       .catch((err) => {
+        toast.error("Đã có lỗi xảy ra, xin thử lại sau!");
         console.error(err);
       });
   };
 
-  const visaCheckout = ({ total }) => {
+  const visaCheckout = () => {
     return (
       <div className="visa">
         <h6>Cách thanh toán</h6>
         <div className="how-to-checkout">
           <button
             disabled={isGettingCheckoutUrl}
-            onClick={() => handleVisaCheckout(total)}
+            onClick={() => handleVisaCheckout()}
           >
             {isGettingCheckoutUrl ? `Chờ một chút...` : `Thực hiện thanh toán`}
           </button>
@@ -131,7 +110,7 @@ const Checkout = () => {
             {selectedMethod === checkoutMethods.MOMO.id ? (
               momoCheckout({ QR: checkoutMethods.MOMO.qr })
             ) : selectedMethod === checkoutMethods.VISA.id ? (
-              visaCheckout({ total: orderDetail.total })
+              visaCheckout()
             ) : (
               <></>
             )}

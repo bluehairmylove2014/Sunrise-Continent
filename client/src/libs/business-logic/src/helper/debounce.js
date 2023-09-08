@@ -14,3 +14,16 @@ export const debouncePromise = (func, timeout) => {
       }, timeout);
     });
 };
+let normalTimer = null;
+export const debounce = (func, timeout) => {
+  return (args) => {
+    if (normalTimer) {
+      clearTimeout(normalTimer);
+    }
+
+    normalTimer = setTimeout(() => {
+      normalTimer = null;
+      func(args);
+    }, timeout);
+  };
+};

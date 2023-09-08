@@ -1,12 +1,12 @@
-
+using SunriseServerCore.Dtos.Admin;
 
 namespace SunriseServer.Services.AdminService
 {
-    public class HotelService : IAdminService
+    public class AdminService : IAdminService
     {
         private readonly UnitOfWork _unitOfWork;
 
-        public HotelService(UnitOfWork uof)
+        public AdminService(UnitOfWork uof)
         {
             _unitOfWork = uof;
         }
@@ -19,6 +19,16 @@ namespace SunriseServer.Services.AdminService
         public async Task<List<WeeklyRevenue>> GetWeeklyRevenue(DateTime? date)
         {
             return await _unitOfWork.AdminRepo.GetWeeklyRevenueAsync(date);
+        }
+
+        public async Task<TotalAccountDto> GetTotalUserPartner()
+        {
+            return await _unitOfWork.AdminRepo.GetTotalUserPartnerAsync();
+        }
+
+        public async Task<List<TopPartnerDto>> GetTopPartner()
+        {
+            return await _unitOfWork.AdminRepo.GetTopPartnerAsync();
         }
     }
 }

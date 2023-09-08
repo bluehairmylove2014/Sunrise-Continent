@@ -23,9 +23,27 @@ import SelectVoucer from "./SelectVoucer";
 import { useNavigate } from "react-router-dom";
 import { useInitOrder } from "../../libs/business-logic/src/lib/order/process/hooks";
 import { getOrderLocalStorage } from "../../libs/business-logic/src/lib/order/process/helpers/localStorageOrder";
+import { useEffect } from "react";
+import { isEqual } from "lodash";
+import { isValidEmail } from "../../utils/validators/email.validator";
+import { isValidPhoneNumber } from "../../utils/validators/phoneNumber.validator";
+import { useGetUser } from "../../libs/business-logic/src/lib/auth/process/hooks";
+
+const calculateTotal = (rooms, voucher, nightCount) => {
+  let total = rooms.reduce((acc, roomData) => {
+    if (roomData && roomData.price) {
+      return acc + roomData.price * nightCount;
+    }
+    return acc;
+  }, 0);
+  // total -= voucher ? voucher.value * total : 0;
+  return total;
+};
 
 const PreCheckout = () => {
+  const userData = useGetUser();
   const selectedRoomsObject = getOrderLocalStorage();
+  const [oldOrderDetail, setOldOrderDetail] = useState(selectedRoomsObject);
   // Extract common fields from the first order
   const {
     hotelId,
@@ -35,7 +53,6 @@ const PreCheckout = () => {
     checkIn: start_date,
     checkOut: end_date,
   } = selectedRoomsObject.orders[0];
-
   // Map room types to an array of room IDs
   const roomIds = selectedRoomsObject.orders.map((order) => order.roomTypeId);
 
@@ -52,7 +69,6 @@ const PreCheckout = () => {
       : [];
   const [sunriseVoucher, setSunriseVoucher] = useState(null);
   const [isChoosingVoucher, setIsChoosingVoucher] = useState(false);
-
   const contactForm = useForm({
     defaultValues: {
       fullName: "",
@@ -80,21 +96,56 @@ const PreCheckout = () => {
     defaultValues: bookingFormValue,
   });
 
-  const startDateFormatted = formatDate(bookingFormValue.start_date);
-  const endDateFormatted = formatDate(bookingFormValue.end_date);
-  const night = calcNight(
-    bookingFormValue.start_date,
-    bookingFormValue.end_date
+  const [startDateFormatted, setStartDateFormatted] = useState(
+    formatDate(bookingFormValue.start_date)
+  );
+  const [endDateFormatted, setEndDateFormatted] = useState(
+    formatDate(bookingFormValue.end_date)
+  );
+  const [night, setNight] = useState(
+    calcNight(bookingFormValue.start_date, bookingFormValue.end_date)
   );
 
-  let total = roomsData.reduce((acc, roomData) => {
-    if (roomData && roomData.price) {
-      return acc + roomData.price * night;
-    }
-    return acc;
-  }, 0);
+  const [total, setTotal] = useState(
+    calculateTotal(roomsData, sunriseVoucher, night)
+  );
 
-  total -= sunriseVoucher ? sunriseVoucher.value : 0;
+  useEffect(() => {
+    if (userData) {
+      contactForm.setValue("fullName", userData.fullName);
+      typeof userData.dateOfBirth === "string" &&
+        userData.dateOfBirth.length > 0 &&
+        contactForm.setValue("dob", userData.dateOfBirth.substring(0, 10));
+      contactForm.setValue("email", userData.emailAddress);
+    }
+  }, [userData]);
+
+  useEffect(() => {
+    if (selectedRoomsObject && !isEqual(selectedRoomsObject, oldOrderDetail)) {
+      setOldOrderDetail(selectedRoomsObject);
+    }
+  }, [selectedRoomsObject]);
+
+  useEffect(() => {
+    setBookingFormValue({
+      start_date,
+      end_date,
+      rooms,
+      adults,
+      childrens,
+    });
+    setStartDateFormatted(formatDate(start_date));
+    setEndDateFormatted(formatDate(end_date));
+
+    const nightCount = calcNight(start_date, end_date);
+    const total = calculateTotal(roomsData, sunriseVoucher, nightCount);
+    setNight(nightCount);
+    setTotal(total);
+  }, [oldOrderDetail]);
+
+  useEffect(() => {
+    setTotal(calculateTotal(roomsData, sunriseVoucher, night));
+  }, [roomsData, sunriseVoucher]);
 
   const today = new Date();
   const minDate = new Date(today);
@@ -153,7 +204,6 @@ const PreCheckout = () => {
       toast.error("Hãy đồng ý với điều khoản và chính sách nhé!");
       return;
     }
-    navigate(PAGES.CHECKOUT);
     onInitOrder({
       fullName: data.fullName,
       nation: data.nationality,
@@ -163,7 +213,7 @@ const PreCheckout = () => {
       specialNeeds: getSelectedOptions(contactForm.getValues()).join(", "),
       notes: data.otherRequirements,
       voucherId: sunriseVoucher ? sunriseVoucher.voucherId : 0,
-      total,
+      total: total - (sunriseVoucher ? sunriseVoucher.value * total : 0),
       orders: roomsData.map((rdata) => ({
         hotelId: hotelId,
         roomTypeId: rdata.id,
@@ -172,6 +222,8 @@ const PreCheckout = () => {
         numberOfRoom: bookingFormValue.rooms,
       })),
     });
+    navigate(PAGES.CHECKOUT);
+    // navigate(PAGES.SUCCESS_ORDER);
   };
   const onContactFormError = (error) => {
     toast.error(error[Object.keys(error)[0]].message);
@@ -186,6 +238,7 @@ const PreCheckout = () => {
             onContactFormSubmit,
             onContactFormError
           )}
+          noValidate
         >
           <section className="contact">
             <Controller
@@ -240,7 +293,15 @@ const PreCheckout = () => {
                 required: "Hãy cho tôi biết ngày sinh của bạn",
               }}
               render={({ field }) => (
-                <div className="contact__input-data">
+                <div
+                  className="contact__input-data"
+                  onClick={(e) => {
+                    const dobInput = e.target.querySelector("input");
+                    if (dobInput) {
+                      dobInput.showPicker();
+                    }
+                  }}
+                >
                   <label htmlFor="dob">Ngày sinh *</label>
                   <input
                     {...field}
@@ -249,6 +310,8 @@ const PreCheckout = () => {
                     onFocus={(e) => handleFocus(e.target)}
                     onBlur={(e) => handleBlur(e.target)}
                     max={formattedMinDate}
+                    onKeyDown={(e) => e.preventDefault()} // Prevent typing
+                    onKeyUp={(e) => e.preventDefault()} // Prevent typing
                   />
                 </div>
               )}
@@ -258,6 +321,8 @@ const PreCheckout = () => {
               control={contactForm.control}
               rules={{
                 required: "Bạn chưa nhập Email kìa",
+                validate: (value) =>
+                  isValidEmail(value) || "Email không hợp lệ",
               }}
               render={({ field }) => (
                 <div className="contact__input-data">
@@ -277,6 +342,8 @@ const PreCheckout = () => {
               control={contactForm.control}
               rules={{
                 required: "Cho chúng tôi số điện thoại để liên hệ nhé",
+                validate: (value) =>
+                  isValidPhoneNumber(value) || "Số điện thoại không hợp lệ",
               }}
               render={({ field }) => (
                 <div className="contact__input-data">
@@ -376,6 +443,7 @@ const PreCheckout = () => {
                     id="otherRequirements"
                     onFocus={(e) => handleFocus(e.target)}
                     onBlur={(e) => handleBlur(e.target)}
+                    placeholder="Nhập gì đó đi..."
                   />
                 </div>
               )}
@@ -394,7 +462,7 @@ const PreCheckout = () => {
               form={contactForm}
               name={"isAcceptPolicy"}
               label={
-                "Tôi đồng ý với điều khoản và chính sách bảo mật của Sunrise Continent"
+                "Tôi đồng ý với chính sách huỷ đặt phòng của Sunrise Continent"
               }
               checkboxSize={"16px"}
             />
@@ -462,14 +530,6 @@ const PreCheckout = () => {
 
               <p>{bookingFormValue.rooms} phòng</p>
             </div>
-            {/* <div className="detail__row">
-              <div className="row__label">
-                <img src={icon.roomIcon} alt="room" />
-                <span>Loại phòng:</span>
-              </div>
-
-              <p>{roomData.name}</p>
-            </div> */}
             <div className="detail__row">
               <div className="row__label"></div>
 
@@ -519,11 +579,7 @@ const PreCheckout = () => {
                   -{" "}
                   {convertNumberToCurrency(
                     "vietnamdong",
-                    // calculateDiscountedPrice(
-                    //   roomData.price * night,
-                    //   sunriseVoucher.value
-                    // ).discountedPrice
-                    sunriseVoucher ? sunriseVoucher.value : 0
+                    sunriseVoucher ? sunriseVoucher.value * total : 0
                   )}
                 </p>
               ) : (
@@ -540,7 +596,10 @@ const PreCheckout = () => {
               </div>
 
               <p className="price total">
-                {convertNumberToCurrency("vietnamdong", total)}
+                {convertNumberToCurrency(
+                  "vietnamdong",
+                  total - (sunriseVoucher ? sunriseVoucher.value * total : 0)
+                )}
               </p>
             </div>
           </div>

@@ -194,19 +194,13 @@ namespace SunriseServer.Controllers
         )
         {
             // Thêm filter sort
-            int ratingVal = 0;
-            if (guestRating is not null)
-            {
-                Enum.TryParse(guestRating, out HotelFilterEnum userPoint);
-                ratingVal = (int)userPoint;
-            }
 
             max_budget = max_budget == 0 ? Int32.MaxValue : max_budget;
             var result = await _hotelService.GetSearchHotels(
                 new SearchHotelDto(location, room_type, start_date, end_date, min_budget, max_budget, rooms, adults, children, new FilterHotelDto() {
                     hotelType = hotelType,
                     bedType = bedType,
-                    guestRating = ratingVal,
+                    guestRating = guestRating,
                     facilities = facilities,
                     service = service,
                     sortingCol = sortingCol,

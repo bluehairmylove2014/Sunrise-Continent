@@ -528,7 +528,11 @@ BEGIN
 
 	BEGIN TRY
 		SELECT @Id = Id FROM HOTEL WHERE AccountId = @AccountId;
-		IF (@Id > 0) DELETE FROM HOTEL WHERE Id = @Id;
+		IF (@Id > 0) 
+		BEGIN
+			UPDATE PERSONAL_DETAILS SET HotelId = 0 WHERE AccountId = @AccountId;
+			DELETE FROM HOTEL WHERE Id = @Id;
+		END
 
 		UPDATE ACCOUNT SET 
 			Active = ABS(Active - 1)
@@ -1338,8 +1342,8 @@ CREATE OR ALTER PROCEDURE USP_UpdateBooking
     @AccountId INTEGER,
     @HotelId INTEGER,
     @RoomTypeId INTEGER,
-    @CheckIn DATE,
-    @CheckOut DATE,
+    @CheckIn DATETIME,
+    @CheckOut DATETIME,
     @NumberOfRoom INTEGER
 AS
 BEGIN
@@ -1613,8 +1617,8 @@ GO
 CREATE OR ALTER FUNCTION USF_GetRoomAvailability (
     @HotelId INTEGER,
     @RoomTypeId INTEGER,
-	@CheckIn DATE,
-	@CheckOut DATE)
+	@CheckIn DATETIME,
+	@CheckOut DATETIME)
 RETURNS INT
 BEGIN
 	DECLARE @Vacancy INT;
@@ -1640,8 +1644,8 @@ CREATE OR ALTER FUNCTION USF_CheckRoomAvailability (
     @HotelId INTEGER,
     @RoomTypeId INTEGER,
 	@NumberOfRoom INTEGER,
-	@CheckIn DATE,
-	@CheckOut DATE)
+	@CheckIn DATETIME,
+	@CheckOut DATETIME)
 RETURNS BIT
 BEGIN
 	DECLARE @Vacancy INT;
@@ -1663,8 +1667,8 @@ GO
 GO
 CREATE OR ALTER PROC USP_GetRoomWithAvailableNum
 	@HotelId INTEGER,
-	@CheckIn DATE,
-	@CheckOut DATE
+	@CheckIn DATETIME,
+	@CheckOut DATETIME
 AS
 	SELECT RT.HotelId, RT.Id, RT.Name, 
 		dbo.USF_GetRoomAvailability(@HotelId, RT.Id, @CheckIn, @CheckOut) as Vacancy,
@@ -1679,8 +1683,8 @@ GO
 CREATE OR ALTER FUNCTION USF_CheckHotelAvailability ( -- //new check
     @HotelId INTEGER,
 	@NumberOfRoom INTEGER,
-	@CheckIn DATE,
-	@CheckOut DATE)
+	@CheckIn DATETIME,
+	@CheckOut DATETIME)
 RETURNS BIT
 BEGIN
 	IF (1 IN (SELECT dbo.USF_CheckRoomAvailability(@HotelId, Id, @NumberOfRoom, @CheckIn, @CheckOut) val FROM ROOM_TYPE WHERE HotelId = @HotelId))
@@ -1749,6 +1753,27 @@ BEGIN
 	RETURN 0;
 END
 
+
+GO
+CREATE OR ALTER FUNCTION USF_CheckHotelRatting ( -- //new check
+    @HotelPoints FLOAT,
+	@GuestRating VARCHAR(100))
+RETURNS BIT
+BEGIN
+	IF (@GuestRating IS NULL) RETURN 1;
+
+	DECLARE @PointTable TABLE (Points FLOAT, Tag VARCHAR(100))
+	INSERT INTO @PointTable (Points, Tag) VALUES
+	(9.0, 'EXCELLENT'),(8.0, 'GREAT'),(7.0, 'VERY_GOOD'),(6.0, 'SATISFIED');
+
+	DECLARE @Min FLOAT, @Max FLOAT;
+	SELECT @Min = MIN(Points), @Max = MAX(Points) FROM @PointTable pt 
+	JOIN (SELECT value FROM STRING_SPLIT(@GuestRating, ',')) st ON st.value = pt.Tag
+
+	IF (@Min = @Max) RETURN CASE WHEN @HotelPoints >= @Max THEN 1 ELSE 0 END; 
+	RETURN CASE WHEN NOT (@HotelPoints < @Min OR @HotelPoints > @Max) THEN 1 ELSE 0 END;
+END
+
 GO
 CREATE OR ALTER PROC USP_FindHotelByName (-- //new check
 	-- Search
@@ -1764,7 +1789,7 @@ CREATE OR ALTER PROC USP_FindHotelByName (-- //new check
 	-- Filter
 	@HotelType VARCHAR(500) = null,
 	@BedType VARCHAR(100) = null,
-	@GuestRating INT = 0,
+	@GuestRating VARCHAR(100) = null,
 	@Facilities VARCHAR(1000) = null,
 	@Service VARCHAR(100) = null,
 	@SortingCol VARCHAR(50) = 'Rating',
@@ -1787,7 +1812,7 @@ BEGIN
 		  AND dbo.USF_GetMinRoomPrice(h.Id) >= @MinBudget
 	      AND dbo.USF_CheckHotelAvailability(h.Id, @Rooms, @StartDate, @EndDate) = 1
 		  AND (h.HotelType IN (SELECT value FROM STRING_SPLIT(@HotelType, ',')) OR @HotelType IS NULL)
-		  AND dbo.USF_GetAvgReview(h.Id) >= @GuestRating
+		  AND dbo.USF_CheckHotelRatting(dbo.USF_GetAvgReview(h.Id), @GuestRating) = 1
 		  AND dbo.USF_CheckHotelFacility(h.Id, @Facilities) = 1
 		  AND dbo.USF_CheckHotelService(h.Id, @Service) = 1
 		  ) hoteTable
@@ -1821,8 +1846,8 @@ BEGIN
 	ORDER BY 
 		CASE WHEN @SortingCol = 'FullName' AND @SortType ='ASC' THEN pd.FullName END,
 		CASE WHEN @SortingCol = 'FullName' AND @SortType ='DESC' THEN pd.FullName END DESC,
-		CASE WHEN @SortingCol = 'DateOfBirth' AND @SortType ='ASC' THEN pd.DateOfBirth END,
-		CASE WHEN @SortingCol = 'DateOfBirth' AND @SortType ='DESC' THEN pd.DateOfBirth END DESC,
+		CASE WHEN @SortingCol = 'DateOfBirth' AND @SortType ='ASC' THEN pd.DateOfBirth END DESC,
+		CASE WHEN @SortingCol = 'DateOfBirth' AND @SortType ='DESC' THEN pd.DateOfBirth END,
 		CASE WHEN @SortingCol = 'Rank' AND @SortType ='ASC' THEN pr.RankValue END,
 		CASE WHEN @SortingCol = 'Rank' AND @SortType ='DESC' THEN pr.RankValue END DESC
 END
@@ -1833,8 +1858,8 @@ CREATE OR ALTER PROCEDURE USP_AddBooking
     @AccountId INTEGER,
     @HotelId INTEGER,
     @RoomTypeId INTEGER,
-    @CheckIn DATE,
-    @CheckOut DATE,
+    @CheckIn DATETIME,
+    @CheckOut DATETIME,
     @NumberOfRoom INTEGER
 AS
 BEGIN
@@ -1893,7 +1918,7 @@ CREATE OR ALTER PROC USP_GetAllAccountOrder (
 AS
 BEGIN
 	SELECT BA.RoomTypeId, BA.HotelId, H.Name as HotelName, H.Country, H.HotelType, H.ProvinceCity, H.Address, H.Stars, H.Rating, H.Image,
-			AO.OrderId, AO.AccountId, AO.FullName, AO.Nation, AO.DateOfBirth, 
+			AO.OrderId, AO.AccountId, AO.FullName, AO.Nation, AO.DateOfBirth, AO.CreatedAt,
 			AO.Email, AO.PhoneNumber, AO.SpecialNeeds, AO.Notes, AO.VoucherId, 
 			AO.Total, AO.Paid, BA.CheckIn, BA.CheckOut, BA.NumberOfRoom, 
 			RT.Name as RoomName, RT.Vacancy, RT.RoomInfo, RT.RoomView, RT.BedType
@@ -2059,14 +2084,14 @@ GO
 
 -- // check
 GO
-CREATE OR ALTER FUNCTION USF_GetBookingTotalById (@BookingId INT)
+CREATE OR ALTER FUNCTION USF_GetBookingTotalById (@BookingId INT, @Fee INT = 0)
 RETURNS INT
 AS
 BEGIN
 	DECLARE @Result INT = 0;
-	SELECT @Result = (RT.Price) * BA.NumberOfRoom 
-	FROM (SELECT * FROM BOOKING_ACCOUNT WHERE BookingId = @BookingId) BA 
-	JOIN ROOM_TYPE RT ON RT.HotelId = BA.HotelId AND RT.Id = BA.RoomTypeId;
+	SELECT @Result = (rt.Price - @Fee) * ba.NumberOfRoom * DATEDIFF(DAY, ba.CheckIn, ba.CheckOut)
+	FROM (SELECT * FROM BOOKING_ACCOUNT WHERE BookingId = @BookingId) ba 
+	JOIN ROOM_TYPE rt ON rt.HotelId = ba.HotelId AND rt.Id = ba.RoomTypeId;
 
 	RETURN @Result;
 END
@@ -2075,12 +2100,12 @@ GO
 
 -- //
 GO
-CREATE OR ALTER FUNCTION USF_GetOrderTotal (@OrderId INT)
+CREATE OR ALTER FUNCTION USF_GetOrderTotal (@OrderId INT, @Fee INT = 0)
 RETURNS INT
 AS
 BEGIN
 	DECLARE @Result INT = 0;
-	SELECT @Result = SUM(dbo.USF_GetBookingTotalById(OD.BookingId)) FROM ORDER_DETAIL OD
+	SELECT @Result = SUM(dbo.USF_GetBookingTotalById(OD.BookingId, @Fee)) FROM ORDER_DETAIL OD
 	WHERE OD.OrderId = @OrderId;
 
 	RETURN @Result;
@@ -2133,7 +2158,7 @@ BEGIN
 	BEGIN TRY
 		DECLARE @Discount FLOAT = 0;
 		SELECT @Discount = Value FROM VOUCHER WHERE VoucherId = @VoucherId;
-		DECLARE @Total INT = dbo.USF_GetOrderTotal(@OrderId);
+		DECLARE @Total INT = dbo.USF_GetOrderTotal(@OrderId, DEFAULT);
 
 		UPDATE ACCOUNT_ORDER
 		SET
@@ -2173,7 +2198,7 @@ BEGIN
 
 		SELECT @Quantity = Quantity FROM VOUCHER_BAG WHERE AccountId = @AccountId AND VoucherId = @VoucherId;
 
-		DECLARE @Total INT = dbo.USF_GetOrderTotal(@OrderId);
+		DECLARE @Total INT = dbo.USF_GetOrderTotal(@OrderId, DEFAULT);
 
 		IF ((@VoucherId IS NOT NULL AND @MultipleConfirm = 0) AND @VoucherId > 0)
 		BEGIN
@@ -2293,13 +2318,12 @@ BEGIN
     DECLARE @StartDate DATE = CAST(STR(@Month) + '-01-' + STR(@Year) as date);
 	DECLARE @EndDate DATE = EOMONTH(@StartDate);
 
-    SELECT @TotalRevenue += (rt.Price - @Fee) * ba.NumberOfRoom
+    SELECT @TotalRevenue += dbo.USF_GetBookingTotalById(ba.BookingId, @Fee) -- check
 	FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1 AND
 		DATEDIFF(DAY, @StartDate, CreatedAt) >= 0 AND 
-		DATEDIFF(DAY, CreatedAt, @EndDate) >= 0) ao 
+		DATEDIFF(DAY, CreatedAt, @EndDate) >= 0) ao
 	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
-	JOIN (SELECT BookingId, NumberOfRoom, RoomTypeId FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba ON ba.BookingId = od.BookingId
-	JOIN (SELECT Id, Price FROM ROOM_TYPE WHERE HotelId = @HotelId) rt ON rt.Id = ba.RoomTypeId
+	JOIN (SELECT BookingId, NumberOfRoom, RoomTypeId FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba ON ba.BookingId = od.BookingId;
 
 	RETURN @TotalRevenue;
 END;
@@ -2336,11 +2360,10 @@ BEGIN
 	DECLARE @TotalRevenue BIGINT = 0;
 	DECLARE @Fee INT = 50000;
 
-	SELECT @TotalRevenue += (rt.Price - @Fee) * ba.NumberOfRoom
-	FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1 AND DATEDIFF(DAY, @Date, CreatedAt) = 0) ao 
+	SELECT @TotalRevenue += dbo.USF_GetBookingTotalById(ba.BookingId, @Fee)
+	FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1 AND DATEDIFF(DAY, @Date, CreatedAt) = 0) ao
 	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
-	JOIN (SELECT BookingId, NumberOfRoom, RoomTypeId FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba ON ba.BookingId = od.BookingId
-	JOIN (SELECT Id, Price FROM ROOM_TYPE WHERE HotelId = @HotelId) rt ON rt.Id = ba.RoomTypeId;
+	JOIN (SELECT BookingId, NumberOfRoom, RoomTypeId FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba ON ba.BookingId = od.BookingId;
 
 	RETURN @TotalRevenue;
 END
@@ -2451,11 +2474,10 @@ BEGIN
 	DECLARE @Fee INT = 50000;
 
 	INSERT INTO @Result (AccountId, TotalSpent)
-		SELECT * FROM (SELECT ao.AccountId, CAST(SUM((rt.Price - @Fee) * ba.NumberOfRoom) as BIGINT) as TotalSpent 
+		SELECT * FROM (SELECT ao.AccountId, CAST(SUM(dbo.USF_GetBookingTotalById(ba.BookingId, @Fee)) as BIGINT) as TotalSpent 
 			FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1) ao
 			JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
 			JOIN (SELECT BookingId, NumberOfRoom, RoomTypeId FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba ON ba.BookingId = od.BookingId
-			JOIN (SELECT Id, Price FROM ROOM_TYPE WHERE HotelId = @HotelId) rt ON rt.Id = ba.RoomTypeId
 			GROUP BY ao.AccountId) cal;
 	RETURN;
 END;
@@ -2493,12 +2515,12 @@ BEGIN
     DECLARE @StartDate DATE = CAST(STR(@Month) + '-01-' + STR(@Year) as date);
 	DECLARE @EndDate DATE = EOMONTH(@StartDate);
 
-    SELECT @TotalRevenue += @Fee * ba.NumberOfRoom
+    SELECT @TotalRevenue += @Fee * ba.NumberOfRoom * DATEDIFF(DAY, ba.CheckIn, ba.CheckOut)
 	FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1 AND
 		DATEDIFF(DAY, @StartDate, CreatedAt) >= 0 AND 
 		DATEDIFF(DAY, CreatedAt, @EndDate) >= 0) ao 
 	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
-	JOIN (SELECT BookingId, NumberOfRoom FROM BOOKING_ACCOUNT) ba ON ba.BookingId = od.BookingId
+	JOIN (SELECT * FROM BOOKING_ACCOUNT) ba ON ba.BookingId = od.BookingId
 
 	RETURN @TotalRevenue;
 END;
@@ -2533,10 +2555,10 @@ BEGIN
 	DECLARE @TotalRevenue BIGINT = 0;
 	DECLARE @Fee INT = 50000;
 
-	SELECT @TotalRevenue += @Fee * ba.NumberOfRoom
+	SELECT @TotalRevenue += @Fee * ba.NumberOfRoom * DATEDIFF(DAY, ba.CheckIn, ba.CheckOut)
 	FROM (SELECT * FROM ACCOUNT_ORDER WHERE Paid = 1 AND DATEDIFF(DAY, @Date, CreatedAt) = 0) ao 
 	JOIN ORDER_DETAIL od ON ao.OrderId = od.OrderId
-	JOIN (SELECT BookingId, NumberOfRoom FROM BOOKING_ACCOUNT) ba ON ba.BookingId = od.BookingId;
+	JOIN (SELECT * FROM BOOKING_ACCOUNT) ba ON ba.BookingId = od.BookingId;
 
 	RETURN @TotalRevenue;
 END
@@ -2562,6 +2584,50 @@ END
 GO
 
 
+GO -- // new check 4
+CREATE OR ALTER PROC USP_GetTotalUserPartner
+AS BEGIN
+	DECLARE @User INT, @Partner INT;
+	
+	SELECT @User = COUNT(Id) FROM ACCOUNT WHERE UserRole = 'User'
+	SELECT @Partner = COUNT(Id) FROM ACCOUNT WHERE UserRole = 'Partner'
+
+	SELECT @User as LastWeek, @Partner as ThisWeek;
+END;
+GO
+
+GO -- // new check 4
+CREATE OR ALTER PROC USP_GetTotalUserPartner
+AS BEGIN
+	DECLARE @User INT, @Partner INT;
+	
+	SELECT @User = COUNT(Id) FROM ACCOUNT WHERE UserRole = 'User'
+	SELECT @Partner = COUNT(Id) FROM ACCOUNT WHERE UserRole = 'Partner'
+
+	SELECT @User as LastWeek, @Partner as ThisWeek;
+END;
+GO
+
+GO -- // new check 4
+CREATE OR ALTER FUNCTION USF_GetPartnerTotal (
+    @HotelId INT)
+RETURNS BIGINT
+BEGIN
+	DECLARE @Profit BIGINT = 0;
+	SELECT @Profit = ISNULL(SUM(CAST(TotalSpent as BIGINT)), 0) FROM dbo.USF_GetTopAccount(@HotelId);
+
+	RETURN @Profit;
+END;
+GO
+
+
+GO -- // new check 3
+CREATE OR ALTER PROCEDURE USP_GetTopPartner
+AS BEGIN
+	SELECT TOP(7) h.*, dbo.USF_GetPartnerTotal(h.Id) as TotalSpent
+	FROM HOTEL h ORDER BY TotalSpent DESC;
+END
+GO
 
 
 -- // check --
@@ -2586,7 +2652,7 @@ CREATE OR ALTER PROC USP_GetBookingLengthBonusPoint (
 	@BookingId INT,
 	@HotelId INT)
 AS
-	DECLARE @Total INT = dbo.USF_GetBookingTotalById(@BookingId);
+	DECLARE @Total INT = dbo.USF_GetBookingTotalById(@BookingId, DEFAULT);
 
 	DECLARE @Times INT = (SELECT COUNT(BA.BookingId) FROM BOOKING_ACCOUNT BA 
 		WHERE BA.AccountId = @AccountId AND BA.HotelId = @HotelId);
@@ -2609,7 +2675,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @StartDate DATE, @EndDate DATE;
+    DECLARE @StartDate DATETIME, @EndDate DATETIME;
 
     -- Tính ngày bắt đầu của quý
     SET @StartDate = DATEFROMPARTS(@Year, (@Quarter - 1) * 3 + 1, 1);

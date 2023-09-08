@@ -5,7 +5,42 @@
     background-size: cover;
     width: 100vw;
     height: 100vh;
+    position: relative;
     transition: all 0.5s ease-in;
+    background-color: black;
+
+
+    .authen__login-bg,
+    .authen__register-bg {
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .authen__login-bg {
+        background-image: url('https://rialloer.sirv.com/Sunrise-Continent/backgrounds/mountain-night.jpg');
+        transition: all 0.5s ease-in;
+        z-index: 9;
+    }
+
+    .authen__register-bg {
+        background-image: url('https://rialloer.sirv.com/Sunrise-Continent/backgrounds/mountain-day.jpg');
+        z-index: 8;
+    }
+
+    &.register {
+        .authen__login-bg {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+    }
+
     .authen__header {
         position: relative;
         z-index: 99;
@@ -13,16 +48,20 @@
         height: 60px;
         // direction - justify content - align items - flex wrap
         @include dflex(row, flex-end, center, nowrap);
+
         nav ul {
             // direction - justify content - align items - flex wrap
             @include dflex(row, flex-end, center, nowrap);
+
             li {
                 margin-right: 2rem;
+
                 a {
                     font-size: 0.75rem;
                     color: white;
                     font-weight: 600;
                     cursor: pointer;
+
                     &.active {
                         color: black;
                         background-color: white;
@@ -33,23 +72,27 @@
             }
         }
     }
+
     .authen__main {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
+        z-index: 98;
+
         .authen__wrapper {
             @include absolute-center;
             width: 1200px;
             height: 500px;
             border-radius: 1rem;
             overflow: hidden;
-            
+
             .authen__container {
                 position: relative;
                 width: 100%;
                 height: 100%;
+
                 .authen__bg {
                     @include absolute-center;
                     background-color: rgba($color: #372C57, $alpha: 0.5);
@@ -57,6 +100,7 @@
                     height: 100%;
                     z-index: -1;
                 }
+
                 .authen__intro {
                     padding: 3rem 4rem 4rem 4rem;
                     color: white;
@@ -64,32 +108,40 @@
                     height: calc(100% - 7rem);
                     // direction - justify content - align items - flex wrap
                     @include dflex(column, space-between, flex-start, nowrap);
+
                     .authen-intro__logo {
                         width: auto;
                         height: 70px;
+
                         img {
                             height: 100%;
                             width: auto;
                         }
                     }
+
                     p {
                         opacity: 0.8;
-                        margin: 1rem 0; 
+                        margin: 1rem 0;
                     }
+
                     .authen-intro__social-link {
                         // direction - justify content - align items - flex wrap
                         @include dflex(row, flex-start, center, nowrap);
+
                         a {
                             color: white;
                             margin: 0 1rem 0 0.5rem;
                             transition: transform 0.2s ease-in;
+
                             &:hover {
                                 transform: scale(1.4);
                             }
                         }
                     }
                 }
-                .loginForm, .registerForm {
+
+                .loginForm,
+                .registerForm {
                     position: absolute;
                     top: 50%;
                     right: 4rem;
@@ -109,6 +161,7 @@
                         height: 50px;
                         position: relative;
                         border-bottom: 2px solid white;
+
                         input {
                             width: 100%;
                             height: 100%;
@@ -118,46 +171,57 @@
                             color: white;
                             font-size: 0.8rem;
                         }
-                        i, label {
+
+                        i,
+                        label {
                             font-size: 0.8rem;
                             position: absolute;
                             top: 50%;
                             transform: translateY(-50%);
                             pointer-events: none;
                         }
+
                         label {
                             left: 0;
                             visibility: hidden;
                             opacity: 0;
                             transition: all 0.2s ease-in;
+
                             &.active {
                                 visibility: visible;
                                 opacity: 1;
                             }
                         }
+
                         i {
                             right: 0;
                         }
                     }
+
                     .authen-form__interact-field {
                         width: 100%;
                         // direction - justify content - align items - flex wrap
                         @include dflex(row, space-between, center, nowrap);
-                        label, a {
+
+                        label,
+                        a {
                             font-size: 0.6rem;
                             color: white;
                             font-weight: 600;
                         }
+
                         div {
                             // direction - justify content - align items - flex wrap
                             @include dflex(row, center, center, nowrap);
                         }
                     }
+
                     .authen-form__register-btn {
                         width: 100%;
                         // border - border radius - background color - color - padding - font size
                         @include normal-btn(none, 5px, transparent, white, 0, 14px);
                         font-weight: 500;
+
                         &:hover {
                             color: var(--soft-blue);
                         }
@@ -169,12 +233,14 @@
                         pointer-events: all;
                     }
                 }
+
                 .loginForm {
                     .button__wrapper {
                         width: 100%;
                         // direction - justify content - align items - flex wrap
                         @include dflex(column, center, center, nowrap);
                         gap: 10px;
+
                         .authen-form__submit-btn,
                         .authen-form__social-btn {
                             width: 100%;
@@ -184,47 +250,58 @@
                             gap: 10px;
                             // border - border radius - background color - color - padding - font size
                             @include normal-btn(none, 5px, var(--soft-blue), white, 0, 14px);
+
                             span {
                                 font-size: 0.6rem;
                             }
+
                             img {
                                 width: 25px;
                                 height: 25px;
                             }
+
                             &:hover {
                                 background-color: var(--ultramarine-blue);
                             }
+
                             &:disabled {
                                 cursor: not-allowed;
                                 pointer-events: none;
                                 background-color: var(--quill-grey);
                             }
+
                             &.google {
                                 background-color: #eeeeee;
                                 color: black;
+
                                 &:hover {
                                     background-color: #d8d8d8;
                                 }
                             }
+
                             &.facebook {
                                 background-color: #3f5c9d;
+
                                 &:hover {
                                     background-color: #4f6eb1;
                                 }
                             }
                         }
                     }
-                    
+
                 }
+
                 .registerForm {
                     .authen-form__submit-btn {
                         width: 100%;
                         height: 40px;
                         // border - border radius - background color - color - padding - font size
                         @include normal-btn(none, 5px, var(--toxic-green), white, 0, 14px);
+
                         &:hover {
                             background-color: var(--kelly-green);
                         }
+
                         &:disabled {
                             cursor: not-allowed;
                             pointer-events: none;

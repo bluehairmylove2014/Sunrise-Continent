@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useLogout } from "../../libs/business-logic/src/lib/auth";
 import "../../styles/common/userSidebar.scss";
 import { RankList } from "../../constants/Rank";
@@ -8,6 +8,12 @@ import { PAGES } from "../../constants/Link.constants";
 const UserSidebar = ({ isActive, userData, callback }) => {
   const sidebarRef = useRef(null);
   const { onLogout } = useLogout();
+  const location = useLocation();
+
+  useEffect(() => {
+    callback(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   useEffect(() => {
     if (sidebarRef.current.classList.contains("active") && !isActive) {
@@ -50,17 +56,17 @@ const UserSidebar = ({ isActive, userData, callback }) => {
       </div>
       <ul>
         <li>
-          <Link to={PAGES.HOME}>
+          <Link to={PAGES.PROFILE}>
             <i className="fi fi-rr-user"></i>
-            <span>Your profile</span>
+            <span>Cá Nhân</span>
           </Link>
         </li>
-        {/* <li>
-          <Link to="/setting">
-            <i className="fi fi-rr-settings"></i>
-            <span>Setting</span>
+        <li>
+          <Link to={PAGES.ORDERS}>
+            <i className="fi fi-rs-ballot"></i>
+            <span>Đơn hàng</span>
           </Link>
-        </li> */}
+        </li>
         <li>
           <button
             onClick={() => {
@@ -69,7 +75,7 @@ const UserSidebar = ({ isActive, userData, callback }) => {
             }}
           >
             <i className="fi fi-rr-power"></i>
-            <span>Logout</span>
+            <span>Đăng xuất</span>
           </button>
         </li>
       </ul>

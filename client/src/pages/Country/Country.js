@@ -25,7 +25,7 @@ const Country = () => {
     provinceSelected &&
       onSearch({ location: provinceSelected })
         .then((data) => {
-          setProvinceHotel(data);
+          setProvinceHotel(data.hotelList);
         })
         .catch((error) => {
           console.error(error);
@@ -43,7 +43,7 @@ const Country = () => {
       {countryData ? (
         <div className="countryDetail">
           <BannerLayout
-            banner={countryData.picture}
+            banner={countryData.picture + "?w=1920"}
             title={countryData.name}
             subtitle={countryData.decription}
           />

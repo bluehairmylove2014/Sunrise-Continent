@@ -5,9 +5,17 @@ export const useSearch = () => {
   const searchMutation = useSearchHotelMutation();
   const onSearch = (searchContent) => {
     return new Promise((resolve, reject) => {
-      const searchParams = {
+      let searchParams = {
         ...searchContent,
       };
+      Object.keys(searchParams).forEach(spk => {
+        if(Array.isArray(searchParams[spk])) {
+          searchParams = {
+            ...searchParams,
+            [spk]: searchParams[spk].join(',')
+          }
+        }
+      })
       if (searchParams["budget"]) {
         Object.assign(searchParams, {
           min_budget: searchContent.budget[0],

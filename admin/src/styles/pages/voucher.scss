@@ -1,0 +1,168 @@
+@import '../partial/mixin';
+
+.voucher {
+    padding: 25px;
+    width: calc(100% - 50px);
+
+    .voucher__header {
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, space-between, center, nowrap);
+        margin-bottom: 50px;
+
+        .btn-wrapper {
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, flex-end, center, nowrap);
+            gap: 20px;
+
+            button {
+
+
+                &:nth-child(2) {
+
+                    // border - border radius - background color - color - padding - font size
+                    @include normal-btn(1px solid var(--kelly-green), 5px, var(--kelly-green), white, 8px 20px, 0.8rem);
+
+                    &:hover {
+                        border-color: var(--toxic-green);
+                        background-color: var(--toxic-green);
+                    }
+                }
+
+                &:nth-child(3) {
+
+                    // border - border radius - background color - color - padding - font size
+                    @include normal-btn(1px solid black, 5px, white, black, 8px 20px, 0.8rem);
+
+                    &:hover {
+                        background-color: var(--quill-grey);
+                    }
+                }
+
+                &:disabled {
+                    border-color: black;
+                    background-color: var(--heavy-white-smoke);
+                    color: black;
+                    cursor: not-allowed;
+
+                    &:hover {
+                        border-color: black;
+                        background-color: var(--heavy-white-smoke);
+                    }
+                }
+
+                &:nth-child(1) {
+
+                    // border - border radius - background color - color - padding - font size
+                    @include normal-btn(1px solid red, 5px, red, white, 8px 12px, 0.8rem);
+
+                    &:hover {
+                        border-color: rgb(214, 0, 0);
+                        background-color: rgb(214, 0, 0);
+                    }
+
+                    &:disabled {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+    }
+
+    $grid-config: 5% 30% 15% 10% 20% 1fr;
+
+    .voucher__list-header {
+        @include dgrid($grid-config, auto, 10px);
+        margin-bottom: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+
+        * {
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, center, flex-start, nowrap);
+            text-align: center
+        }
+    }
+
+    .voucher__list {
+        // direction - justify content - align items - flex wrap
+        @include dflex(column, flex-start, flex-start, nowrap);
+        gap: 30px;
+
+
+
+        .voucher__item {
+            width: 100%;
+            // columns - row - gap
+            @include dgrid($grid-config, auto, 10px);
+            font-size: 0.75rem;
+            font-weight: 500;
+
+            * {
+                // direction - justify content - align items - flex wrap
+                @include dflex(row, center, center, nowrap);
+            }
+
+            .voucher__name,
+            .voucher__quantity {
+                text-align: center;
+            }
+
+            .voucher__required-rank {
+                gap: 5px;
+
+                img {
+                    width: 25px;
+                    height: 25px;
+                }
+            }
+
+            .voucher__action {
+                gap: 10px;
+
+                button {
+                    cursor: pointer;
+                    transition: all 0.1s ease-in-out;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+
+                    background-color: transparent;
+                    border: 1px solid black;
+
+                    &:hover {
+                        background-color: red;
+                        border-color: red;
+                        color: white;
+                    }
+
+                    // &:nth-child(1) {
+                    //     background-color: var(--ultramarine-blue);
+                    //     border: 1px solid var(--ultramarine-blue);
+                    //     color: white;
+
+                    //     &:hover {
+                    //         background-color: var(--soft-blue)
+                    //     }
+                    // }
+
+                    // &:nth-child(2) {
+                    //     background-color: transparent;
+                    //     border: 1px solid black;
+
+                    //     &:hover {
+                    //         background-color: red;
+                    //         border-color: red;
+                    //         color: white;
+                    //     }
+                    // }
+                }
+            }
+        }
+    }
+
+    .voucher__pagination {
+        margin-top: 3rem;
+        // direction - justify content - align items - flex wrap
+        @include dflex(row, center, center, nowrap);
+    }
+}

@@ -3,7 +3,7 @@ import { Controller } from "react-hook-form";
 import "../../styles/common/checkbox.scss";
 
 const Checkbox = ({ form, name, label, callbackOnChange, checkboxSize }) => {
-  const checkboxRealSize = checkboxSize ?? "18px";
+  const checkboxRealSize = checkboxSize || "18px";
   return (
     <div className="common-component__checkbox">
       <Controller

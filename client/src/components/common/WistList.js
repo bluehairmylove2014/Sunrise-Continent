@@ -76,7 +76,7 @@ const WistList = ({ isActive, callback }) => {
               <button
                 onClick={() => {
                   callback(false);
-                  navigate(PAGES.HOTEL_DETAIL + `?id=${d.id}`);
+                  navigate(PAGES.HOTEL_DETAIL + `?id=${d.id}`, {replace: true});
                 }}
               >
                 Đặt ngay

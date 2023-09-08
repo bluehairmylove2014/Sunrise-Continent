@@ -1,0 +1,101 @@
+@import '../../../styles/partial/mixin';
+
+.top-user__wrapper {
+    h3 {
+        margin-bottom: 20px
+    }
+
+    .top-user-list {
+        // direction - justify content - align items - flex wrap
+        @include dflex(column, flex-start, flex-start, nowrap);
+        width: calc(100% - 40px);
+        height: fit-content;
+        border-radius: 10px;
+        border: 1px solid black;
+        padding: 0 20px;
+
+        .top-user {
+            width: 100%;
+            height: 50px;
+            // direction - justify content - align items - flex wrap
+            @include dflex(row, flex-start, center, nowrap);
+            padding: 14px 0;
+            border-bottom: 1px solid black;
+
+            &:last-child {
+                border: none;
+            }
+
+            .rank {
+                border-radius: 50%;
+                font-weight: 600;
+                font-size: 0.75rem;
+                width: 25px;
+                height: 25px;
+                // direction - justify content - align items - flex wrap
+                @include dflex(row, center, center, nowrap);
+                margin-right: 15px;
+
+                &.top1 {
+                    background-color: #FFD937;
+                }
+
+                &.top2 {
+                    background-color: #D1CFC6;
+                }
+
+                &.top3 {
+                    background-color: #E98930;
+                }
+            }
+
+            .user {
+                // direction - justify content - align items - flex wrap
+                @include dflex(row, flex-start, center, nowrap);
+                flex-grow: 1;
+
+                &>img {
+                    min-width: 40px;
+                    width: 40px;
+                    height: 40px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    margin-right: 12px;
+                }
+
+                .user__info {
+                    // direction - justify content - align items - flex wrap
+                    @include dflex(column, center, flex-start, nowrap);
+
+                    span {
+                        &:nth-child(1) {
+                            font-size: 0.8rem;
+                            font-weight: 600;
+                        }
+
+                        &:nth-child(2) {
+                            // direction - justify content - align items - flex wrap
+                            @include dflex(row, flex-start, center, nowrap);
+
+                            img {
+                                width: 12px;
+                                height: 12px;
+                                margin-right: 3px;
+                            }
+
+                            font-size: 0.6rem;
+                            font-weight: 500;
+                            // opacity: 0.5;
+                        }
+                    }
+                }
+            }
+
+            .money {
+                color: var(--ultramarine-blue);
+                flex-shrink: 1;
+            }
+        }
+    }
+}

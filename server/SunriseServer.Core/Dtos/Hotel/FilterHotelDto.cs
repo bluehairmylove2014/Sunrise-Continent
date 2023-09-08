@@ -11,7 +11,7 @@ namespace SunriseServerCore.Dtos.Hotel
     {
         public string hotelType { get; set; } = null;
         public string bedType { get; set; } = null;
-        public int guestRating { get; set; } = 0;
+        public string guestRating { get; set; }
         public string facilities { get; set; } = null;
         public string service { get; set; } = null;
         public string sortingCol { get; set; } = "Rating";

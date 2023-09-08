@@ -193,8 +193,8 @@ CREATE TABLE BOOKING_ACCOUNT
 	AccountId INT,
 	HotelId INT,
 	RoomTypeId INT,
-	CheckIn DATE,
-	CheckOut DATE,
+	CheckIn DATETIME,
+	CheckOut DATETIME,
 	NumberOfRoom INT,
 
 	PRIMARY KEY (BookingId)

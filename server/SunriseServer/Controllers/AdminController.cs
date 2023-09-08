@@ -45,7 +45,7 @@ namespace SunriseServer.Controllers
             return Ok(result);
         }
 
-        [HttpGet("weekly-revenue")] // , Authorize(Roles = GlobalConstant.Admin)
+        [HttpGet("weekly-revenue"), Authorize(Roles = GlobalConstant.Admin)]
         public async Task<ActionResult<StatisticsAdminDto>> GetHotelWeeklyRevenue(DateTime? date)
         {
             StatisticsAdminDto result;

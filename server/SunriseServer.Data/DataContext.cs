@@ -40,7 +40,7 @@ namespace SunriseServerData
                 .HasKey(x => new { x.AccountId, x.VoucherId });
             
             modelBuilder.Entity<Order>()
-                .HasKey(x => new { x.OrderId });
+                .HasKey(x => new { x.OrderId, x.HotelId, x.RoomTypeId, x.AccountId });
 
             modelBuilder.Entity<MyFunctionResult>()
                 .HasNoKey().ToTable("MyFunctionResult", t => t.ExcludeFromMigrations());

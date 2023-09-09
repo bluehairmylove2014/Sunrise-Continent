@@ -18,7 +18,9 @@ BEGIN
 	declare @Value FLOAT
 	SET @Value = (SELECT AVG(Points) FROM REVIEW WHERE HotelId = @HotelId)
 	IF (@Value IS NULL)
-		SET @Value = 10.0;
+		DECLARE @Rating FLOAT = NULL;
+		SELECT @Rating = Rating FROM HOTEL WHERE Id = @HotelId;
+		SET @Value = CASE WHEN @Rating IS NULL THEN 10.0 ELSE @Rating END;
 
     RETURN @Value
 END
@@ -1577,8 +1579,9 @@ BEGIN
 END
 GO
 
-GO
---Proc tính điểm dựa vào chi tiêu khi đặt phòng. 
+
+
+GO --Proc tính điểm dựa vào chi tiêu khi đặt phòng. 
 CREATE OR ALTER PROCEDURE USP_UpdateMemberPoints
     @AccountId INTEGER,
     @TotalPay INT,
@@ -1588,7 +1591,7 @@ AS
 BEGIN
 	DECLARE @VietNamDongRate INT = 1000;
     
-    BEGIN TRANSACTION; -- Bắt đầu giao dịch
+    BEGIN TRANSACTION;
 	BEGIN TRY
 		-- Tính điểm tích lũy từ giao dịch (tỉ lệ [điểm] = [giá trị total] * @ExangeRate(%) )
 		DECLARE @EarnedPoints FLOAT = @TotalPay * @ExchangeRate / 100 / @VietNamDongRate;
@@ -1611,6 +1614,95 @@ BEGIN
 	RETURN 0; -- Gán giá trị trả về là 0 nếu quá trình thành công
 END
 GO
+
+GO -- Proc tính điểm thành viên dựa trên số ngày đặt phòng của khách sạn.
+CREATE OR ALTER PROCEDURE USP_UpdateMemberPointByDayBooked (
+    @AccountId INT,
+	@OrderId INT,
+	@DateRecorded VARCHAR(30) = NULL)
+AS
+BEGIN
+    
+	BEGIN TRAN;
+	BEGIN TRY
+
+		IF (@DateRecorded IS NULL) 
+			SET @DateRecorded = CAST(FORMAT(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss.fffffff') as VARCHAR(30));
+		DECLARE @HotelId INT, @VietNamDongRate INT = 1000;
+
+		DECLARE @PriceTable TABLE (BookingId INT, BookedDay INT, Total INT);
+		INSERT INTO @PriceTable (BookingId, BookedDay, Total)
+			SELECT * FROM  (
+				SELECT ba.BookingId, 
+					DATEDIFF(DAY, ba.CheckIn, ba.CheckOut) as BookedDay, 
+					dbo.USF_GetBookingTotalById(ba.BookingId, DEFAULT) as Total
+				FROM (SELECT * FROM ORDER_DETAIL WHERE OrderId = @OrderId) od
+				JOIN BOOKING_ACCOUNT ba ON od.BookingId = ba.BookingId) cal;
+
+		DECLARE @EarnedPoints FLOAT = 0;
+		SELECT @EarnedPoints += CASE WHEN pt.BookedDay < 25 THEN CAST(pt.BookedDay / 5 as INT) ELSE 5 END *
+			CAST((CASE WHEN Total < 10000000 THEN 0.0015 ELSE 0.003 END) * Total / @VietNamDongRate as FLOAT)
+		FROM @PriceTable pt
+
+		IF (@EarnedPoints > 0)
+			INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime, Content) 
+				VALUES (@AccountId, @EarnedPoints, @DateRecorded, N'Cộng điểm dựa vào số ngày đặt phòng khách sạn.');
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR(N'Lỗi tính điểm theo số ngày đặt phòng khách sạn.', 11, 1);
+		ROLLBACK;
+		RETURN -1;
+	END CATCH
+		
+	COMMIT;
+	RETURN 0;
+END
+GO
+
+GO -- Proc tính điểm thành viên dựa trên số lần đặt cùng một khách sạn.
+CREATE OR ALTER PROC USP_UpdateMemberPointByBookingTime (
+	@AccountId INT,
+	@TotalPay INT,
+	@OrderId INT,
+	@DateRecorded VARCHAR(30) = NULL)
+AS
+BEGIN
+	BEGIN TRAN
+
+	BEGIN TRY
+		IF (@DateRecorded IS NULL) 
+			SET @DateRecorded = CAST(FORMAT(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss.fffffff') as VARCHAR(30));
+		
+		DECLARE @HotelId INT, @Times INT = 0, @ExchangeRate INT = 0, @VietNamDongRate INT = 1000;
+		SELECT @HotelId = ba.HotelId FROM (SELECT * FROM ORDER_DETAIL WHERE OrderId = @OrderId) od 
+		JOIN BOOKING_ACCOUNT ba ON od.BookingId = ba.BookingId;
+
+		SELECT @Times = COUNT(HotelId) + SUM(NumberOfRoom) FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId AND AccountId = @AccountId;
+
+		IF (@Times > 50)
+			SET @ExchangeRate = 2;
+		ELSE IF (@Times >= 15)
+			SET @ExchangeRate = 1;
+
+		DECLARE @EarnedPoints FLOAT = @TotalPay * @ExchangeRate / 100 / @VietNamDongRate;
+
+		IF (@EarnedPoints > 0)
+			INSERT INTO POINT_HISTORY (AccountId, Value, RecordedTime, Content) 
+				VALUES (@AccountId, @EarnedPoints, @DateRecorded, N'Cộng điểm dựa vào số lần đặt khách sạn và số lượng phòng đặt.');
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR(N'Lỗi tính điểm theo số lần đặt khách sạn.', 11, 1);
+		ROLLBACK;
+		RETURN -1;
+	END CATCH
+
+	COMMIT;
+	RETURN 0;
+END;
+GO
+
 
 -- //
 GO
@@ -2211,6 +2303,8 @@ BEGIN
 
 		-- Cập nhật điểm thành viên.
 		EXEC USP_UpdateMemberPoints @AccountId, @Total, @DateRecorded;
+		EXEC USP_UpdateMemberPointByBookingTime @AccountId, @OrderId, @OrderId, @DateRecorded;
+		EXEC USP_UpdateMemberPointByDayBooked @AccountId, @OrderId, @DateRecorded;
 	END TRY
 
 	BEGIN CATCH
@@ -2221,7 +2315,7 @@ BEGIN
 
 	COMMIT;
 	RETURN 0;
-END
+END;
 GO
 
 
@@ -2241,22 +2335,24 @@ BEGIN
 		IF (LEN(@Sql) != 0)
 		BEGIN
 			DECLARE @NewSql NVARCHAR(MAX) = SUBSTRING(@Sql, 1, LEN(@Sql) - 2) + ', @MultipleConfirm=0;';
-			EXECUTE(@NewSql);
+			EXEC sp_executesql @NewSql;
 
 			UPDATE ACCOUNT_ORDER SET Paid = 1
 			WHERE SessionId = @SessionId;
 		END
+
 	END TRY
 
 	BEGIN CATCH
-		RAISERROR('', 11, 1);
-		ROLLBACK TRAN;
+		RAISERROR('Lỗi xác nhận đơn đặt.', 11, 1);
+		ROLLBACK;
+		RETURN 0;
 	END CATCH
 
-	COMMIT TRAN;
+	COMMIT;
 	RETURN 0;
 END
-GO
+
 
 GO
 CREATE OR ALTER FUNCTION USF_GetAccountId (@Email VARCHAR(50))
@@ -2439,7 +2535,7 @@ BEGIN
 	DECLARE @EndDate DATE = DATEADD(DAY, 6, @StartDate); -- Sunday
 	DECLARE @Result INT;
 
-	SELECT @Result = COUNT(ao.OrderId) FROM (SELECT * FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba
+	SELECT @Result = COUNT(DISTINCT ao.OrderId) FROM (SELECT * FROM BOOKING_ACCOUNT WHERE HotelId = @HotelId) ba
 	JOIN ORDER_DETAIL od ON od.BookingId = ba.BookingId
 	JOIN ACCOUNT_ORDER ao ON od.OrderId = ao.OrderId
 	WHERE DATEDIFF(DAY, @StartDate, ao.CreatedAt) >= 0 AND DATEDIFF(DAY, ao.CreatedAt, @EndDate) >= 0;
@@ -2632,37 +2728,10 @@ GO
 
 -- // check --
 
---! Func tính điểm input tổng số tiền và số thứ tự của đơn đặt phòng
-GO
-CREATE OR ALTER FUNCTION USF_CaculateBonusPoint(@Total INT, @Times INT)
-RETURNS INT
-BEGIN
-	DECLARE @Point INT = 0;
-	IF @Times >= 15 AND @Times < 50
-	SET @Point = @Total * 0.01 / 1000;
-	ELSE IF @Times > 50
-	SET @Point = @Total * 0.02 / 1000;
-	RETURN @Point;
-END
 
-GO
---! Proc tính diểm thành viên dựa trên số lần đặt cùng một loại phòng của khách sạn.
-CREATE OR ALTER PROC USP_GetBookingLengthBonusPoint (
-	@AccountId INT,
-	@BookingId INT,
-	@HotelId INT)
-AS
-	DECLARE @Total INT = dbo.USF_GetBookingTotalById(@BookingId, DEFAULT);
 
-	DECLARE @Times INT = (SELECT COUNT(BA.BookingId) FROM BOOKING_ACCOUNT BA 
-		WHERE BA.AccountId = @AccountId AND BA.HotelId = @HotelId);
 
-	DECLARE @Point INT
-	EXECUTE @Point = dbo.USF_CaculateBonusPoint @Total, @Times;
-	RETURN @Point
-	
-GO
-
+-- // check --
 
 --!proc tính doanh thu khách sạn theo quý
 GO

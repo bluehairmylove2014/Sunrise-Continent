@@ -261,6 +261,10 @@ const PreCheckout = () => {
         childrens: bookingFormValue.childrens,
       })),
     });
+    window.localStorage.setItem(
+      "SUNRISE_VOUCHER",
+      JSON.stringify(sunriseVoucher.value)
+    );
     navigate(PAGES.CHECKOUT);
     // navigate(PAGES.SUCCESS_ORDER);
   };

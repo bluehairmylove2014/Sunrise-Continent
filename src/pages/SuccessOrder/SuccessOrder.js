@@ -59,6 +59,9 @@ const SuccessOrder = () => {
   const night = calcNight(start_date, end_date);
   const [total, setTotal] = useState(0);
   const { onReview } = useReviewHotel();
+  const sunriseVoucher = JSON.parse(
+    window.localStorage.getItem("SUNRISE_VOUCHER")
+  );
 
   const handleReviewHotel = ({ point, content }) => {
     const reviewPkg = {
@@ -250,7 +253,10 @@ const SuccessOrder = () => {
               </div>
 
               <p className="price total">
-                {convertNumberToCurrency("vietnamdong", total)}
+                {convertNumberToCurrency(
+                  "vietnamdong",
+                  total - (sunriseVoucher ? sunriseVoucher * total : 0)
+                )}
               </p>
             </div>
           </div>

@@ -49,7 +49,7 @@ namespace SunriseServer.Services.PaymentService
                                 Description = "Thanh toán với thẻ thanh toán quốc tế VISA",
                                 Images = new List<string>
                                 {
-                                    "https://th.bing.com/th/id/R.88fffa3cfd63e9c82824f909437d4286?rik=b8IrXxOpUaP%2f6w&pid=ImgRaw&r=0",
+                                    "https://rialloer.sirv.com/Sunrise-Continent/Logo/sc-vertical.png?fbclid=IwAR0f1zZWcQItrZZ4DKM566XS5f0e3XXxtzS8ofBZGh-OayprXK1CJhRuJjs",
                                     "https://leadtravel.com.vn/cam-nang-du-lich/wp-content/uploads/2018/06/khach-san-5-sao-ha-long-1.jpg",
                                     "https://2trip.vn/wp-content/uploads/2021/04/khach-san-5-sao-tai-vung-tau-1.jpg"
                                 }

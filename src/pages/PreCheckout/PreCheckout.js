@@ -248,7 +248,9 @@ const PreCheckout = () => {
       specialNeeds: getSelectedOptions(contactForm.getValues()).join(", "),
       notes: data.otherRequirements,
       voucherId: sunriseVoucher ? sunriseVoucher.voucherId : 0,
-      total: total - (sunriseVoucher ? sunriseVoucher.value * total : 0),
+      total: Math.floor(
+        total - (sunriseVoucher ? sunriseVoucher.value * total : 0)
+      ),
       orders: roomsData.map((rdata) => ({
         hotelId: hotelId,
         roomTypeId: rdata.id,

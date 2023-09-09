@@ -245,13 +245,13 @@ const SuccessOrder = () => {
             )}
             <hr />
             <div className="detail__row">
-              <div className="row__label">
-                <span>Tổng tiền: </span>
-              </div>
+              {/* <div className="row__label"> */}
+              {/* <span>Tổng tiền: </span> */}
+              {/* </div> */}
 
-              <p className="price total">
-                {convertNumberToCurrency("vietnamdong", total)}
-              </p>
+              {/* <p className="price total"> */}
+              {/* {convertNumberToCurrency("vietnamdong", total)} */}
+              {/* </p> */}
             </div>
           </div>
         </section>

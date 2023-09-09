@@ -55,7 +55,7 @@ const HotelCard = ({ hotelData, type }) => {
           <div className="hotel-card-body-rating__review">
             {/* <small>{hotelData.rating.reviews} reviews</small> */}
             <small>
-              {2014} <br /> đánh giá
+              {Math.floor(Math.random() * 50) + 1} <br /> đánh giá
             </small>
             <div className="rating-review__score">
               <p>{hotelData.rating.toFixed(1)}</p>

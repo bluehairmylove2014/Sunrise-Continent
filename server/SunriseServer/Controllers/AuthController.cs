@@ -14,6 +14,10 @@ using SunriseServer.Common.Helper;
 
 namespace SunriseServer.Controllers
 {
+    public class RefreshTokenDto
+    {
+        public string RefreshToken { get; set; }
+    }
     [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -200,16 +204,16 @@ namespace SunriseServer.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<ResponseMessageDetails<string>>> RefreshToken(string refreshToken)
+        public async Task<ActionResult<ResponseMessageDetails<string>>> RefreshToken(RefreshTokenDto refreshToken)
         {
-            if (string.IsNullOrEmpty(refreshToken))
+            if (string.IsNullOrEmpty(refreshToken.RefreshToken))
             {
                 return BadRequest(new
                 {
                     message = "Refresh token không hợp lệ"
                 });
             }
-            var acc = await _accService.FindMatchingRefreshToken(refreshToken);
+            var acc = await _accService.FindMatchingRefreshToken(refreshToken.RefreshToken);
 
             if (acc == null)
             {
@@ -279,7 +283,7 @@ namespace SunriseServer.Controllers
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddSeconds(5),
                 signingCredentials: creds);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);

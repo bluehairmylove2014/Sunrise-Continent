@@ -62,7 +62,7 @@ namespace SunriseServer.Controllers
             return result;
         }
 
-        [HttpGet("")]
+        [HttpGet(""), Authorize]
         public async Task<ActionResult<List<HotelDto>>> GetAllHotelInfo()
         {
             var result = await _hotelService.GetAllHotels();
